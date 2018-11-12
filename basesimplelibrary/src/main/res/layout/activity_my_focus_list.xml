@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/bar_top"
+        style="@style/bar_top_style">
+
+        <ImageView
+            android:id="@+id/iv_return"
+            style="@style/top_bar_back" />
+
+        <TextView
+            android:id="@+id/tv_setting_title"
+            style="@style/top_bar_center_title"
+            android:text="我的关注" />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/white">
+
+        <FrameLayout
+            android:id="@+id/framelayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.simplesoft.resident.view.OverScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <baselibrary.halobear.library.special.view.scrollview.NestListView
+                        android:id="@+id/nest_list_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:divider="@null"
+                        android:dividerHeight="0dp"
+                        android:listSelector="@android:color/transparent"
+                        android:scrollbars="none" />
+
+                </LinearLayout>
+            </com.simplesoft.resident.view.OverScrollView>
+        </FrameLayout>
+
+        <include layout="@layout/layout_loading_view" />
+
+        <include layout="@layout/layout_request_no_data" />
+
+        <include layout="@layout/layout_request_network_error" />
+
+    </FrameLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,11 @@
+include ':app',
+        ':basesimplelibrary',
+        ':basesimplelibrary:refresh-footer',
+        ':basesimplelibrary:refresh-header',
+        ':basesimplelibrary:dialogAnim',
+        ':basesimplelibrary:PullToRefresh',
+        ':basesimplelibrary:photoview_lib',
+        ':basesimplelibrary:simpleOldLib',
+        ':basesimplelibrary:refresh-layout',
+        ':basesimplelibrary:pickerview',
+        ':basesimplelibrary:indexlib'

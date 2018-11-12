@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ptr="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/default_background_color"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        style="@style/bar_top_style"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+
+        <ImageView
+            android:id="@+id/iv_return"
+            style="@style/top_bar_back" />
+
+        <TextView
+            android:id="@+id/tv_setting_title"
+            style="@style/top_bar_center_title"
+            android:text="社区公告" />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/layout_listview_pulltorefresh_progressbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/default_background_color"
+            android:gravity="center">
+
+            <!--网络加载显示的动画-->
+            <include layout="@layout/layout_loading_view" />
+
+            <com.handmark.pulltorefresh.library.PullToRefreshListView
+                android:id="@+id/pull_to_refresh_listview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@null"
+                android:dividerHeight="0px"
+                android:listSelector="@android:color/transparent"
+                android:scrollbars="none"
+                android:visibility="visible"
+                ptr:ptrAnimationStyle="rotate"
+                ptr:ptrHeaderTextColor="@color/a888888" />
+
+        </FrameLayout>
+
+        <include layout="@layout/layout_request_no_data" />
+        <!--网络访问出错布局-->
+        <include layout="@layout/layout_request_network_error" />
+
+    </FrameLayout>
+
+</LinearLayout>

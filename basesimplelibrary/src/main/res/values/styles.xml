@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ViewDialog" parent="android:Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <!-- 自定义dialog（无黑色背景） -->
+    <style name="ViewDialogNoBlack" parent="android:Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <!--设置中单个一项样式-->
+    <style name="bar_top_style">
+        <item name="android:paddingTop">25dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:contentDescription">@string/title</item>
+        <item name="android:background">@drawable/bar_top_style</item>
+        <item name="android:layout_height">58dp</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="topbar_bg_no_status_bar">
+        <item name="android:paddingTop">25dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:background">@color/app_main_color</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">58dp</item>
+    </style>
+
+
+    <!-- 左侧图片样式 -->
+    <style name="layout_left_img_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:src">@drawable/back_white</item>
+    </style>
+
+    <!-- 左侧返回键 -->
+    <style name="top_bar_back" parent="@style/layout_left_img_style">
+        <item name="android:contentDescription">取消</item>
+        <item name="android:src">@drawable/back_white</item>
+    </style>
+
+    <!-- 中间标题 -->
+    <style name="top_bar_center_title" parent="@style/layout_center_text_style">
+        <item name="android:contentDescription">标题</item>
+        <item name="android:text">@string/title</item>
+    </style>
+
+    <!-- 中间文字样式 -->
+    <style name="layout_center_text_style" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_centerInParent">true</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <!-- 下拉显示图片的scrollview -->
+    <declare-styleable name="PullScrollView">
+        <attr name="header" format="reference"/>
+        <attr name="headerHeight" format="dimension"/>
+        <attr name="headerVisibleHeight" format="dimension"/>
+    </declare-styleable>
+
+    <!--间隔线样式-->
+    <style name="horizontal_line">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1px</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+        <item name="android:background">@color/bg_line_color</item>
+    </style>
+
+    <!--间隔线样式-->
+    <style name="vertical_line">
+        <item name="android:layout_width">1px</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginTop">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginBottom">@dimen/activity_horizontal_margin</item>
+        <item name="android:background">@color/bg_line_color</item>
+    </style>
+
+    <!--登录按钮样式-->
+    <style name="login_btn_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">41dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:background">@drawable/login_btn_background</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="wrap_wrap">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="match_match">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="wrap_match">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="match_wrap">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="ll_vertical_match_wrap" parent="match_wrap">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="text" parent="wrap_wrap">
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/gray_3</item>
+    </style>
+
+    <style name="text_huge" parent="text">
+        <item name="android:textSize">21sp</item>
+    </style>
+
+    <style name="text_huge_white" parent="text_huge">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="text_huge_black" parent="text_huge">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="text_large" parent="text">
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="text_large_white" parent="text_large">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="text_large_black" parent="text_large">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="text_big" parent="text">
+        <item name="android:textSize">19sp</item>
+    </style>
+
+    <style name="text_big_white" parent="text_big">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="text_big_black" parent="text_big">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="divider">
+        <item name="android:background">@color/alpha_3</item>
+    </style>
+
+    <style name="divider_horizontal_1px" parent="divider">
+        <item name="android:layout_height">1px</item>
+        <item name="android:layout_width">fill_parent</item>
+    </style>
+
+    <style name="text_middle" parent="text">
+        <item name="android:textSize">16sp</item>
+    </style>
+</resources>

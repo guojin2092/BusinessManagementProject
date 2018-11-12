@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="app_main_color">#EC9719</color>
+    <color name="write">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="text_color">#FFFFFF</color>
+    <color name="divider_color">#11000000</color>
+    <color name="msg_color">#FFFFFFFF</color>
+    <color name="dialog_bg">#ffe74c3c</color>
+    <color name="a333333">#333333</color>
+    <color name="btn_press_color">#66000000</color>
+    <color name="btn_unpress_color">#22000000</color>
+    <color name="shouye_red">#FF0000</color>
+
+</resources>

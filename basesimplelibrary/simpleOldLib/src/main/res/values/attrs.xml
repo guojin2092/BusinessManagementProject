@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PrintTextView">
+        <attr name="audio_src" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="StickyScrollView">
+        <attr name="stuckShadowHeight" format="dimension" />
+        <attr name="stuckShadowDrawable" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="ParallaxScrollView">
+        <attr name="zoomRatio" format="float" />
+    </declare-styleable>
+</resources>
