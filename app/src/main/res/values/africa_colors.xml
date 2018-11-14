@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--标题栏背景色-->
+    <color name="app_theme_bg_color">#fe4070</color>
+    <!--app主色调-->
+    <color name="app_theme_main_color">#ffffff</color>
+    <!--界面默认背景颜色-->
+    <color name="app_theme_layout_bg">#f7f7f7</color>
+    <!--加载图片背景色-->
+    <!--线条颜色-->
+    <color name="app_line_color">#dfdfdf</color>
+
+    <!--顶部标题栏背景色-->
+    <color name="app_title_bg_color">#ffffff</color>
+
+    <!--线条颜色-->
+    <color name="CECECE">#cecece</color>
+    <!--<color name="dfdfdf">#DFDFDF</color>-->
+    <color name="white">#ffffff</color>
+    <!--<color name="black">#000000</color>-->
+    <color name="half_transparent">#4b000000</color>
+    <color name="red">#ff0000</color>
+    <color name="green">#00ff00</color>
+    <color name="blue">#0000ff</color>
+    <color name="cccccc">#CCCCCC</color>
+    <color name="a888888">#888888</color>
+
+
+</resources>

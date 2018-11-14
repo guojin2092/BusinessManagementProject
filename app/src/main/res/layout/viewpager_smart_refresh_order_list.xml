@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tl="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/top_bar"
+        style="@style/topbar_bg_no_status_bar">
+
+        <TextView
+            android:id="@+id/tv_top_bar_title"
+            style="@style/topbar_title"
+            android:layout_centerHorizontal="true"
+            android:text="我的订单"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/app_main_color"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
+
+        <com.africa.crm.businessmanagementproject.widget.ClearEditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="14dp"
+            android:background="@drawable/null_drawable"
+            android:drawableLeft="@drawable/search"
+            android:drawablePadding="5dp"
+            android:hint="搜索"
+            android:imeOptions="actionSearch"
+            android:paddingLeft="@dimen/activity_vertical_margin"
+            android:paddingRight="10dp"
+            android:singleLine="true"
+            android:textColorHint="@color/white"
+            android:textSize="14sp"/>
+    </RelativeLayout>
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/smart_main_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:srlAccentColor="@android:color/white"
+        app:srlFixedHeaderViewId="@+id/tab"
+        app:srlPrimaryColor="@color/app_main_color">
+
+        <LinearLayout
+            android:id="@+id/loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.flyco.tablayout.SlidingTabLayout
+                android:id="@+id/tab"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:background="@color/white"
+                tl:tl_divider_color="#d2d2d2"
+                tl:tl_divider_padding="13dp"
+                tl:tl_divider_width="1dp"
+                tl:tl_indicator_color="@color/app_main_color"
+                tl:tl_indicator_height="1.5dp"
+                tl:tl_indicator_width_equal_title="true"
+                tl:tl_tab_padding="@dimen/activity_vertical_margin"
+                tl:tl_tab_space_equal="true"
+                tl:tl_textSelectColor="@color/app_main_color"
+                tl:tl_textUnselectColor="#202020"
+                tl:tl_underline_color="@color/white"
+                tl:tl_underline_height="1dp"/>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </LinearLayout>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+</LinearLayout>

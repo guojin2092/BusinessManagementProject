@@ -30,6 +30,21 @@ dependencies {
     api project(':basesimplelibrary')
     /*基础类库*/
 
+    releaseApi 'com.android.support:multidex:1.0.3'
+    /*64k方法数限制原理与解决 http://www.jianshu.com/p/da138bf975f7*/
+
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+    /*TabLayout*/
+    implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
+    /*TabLayout*/
+
+    /*圆形头像*/
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+    /*圆形头像*/
+
+    implementation 'com.nineoldandroids:library:2.4.0'
 
 
 }
