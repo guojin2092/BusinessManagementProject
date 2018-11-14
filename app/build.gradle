@@ -25,7 +25,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-
+    implementation 'com.nineoldandroids:library:2.4.0'
     /*基础类库*/
     api project(':basesimplelibrary')
     /*基础类库*/
@@ -44,7 +44,7 @@ dependencies {
     implementation 'com.makeramen:roundedimageview:2.3.0'
     /*圆形头像*/
 
-    implementation 'com.nineoldandroids:library:2.4.0'
-
-
+    /*万能适配器*/
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.40'
+    /*万能适配器*/
 }

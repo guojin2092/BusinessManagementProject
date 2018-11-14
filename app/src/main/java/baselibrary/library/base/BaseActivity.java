@@ -3,6 +3,7 @@ package baselibrary.library.base;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -52,6 +53,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        PushAgent.getInstance(context).onAppStart();
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         initSystemBarTint();
         setView(savedInstanceState);
         isAlive = true;

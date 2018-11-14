@@ -3,11 +3,14 @@ package com.africa.crm.businessmanagementproject.main;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import com.africa.crm.businessmanagementproject.R;
 
 import baselibrary.library.base.progress.BaseActivityProgress;
 import baselibrary.library.base.progress.BaseFragmentProgress;
+import butterknife.BindView;
 
 /**
  * Project：BusinessManagementProject
@@ -19,6 +22,9 @@ import baselibrary.library.base.progress.BaseFragmentProgress;
  * Why & What is modified:
  */
 public class LoginActivity extends BaseActivityProgress {
+    @BindView(R.id.tv_login)
+    TextView tv_login;
+
     //登陆成功
     public final static int LOGIN_SUCCESS = 1002;
     public static final String LOGIN_SUCCESS_OK = "com.simplesoft.resident.login_success";
@@ -48,11 +54,27 @@ public class LoginActivity extends BaseActivityProgress {
 
     @Override
     public void setView(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_login);
+    }
 
+    @Override
+    public void initView() {
+        super.initView();
+        tv_login.setOnClickListener(this);
     }
 
     @Override
     public void initData() {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        switch (v.getId()) {
+            case R.id.tv_login:
+                MainActivity.startActivity(this);
+                break;
+        }
     }
 }

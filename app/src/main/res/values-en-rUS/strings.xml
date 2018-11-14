@@ -1,4 +1,21 @@
 <resources>
     <string name="app_name">BusinessManagementProject</string>
 
+    <string name="username_hint">please enter username</string>
+    <string name="password_hint">please enter password</string>
+    <string name="forget_password">forget password</string>
+    <string name="login">login</string>
+    <string name="notification_title">Notification</string>
+    <string name="notification_content">Receive a new message</string>
+    <string name="work_station">work station</string>
+
+    <string name="enterprise_information_management">Enterprise information management</string>
+    <string name="enterprise_account_management">Enterprise account management</string>
+    <string name="supplier_management">Supplier management</string>
+    <string name="product_management">Product management</string>
+    <string name="customer_management">Customer management</string>
+    <string name="contact_management">Contact management</string>
+    <string name="trading_order_management">Trading order management</string>
+    <string name="quotation_management">Quotation management</string>
+    <string name="sales_order_management">Sales order management</string>
 </resources>

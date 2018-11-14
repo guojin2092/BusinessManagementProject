@@ -1,11 +1,49 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:listDivider">@drawable/line_horizontal</item>
+        <item name="android:windowAnimationStyle">@style/AppTheme.Animation.Activity</item>
+        <item name="android:windowEnableSplitTouch">false</item>
+        <item name="android:splitMotionEvents">false</item>
+        <item name="toolbarStyle">@style/AppTheme.ToolBar</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/bg_gray</item>
+    </style>
+
+    <!-- 切换的特效 Android6.0默认特效-->
+    <style name="AppTheme.Animation.Activity" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/default_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/no_anim</item>
+        <item name="android:activityCloseEnterAnimation">@anim/no_anim</item>
+        <item name="android:activityCloseExitAnimation">@anim/default_exit</item>
+    </style>
+
+    <style name="AppTheme.ToolBar" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@drawable/bg_tb</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">@dimen/toolBarHeight</item>
+        <item name="titleTextAppearance">@style/AppTheme.TextAppearance.ToolBar</item>
+        <item name="maxButtonHeight">48dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="elevation">0dp</item>
+    </style>
+
+    <style name="AppTheme.TextAppearance.ToolBar" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/dark_black</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="AppTheme.TextAppearance.Title" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">@dimen/title_sp</item>
+        <item name="android:textColor">@color/dark_black</item>
+
     </style>
 
     <style name="CityPickerAnim">
@@ -14,7 +52,20 @@
     </style>
 
     <declare-styleable name="MaxHeightView">
-        <attr name="mhv_HeightRatio" format="reference|float"/>
-        <attr name="mhv_HeightDimen" format="reference|dimension"/>
+        <attr name="mhv_HeightRatio" format="reference|float" />
+        <attr name="mhv_HeightDimen" format="reference|dimension" />
     </declare-styleable>
+
+    <style name="MyEditText" parent="Theme.AppCompat.Light">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/a333333</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:textCursorDrawable">@drawable/cursor_color</item>
+        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+    </style>
+
+
 </resources>

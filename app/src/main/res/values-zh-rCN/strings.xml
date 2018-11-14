@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">商务管理系统</string>
+    <string name="username_hint">请输入用户名</string>
+    <string name="password_hint">请输入密码</string>
+    <string name="forget_password">忘记密码</string>
+    <string name="login">登录</string>
+    <string name="notification_title">通知</string>
+    <string name="notification_content">收到一条新消息</string>
+    <string name="work_station">工作站</string>
 
-    <!--检查更新-->
     <string name="my_setting_versionupdate_title">版本更新</string>
-    <!--    <string name="settings_productsetting_checkup_version">正在检查最新版本</string>-->
     <string name="my_setting_versionupdate_latest">你的软件是最新的版本</string>
+
+    <string name="enterprise_information_management">企业信息管理</string>
+    <string name="enterprise_account_management">企业账号管理</string>
+    <string name="supplier_management">供应商管理</string>
+    <string name="product_management">产品管理</string>
+    <string name="customer_management">客户管理</string>
+    <string name="contact_management">联系人管理</string>
+    <string name="trading_order_management">交易单管理</string>
+    <string name="quotation_management">报价单管理</string>
+    <string name="sales_order_management">销售单管理</string>
 </resources>

@@ -1,4 +1,21 @@
 <resources>
     <string name="app_name">Système de gestion d'entreprise</string>
+    <string name="username_hint">S'il vous plaît entrer un nom d'utilisateur</string>
+    <string name="password_hint">veuillez entrer le mot de passe</string>
+    <string name="forget_password">Mot de passe oublié</string>
+    <string name="login">Connexion</string>
+    <string name="notification_title">Avis</string>
+    <string name="notification_content">Reçu un nouveau message</string>
+    <string name="work_station">Poste de travail</string>
+
+    <string name="enterprise_information_management">Gestion de l'information d'entreprise</string>
+    <string name="enterprise_account_management">Gestion de compte d'entreprise</string>
+    <string name="supplier_management">Gestion des fournisseurs</string>
+    <string name="product_management">Gestion de produit</string>
+    <string name="customer_management">Gestion de la clientèle</string>
+    <string name="contact_management">Gestion des contacts</string>
+    <string name="trading_order_management">Gestion des ordres de trading</string>
+    <string name="quotation_management">Gestion des devis</string>
+    <string name="sales_order_management">Gestion des commandes</string>
 
 </resources>
