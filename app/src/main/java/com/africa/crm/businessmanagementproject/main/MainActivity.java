@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagementproject.R;
 import com.africa.crm.businessmanagementproject.main.adapter.WorkStationListAdapter;
 import com.africa.crm.businessmanagementproject.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagementproject.widget.GridItemDecoration;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +23,8 @@ import baselibrary.library.base.progress.BaseActivityProgress;
 import butterknife.BindView;
 
 public class MainActivity extends BaseActivityProgress {
+    @BindView(R.id.titlebar_back)
+    ImageView titlebar_back;
     @BindView(R.id.titlebar_name)
     TextView titlebar_name;
     @BindView(R.id.rv_work_station)
@@ -47,6 +52,7 @@ public class MainActivity extends BaseActivityProgress {
     @Override
     public void initView() {
         super.initView();
+        titlebar_back.setVisibility(View.GONE);
         titlebar_name.setText(getString(R.string.work_station));
     }
 
@@ -96,6 +102,13 @@ public class MainActivity extends BaseActivityProgress {
             rv_work_station.addItemDecoration(new GridItemDecoration(0, 3));
             rv_work_station.setHasFixedSize(true);
             rv_work_station.setNestedScrollingEnabled(false);
+
+            mWorkStationListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+
+                }
+            });
         }
     }
 }
