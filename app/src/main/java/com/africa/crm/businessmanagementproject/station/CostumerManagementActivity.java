@@ -123,6 +123,7 @@ public class CostumerManagementActivity extends BaseActivityProgress {
                     Intent intent = new Intent(CostumerManagementActivity.this,CostumerDetailActivity.class);
                     intent.putExtra(COSTUMER_INFO, mCostumerInfoBeanList.get(position));
                     startActivity(intent);
+                    overridePendingTransition(R.anim.anim_right_in, R.anim.anim_left_out);
                 }
             });
         }

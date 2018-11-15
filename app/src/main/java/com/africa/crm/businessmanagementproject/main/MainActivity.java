@@ -141,6 +141,7 @@ public class MainActivity extends BaseActivityProgress {
                     ToastUtils.show(MainActivity.this, workStationInfoList.get(position).getWork_name());
                     if (workStationInfoList.get(position).getWork_type().equals("5")) {
                         startActivity(new Intent(MainActivity.this, CostumerManagementActivity.class));
+                        overridePendingTransition(R.anim.anim_right_in, R.anim.anim_left_out);
                     }
                 }
             });

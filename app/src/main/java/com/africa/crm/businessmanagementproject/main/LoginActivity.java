@@ -74,6 +74,7 @@ public class LoginActivity extends BaseActivityProgress {
         switch (v.getId()) {
             case R.id.tv_login:
                 startActivity(new Intent(this, MainActivity.class));
+                overridePendingTransition(R.anim.anim_right_in, R.anim.anim_left_out);
                 break;
         }
     }
