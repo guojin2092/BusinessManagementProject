@@ -38,4 +38,59 @@
 
     </LinearLayout>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.africa.crm.businessmanagementproject.widget.OverScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_costumer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:divider="@color/F2F2F2"
+                    android:dividerHeight="1dp"
+                    android:overScrollMode="never" />
+
+            </LinearLayout>
+        </com.africa.crm.businessmanagementproject.widget.OverScrollView>
+
+        <LinearLayout
+            android:id="@+id/ll_add"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="bottom|right"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="80dp"
+            android:background="@drawable/btn_add"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/iv_add_logo" />
+
+            <TextView
+                android:id="@+id/tv_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="添加"
+                android:textColor="@color/A8F6812"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+    </FrameLayout>
+
+
 </LinearLayout>

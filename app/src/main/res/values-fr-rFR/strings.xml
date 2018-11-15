@@ -18,4 +18,6 @@
     <string name="quotation_management">Gestion des devis</string>
     <string name="sales_order_management">Gestion des commandes</string>
 
+    <string name="all_customers">Tous les clients</string>
+
 </resources>

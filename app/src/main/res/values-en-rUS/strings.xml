@@ -18,4 +18,6 @@
     <string name="trading_order_management">Trading order management</string>
     <string name="quotation_management">Quotation management</string>
     <string name="sales_order_management">Sales order management</string>
+
+    <string name="all_customers">All customers</string>
 </resources>

@@ -13,7 +13,8 @@
 
         <activity
             android:name=".main.LoginActivity"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,6 +23,12 @@
         </activity>
 
         <activity android:name=".main.MainActivity" />
+        <activity
+            android:name=".station.CostumerManagementActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".station.CostumerDetailActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
     </application>
 
 </manifest>

@@ -12,7 +12,7 @@
         <item name="android:splitMotionEvents">false</item>
         <item name="toolbarStyle">@style/AppTheme.ToolBar</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowBackground">@color/bg_gray</item>
+        <item name="android:windowBackground">@color/F2F2F2</item>
     </style>
 
     <!-- 切换的特效 Android6.0默认特效-->
@@ -67,5 +67,13 @@
         <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
 
+    <style name="costumer_title_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/A606060</item>
+        <item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
+        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
+    </style>
 
 </resources>

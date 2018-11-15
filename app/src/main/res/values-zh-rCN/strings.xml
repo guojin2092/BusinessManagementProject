@@ -21,4 +21,6 @@
     <string name="trading_order_management">交易单管理</string>
     <string name="quotation_management">报价单管理</string>
     <string name="sales_order_management">销售单管理</string>
+
+    <string name="all_customers">所有客户</string>
 </resources>

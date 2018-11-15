@@ -6,10 +6,15 @@
 
     <color name="A9A9B9B">#9A9B9B</color>
     <color name="A606060">#606060</color>
+    <color name="B2B2B2">#B2B2B2</color>
     <color name="lineColor">#CCCCCC</color>
     <color name="line_black">#999999</color>
     <color name="link_black">#999999</color>
     <color name="bg_gray">#f0eff5</color>
     <color name="dark_black">#373737</color>
     <color name="EDB232">#EDB232</color>
+    <color name="A8F6812">#8F6812</color>
+    <color name="F2F2F2">#F2F2F2</color>
+    <color name="A768DBD">#768DBD</color>
+    <color name="F75E5E">#F75E5E</color>
 </resources>

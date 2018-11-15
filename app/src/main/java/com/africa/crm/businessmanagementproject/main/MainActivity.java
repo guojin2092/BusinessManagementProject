@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.africa.crm.businessmanagementproject.R;
 import com.africa.crm.businessmanagementproject.main.adapter.WorkStationListAdapter;
 import com.africa.crm.businessmanagementproject.main.bean.WorkStationInfo;
+import com.africa.crm.businessmanagementproject.station.CostumerManagementActivity;
 import com.africa.crm.businessmanagementproject.widget.GridItemDecoration;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import baselibrary.common.util.ListUtils;
+import baselibrary.common.util.ToastUtils;
 import baselibrary.library.base.progress.BaseActivityProgress;
 import butterknife.BindView;
 
@@ -34,8 +36,6 @@ public class MainActivity extends BaseActivityProgress {
     private WorkStationListAdapter mWorkStationListAdapter;
 
     /**
-     * 在activity中请求回调,显示登录界面
-     *
      * @param activity
      */
     public static void startActivity(Activity activity) {
@@ -60,30 +60,39 @@ public class MainActivity extends BaseActivityProgress {
     public void initData() {
         WorkStationInfo workStationInfo = new WorkStationInfo();
         workStationInfo.setWork_type("1");
+        workStationInfo.setWork_name(getString(R.string.enterprise_information_management));
         mWorkStationInfoList.add(workStationInfo);
         WorkStationInfo workStationInfo2 = new WorkStationInfo();
         workStationInfo2.setWork_type("2");
+        workStationInfo2.setWork_name(getString(R.string.enterprise_account_management));
         mWorkStationInfoList.add(workStationInfo2);
         WorkStationInfo workStationInfo3 = new WorkStationInfo();
         workStationInfo3.setWork_type("3");
+        workStationInfo3.setWork_name(getString(R.string.supplier_management));
         mWorkStationInfoList.add(workStationInfo3);
         WorkStationInfo workStationInfo4 = new WorkStationInfo();
         workStationInfo4.setWork_type("4");
+        workStationInfo4.setWork_name(getString(R.string.product_management));
         mWorkStationInfoList.add(workStationInfo4);
         WorkStationInfo workStationInfo5 = new WorkStationInfo();
         workStationInfo5.setWork_type("5");
+        workStationInfo5.setWork_name(getString(R.string.customer_management));
         mWorkStationInfoList.add(workStationInfo5);
         WorkStationInfo workStationInfo6 = new WorkStationInfo();
         workStationInfo6.setWork_type("6");
+        workStationInfo6.setWork_name(getString(R.string.contact_management));
         mWorkStationInfoList.add(workStationInfo6);
         WorkStationInfo workStationInfo7 = new WorkStationInfo();
         workStationInfo7.setWork_type("7");
+        workStationInfo7.setWork_name(getString(R.string.trading_order_management));
         mWorkStationInfoList.add(workStationInfo7);
         WorkStationInfo workStationInfo8 = new WorkStationInfo();
         workStationInfo8.setWork_type("8");
+        workStationInfo8.setWork_name(getString(R.string.quotation_management));
         mWorkStationInfoList.add(workStationInfo8);
         WorkStationInfo workStationInfo9 = new WorkStationInfo();
         workStationInfo9.setWork_type("9");
+        workStationInfo9.setWork_name(getString(R.string.sales_order_management));
         mWorkStationInfoList.add(workStationInfo9);
         setWorkStationDatas(mWorkStationInfoList);
     }
@@ -93,7 +102,7 @@ public class MainActivity extends BaseActivityProgress {
      *
      * @param workStationInfoList
      */
-    private void setWorkStationDatas(List<WorkStationInfo> workStationInfoList) {
+    private void setWorkStationDatas(final List<WorkStationInfo> workStationInfoList) {
         if (!ListUtils.isEmpty(workStationInfoList)) {
             mWorkStationListAdapter = new WorkStationListAdapter(R.layout.item_work_station_list, workStationInfoList);
             rv_work_station.setAdapter(mWorkStationListAdapter);
@@ -106,7 +115,10 @@ public class MainActivity extends BaseActivityProgress {
             mWorkStationListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-
+                    ToastUtils.show(MainActivity.this, workStationInfoList.get(position).getWork_name());
+                    if (workStationInfoList.get(position).getWork_type().equals("5")) {
+                        CostumerManagementActivity.startActivity(MainActivity.this);
+                    }
                 }
             });
         }
