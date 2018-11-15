@@ -1,6 +1,5 @@
 package com.africa.crm.businessmanagementproject.station;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -25,6 +24,8 @@ import baselibrary.common.util.ToastUtils;
 import baselibrary.library.base.progress.BaseActivityProgress;
 import butterknife.BindView;
 
+import static com.africa.crm.businessmanagementproject.station.CostumerDetailActivity.COSTUMER_INFO;
+
 /**
  * Project：BusinessManagementProject
  * Author:  guojin
@@ -47,14 +48,6 @@ public class CostumerManagementActivity extends BaseActivityProgress {
     private CostumerListAdapter mCostumerListAdapter;
     private List<CostumerInfoBean> mCostumerInfoBeanList = new ArrayList<>();
 
-    /**
-     * @param activity
-     */
-    public static void startActivity(Activity activity) {
-        Intent intent = new Intent(activity, CostumerManagementActivity.class);
-        activity.startActivity(intent);
-        activity.overridePendingTransition(R.anim.right_push_in, R.anim.hold);
-    }
 
     @Override
     public void setView(Bundle savedInstanceState) {
@@ -127,7 +120,9 @@ public class CostumerManagementActivity extends BaseActivityProgress {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                     ToastUtils.show(CostumerManagementActivity.this, mCostumerInfoBeanList.get(position).getCompany());
-                    CostumerDetailActivity.startActivity(CostumerManagementActivity.this, mCostumerInfoBeanList.get(position));
+                    Intent intent = new Intent(CostumerManagementActivity.this,CostumerDetailActivity.class);
+                    intent.putExtra(COSTUMER_INFO, mCostumerInfoBeanList.get(position));
+                    startActivity(intent);
                 }
             });
         }

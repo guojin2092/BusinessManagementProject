@@ -1,12 +1,14 @@
 package com.africa.crm.businessmanagementproject.main;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagementproject.R;
@@ -32,16 +34,24 @@ public class MainActivity extends BaseActivityProgress {
     @BindView(R.id.rv_work_station)
     RecyclerView rv_work_station;
 
+    @BindView(R.id.ll_message)
+    LinearLayout ll_message;
+    @BindView(R.id.iv_cancel)
+    ImageView iv_cancel;
+
     private List<WorkStationInfo> mWorkStationInfoList = new ArrayList<>();
     private WorkStationListAdapter mWorkStationListAdapter;
 
-    /**
-     * @param activity
-     */
-    public static void startActivity(Activity activity) {
-        Intent intent = new Intent(activity, MainActivity.class);
-        activity.startActivity(intent);
-        activity.overridePendingTransition(R.anim.right_push_in, R.anim.hold);
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransition(R.anim.anim_right_in, R.anim.anim_left_out);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.anim_left_in, R.anim.anim_right_out);
     }
 
     @Override
@@ -54,6 +64,19 @@ public class MainActivity extends BaseActivityProgress {
         super.initView();
         titlebar_back.setVisibility(View.GONE);
         titlebar_name.setText(getString(R.string.work_station));
+
+        iv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TranslateAnimation hideAnim = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                        Animation.RELATIVE_TO_SELF, 1.0f,
+                        Animation.RELATIVE_TO_SELF, 0.0f,
+                        Animation.RELATIVE_TO_SELF, 0.0f);
+                hideAnim.setDuration(300);
+                ll_message.startAnimation(hideAnim);
+                ll_message.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override
@@ -117,7 +140,7 @@ public class MainActivity extends BaseActivityProgress {
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                     ToastUtils.show(MainActivity.this, workStationInfoList.get(position).getWork_name());
                     if (workStationInfoList.get(position).getWork_type().equals("5")) {
-                        CostumerManagementActivity.startActivity(MainActivity.this);
+                        startActivity(new Intent(MainActivity.this, CostumerManagementActivity.class));
                     }
                 }
             });

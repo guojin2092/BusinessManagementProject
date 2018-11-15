@@ -13,7 +13,6 @@
 
         <activity
             android:name=".main.LoginActivity"
-            android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

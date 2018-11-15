@@ -53,7 +53,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        PushAgent.getInstance(context).onAppStart();
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);限制横屏显示
         initSystemBarTint();
         setView(savedInstanceState);
         isAlive = true;
@@ -561,6 +561,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
     @Override
     public void finish() {
         super.finish();
+        overridePendingTransition(R.anim.anim_left_in, R.anim.anim_right_out);
         runUiThread(new Runnable() {
             @Override
             public void run() {
@@ -574,6 +575,12 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
                 }
             }
         });
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransition(R.anim.anim_right_in, R.anim.anim_left_out);
     }
 
     @Override

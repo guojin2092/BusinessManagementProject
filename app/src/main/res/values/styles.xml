@@ -7,7 +7,6 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:listDivider">@drawable/line_horizontal</item>
-        <item name="android:windowAnimationStyle">@style/AppTheme.Animation.Activity</item>
         <item name="android:windowEnableSplitTouch">false</item>
         <item name="android:splitMotionEvents">false</item>
         <item name="toolbarStyle">@style/AppTheme.ToolBar</item>

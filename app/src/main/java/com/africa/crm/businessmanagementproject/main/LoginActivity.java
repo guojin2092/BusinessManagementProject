@@ -73,7 +73,7 @@ public class LoginActivity extends BaseActivityProgress {
         super.onClick(v);
         switch (v.getId()) {
             case R.id.tv_login:
-                MainActivity.startActivity(this);
+                startActivity(new Intent(this, MainActivity.class));
                 break;
         }
     }

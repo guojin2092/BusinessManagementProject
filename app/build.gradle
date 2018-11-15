@@ -47,4 +47,8 @@ dependencies {
     /*万能适配器*/
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.40'
     /*万能适配器*/
+
+    /*ExpandableRecyclerView*/
+    implementation 'com.drawthink:expandable-recyclerview:0.0.3'
+    /*ExpandableRecyclerView*/
 }

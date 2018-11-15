@@ -56,8 +56,6 @@
                     android:id="@+id/rv_costumer"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:divider="@color/F2F2F2"
-                    android:dividerHeight="1dp"
                     android:overScrollMode="never" />
 
             </LinearLayout>
