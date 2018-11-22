@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 
 import com.africa.crm.businessmanagementproject.R;
-import com.africa.crm.businessmanagementproject.network.OaPortUrl;
+import com.africa.crm.businessmanagementproject.widget.OaPortUrl;
 import com.google.gson.Gson;
 import com.simplesoft.basesimplelibrary.bean.BaseSimpleBean;
 

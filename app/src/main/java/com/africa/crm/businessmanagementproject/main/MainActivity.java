@@ -12,8 +12,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagementproject.R;
+import com.africa.crm.businessmanagementproject.bean.GoodAlertBean;
 import com.africa.crm.businessmanagementproject.main.adapter.WorkStationListAdapter;
 import com.africa.crm.businessmanagementproject.main.bean.WorkStationInfo;
+import com.africa.crm.businessmanagementproject.network.error.ComConsumer;
+import com.africa.crm.businessmanagementproject.network.util.RxUtils;
 import com.africa.crm.businessmanagementproject.station.CostumerManagementActivity;
 import com.africa.crm.businessmanagementproject.widget.GridItemDecoration;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -25,6 +28,7 @@ import baselibrary.common.util.ListUtils;
 import baselibrary.common.util.ToastUtils;
 import baselibrary.library.base.progress.BaseActivityProgress;
 import butterknife.BindView;
+import io.reactivex.functions.Consumer;
 
 public class MainActivity extends BaseActivityProgress {
     @BindView(R.id.titlebar_back)
@@ -41,18 +45,6 @@ public class MainActivity extends BaseActivityProgress {
 
     private List<WorkStationInfo> mWorkStationInfoList = new ArrayList<>();
     private WorkStationListAdapter mWorkStationListAdapter;
-
-    @Override
-    public void startActivity(Intent intent) {
-        super.startActivity(intent);
-        overridePendingTransition(R.anim.anim_right_in, R.anim.anim_left_out);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(R.anim.anim_left_in, R.anim.anim_right_out);
-    }
 
     @Override
     public void setView(Bundle savedInstanceState) {
@@ -143,6 +135,14 @@ public class MainActivity extends BaseActivityProgress {
                         startActivity(new Intent(MainActivity.this, CostumerManagementActivity.class));
                         overridePendingTransition(R.anim.anim_right_in, R.anim.anim_left_out);
                     }
+                    addDisposable(mDataManager.getGoodsAlert("")
+                            .compose(RxUtils.<GoodAlertBean>ioToMain())
+                            .subscribe(new Consumer<GoodAlertBean>() {
+                                @Override
+                                public void accept(GoodAlertBean goodAlertBean) throws Exception {
+                                    ToastUtils.show(MainActivity.this, goodAlertBean.getCount());
+                                }
+                            }, new ComConsumer(MainActivity.this)));
                 }
             });
         }

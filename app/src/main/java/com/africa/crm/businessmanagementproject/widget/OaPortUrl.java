@@ -1,4 +1,4 @@
-package com.africa.crm.businessmanagementproject.network;
+package com.africa.crm.businessmanagementproject.widget;
 
 /**
  * Project：resident_project

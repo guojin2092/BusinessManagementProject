@@ -3,11 +3,9 @@ package baselibrary.library.base;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
@@ -21,6 +19,7 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.africa.crm.businessmanagementproject.R;
+import com.africa.crm.businessmanagementproject.mvp.activity.BaseRxActivity;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import baselibrary.library.http.MyHttpRequestManager;
@@ -35,7 +34,7 @@ import butterknife.ButterKnife;
  * @author guoj
  */
 
-public abstract class BaseActivity extends AppCompatActivity implements OnClickListener {
+public abstract class BaseActivity extends BaseRxActivity implements OnClickListener {
     private static final String TAG = "BaseActivity";
     private boolean isAlive = false;
     protected BaseActivity context = null;
