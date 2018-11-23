@@ -1,6 +1,7 @@
 package com.africa.crm.businessmanagementproject.network;
 
 import com.africa.crm.businessmanagementproject.bean.GoodAlertBean;
+import com.africa.crm.businessmanagementproject.main.bean.LoginInfoBean;
 
 import io.reactivex.Observable;
 
@@ -26,7 +27,7 @@ public class DataManager implements HttpHelper {
     }
 
     @Override
-    public Observable<GoodAlertBean> getGoodsAlert(String gId) {
-        return mHttpHelper.getGoodsAlert(gId);
+    public Observable<LoginInfoBean> getLoginInfo(String userName, String passWord) {
+        return mHttpHelper.getLoginInfo(userName, passWord);
     }
 }

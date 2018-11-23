@@ -135,14 +135,6 @@ public class MainActivity extends BaseActivityProgress {
                         startActivity(new Intent(MainActivity.this, CostumerManagementActivity.class));
                         overridePendingTransition(R.anim.anim_right_in, R.anim.anim_left_out);
                     }
-                    addDisposable(mDataManager.getGoodsAlert("")
-                            .compose(RxUtils.<GoodAlertBean>ioToMain())
-                            .subscribe(new Consumer<GoodAlertBean>() {
-                                @Override
-                                public void accept(GoodAlertBean goodAlertBean) throws Exception {
-                                    ToastUtils.show(MainActivity.this, goodAlertBean.getCount());
-                                }
-                            }, new ComConsumer(MainActivity.this)));
                 }
             });
         }

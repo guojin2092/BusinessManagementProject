@@ -1,7 +1,5 @@
 package com.africa.crm.businessmanagementproject.network.api;
 
-import com.africa.crm.businessmanagementproject.BuildConfig;
-
 /**
  * Project：BusinessManagementProject
  * Author:  guojin
@@ -12,6 +10,5 @@ import com.africa.crm.businessmanagementproject.BuildConfig;
  * Why & What is modified:
  */
 public class ApiConfig {
-    public static final String BASE_URL = BuildConfig.URL_HOST + "backend/web/";
-
+    public static final String BASE_URL = "http://c.sushimt.com/SYCRMPC/api/";
 }

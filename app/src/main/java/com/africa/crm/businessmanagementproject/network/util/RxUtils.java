@@ -113,13 +113,13 @@ public class RxUtils {
         return Observable.create(new ObservableOnSubscribe<R>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<R> e) throws Exception {
-                if (b.getStatus() == BaseEntity.SUCCESS && b.getData() != null) {
+                if (b.isSuccess() == true && b.getData() != null) {
                     e.onNext(b.getData());
                     e.onComplete();
-                } else if (b.getStatus() == BaseEntity.SUCCESS && b.getData() == null) {
+                } else if (b.isSuccess() == true && b.getData() == null) {
                     e.onError(new ComException(ComException.NO_DATA, "加载成功，暂时没有数据"));
                 } else {
-                    e.onError(new ComException(b.getStatus(), b.getMessage()));
+                    e.onError(new ComException(b.getStatus(), b.getReturnMsg()));
                 }
             }
         });
@@ -153,14 +153,14 @@ public class RxUtils {
         return Observable.create(new ObservableOnSubscribe<List<T>>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<List<T>> e) throws Exception {
-                if (b.getStatus() == BaseEntity.SUCCESS && b.getData() != null) {
+                if (b.isSuccess() == true && b.getData() != null) {
                     e.onNext(b.getData());
                     e.onComplete();
-                } else if (b.getStatus() == BaseEntity.SUCCESS && b.getData() == null) {
+                } else if (b.isSuccess() == true && b.getData() == null) {
                     e.onNext(new ArrayList<T>());
                     e.onComplete();
                 } else {
-                    e.onError(new ComException(b.getStatus(), b.getMessage()));
+                    e.onError(new ComException(b.getStatus(), b.getReturnMsg()));
                 }
             }
         });

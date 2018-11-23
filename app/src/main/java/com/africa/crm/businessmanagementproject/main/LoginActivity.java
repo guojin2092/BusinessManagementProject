@@ -4,13 +4,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagementproject.R;
+import com.africa.crm.businessmanagementproject.main.bean.LoginInfoBean;
+import com.africa.crm.businessmanagementproject.network.error.ComConsumer;
+import com.africa.crm.businessmanagementproject.network.util.RxUtils;
 
 import baselibrary.library.base.progress.BaseActivityProgress;
 import baselibrary.library.base.progress.BaseFragmentProgress;
 import butterknife.BindView;
+import io.reactivex.functions.Consumer;
 
 /**
  * Project：BusinessManagementProject
@@ -24,6 +29,10 @@ import butterknife.BindView;
 public class LoginActivity extends BaseActivityProgress {
     @BindView(R.id.tv_login)
     TextView tv_login;
+    @BindView(R.id.et_username)
+    EditText et_username;
+    @BindView(R.id.et_password)
+    EditText et_password;
 
     //登陆成功
     public final static int LOGIN_SUCCESS = 1002;
@@ -73,8 +82,17 @@ public class LoginActivity extends BaseActivityProgress {
         super.onClick(v);
         switch (v.getId()) {
             case R.id.tv_login:
-                startActivity(new Intent(this, MainActivity.class));
-                overridePendingTransition(R.anim.anim_right_in, R.anim.anim_left_out);
+                addDisposable(mDataManager.getLoginInfo(et_username.getText().toString().trim(), et_password.getText().toString().trim())
+                        .compose(RxUtils.<LoginInfoBean>ioToMain())
+                        .subscribe(new Consumer<LoginInfoBean>() {
+                            @Override
+                            public void accept(LoginInfoBean loginInfoBean) throws Exception {
+                                if (loginInfoBean != null) {
+                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                    overridePendingTransition(R.anim.anim_right_in, R.anim.anim_left_out);
+                                }
+                            }
+                        }, new ComConsumer(LoginActivity.this)));
                 break;
         }
     }

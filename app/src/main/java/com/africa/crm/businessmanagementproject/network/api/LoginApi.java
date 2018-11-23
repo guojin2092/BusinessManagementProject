@@ -1,6 +1,7 @@
 package com.africa.crm.businessmanagementproject.network.api;
 
 import com.africa.crm.businessmanagementproject.bean.GoodAlertBean;
+import com.africa.crm.businessmanagementproject.main.bean.LoginInfoBean;
 import com.africa.crm.businessmanagementproject.network.base.BaseEntity;
 
 import io.reactivex.Observable;
@@ -20,6 +21,6 @@ import retrofit2.http.POST;
 public interface LoginApi {
 
     @FormUrlEncoded
-    @POST("index.php?r=client/get-goods-alert")
-    Observable<BaseEntity<GoodAlertBean>> getGoodsAlert(@Field("ak") String ak, @Field("sn") String sn, @Field("gid") String gid);
+    @POST("login/doLogin")
+    Observable<BaseEntity<LoginInfoBean>> getLoginInfo(@Field("userName") String userName, @Field("passWord") String passWord);
 }

@@ -1,6 +1,6 @@
 package com.africa.crm.businessmanagementproject.network;
 
-import com.africa.crm.businessmanagementproject.bean.GoodAlertBean;
+import com.africa.crm.businessmanagementproject.main.bean.LoginInfoBean;
 
 import io.reactivex.Observable;
 
@@ -15,6 +15,6 @@ import io.reactivex.Observable;
  */
 public interface HttpHelper {
 
-    Observable<GoodAlertBean> getGoodsAlert(String gId);
+    Observable<LoginInfoBean> getLoginInfo(String userName, String passWord);
 
 }

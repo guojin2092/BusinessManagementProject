@@ -10,11 +10,19 @@ package com.africa.crm.businessmanagementproject.network.base;
  * Why & What is modified:
  */
 public class BaseEntity<R> {
-    public static final int SUCCESS=200;
+    private boolean success;
     private int status;
     private int code;
-    private String message;
+    private String returnMsg;
     private R data;
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
+    }
 
     public int getStatus() {
         return status;
@@ -32,12 +40,12 @@ public class BaseEntity<R> {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
+    public String getReturnMsg() {
+        return returnMsg;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setReturnMsg(String returnMsg) {
+        this.returnMsg = returnMsg;
     }
 
     public R getData() {
