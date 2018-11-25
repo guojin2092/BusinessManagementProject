@@ -59,6 +59,8 @@ public class RetrofitHelper {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .cache(cache)
                 .retryOnConnectionFailure(true)
+                .addInterceptor(new HeaderInterceptor())
+                .addInterceptor(new RequestEncryptInterceptor())
                 .connectTimeout(15, TimeUnit.SECONDS)
                 .writeTimeout(15, TimeUnit.SECONDS)
                 .readTimeout(15, TimeUnit.SECONDS);
