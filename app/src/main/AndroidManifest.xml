@@ -29,6 +29,10 @@
         <activity
             android:name=".station.CostumerDetailActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".station.RoleManagementActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+
     </application>
 
 </manifest>

@@ -115,7 +115,7 @@ public class CostumerManagementActivity extends BaseActivityProgress {
      */
     private void setCostomerData(final List<CostumerInfoBean> mCostumerInfoBeanList) {
         if (!ListUtils.isEmpty(mCostumerInfoBeanList)) {
-            mCostumerListAdapter = new CostumerListAdapter(R.layout.item_customer_list, mCostumerInfoBeanList);
+            mCostumerListAdapter = new CostumerListAdapter(mCostumerInfoBeanList);
             rv_costumer.setAdapter(mCostumerListAdapter);
             LinearLayoutManager layoutManager = new LinearLayoutManager(this);
             rv_costumer.setLayoutManager(layoutManager);

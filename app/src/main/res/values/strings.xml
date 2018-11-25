@@ -18,6 +18,18 @@
     <string name="trading_order_management">Trading order management</string>
     <string name="quotation_management">Quotation management</string>
     <string name="sales_order_management">Sales order management</string>
-    
+    <string name="system_management">System management</string>
+    <string name="role_management">Role management</string>
+    <string name="user_management">User management</string>
+
     <string name="all_customers">All customers</string>
+    <string name="search">Search</string>
+    <string name="see_detail">See details</string>
+    <string name="authority_allocation">Authority allocation</string>
+    <string name="exit_app">Press again to exit the program</string>
+    <string name="role_detail">Role details</string>
+    <string name="add">Add</string>
+    <string name="delete">Delete</string>
+    <string name="check">Check</string>
+    <string name="save">Save</string>
 </resources>

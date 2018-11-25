@@ -3,38 +3,25 @@ package baselibrary.library.base;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.africa.crm.businessmanagementproject.R;
+import com.africa.crm.businessmanagementproject.mvp.fragment.BaseRxFragment;
 
 import baselibrary.library.http.MyHttpRequestManager;
 import baselibrary.library.myview.MyLog;
 import baselibrary.library.special.material.MyMaterialDialog;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Fragment界面需要继承的基类<br />
  * 这个类包含网络请求方法
  */
-public abstract class BaseFragment extends Fragment implements OnClickListener {
-
-    /**
-     * 在 on Attach 执行完后会立刻调用此方法，通常被用于读取保存的状态值，获取或者初始化一些数据，
-     * 但是该方法不执行，窗口是不会显示的，因此如果获取的数据需要访问网络，最好新开线程。
-     *
-     * @param savedInstanceState
-     */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ButterKnife.bind(getActivity());
-/*        if (MyImageLoader.imageLoader == null)
-            MyImageLoader.imageLoader = ImageLoader.getInstance();*/
-  /*      initCreate(savedInstanceState);*/
-    }
+public abstract class BaseFragment extends BaseRxFragment implements OnClickListener {
+    private Unbinder binder;
 
     /**
      * 在 Activity.onCreate 方法调用后会立刻调用此方法，表示窗口已经初始化完毕，此时可以调用控件了
@@ -49,6 +36,7 @@ public abstract class BaseFragment extends Fragment implements OnClickListener {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        binder = ButterKnife.bind(this, view);
         initView();
         initData();
     }
@@ -109,13 +97,13 @@ public abstract class BaseFragment extends Fragment implements OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-      /*  MobclickAgent.onPageStart("MainScreen"); // 统计页面*/
+        /*  MobclickAgent.onPageStart("MainScreen"); // 统计页面*/
     }
 
     @Override
     public void onPause() {
         super.onPause();
-     /*   MobclickAgent.onPageEnd("MainScreen");*/
+        /*   MobclickAgent.onPageEnd("MainScreen");*/
     }
 
     private MaterialDialog progressDialog;
@@ -197,6 +185,7 @@ public abstract class BaseFragment extends Fragment implements OnClickListener {
     public void onDestroy() {
         super.onDestroy();
         MyLog.e(this, "释放");
+        binder.unbind();
         MyHttpRequestManager.getInstance(getActivity()).cancelRequests(getActivity(), true);
         release();
     }

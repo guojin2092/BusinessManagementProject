@@ -20,19 +20,17 @@ import java.util.List;
  * Modification  History:
  * Why & What is modified:
  */
-public class CostumerListAdapter extends BaseQuickAdapter<CostumerInfoBean, BaseViewHolder> {
-
-    public CostumerListAdapter(@Nullable List<CostumerInfoBean> data) {
-        super(R.layout.item_customer_list, data);
+public class RoleListAdapter extends BaseQuickAdapter<CostumerInfoBean, BaseViewHolder> {
+    public RoleListAdapter(@Nullable List<CostumerInfoBean> data) {
+        super(R.layout.item_role_list, data);
     }
 
     @Override
     protected void convert(BaseViewHolder helper, CostumerInfoBean item) {
         ImageView iv_icon = helper.getView(R.id.iv_icon);
         TextView tv_company = helper.getView(R.id.tv_company);
-        TextView tv_type = helper.getView(R.id.tv_type);
-        TextView tv_location = helper.getView(R.id.tv_location);
-
+        helper.addOnClickListener(R.id.tv_see_detail);
+        helper.addOnClickListener(R.id.tv_auth_allocation);
         int icon = Integer.valueOf(item.getIcon());
         int iconSrc = 0;
         switch (icon) {
@@ -48,7 +46,5 @@ public class CostumerListAdapter extends BaseQuickAdapter<CostumerInfoBean, Base
         }
         iv_icon.setImageResource(iconSrc);
         tv_company.setText(item.getCompany());
-        tv_type.setText(item.getType());
-        tv_location.setText(item.getLocation());
     }
 }

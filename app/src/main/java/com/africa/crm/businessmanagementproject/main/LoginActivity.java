@@ -3,19 +3,17 @@ package com.africa.crm.businessmanagementproject.main;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.africa.crm.businessmanagementproject.R;
-import com.africa.crm.businessmanagementproject.main.bean.LoginInfoBean;
-import com.africa.crm.businessmanagementproject.network.error.ComConsumer;
-import com.africa.crm.businessmanagementproject.network.util.RxUtils;
 
 import baselibrary.library.base.progress.BaseActivityProgress;
 import baselibrary.library.base.progress.BaseFragmentProgress;
 import butterknife.BindView;
-import io.reactivex.functions.Consumer;
 
 /**
  * Project：BusinessManagementProject
@@ -33,6 +31,8 @@ public class LoginActivity extends BaseActivityProgress {
     EditText et_username;
     @BindView(R.id.et_password)
     EditText et_password;
+
+    private long firstTime = 0;
 
     //登陆成功
     public final static int LOGIN_SUCCESS = 1002;
@@ -96,5 +96,20 @@ public class LoginActivity extends BaseActivityProgress {
                 MainActivity.startActivity(this);
                 break;
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            long secondTime = System.currentTimeMillis();
+            if (secondTime - firstTime > 2000) {
+                Toast.makeText(this, R.string.exit_app, Toast.LENGTH_SHORT).show();
+                firstTime = secondTime;//更新firstTime  
+                return true;
+            } else {
+                finish();
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

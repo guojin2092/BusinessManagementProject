@@ -17,7 +17,20 @@
     <string name="trading_order_management">Gestion des ordres de trading</string>
     <string name="quotation_management">Gestion des devis</string>
     <string name="sales_order_management">Gestion des commandes</string>
+    <string name="system_management">Gestion du système</string>
+    <string name="role_management">Gestion des rôles</string>
+    <string name="user_management">Gestion des utilisateurs</string>
 
     <string name="all_customers">Tous les clients</string>
+    <string name="search">chercher</string>
+    <string name="see_detail">Voir les détails</string>
+    <string name="authority_allocation">Attribution d'autorité</string>
+    <string name="exit_app">Appuyez à nouveau pour quitter le programme</string>
+    <string name="role_detail">Détails du rôle</string>
+    <string name="add">Ajouter</string>
+    <string name="delete">Supprimer</string>
+    <string name="check">Chèque</string>
+    <string name="save">Enregistrer</string>
+
 
 </resources>

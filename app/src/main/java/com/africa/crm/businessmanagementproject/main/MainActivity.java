@@ -16,6 +16,7 @@ import com.africa.crm.businessmanagementproject.R;
 import com.africa.crm.businessmanagementproject.main.adapter.WorkStationListAdapter;
 import com.africa.crm.businessmanagementproject.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagementproject.station.CostumerManagementActivity;
+import com.africa.crm.businessmanagementproject.station.RoleManagementActivity;
 import com.africa.crm.businessmanagementproject.widget.GridItemDecoration;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
@@ -114,6 +115,10 @@ public class MainActivity extends BaseActivityProgress {
         workStationInfo9.setWork_type("9");
         workStationInfo9.setWork_name(getString(R.string.sales_order_management));
         mWorkStationInfoList.add(workStationInfo9);
+        WorkStationInfo workStationInfo10 = new WorkStationInfo();
+        workStationInfo10.setWork_type("10");
+        workStationInfo10.setWork_name(getString(R.string.system_management));
+        mWorkStationInfoList.add(workStationInfo10);
         setWorkStationDatas(mWorkStationInfoList);
     }
 
@@ -136,8 +141,17 @@ public class MainActivity extends BaseActivityProgress {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                     ToastUtils.show(MainActivity.this, workStationInfoList.get(position).getWork_name());
-                    if (workStationInfoList.get(position).getWork_type().equals("5")) {
-                        CostumerManagementActivity.startActivity(MainActivity.this);
+                    String type = workStationInfoList.get(position).getWork_type();
+                    switch (type) {
+                        case "5":
+                            CostumerManagementActivity.startActivity(MainActivity.this);
+                            break;
+                        case "10":
+                            RoleManagementActivity.startActivity(MainActivity.this);
+                            break;
+                        default:
+                            ToastUtils.show(MainActivity.this, "暂无该分类");
+                            break;
                     }
                 }
             });
