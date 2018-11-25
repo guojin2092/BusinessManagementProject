@@ -82,7 +82,7 @@ public class LoginActivity extends BaseActivityProgress {
         super.onClick(v);
         switch (v.getId()) {
             case R.id.tv_login:
-                addDisposable(mDataManager.getLoginInfo(et_username.getText().toString().trim(), et_password.getText().toString().trim())
+               /* addDisposable(mDataManager.getLoginInfo(et_username.getText().toString().trim(), et_password.getText().toString().trim())
                         .compose(RxUtils.<LoginInfoBean>ioToMain())
                         .subscribe(new Consumer<LoginInfoBean>() {
                             @Override
@@ -92,7 +92,8 @@ public class LoginActivity extends BaseActivityProgress {
                                     overridePendingTransition(R.anim.anim_right_in, R.anim.anim_left_out);
                                 }
                             }
-                        }, new ComConsumer(LoginActivity.this)));
+                        }, new ComConsumer(LoginActivity.this)));*/
+                MainActivity.startActivity(this);
                 break;
         }
     }

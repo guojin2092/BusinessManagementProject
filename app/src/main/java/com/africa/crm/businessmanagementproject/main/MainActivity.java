@@ -1,5 +1,6 @@
 package com.africa.crm.businessmanagementproject.main;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,11 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagementproject.R;
-import com.africa.crm.businessmanagementproject.bean.GoodAlertBean;
 import com.africa.crm.businessmanagementproject.main.adapter.WorkStationListAdapter;
 import com.africa.crm.businessmanagementproject.main.bean.WorkStationInfo;
-import com.africa.crm.businessmanagementproject.network.error.ComConsumer;
-import com.africa.crm.businessmanagementproject.network.util.RxUtils;
 import com.africa.crm.businessmanagementproject.station.CostumerManagementActivity;
 import com.africa.crm.businessmanagementproject.widget.GridItemDecoration;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -28,7 +26,6 @@ import baselibrary.common.util.ListUtils;
 import baselibrary.common.util.ToastUtils;
 import baselibrary.library.base.progress.BaseActivityProgress;
 import butterknife.BindView;
-import io.reactivex.functions.Consumer;
 
 public class MainActivity extends BaseActivityProgress {
     @BindView(R.id.titlebar_back)
@@ -45,6 +42,14 @@ public class MainActivity extends BaseActivityProgress {
 
     private List<WorkStationInfo> mWorkStationInfoList = new ArrayList<>();
     private WorkStationListAdapter mWorkStationListAdapter;
+
+    /**
+     * @param activity
+     */
+    public static void startActivity(Activity activity) {
+        Intent intent = new Intent(activity, MainActivity.class);
+        activity.startActivity(intent);
+    }
 
     @Override
     public void setView(Bundle savedInstanceState) {
@@ -132,8 +137,7 @@ public class MainActivity extends BaseActivityProgress {
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                     ToastUtils.show(MainActivity.this, workStationInfoList.get(position).getWork_name());
                     if (workStationInfoList.get(position).getWork_type().equals("5")) {
-                        startActivity(new Intent(MainActivity.this, CostumerManagementActivity.class));
-                        overridePendingTransition(R.anim.anim_right_in, R.anim.anim_left_out);
+                        CostumerManagementActivity.startActivity(MainActivity.this);
                     }
                 }
             });

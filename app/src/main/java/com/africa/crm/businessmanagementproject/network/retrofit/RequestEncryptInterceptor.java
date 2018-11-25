@@ -1,10 +1,8 @@
 package com.africa.crm.businessmanagementproject.network.retrofit;
 
-import android.util.Base64;
-import android.util.Log;
-
 import com.africa.crm.businessmanagementproject.network.encryption.AES;
 import com.africa.crm.businessmanagementproject.network.encryption.RSACoder;
+import com.africa.crm.businessmanagementproject.widget.LogUtil;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -46,11 +44,16 @@ public class RequestEncryptInterceptor implements Interceptor {
         try {
             //1.生成AES密钥
             String AesKey = AES.generateKeyString();
+            LogUtil.w("guoj", "AESKEY==" + AesKey);
             //2.使用RSA公钥加密刚刚生成的AES密钥
             aesKey = AES.byte2hex(RSACoder.encryptByPublicKey(AesKey.getBytes(), publicKey));
+            LogUtil.w("guoj", "RSA加密---->" + RSACoder.encryptByPublicKey(AesKey.getBytes(), publicKey));
+            LogUtil.w("guoj", "RSA+AES---->" + aesKey);
             //3.使用第1步生成的AES密钥，通过AES加密需要提交给服务端的数据；
             encodedData = AES.encrypt(paramsStr, AesKey);
+            LogUtil.w("guoj", "AES加密---->" + encodedData);
             result = aesKey + "=" + encodedData;
+            LogUtil.w("guoj", "KEY=VALUE---->" + result);
         } catch (Exception e) {
             e.printStackTrace();
         }
