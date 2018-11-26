@@ -16,6 +16,7 @@ import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.main.adapter.WorkStationListAdapter;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.station.CostumerManagementActivity;
+import com.africa.crm.businessmanagement.station.EnterpriseManagementActivity;
 import com.africa.crm.businessmanagement.station.RoleManagementActivity;
 import com.africa.crm.businessmanagement.widget.GridItemDecoration;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -143,6 +144,9 @@ public class MainActivity extends BaseActivityProgress {
                     ToastUtils.show(MainActivity.this, workStationInfoList.get(position).getWork_name());
                     String type = workStationInfoList.get(position).getWork_type();
                     switch (type) {
+                        case "1":
+                            EnterpriseManagementActivity.startActivity(MainActivity.this);
+                            break;
                         case "5":
                             CostumerManagementActivity.startActivity(MainActivity.this);
                             break;

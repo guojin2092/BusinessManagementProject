@@ -38,7 +38,10 @@
             android:name="com.africa.crm.businessmanagement.station.RoleManagementActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-
+        <activity
+            android:name="com.africa.crm.businessmanagement.station.EnterpriseManagementActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
     </application>
 
 </manifest>
