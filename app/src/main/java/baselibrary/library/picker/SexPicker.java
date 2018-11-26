@@ -12,7 +12,7 @@ import android.view.WindowManager;
 import android.widget.PopupWindow;
 
 
-import com.africa.crm.businessmanagementproject.R;
+import com.africa.crm.businessmanagement.R;
 
 import java.util.ArrayList;
 import java.util.List;

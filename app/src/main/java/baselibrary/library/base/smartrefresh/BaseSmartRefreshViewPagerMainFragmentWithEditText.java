@@ -4,8 +4,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
-import com.africa.crm.businessmanagementproject.R;
-import com.africa.crm.businessmanagementproject.widget.ClearEditText;
+import com.africa.crm.businessmanagement.R;
+import com.africa.crm.businessmanagement.widget.ClearEditText;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;

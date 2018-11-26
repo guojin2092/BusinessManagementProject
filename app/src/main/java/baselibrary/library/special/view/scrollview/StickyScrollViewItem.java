@@ -18,7 +18,7 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 
 
-import com.africa.crm.businessmanagementproject.R;
+import com.africa.crm.businessmanagement.R;
 
 import java.util.ArrayList;
 

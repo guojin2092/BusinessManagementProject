@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.africa.crm.businessmanagementproject.R;
+import com.africa.crm.businessmanagement.R;
 
 import baselibrary.library.base.bean.UpdateBean;
 import baselibrary.library.base.progress.BaseActivityProgress;

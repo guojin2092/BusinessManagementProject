@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-import com.africa.crm.businessmanagementproject.R;
+import com.africa.crm.businessmanagement.R;
 
 import java.util.ArrayList;
 import java.util.List;

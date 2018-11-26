@@ -7,8 +7,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.africa.crm.businessmanagementproject.R;
-import com.africa.crm.businessmanagementproject.main.LoginActivity;
+import com.africa.crm.businessmanagement.R;
+import com.africa.crm.businessmanagement.main.LoginActivity;
 import com.simplesoft.basesimplelibrary.bean.BaseSimpleBean;
 
 import baselibrary.library.base.BaseActivity;

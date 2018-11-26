@@ -12,7 +12,7 @@ import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
 
 
-import com.africa.crm.businessmanagementproject.R;
+import com.africa.crm.businessmanagement.R;
 
 import java.util.LinkedList;
 import java.util.List;

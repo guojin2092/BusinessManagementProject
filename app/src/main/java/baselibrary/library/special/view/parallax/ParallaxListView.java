@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 
-import com.africa.crm.businessmanagementproject.R;
+import com.africa.crm.businessmanagement.R;
 
 import java.util.ArrayList;
 

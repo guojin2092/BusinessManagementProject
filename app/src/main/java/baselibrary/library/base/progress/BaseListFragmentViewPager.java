@@ -3,7 +3,7 @@ package baselibrary.library.base.progress;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.africa.crm.businessmanagementproject.R;
+import com.africa.crm.businessmanagement.R;
 import com.simplesoft.basesimplelibrary.bean.BaseSimpleBean;
 
 import baselibrary.library.http.MyHttpRequestFinishInterface;

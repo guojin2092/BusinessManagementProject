@@ -3,7 +3,7 @@ package baselibrary.library.special.material;
 import android.content.Context;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.africa.crm.businessmanagementproject.R;
+import com.africa.crm.businessmanagement.R;
 
 /**
  * Created by daxiongzaici on 15/7/9.

@@ -25,7 +25,7 @@
         android:focusable="true"
         android:focusableInTouchMode="true">
 
-        <com.africa.crm.businessmanagementproject.widget.ClearEditText
+        <com.africa.crm.businessmanagement.widget.ClearEditText
             android:id="@+id/et_search"
             android:layout_width="match_parent"
             android:layout_height="34dp"

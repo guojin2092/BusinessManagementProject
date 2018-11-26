@@ -32,7 +32,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 
-import com.africa.crm.businessmanagementproject.R;
+import com.africa.crm.businessmanagement.R;
 
 import java.util.List;
 

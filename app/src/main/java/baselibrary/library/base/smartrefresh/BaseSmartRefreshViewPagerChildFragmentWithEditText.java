@@ -5,8 +5,8 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.africa.crm.businessmanagementproject.R;
-import com.africa.crm.businessmanagementproject.widget.ClearEditText;
+import com.africa.crm.businessmanagement.R;
+import com.africa.crm.businessmanagement.widget.ClearEditText;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.simplesoft.basesimplelibrary.http.MyNetworkUtil;
 import com.simplesoft.basesimplelibrary.utils.ToastUtils;

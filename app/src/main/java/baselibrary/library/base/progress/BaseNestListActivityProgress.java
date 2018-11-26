@@ -4,7 +4,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 
-import com.africa.crm.businessmanagementproject.R;
+import com.africa.crm.businessmanagement.R;
 import com.simplesoft.basesimplelibrary.bean.BaseSimpleBean;
 
 import baselibrary.library.http.MyHttpRequestFinishInterface;

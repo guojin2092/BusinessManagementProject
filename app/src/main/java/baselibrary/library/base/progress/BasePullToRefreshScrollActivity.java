@@ -6,7 +6,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ScrollView;
 
-import com.africa.crm.businessmanagementproject.R;
+import com.africa.crm.businessmanagement.R;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.simplesoft.basesimplelibrary.bean.BaseSimpleBean;

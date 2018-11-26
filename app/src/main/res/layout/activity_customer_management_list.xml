@@ -42,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.africa.crm.businessmanagementproject.widget.OverScrollView
+        <com.africa.crm.businessmanagement.widget.OverScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none">
@@ -59,7 +59,7 @@
                     android:overScrollMode="never" />
 
             </LinearLayout>
-        </com.africa.crm.businessmanagementproject.widget.OverScrollView>
+        </com.africa.crm.businessmanagement.widget.OverScrollView>
 
         <LinearLayout
             android:id="@+id/ll_add"

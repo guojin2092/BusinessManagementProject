@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.africa.crm.businessmanagementproject.R;
+import com.africa.crm.businessmanagement.R;
 
 
 /**

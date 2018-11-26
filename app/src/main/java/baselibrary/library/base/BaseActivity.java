@@ -18,8 +18,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.africa.crm.businessmanagementproject.R;
-import com.africa.crm.businessmanagementproject.mvp.activity.BaseRxActivity;
+import com.africa.crm.businessmanagement.R;
+import com.africa.crm.businessmanagement.mvp.activity.BaseRxActivity;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import baselibrary.library.http.MyHttpRequestManager;

@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.africa.crm.businessmanagementproject.R;
-import com.africa.crm.businessmanagementproject.mvp.fragment.BaseRxFragment;
+import com.africa.crm.businessmanagement.R;
+import com.africa.crm.businessmanagement.mvp.fragment.BaseRxFragment;
 
 import baselibrary.library.http.MyHttpRequestManager;
 import baselibrary.library.myview.MyLog;
