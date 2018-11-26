@@ -39,5 +39,6 @@
     <string name="cancel">取消</string>
     <string name="all_enterprises">所有企业</string>
     <string name="search_enterprise">请输入企业名称或创建时间查询</string>
+    <string name="edit">编辑</string>
 
 </resources>

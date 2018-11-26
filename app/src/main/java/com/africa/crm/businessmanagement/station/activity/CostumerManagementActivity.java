@@ -1,4 +1,4 @@
-package com.africa.crm.businessmanagement.station;
+package com.africa.crm.businessmanagement.station.activity;
 
 import android.app.Activity;
 import android.content.Intent;

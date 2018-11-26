@@ -35,6 +35,7 @@
     <string name="cancel">Annuler</string>
     <string name="all_enterprises">Toutes les entreprises</string>
     <string name="search_enterprise">Veuillez saisir le nom de l 'entreprise ou créer une requête</string>
+    <string name="edit">Édition</string>
 
 
 </resources>

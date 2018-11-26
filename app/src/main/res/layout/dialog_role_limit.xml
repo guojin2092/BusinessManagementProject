@@ -39,7 +39,7 @@
                     android:gravity="center"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:text="@string/role_detail"
+                    android:text="@string/permission_assignment"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 

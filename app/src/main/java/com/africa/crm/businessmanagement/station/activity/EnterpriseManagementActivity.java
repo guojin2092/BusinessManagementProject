@@ -1,4 +1,4 @@
-package com.africa.crm.businessmanagement.station;
+package com.africa.crm.businessmanagement.station.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,14 +7,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.station.adapter.CostumerListAdapter;
 import com.africa.crm.businessmanagement.station.adapter.EnterpriseListAdapter;
-import com.africa.crm.businessmanagement.station.bean.CostumerInfoBean;
 import com.africa.crm.businessmanagement.station.bean.EnterpriseInfoBean;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -45,6 +44,8 @@ public class EnterpriseManagementActivity extends BaseActivity {
     TextView titlebar_right;
     @BindView(R.id.ll_add)
     LinearLayout ll_add;
+    @BindView(R.id.tv_delete)
+    TextView tv_delete;
 
     @BindView(R.id.rv_enterprise)
     RecyclerView rv_enterprise;
@@ -67,8 +68,9 @@ public class EnterpriseManagementActivity extends BaseActivity {
     @Override
     public void initView() {
         titlebar_back.setOnClickListener(this);
-        ll_add.setOnClickListener(this);
         titlebar_right.setOnClickListener(this);
+        ll_add.setOnClickListener(this);
+        tv_delete.setOnClickListener(this);
         titlebar_name.setText(R.string.all_enterprises);
         titlebar_right.setText(R.string.delete);
     }
@@ -83,11 +85,13 @@ public class EnterpriseManagementActivity extends BaseActivity {
             case R.id.titlebar_right:
                 if (titlebar_right.getText().toString().equals(getString(R.string.delete))) {
                     titlebar_right.setText(R.string.cancel);
+                    tv_delete.setVisibility(View.VISIBLE);
                     if (mEnterpriseListAdapter != null) {
                         mEnterpriseListAdapter.setmIsDeleted(true);
                     }
                 } else {
                     titlebar_right.setText(R.string.delete);
+                    tv_delete.setVisibility(View.GONE);
                     if (mEnterpriseListAdapter != null) {
                         mEnterpriseListAdapter.setmIsDeleted(false);
                     }
@@ -95,6 +99,15 @@ public class EnterpriseManagementActivity extends BaseActivity {
                 break;
             case R.id.ll_add:
                 ToastUtils.show(this, "添加企业");
+                break;
+            case R.id.tv_delete:
+                List<EnterpriseInfoBean> list = new ArrayList<>();
+                for (int i = 0; i < mEnterpriseInfoList.size(); i++) {
+                    if (!mEnterpriseInfoList.get(i).isChosen()) {
+                        list.add(mEnterpriseInfoList.get(i));
+                    }
+                }
+                setCostomerData(list);
                 break;
         }
     }
@@ -146,8 +159,16 @@ public class EnterpriseManagementActivity extends BaseActivity {
             mEnterpriseListAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
                 @Override
                 public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                    mEnterpriseInfoList.get(position).setChosen(true);
+                    CheckBox cb_choose = (CheckBox) adapter.getViewByPosition(rv_enterprise, position, R.id.cb_choose);
+                    mEnterpriseInfoList.get(position).setChosen(cb_choose.isChecked());
                     mEnterpriseListAdapter.notifyDataSetChanged();
+                }
+            });
+
+            mEnterpriseListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                    EnterpriseDetailActivity.startActivity(EnterpriseManagementActivity.this, mEnterpriseInfoList.get(position));
                 }
             });
         }
