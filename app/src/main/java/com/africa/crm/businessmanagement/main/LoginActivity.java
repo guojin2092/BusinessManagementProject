@@ -92,12 +92,10 @@ public class LoginActivity extends BaseActivityProgress {
                             @Override
                             public void accept(LoginInfoBean loginInfoBean) throws Exception {
                                 if (loginInfoBean != null) {
-                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                                    overridePendingTransition(R.anim.anim_right_in, R.anim.anim_left_out);
+                                    MainActivity.startActivity(LoginActivity.this);
                                 }
                             }
                         }, new ComConsumer(LoginActivity.this)));
-//                MainActivity.startActivity(this);
                 break;
         }
     }

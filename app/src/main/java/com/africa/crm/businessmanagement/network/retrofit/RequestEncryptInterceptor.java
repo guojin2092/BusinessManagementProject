@@ -51,6 +51,7 @@ public class RequestEncryptInterceptor implements Interceptor {
             LogUtil.w("guoj", "RSA+AES---->" + aesKey);
             //3.使用第1步生成的AES密钥，通过AES加密需要提交给服务端的数据；
             encodedData = AES.encrypt(paramsStr, AesKey);
+            LogUtil.w("guoj", "原始参数---->" + paramsStr);
             LogUtil.w("guoj", "AES加密---->" + encodedData);
             result = aesKey + "=" + encodedData;
             LogUtil.w("guoj", "KEY=VALUE---->" + result);

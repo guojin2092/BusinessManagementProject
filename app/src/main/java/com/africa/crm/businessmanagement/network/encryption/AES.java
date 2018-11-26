@@ -20,8 +20,8 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class AES {
     // /** 算法/模式/填充 **/
-    private static final String CipherMode = "AES/ECB/PKCS5Padding";
-    // private static final String CipherMode = "AES";
+//    private static final String CipherMode = "AES/ECB/PKCS5Padding";
+     private static final String CipherMode = "AES";
 
     /**
      * 生成一个AES密钥对象

@@ -56,6 +56,10 @@ public class RoleManagementActivity extends BaseActivity {
     @Override
     public void setView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_role_management);
+        if (savedInstanceState != null) {
+            getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag(RoleManagementFragment.class.getSimpleName()));
+            getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag(UserManagementFragment.class.getSimpleName()));
+        }
     }
 
     @Override

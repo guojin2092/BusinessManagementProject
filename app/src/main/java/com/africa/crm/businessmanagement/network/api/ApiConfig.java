@@ -10,6 +10,6 @@ package com.africa.crm.businessmanagement.network.api;
  * Why & What is modified:
  */
 public class ApiConfig {
-        public static final String BASE_URL = "http://c.sushimt.com/SYCRMPC/api/";
-//    public static final String BASE_URL = "http://15p66g2561.51mypc.cn/SYCRMPC/api/";
+    public static final String BASE_URL = "http://c.sushimt.com/SYCRMPC/api/";//外网地址
+//    public static final String BASE_URL = "http://15p66g2561.51mypc.cn/SYCRMPC/api/";//测试地址
 }
