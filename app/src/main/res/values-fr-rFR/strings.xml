@@ -34,7 +34,9 @@
     <string name="save">Enregistrer</string>
     <string name="cancel">Annuler</string>
     <string name="all_enterprises">Toutes les entreprises</string>
+    <string name="all_enterprises_account">Compte de toutes les entreprises</string>
     <string name="search_enterprise">Veuillez saisir le nom de l 'entreprise ou créer une requête</string>
+    <string name="search_enterprise_account">Veuillez saisir le numéro / nom de l 'entreprise</string>
     <string name="edit">Édition</string>
 
 

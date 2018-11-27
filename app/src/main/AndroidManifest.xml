@@ -46,6 +46,14 @@
             android:name=".main.station.activity.EnterpriseDetailActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".main.station.activity.EnterpriseAccountActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".main.station.activity.EnterpriseAccountDetailActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
     </application>
 
 </manifest>

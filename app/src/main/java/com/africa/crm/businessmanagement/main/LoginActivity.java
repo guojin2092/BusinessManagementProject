@@ -10,14 +10,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
-import com.africa.crm.businessmanagement.network.error.ComConsumer;
-import com.africa.crm.businessmanagement.network.util.RxUtils;
 
 import baselibrary.library.base.progress.BaseActivityProgress;
 import baselibrary.library.base.progress.BaseFragmentProgress;
 import butterknife.BindView;
-import io.reactivex.functions.Consumer;
 
 /**
  * Project：BusinessManagementProject
@@ -86,8 +82,9 @@ public class LoginActivity extends BaseActivityProgress {
         super.onClick(v);
         switch (v.getId()) {
             case R.id.tv_login:
+/*
                 addDisposable(mDataManager.getLoginInfo(et_username.getText().toString().trim(), et_password.getText().toString().trim())
-                        .compose(RxUtils.<LoginInfoBean>ioToMain())
+                        .compose(RxUtils.<LoginInfoBean>ioToMain(this))
                         .subscribe(new Consumer<LoginInfoBean>() {
                             @Override
                             public void accept(LoginInfoBean loginInfoBean) throws Exception {
@@ -96,6 +93,8 @@ public class LoginActivity extends BaseActivityProgress {
                                 }
                             }
                         }, new ComConsumer(LoginActivity.this)));
+*/
+                MainActivity.startActivity(LoginActivity.this);
                 break;
         }
     }

@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.main.station.adapter.EnterpriseListAdapter;
+import com.africa.crm.businessmanagement.main.station.adapter.EnterpriseAccountListAdapter;
 import com.africa.crm.businessmanagement.main.station.bean.EnterpriseInfoBean;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
@@ -32,11 +32,11 @@ import butterknife.BindView;
  * Author:  guojin
  * Version:
  * Description：
- * Date：2018/11/26 0026 16:05
+ * Date：2018/11/27 0027 9:04
  * Modification  History:
  * Why & What is modified:
  */
-public class EnterpriseManagementActivity extends BaseActivity {
+public class EnterpriseAccountActivity extends BaseActivity {
     @BindView(R.id.titlebar_back)
     ImageView titlebar_back;
     @BindView(R.id.titlebar_name)
@@ -48,24 +48,25 @@ public class EnterpriseManagementActivity extends BaseActivity {
     @BindView(R.id.tv_delete)
     TextView tv_delete;
 
-    @BindView(R.id.rv_enterprise)
-    RecyclerView rv_enterprise;
-    private EnterpriseListAdapter mEnterpriseListAdapter;
-    private List<EnterpriseInfoBean> mEnterpriseInfoList = new ArrayList<>();
+    @BindView(R.id.rv_enterprise_account)
+    RecyclerView rv_enterprise_account;
+    private EnterpriseAccountListAdapter mEnterpriseAccountListAdapter;
     private List<EnterpriseInfoBean> mDeleteList = new ArrayList<>();
+    private List<EnterpriseInfoBean> mEnterpriseInfoList = new ArrayList<>();
+
     private boolean mShowCheckBox = false;
 
     /**
      * @param activity
      */
     public static void startActivity(Activity activity) {
-        Intent intent = new Intent(activity, EnterpriseManagementActivity.class);
+        Intent intent = new Intent(activity, EnterpriseAccountActivity.class);
         activity.startActivity(intent);
     }
 
     @Override
     public void setView(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_enterprise_management);
+        setContentView(R.layout.activity_enterprise_account);
     }
 
     @Override
@@ -74,7 +75,7 @@ public class EnterpriseManagementActivity extends BaseActivity {
         titlebar_right.setOnClickListener(this);
         ll_add.setOnClickListener(this);
         tv_delete.setOnClickListener(this);
-        titlebar_name.setText(R.string.all_enterprises);
+        titlebar_name.setText(R.string.all_enterprises_account);
         titlebar_right.setText(R.string.delete);
     }
 
@@ -95,15 +96,15 @@ public class EnterpriseManagementActivity extends BaseActivity {
                     tv_delete.setVisibility(View.GONE);
                     mShowCheckBox = false;
                 }
-                if (mEnterpriseListAdapter != null) {
-                    mEnterpriseListAdapter.setmIsDeleted(mShowCheckBox);
+                if (mEnterpriseAccountListAdapter != null) {
+                    mEnterpriseAccountListAdapter.setmIsDeleted(mShowCheckBox);
                 }
                 break;
             case R.id.ll_add:
-                ToastUtils.show(this, "添加企业");
+                ToastUtils.show(this, "添加企业账号");
                 break;
             case R.id.tv_delete:
-                new AlertDialog.Builder(EnterpriseManagementActivity.this)
+                new AlertDialog.Builder(EnterpriseAccountActivity.this)
                         .setTitle("温馨提示")
                         .setMessage("是否确认删除？")
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -119,8 +120,8 @@ public class EnterpriseManagementActivity extends BaseActivity {
                                     if (mEnterpriseInfoList.contains(mDeleteList.get(i))) {
                                         int position = mEnterpriseInfoList.indexOf(mDeleteList.get(i));
                                         mEnterpriseInfoList.remove(mDeleteList.get(i));
-                                        if (mEnterpriseListAdapter != null) {
-                                            mEnterpriseListAdapter.notifyItemRemoved(position);
+                                        if (mEnterpriseAccountListAdapter != null) {
+                                            mEnterpriseAccountListAdapter.notifyItemRemoved(position);
                                         }
                                     }
                                 }
@@ -139,6 +140,7 @@ public class EnterpriseManagementActivity extends BaseActivity {
         enterpriseInfoBean.setCompany("云茂地产");
         enterpriseInfoBean.setType("科技");
         enterpriseInfoBean.setLocation("上海");
+        enterpriseInfoBean.setAccount("企业账号：17861863");
         enterpriseInfoBean.setChosen(false);
         mEnterpriseInfoList.add(enterpriseInfoBean);
 
@@ -147,6 +149,7 @@ public class EnterpriseManagementActivity extends BaseActivity {
         enterpriseInfoBean2.setCompany("西行设计");
         enterpriseInfoBean2.setType("教育");
         enterpriseInfoBean2.setLocation("沈阳");
+        enterpriseInfoBean2.setAccount("企业账号：23536464");
         enterpriseInfoBean.setChosen(false);
         mEnterpriseInfoList.add(enterpriseInfoBean2);
 
@@ -155,41 +158,41 @@ public class EnterpriseManagementActivity extends BaseActivity {
         enterpriseInfoBean3.setCompany("兴时科技");
         enterpriseInfoBean3.setType("金融服务");
         enterpriseInfoBean3.setLocation("江西");
+        enterpriseInfoBean3.setAccount("企业账号：32624626");
         enterpriseInfoBean3.setChosen(false);
         mEnterpriseInfoList.add(enterpriseInfoBean3);
 
-        setCostomerData(mEnterpriseInfoList);
+        setEnterpriseAccountDatas(mEnterpriseInfoList);
     }
 
     /**
-     * 设置客户数据
+     * 设置企业账号数据
      *
      * @param enterpriseInfoBeanList
      */
-    private void setCostomerData(final List<EnterpriseInfoBean> enterpriseInfoBeanList) {
-        mEnterpriseListAdapter = new EnterpriseListAdapter(enterpriseInfoBeanList);
-        rv_enterprise.setAdapter(mEnterpriseListAdapter);
+    private void setEnterpriseAccountDatas(final List<EnterpriseInfoBean> enterpriseInfoBeanList) {
+        mEnterpriseAccountListAdapter = new EnterpriseAccountListAdapter(enterpriseInfoBeanList);
+        rv_enterprise_account.setAdapter(mEnterpriseAccountListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        rv_enterprise.setLayoutManager(layoutManager);
-        rv_enterprise.addItemDecoration(new LineItemDecoration(this, LinearLayoutManager.VERTICAL, 2, ContextCompat.getColor(this, R.color.F2F2F2)));
-        rv_enterprise.setHasFixedSize(true);
-        rv_enterprise.setNestedScrollingEnabled(false);
+        rv_enterprise_account.setLayoutManager(layoutManager);
+        rv_enterprise_account.addItemDecoration(new LineItemDecoration(this, LinearLayoutManager.VERTICAL, 2, ContextCompat.getColor(this, R.color.F2F2F2)));
+        rv_enterprise_account.setHasFixedSize(true);
+        rv_enterprise_account.setNestedScrollingEnabled(false);
 
-        mEnterpriseListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        mEnterpriseAccountListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (mShowCheckBox) {
-                    CheckBox cb_choose = (CheckBox) adapter.getViewByPosition(rv_enterprise, position, R.id.cb_choose);
+                    CheckBox cb_choose = (CheckBox) adapter.getViewByPosition(rv_enterprise_account, position, R.id.cb_choose);
                     mEnterpriseInfoList.get(position).setChosen(!cb_choose.isChecked());
                     if (mEnterpriseInfoList.get(position).isChosen()) {
                         mDeleteList.add(mEnterpriseInfoList.get(position));
                     }
-                    mEnterpriseListAdapter.notifyDataSetChanged();
+                    mEnterpriseAccountListAdapter.notifyDataSetChanged();
                 } else {
-                    EnterpriseDetailActivity.startActivity(EnterpriseManagementActivity.this, mEnterpriseInfoList.get(position));
+                    EnterpriseAccountDetailActivity.startActivity(EnterpriseAccountActivity.this, mEnterpriseInfoList.get(position));
                 }
             }
         });
     }
-
 }

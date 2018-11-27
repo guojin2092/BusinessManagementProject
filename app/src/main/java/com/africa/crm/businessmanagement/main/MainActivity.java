@@ -16,6 +16,7 @@ import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.main.adapter.WorkStationListAdapter;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.station.activity.CostumerManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.EnterpriseAccountActivity;
 import com.africa.crm.businessmanagement.main.station.activity.EnterpriseManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.RoleManagementActivity;
 import com.africa.crm.businessmanagement.widget.GridItemDecoration;
@@ -146,6 +147,9 @@ public class MainActivity extends BaseActivityProgress {
                     switch (type) {
                         case "1":
                             EnterpriseManagementActivity.startActivity(MainActivity.this);
+                            break;
+                        case "2":
+                            EnterpriseAccountActivity.startActivity(MainActivity.this);
                             break;
                         case "5":
                             CostumerManagementActivity.startActivity(MainActivity.this);

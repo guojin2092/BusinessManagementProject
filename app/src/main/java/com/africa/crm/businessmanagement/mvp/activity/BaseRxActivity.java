@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 
 import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.network.DataManager;
@@ -26,6 +27,7 @@ import io.reactivex.disposables.Disposable;
  */
 public abstract class BaseRxActivity extends AppCompatActivity implements BaseView {
     protected DataManager mDataManager;
+
     /**
      * 管理所有添加进来的Disposable；
      */
@@ -34,6 +36,7 @@ public abstract class BaseRxActivity extends AppCompatActivity implements BaseVi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         mDataManager = MyApplication.getInstance().getDataManager();
         if (mCompositeDisposable == null) {
             mCompositeDisposable = new CompositeDisposable();

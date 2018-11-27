@@ -22,11 +22,11 @@ import java.util.List;
  * Modification  History:
  * Why & What is modified:
  */
-public class EnterpriseListAdapter extends BaseQuickAdapter<EnterpriseInfoBean, BaseViewHolder> {
+public class EnterpriseAccountListAdapter extends BaseQuickAdapter<EnterpriseInfoBean, BaseViewHolder> {
     private boolean mIsDeleted = false;
 
-    public EnterpriseListAdapter(@Nullable List<EnterpriseInfoBean> data) {
-        super(R.layout.item_enterprise_list, data);
+    public EnterpriseAccountListAdapter(@Nullable List<EnterpriseInfoBean> data) {
+        super(R.layout.item_enterprise_account_list, data);
     }
 
     public boolean ismIsDeleted() {
@@ -42,8 +42,8 @@ public class EnterpriseListAdapter extends BaseQuickAdapter<EnterpriseInfoBean, 
     protected void convert(BaseViewHolder helper, EnterpriseInfoBean item) {
         ImageView iv_icon = helper.getView(R.id.iv_icon);
         TextView tv_company = helper.getView(R.id.tv_company);
-        TextView tv_type = helper.getView(R.id.tv_type);
         TextView tv_location = helper.getView(R.id.tv_location);
+        TextView tv_company_account = helper.getView(R.id.tv_company_account);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
         int icon = Integer.valueOf(item.getIcon());
@@ -61,8 +61,8 @@ public class EnterpriseListAdapter extends BaseQuickAdapter<EnterpriseInfoBean, 
         }
         iv_icon.setImageResource(iconSrc);
         tv_company.setText(item.getCompany());
-        tv_type.setText(item.getType());
         tv_location.setText(item.getLocation());
+        tv_company_account.setText(item.getAccount());
         if (mIsDeleted) {
             cb_choose.setVisibility(View.VISIBLE);
         } else {
@@ -74,4 +74,5 @@ public class EnterpriseListAdapter extends BaseQuickAdapter<EnterpriseInfoBean, 
             cb_choose.setChecked(false);
         }
     }
+
 }

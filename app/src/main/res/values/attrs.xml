@@ -12,4 +12,19 @@
         <attr name="dividerColor" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="MyAlertDialog">
+        <attr name="android:layout" />
+        <attr name="buttonPanelSideLayout" format="reference" />
+        <attr name="listLayout" format="reference" />
+        <attr name="multiChoiceItemLayout" format="reference" />
+        <attr name="singleChoiceItemLayout" format="reference" />
+        <attr name="listItemLayout" format="reference" />
+        <attr name="showTitle" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="MyRecycleListView">
+        <attr name="paddingBottomNoButtons" format="dimension" />
+        <attr name="paddingTopNoTitle" format="dimension" />
+    </declare-styleable>
+
 </resources>

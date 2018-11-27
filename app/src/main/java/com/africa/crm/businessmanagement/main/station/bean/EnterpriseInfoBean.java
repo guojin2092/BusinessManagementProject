@@ -16,6 +16,7 @@ public class EnterpriseInfoBean implements Serializable {
     private String company;
     private String type;
     private String location;
+    private String account;
     private boolean chosen;
 
     public String getIcon() {
@@ -48,6 +49,14 @@ public class EnterpriseInfoBean implements Serializable {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     public boolean isChosen() {

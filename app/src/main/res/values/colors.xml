@@ -24,4 +24,5 @@
     <color name="DDDDDD">#DDDDDD</color>
     <color name="D8D7D7">#D8D7D7</color>
     <color name="C4C4C4">#C4C4C4</color>
+    <color name="text_dark">#484848</color>
 </resources>
