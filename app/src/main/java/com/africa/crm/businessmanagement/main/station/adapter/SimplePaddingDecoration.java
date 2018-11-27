@@ -1,4 +1,4 @@
-package com.africa.crm.businessmanagement.station.adapter;
+package com.africa.crm.businessmanagement.main.station.adapter;
 
 import android.content.Context;
 import android.graphics.Rect;

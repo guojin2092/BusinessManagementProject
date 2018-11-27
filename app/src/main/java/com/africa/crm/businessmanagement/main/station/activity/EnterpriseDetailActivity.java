@@ -1,4 +1,4 @@
-package com.africa.crm.businessmanagement.station.activity;
+package com.africa.crm.businessmanagement.main.station.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.station.bean.EnterpriseInfoBean;
+import com.africa.crm.businessmanagement.main.station.bean.EnterpriseInfoBean;
 
 import baselibrary.common.util.ToastUtils;
 import baselibrary.library.base.BaseActivity;

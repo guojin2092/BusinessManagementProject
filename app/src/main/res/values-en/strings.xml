@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">商务管理系统</string>
+
+    <!--检查更新-->
+    <string name="my_setting_versionupdate_title">版本更新</string>
+    <!--    <string name="settings_productsetting_checkup_version">正在检查最新版本</string>-->
+    <string name="my_setting_versionupdate_latest">你的软件是最新的版本</string>
+</resources>

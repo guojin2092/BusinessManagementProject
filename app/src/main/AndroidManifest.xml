@@ -27,23 +27,23 @@
             android:name="com.africa.crm.businessmanagement.main.MainActivity"
             android:screenOrientation="landscape" />
         <activity
-            android:name="com.africa.crm.businessmanagement.station.activity.CostumerManagementActivity"
+            android:name=".main.station.activity.CostumerManagementActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name="com.africa.crm.businessmanagement.station.activity.CostumerDetailActivity"
+            android:name=".main.station.activity.CostumerDetailActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name="com.africa.crm.businessmanagement.station.activity.RoleManagementActivity"
+            android:name=".main.station.activity.RoleManagementActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name="com.africa.crm.businessmanagement.station.activity.EnterpriseManagementActivity"
+            android:name=".main.station.activity.EnterpriseManagementActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name="com.africa.crm.businessmanagement.station.activity.EnterpriseDetailActivity"
+            android:name=".main.station.activity.EnterpriseDetailActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
     </application>

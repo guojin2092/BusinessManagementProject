@@ -1,4 +1,4 @@
-package com.africa.crm.businessmanagement.station.adapter;
+package com.africa.crm.businessmanagement.main.station.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.station.bean.TableInfo;
-import com.africa.crm.businessmanagement.station.bean.TableInfoBean;
+import com.africa.crm.businessmanagement.main.station.bean.TableInfo;
+import com.africa.crm.businessmanagement.main.station.bean.TableInfoBean;
 
 import java.util.ArrayList;
 import java.util.List;

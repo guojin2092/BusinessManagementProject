@@ -1,4 +1,4 @@
-package com.africa.crm.businessmanagement.station.activity;
+package com.africa.crm.businessmanagement.main.station.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,8 +12,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.station.fragment.RoleManagementFragment;
-import com.africa.crm.businessmanagement.station.fragment.UserManagementFragment;
+import com.africa.crm.businessmanagement.main.station.fragment.RoleManagementFragment;
+import com.africa.crm.businessmanagement.main.station.fragment.UserManagementFragment;
 
 import baselibrary.library.base.BaseActivity;
 import butterknife.BindView;

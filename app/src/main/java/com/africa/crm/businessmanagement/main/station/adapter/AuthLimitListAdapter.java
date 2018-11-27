@@ -1,11 +1,11 @@
-package com.africa.crm.businessmanagement.station.adapter;
+package com.africa.crm.businessmanagement.main.station.adapter;
 
 import android.support.annotation.Nullable;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.station.bean.AuthInfoBean;
+import com.africa.crm.businessmanagement.main.station.bean.AuthInfoBean;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 

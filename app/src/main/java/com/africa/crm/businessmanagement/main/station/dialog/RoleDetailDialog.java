@@ -1,4 +1,4 @@
-package com.africa.crm.businessmanagement.station.dialog;
+package com.africa.crm.businessmanagement.main.station.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -6,9 +6,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -18,22 +15,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.station.adapter.AuthLimitListAdapter;
-import com.africa.crm.businessmanagement.station.bean.AuthInfoBean;
-import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.gitonway.lee.niftymodaldialogeffects.lib.ColorUtils;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.gitonway.lee.niftymodaldialogeffects.lib.effects.BaseEffects;
 
-import java.util.List;
-
-import baselibrary.common.util.ListUtils;
-
 
 /**
- * 权限分配
+ * 角色详情
  */
-public class RoleAuthLimitDialog extends Dialog implements DialogInterface {
+public class RoleDetailDialog extends Dialog implements DialogInterface {
 
     private static Context tmpContext;
 
@@ -65,40 +55,19 @@ public class RoleAuthLimitDialog extends Dialog implements DialogInterface {
 
     private boolean isCancelable = true;
 
-    private static RoleAuthLimitDialog instance;
+    private static RoleDetailDialog instance;
 
-    private AuthLimitListAdapter mAuthLimitListAdapter;
-    private RecyclerView rv_auth_limit;
 
-    public RoleAuthLimitDialog(Context context) {
+
+    public RoleDetailDialog(Context context) {
         super(context);
         init(context);
 
     }
 
-    public RoleAuthLimitDialog(Context context, int theme) {
+    public RoleDetailDialog(Context context, int theme) {
         super(context, theme);
         init(context);
-    }
-
-    public RoleAuthLimitDialog(Context context, int theme, List<AuthInfoBean> list) {
-        super(context, theme);
-        init(context);
-        setLimitDatas(list);
-    }
-
-    private void setLimitDatas(List<AuthInfoBean> authInfoBeanList) {
-        if (!ListUtils.isEmpty(authInfoBeanList)) {
-            mAuthLimitListAdapter = new AuthLimitListAdapter(authInfoBeanList);
-            rv_auth_limit.setAdapter(mAuthLimitListAdapter);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-            rv_auth_limit.setLayoutManager(layoutManager);
-            rv_auth_limit.addItemDecoration(new LineItemDecoration(getContext(), LinearLayoutManager.VERTICAL, 0, ContextCompat.getColor(getContext(), R.color.transparent)));
-            rv_auth_limit.setHasFixedSize(true);
-            rv_auth_limit.setNestedScrollingEnabled(false);
-
-        }
-
     }
 
     @Override
@@ -111,12 +80,12 @@ public class RoleAuthLimitDialog extends Dialog implements DialogInterface {
 
     }
 
-    public static RoleAuthLimitDialog getInstance(Context context, List<AuthInfoBean> list) {
+    public static RoleDetailDialog getInstance(Context context) {
 
         if (instance == null || !tmpContext.equals(context)) {
-            synchronized (RoleAuthLimitDialog.class) {
+            synchronized (RoleDetailDialog.class) {
                 if (instance == null || !tmpContext.equals(context)) {
-                    instance = new RoleAuthLimitDialog(context, R.style.dialog_untran, list);
+                    instance = new RoleDetailDialog(context, com.gitonway.lee.niftymodaldialogeffects.lib.R.style.dialog_untran);
                 }
             }
         }
@@ -127,7 +96,7 @@ public class RoleAuthLimitDialog extends Dialog implements DialogInterface {
 
     private void init(Context context) {
 
-        mDialogView = View.inflate(context, R.layout.dialog_role_limit, null);
+        mDialogView = View.inflate(context, R.layout.dialog_role_detail, null);
 
         mLinearLayoutView = (LinearLayout) mDialogView.findViewById(R.id.parentPanel);
         mRelativeLayoutView = (RelativeLayout) mDialogView.findViewById(R.id.main);
@@ -139,7 +108,7 @@ public class RoleAuthLimitDialog extends Dialog implements DialogInterface {
         mIcon = (ImageView) mDialogView.findViewById(R.id.icon);
         mDivider = mDialogView.findViewById(R.id.titleDivider);
         tv_save = mDialogView.findViewById(R.id.tv_save);
-        rv_auth_limit = mDialogView.findViewById(R.id.rv_auth_limit);
+
         setContentView(mDialogView);
 
         this.setOnShowListener(new OnShowListener() {
@@ -162,103 +131,103 @@ public class RoleAuthLimitDialog extends Dialog implements DialogInterface {
         });
     }
 
-    public RoleAuthLimitDialog withDividerColor(String colorString) {
+    public RoleDetailDialog withDividerColor(String colorString) {
         mDivider.setBackgroundColor(Color.parseColor(colorString));
         return this;
     }
 
-    public RoleAuthLimitDialog withDividerColor(int color) {
+    public RoleDetailDialog withDividerColor(int color) {
         mDivider.setBackgroundColor(color);
         return this;
     }
 
 
-    public RoleAuthLimitDialog withTitle(CharSequence title) {
+    public RoleDetailDialog withTitle(CharSequence title) {
         toggleView(mLinearLayoutTopView, title);
         mTitle.setText(title);
         return this;
     }
 
-    public RoleAuthLimitDialog withTitleColor(String colorString) {
+    public RoleDetailDialog withTitleColor(String colorString) {
         mTitle.setTextColor(Color.parseColor(colorString));
         return this;
     }
 
-    public RoleAuthLimitDialog withTitleColor(int color) {
+    public RoleDetailDialog withTitleColor(int color) {
         mTitle.setTextColor(color);
         return this;
     }
 
-    public RoleAuthLimitDialog withMessage(int textResId) {
+    public RoleDetailDialog withMessage(int textResId) {
         toggleView(mLinearLayoutMsgView, textResId);
         mMessage.setText(textResId);
         return this;
     }
 
-    public RoleAuthLimitDialog withMessage(CharSequence msg) {
+    public RoleDetailDialog withMessage(CharSequence msg) {
         toggleView(mLinearLayoutMsgView, msg);
         mMessage.setText(msg);
         return this;
     }
 
-    public RoleAuthLimitDialog withMessageColor(String colorString) {
+    public RoleDetailDialog withMessageColor(String colorString) {
         mMessage.setTextColor(Color.parseColor(colorString));
         return this;
     }
 
-    public RoleAuthLimitDialog withMessageColor(int color) {
+    public RoleDetailDialog withMessageColor(int color) {
         mMessage.setTextColor(color);
         return this;
     }
 
-    public RoleAuthLimitDialog withDialogColor(String colorString) {
+    public RoleDetailDialog withDialogColor(String colorString) {
         mLinearLayoutView.getBackground().setColorFilter(ColorUtils.getColorFilter(Color
                 .parseColor(colorString)));
         return this;
     }
 
-    public RoleAuthLimitDialog withDialogColor(int color) {
+    public RoleDetailDialog withDialogColor(int color) {
         mLinearLayoutView.getBackground().setColorFilter(ColorUtils.getColorFilter(color));
         return this;
     }
 
-    public RoleAuthLimitDialog withIcon(int drawableResId) {
+    public RoleDetailDialog withIcon(int drawableResId) {
         mIcon.setImageResource(drawableResId);
         return this;
     }
 
-    public RoleAuthLimitDialog withIcon(Drawable icon) {
+    public RoleDetailDialog withIcon(Drawable icon) {
         mIcon.setImageDrawable(icon);
         return this;
     }
 
-    public RoleAuthLimitDialog setCancelClick(View.OnClickListener click) {
+    public RoleDetailDialog setCancelClick(View.OnClickListener click) {
         mIcon.setOnClickListener(click);
         return this;
     }
 
-    public RoleAuthLimitDialog withDuration(int duration) {
+    public RoleDetailDialog withDuration(int duration) {
         this.mDuration = duration;
         return this;
     }
 
-    public RoleAuthLimitDialog withEffect(Effectstype type) {
+    public RoleDetailDialog withEffect(Effectstype type) {
         this.type = type;
         return this;
     }
 
-    public RoleAuthLimitDialog setSaveClick(View.OnClickListener click) {
+    public RoleDetailDialog setSaveClick(View.OnClickListener click) {
         tv_save.setOnClickListener(click);
         return this;
     }
 
-    public RoleAuthLimitDialog isCancelableOnTouchOutside(boolean cancelable) {
+    public RoleDetailDialog isCancelableOnTouchOutside(boolean cancelable) {
         this.isCancelable = cancelable;
         this.setCanceledOnTouchOutside(cancelable);
         return this;
     }
 
-    public RoleAuthLimitDialog isCancelable(boolean cancelable) {
+    public RoleDetailDialog isCancelable(boolean cancelable) {
         this.isCancelable = cancelable;
         this.setCancelable(cancelable);
         return this;

@@ -1,4 +1,4 @@
-package com.africa.crm.businessmanagement.station.fragment;
+package com.africa.crm.businessmanagement.main.station.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

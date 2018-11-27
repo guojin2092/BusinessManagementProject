@@ -1,4 +1,4 @@
-package com.africa.crm.businessmanagement.station.fragment;
+package com.africa.crm.businessmanagement.main.station.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,11 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.station.adapter.RoleListAdapter;
-import com.africa.crm.businessmanagement.station.bean.AuthInfoBean;
-import com.africa.crm.businessmanagement.station.bean.CostumerInfoBean;
-import com.africa.crm.businessmanagement.station.dialog.RoleAuthLimitDialog;
-import com.africa.crm.businessmanagement.station.dialog.RoleDetailDialog;
+import com.africa.crm.businessmanagement.main.station.adapter.RoleListAdapter;
+import com.africa.crm.businessmanagement.main.station.bean.AuthInfoBean;
+import com.africa.crm.businessmanagement.main.station.bean.CostumerInfoBean;
+import com.africa.crm.businessmanagement.main.station.dialog.RoleAuthLimitDialog;
+import com.africa.crm.businessmanagement.main.station.dialog.RoleDetailDialog;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;

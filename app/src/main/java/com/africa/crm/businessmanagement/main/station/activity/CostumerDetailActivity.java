@@ -1,4 +1,4 @@
-package com.africa.crm.businessmanagement.station.activity;
+package com.africa.crm.businessmanagement.main.station.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,11 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.station.adapter.CostumerInfoListAdapter;
-import com.africa.crm.businessmanagement.station.adapter.SimplePaddingDecoration;
-import com.africa.crm.businessmanagement.station.bean.CostumerInfoBean;
-import com.africa.crm.businessmanagement.station.bean.TableInfo;
-import com.africa.crm.businessmanagement.station.bean.TableInfoBean;
+import com.africa.crm.businessmanagement.main.station.adapter.CostumerInfoListAdapter;
+import com.africa.crm.businessmanagement.main.station.adapter.SimplePaddingDecoration;
+import com.africa.crm.businessmanagement.main.station.bean.CostumerInfoBean;
+import com.africa.crm.businessmanagement.main.station.bean.TableInfo;
+import com.africa.crm.businessmanagement.main.station.bean.TableInfoBean;
 
 import java.util.ArrayList;
 import java.util.List;

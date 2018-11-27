@@ -1,4 +1,4 @@
-package com.africa.crm.businessmanagement.station.adapter;
+package com.africa.crm.businessmanagement.main.station.adapter;
 
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.station.bean.EnterpriseInfoBean;
+import com.africa.crm.businessmanagement.main.station.bean.EnterpriseInfoBean;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 

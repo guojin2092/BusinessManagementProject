@@ -1,4 +1,4 @@
-package com.africa.crm.businessmanagement.station.activity;
+package com.africa.crm.businessmanagement.main.station.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,8 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.station.adapter.CostumerListAdapter;
-import com.africa.crm.businessmanagement.station.bean.CostumerInfoBean;
+import com.africa.crm.businessmanagement.main.station.adapter.CostumerListAdapter;
+import com.africa.crm.businessmanagement.main.station.bean.CostumerInfoBean;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
