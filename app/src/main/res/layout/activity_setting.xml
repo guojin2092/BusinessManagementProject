@@ -118,7 +118,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:inputType="textPassword"
                         android:text="*******"
                         android:textColor="@color/A768DBD"
                         android:textSize="18sp" />
@@ -135,7 +134,7 @@
             android:layout_weight="1">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 

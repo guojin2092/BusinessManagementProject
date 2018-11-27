@@ -102,5 +102,25 @@
         <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
     </style>
 
+    <style name="product_title_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingBottom">15dp</item>
+        <item name="android:paddingLeft">30dp</item>
+    </style>
 
+    <style name="product_title_blue" parent="product_title_style">
+        <item name="android:textColor">@color/A586686</item>
+    </style>
+
+    <style name="product_title_black" parent="product_title_style">
+        <item name="android:textColor">@color/A606060</item>
+    </style>
+
+    <style name="product_et_blue" parent="product_title_style">
+        <item name="android:textColor">@color/A586686</item>
+        <item name="android:background">@drawable/null_drawable</item>
+    </style>
 </resources>

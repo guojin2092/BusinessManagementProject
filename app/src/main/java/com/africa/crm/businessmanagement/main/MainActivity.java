@@ -18,6 +18,7 @@ import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.station.activity.CostumerManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.EnterpriseAccountActivity;
 import com.africa.crm.businessmanagement.main.station.activity.EnterpriseManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.ProductManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SettingActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SupplierManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SystemManagementActivity;
@@ -148,7 +149,6 @@ public class MainActivity extends BaseActivityProgress {
             mWorkStationListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    ToastUtils.show(MainActivity.this, workStationInfoList.get(position).getWork_name());
                     WorkStationInfo workStationInfo = workStationInfoList.get(position);
                     String type = workStationInfoList.get(position).getWork_type();
                     switch (type) {
@@ -160,6 +160,9 @@ public class MainActivity extends BaseActivityProgress {
                             break;
                         case "3":
                             SupplierManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            break;
+                        case "4":
+                            ProductManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "5":
                             CostumerManagementActivity.startActivity(MainActivity.this, workStationInfo);

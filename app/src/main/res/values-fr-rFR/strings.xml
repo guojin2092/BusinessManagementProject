@@ -32,10 +32,11 @@
     <string name="delete">Supprimer</string>
     <string name="check">Chèque</string>
     <string name="save">Enregistrer</string>
+    <string name="edit">Édition</string>
     <string name="cancel">Annuler</string>
     <string name="search_enterprise">Veuillez saisir le nom de l 'entreprise ou créer une requête</string>
     <string name="search_enterprise_account">Veuillez saisir le numéro / nom de l 'entreprise</string>
-    <string name="edit">Édition</string>
+    <string name="search_product">Veuillez saisir le nom du produit</string>
 
 
 </resources>

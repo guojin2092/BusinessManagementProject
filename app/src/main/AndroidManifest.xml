@@ -4,16 +4,15 @@
     package="com.africa.crm.businessmanagement">
 
     <application
-        android:name="com.africa.crm.businessmanagement.MyApplication"
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
         <activity
-            android:name="com.africa.crm.businessmanagement.main.LoginActivity"
+            android:name=".main.LoginActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden">
             <intent-filter>
@@ -22,9 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name="com.africa.crm.businessmanagement.main.MainActivity"
+            android:name=".main.MainActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
@@ -65,6 +63,14 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".main.station.activity.SupplierDetailActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".main.station.activity.ProductManagementActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".main.station.activity.ProductDetailActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
     </application>

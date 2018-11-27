@@ -36,9 +36,10 @@
     <string name="delete">删除</string>
     <string name="check">查看</string>
     <string name="save">保存</string>
+    <string name="edit">编辑</string>
     <string name="cancel">取消</string>
     <string name="search_enterprise">请输入企业名称或创建时间查询</string>
     <string name="search_enterprise_account">请输入企业账号/名称</string>
-    <string name="edit">编辑</string>
+    <string name="search_product">请输入产品名称</string>
 
 </resources>

@@ -33,9 +33,10 @@
     <string name="delete">Delete</string>
     <string name="check">Check</string>
     <string name="save">Save</string>
+    <string name="edit">edit</string>
     <string name="cancel">Cancel</string>
     <string name="search_enterprise">Please enter the enterprise name or create time query</string>
     <string name="search_enterprise_account">Please enter the enterprise account / name</string>
-    <string name="edit">edit</string>
+    <string name="search_product">Please enter the product name</string>
 
 </resources>
