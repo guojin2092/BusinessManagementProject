@@ -18,7 +18,8 @@ import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.station.activity.CostumerManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.EnterpriseAccountActivity;
 import com.africa.crm.businessmanagement.main.station.activity.EnterpriseManagementActivity;
-import com.africa.crm.businessmanagement.main.station.activity.RoleManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.SupplierManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.SystemManagementActivity;
 import com.africa.crm.businessmanagement.widget.GridItemDecoration;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
@@ -143,19 +144,23 @@ public class MainActivity extends BaseActivityProgress {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                     ToastUtils.show(MainActivity.this, workStationInfoList.get(position).getWork_name());
+                    WorkStationInfo workStationInfo = workStationInfoList.get(position);
                     String type = workStationInfoList.get(position).getWork_type();
                     switch (type) {
                         case "1":
-                            EnterpriseManagementActivity.startActivity(MainActivity.this);
+                            EnterpriseManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "2":
-                            EnterpriseAccountActivity.startActivity(MainActivity.this);
+                            EnterpriseAccountActivity.startActivity(MainActivity.this, workStationInfo);
+                            break;
+                        case "3":
+                            SupplierManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "5":
-                            CostumerManagementActivity.startActivity(MainActivity.this);
+                            CostumerManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "10":
-                            RoleManagementActivity.startActivity(MainActivity.this);
+                            SystemManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         default:
                             ToastUtils.show(MainActivity.this, "暂无该分类");

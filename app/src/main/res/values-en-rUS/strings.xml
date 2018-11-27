@@ -22,7 +22,6 @@
     <string name="role_management">Role management</string>
     <string name="user_management">User management</string>
 
-    <string name="all_customers">All customers</string>
     <string name="search">Search</string>
     <string name="see_detail">see details</string>
     <string name="authority_allocation">Authority allocation</string>
@@ -34,8 +33,6 @@
     <string name="check">Check</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
-    <string name="all_enterprises">All enterprises</string>
-    <string name="all_enterprises_account">All enterprise accounts</string>
     <string name="search_enterprise">Please enter the enterprise name or create time query</string>
     <string name="search_enterprise_account">Please enter the enterprise account / name</string>
     <string name="edit">edit</string>

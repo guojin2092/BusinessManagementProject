@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
-import com.africa.crm.businessmanagement.main.station.adapter.EnterpriseListAdapter;
+import com.africa.crm.businessmanagement.main.station.adapter.SupplierListAdapter;
 import com.africa.crm.businessmanagement.main.station.bean.EnterpriseInfoBean;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
@@ -33,11 +33,11 @@ import butterknife.BindView;
  * Author:  guojin
  * Version:
  * Description：
- * Date：2018/11/26 0026 16:05
+ * Date：2018/11/27 0027 16:10
  * Modification  History:
  * Why & What is modified:
  */
-public class EnterpriseManagementActivity extends BaseActivity {
+public class SupplierManagementActivity extends BaseActivity {
     @BindView(R.id.titlebar_back)
     ImageView titlebar_back;
     @BindView(R.id.titlebar_name)
@@ -51,25 +51,27 @@ public class EnterpriseManagementActivity extends BaseActivity {
 
     private WorkStationInfo mWorkStationInfo;
 
-    @BindView(R.id.rv_enterprise)
-    RecyclerView rv_enterprise;
-    private EnterpriseListAdapter mEnterpriseListAdapter;
-    private List<EnterpriseInfoBean> mEnterpriseInfoList = new ArrayList<>();
+    @BindView(R.id.rv_supplier)
+    RecyclerView rv_supplier;
+    private SupplierListAdapter mSupplierListAdapter;
     private List<EnterpriseInfoBean> mDeleteList = new ArrayList<>();
+    private List<EnterpriseInfoBean> mSupplierList = new ArrayList<>();
+
     private boolean mShowCheckBox = false;
 
     /**
      * @param activity
      */
     public static void startActivity(Activity activity, WorkStationInfo workStationInfo) {
-        Intent intent = new Intent(activity, EnterpriseManagementActivity.class);
+        Intent intent = new Intent(activity, SupplierManagementActivity.class);
         intent.putExtra("info", workStationInfo);
         activity.startActivity(intent);
     }
 
+
     @Override
     public void setView(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_enterprise_management);
+        setContentView(R.layout.activity_supplier_management);
     }
 
     @Override
@@ -84,6 +86,7 @@ public class EnterpriseManagementActivity extends BaseActivity {
         tv_delete.setOnClickListener(this);
         titlebar_right.setText(R.string.delete);
     }
+
 
     @Override
     public void onClick(View v) {
@@ -102,15 +105,15 @@ public class EnterpriseManagementActivity extends BaseActivity {
                     tv_delete.setVisibility(View.GONE);
                     mShowCheckBox = false;
                 }
-                if (mEnterpriseListAdapter != null) {
-                    mEnterpriseListAdapter.setmIsDeleted(mShowCheckBox);
+                if (mSupplierListAdapter != null) {
+                    mSupplierListAdapter.setmIsDeleted(mShowCheckBox);
                 }
                 break;
             case R.id.ll_add:
-                ToastUtils.show(this, "添加企业");
+                ToastUtils.show(this, "添加供应商");
                 break;
             case R.id.tv_delete:
-                new AlertDialog.Builder(EnterpriseManagementActivity.this)
+                new AlertDialog.Builder(SupplierManagementActivity.this)
                         .setTitle("温馨提示")
                         .setMessage("是否确认删除？")
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -123,11 +126,11 @@ public class EnterpriseManagementActivity extends BaseActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int which) {
                                 for (int i = 0; i < mDeleteList.size(); i++) {
-                                    if (mEnterpriseInfoList.contains(mDeleteList.get(i))) {
-                                        int position = mEnterpriseInfoList.indexOf(mDeleteList.get(i));
-                                        mEnterpriseInfoList.remove(mDeleteList.get(i));
-                                        if (mEnterpriseListAdapter != null) {
-                                            mEnterpriseListAdapter.notifyItemRemoved(position);
+                                    if (mSupplierList.contains(mDeleteList.get(i))) {
+                                        int position = mSupplierList.indexOf(mDeleteList.get(i));
+                                        mSupplierList.remove(mDeleteList.get(i));
+                                        if (mSupplierListAdapter != null) {
+                                            mSupplierListAdapter.notifyItemRemoved(position);
                                         }
                                     }
                                 }
@@ -146,57 +149,59 @@ public class EnterpriseManagementActivity extends BaseActivity {
         enterpriseInfoBean.setCompany("云茂地产");
         enterpriseInfoBean.setType("科技");
         enterpriseInfoBean.setLocation("上海");
+        enterpriseInfoBean.setAccount("企业账号：17861863");
         enterpriseInfoBean.setChosen(false);
-        mEnterpriseInfoList.add(enterpriseInfoBean);
+        mSupplierList.add(enterpriseInfoBean);
 
         EnterpriseInfoBean enterpriseInfoBean2 = new EnterpriseInfoBean();
         enterpriseInfoBean2.setIcon("2");
         enterpriseInfoBean2.setCompany("西行设计");
         enterpriseInfoBean2.setType("教育");
         enterpriseInfoBean2.setLocation("沈阳");
+        enterpriseInfoBean2.setAccount("企业账号：23536464");
         enterpriseInfoBean.setChosen(false);
-        mEnterpriseInfoList.add(enterpriseInfoBean2);
+        mSupplierList.add(enterpriseInfoBean2);
 
         EnterpriseInfoBean enterpriseInfoBean3 = new EnterpriseInfoBean();
         enterpriseInfoBean3.setIcon("3");
         enterpriseInfoBean3.setCompany("兴时科技");
         enterpriseInfoBean3.setType("金融服务");
         enterpriseInfoBean3.setLocation("江西");
+        enterpriseInfoBean3.setAccount("企业账号：32624626");
         enterpriseInfoBean3.setChosen(false);
-        mEnterpriseInfoList.add(enterpriseInfoBean3);
+        mSupplierList.add(enterpriseInfoBean3);
 
-        setCostomerData(mEnterpriseInfoList);
+        setEnterpriseAccountDatas(mSupplierList);
     }
 
     /**
-     * 设置客户数据
+     * 设置企业账号数据
      *
      * @param enterpriseInfoBeanList
      */
-    private void setCostomerData(final List<EnterpriseInfoBean> enterpriseInfoBeanList) {
-        mEnterpriseListAdapter = new EnterpriseListAdapter(enterpriseInfoBeanList);
-        rv_enterprise.setAdapter(mEnterpriseListAdapter);
+    private void setEnterpriseAccountDatas(final List<EnterpriseInfoBean> enterpriseInfoBeanList) {
+        mSupplierListAdapter = new SupplierListAdapter(enterpriseInfoBeanList);
+        rv_supplier.setAdapter(mSupplierListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        rv_enterprise.setLayoutManager(layoutManager);
-        rv_enterprise.addItemDecoration(new LineItemDecoration(this, LinearLayoutManager.VERTICAL, 2, ContextCompat.getColor(this, R.color.F2F2F2)));
-        rv_enterprise.setHasFixedSize(true);
-        rv_enterprise.setNestedScrollingEnabled(false);
+        rv_supplier.setLayoutManager(layoutManager);
+        rv_supplier.addItemDecoration(new LineItemDecoration(this, LinearLayoutManager.VERTICAL, 2, ContextCompat.getColor(this, R.color.F2F2F2)));
+        rv_supplier.setHasFixedSize(true);
+        rv_supplier.setNestedScrollingEnabled(false);
 
-        mEnterpriseListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        mSupplierListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (mShowCheckBox) {
-                    CheckBox cb_choose = (CheckBox) adapter.getViewByPosition(rv_enterprise, position, R.id.cb_choose);
-                    mEnterpriseInfoList.get(position).setChosen(!cb_choose.isChecked());
-                    if (mEnterpriseInfoList.get(position).isChosen()) {
-                        mDeleteList.add(mEnterpriseInfoList.get(position));
+                    CheckBox cb_choose = (CheckBox) adapter.getViewByPosition(rv_supplier, position, R.id.cb_choose);
+                    mSupplierList.get(position).setChosen(!cb_choose.isChecked());
+                    if (mSupplierList.get(position).isChosen()) {
+                        mDeleteList.add(mSupplierList.get(position));
                     }
-                    mEnterpriseListAdapter.notifyDataSetChanged();
+                    mSupplierListAdapter.notifyDataSetChanged();
                 } else {
-                    EnterpriseDetailActivity.startActivity(EnterpriseManagementActivity.this, mEnterpriseInfoList.get(position));
+                    SupplierDetailActivity.startActivity(SupplierManagementActivity.this, mSupplierList.get(position));
                 }
             }
         });
     }
-
 }

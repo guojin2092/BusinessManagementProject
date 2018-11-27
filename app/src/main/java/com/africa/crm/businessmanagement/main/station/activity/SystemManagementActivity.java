@@ -12,6 +12,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
+import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.station.fragment.RoleManagementFragment;
 import com.africa.crm.businessmanagement.main.station.fragment.UserManagementFragment;
 
@@ -27,11 +28,13 @@ import butterknife.BindView;
  * Modification  History:
  * Why & What is modified:
  */
-public class RoleManagementActivity extends BaseActivity {
+public class SystemManagementActivity extends BaseActivity {
     @BindView(R.id.titlebar_back)
     ImageView titlebar_back;
     @BindView(R.id.titlebar_name)
     TextView titlebar_name;
+
+    private WorkStationInfo mWorkStationInfo;
 
     @BindView(R.id.rg_management)
     RadioGroup rg_management;
@@ -48,8 +51,9 @@ public class RoleManagementActivity extends BaseActivity {
     /**
      * @param activity
      */
-    public static void startActivity(Activity activity) {
-        Intent intent = new Intent(activity, RoleManagementActivity.class);
+    public static void startActivity(Activity activity, WorkStationInfo workStationInfo) {
+        Intent intent = new Intent(activity, SystemManagementActivity.class);
+        intent.putExtra("info", workStationInfo);
         activity.startActivity(intent);
     }
 
@@ -64,6 +68,10 @@ public class RoleManagementActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        mWorkStationInfo = (WorkStationInfo) getIntent().getSerializableExtra("info");
+        if (mWorkStationInfo != null) {
+            titlebar_name.setText(mWorkStationInfo.getWork_name());
+        }
         titlebar_back.setOnClickListener(this);
         titlebar_name.setText(getString(R.string.system_management));
         rb_role_management.setOnClickListener(this);
@@ -101,7 +109,7 @@ public class RoleManagementActivity extends BaseActivity {
      */
     private void chosenRadioButton(RadioButton radioButton) {
         radioButton.setBackground(ContextCompat.getDrawable(this, R.drawable.rb_background_chosen));
-        radioButton.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, ContextCompat.getDrawable(RoleManagementActivity.this, R.drawable.iv_arrow_white), null);
+        radioButton.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, ContextCompat.getDrawable(SystemManagementActivity.this, R.drawable.iv_arrow_white), null);
         radioButton.setTextColor(ContextCompat.getColor(this, R.color.white));
     }
 
@@ -112,7 +120,7 @@ public class RoleManagementActivity extends BaseActivity {
      */
     private void unChosenRadioButton(RadioButton radioButton) {
         radioButton.setBackground(ContextCompat.getDrawable(this, R.drawable.rb_background_unchosen));
-        radioButton.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, ContextCompat.getDrawable(RoleManagementActivity.this, R.drawable.iv_arrow_gray), null);
+        radioButton.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, ContextCompat.getDrawable(SystemManagementActivity.this, R.drawable.iv_arrow_gray), null);
         radioButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
     }
 

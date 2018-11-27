@@ -19,7 +19,7 @@ import com.africa.crm.businessmanagement.main.station.bean.TableInfoBean;
 import java.util.ArrayList;
 import java.util.List;
 
-import baselibrary.library.base.progress.BaseActivityProgress;
+import baselibrary.library.base.BaseActivity;
 import butterknife.BindView;
 import drawthink.expandablerecyclerview.bean.RecyclerViewData;
 import drawthink.expandablerecyclerview.listener.OnRecyclerViewListener;
@@ -33,7 +33,7 @@ import drawthink.expandablerecyclerview.listener.OnRecyclerViewListener;
  * Modification  History:
  * Why & What is modified:
  */
-public class CostumerDetailActivity extends BaseActivityProgress implements OnRecyclerViewListener.OnItemClickListener {
+public class CostumerDetailActivity extends BaseActivity implements OnRecyclerViewListener.OnItemClickListener {
     public final static String COSTUMER_INFO = "costumer_info";
     private CostumerInfoBean mCostumerInfoBean;
     @BindView(R.id.titlebar_back)
@@ -56,7 +56,7 @@ public class CostumerDetailActivity extends BaseActivityProgress implements OnRe
         Intent intent = new Intent(activity, CostumerDetailActivity.class);
         intent.putExtra(COSTUMER_INFO, costumerInfoBean);
         activity.startActivity(intent);
-        activity.overridePendingTransition(R.anim.anim_right_in,R.anim.anim_left_out);
+        activity.overridePendingTransition(R.anim.anim_right_in, R.anim.anim_left_out);
     }
 
     @Override
@@ -66,7 +66,6 @@ public class CostumerDetailActivity extends BaseActivityProgress implements OnRe
 
     @Override
     public void initView() {
-        super.initView();
         titlebar_back.setOnClickListener(this);
         mCostumerInfoBean = (CostumerInfoBean) getIntent().getSerializableExtra(COSTUMER_INFO);
         if (mCostumerInfoBean != null) {

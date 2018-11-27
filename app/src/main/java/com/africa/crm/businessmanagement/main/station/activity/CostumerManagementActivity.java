@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
+import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.station.adapter.CostumerListAdapter;
 import com.africa.crm.businessmanagement.main.station.bean.CostumerInfoBean;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
@@ -40,6 +41,8 @@ public class CostumerManagementActivity extends BaseActivityProgress {
     @BindView(R.id.titlebar_name)
     TextView titlebar_name;
 
+    private WorkStationInfo mWorkStationInfo;
+
     @BindView(R.id.ll_add)
     LinearLayout ll_add;
     @BindView(R.id.rv_costumer)
@@ -50,8 +53,9 @@ public class CostumerManagementActivity extends BaseActivityProgress {
     /**
      * @param activity
      */
-    public static void startActivity(Activity activity) {
+    public static void startActivity(Activity activity, WorkStationInfo workStationInfo) {
         Intent intent = new Intent(activity, CostumerManagementActivity.class);
+        intent.putExtra("info", workStationInfo);
         activity.startActivity(intent);
     }
 
@@ -64,9 +68,12 @@ public class CostumerManagementActivity extends BaseActivityProgress {
     @Override
     public void initView() {
         super.initView();
+        mWorkStationInfo = (WorkStationInfo) getIntent().getSerializableExtra("info");
+        if (mWorkStationInfo != null) {
+            titlebar_name.setText(mWorkStationInfo.getWork_name());
+        }
         titlebar_back.setOnClickListener(this);
         ll_add.setOnClickListener(this);
-        titlebar_name.setText(getString(R.string.all_customers));
     }
 
     @Override

@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
+import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.station.adapter.EnterpriseAccountListAdapter;
 import com.africa.crm.businessmanagement.main.station.bean.EnterpriseInfoBean;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
@@ -48,6 +49,9 @@ public class EnterpriseAccountActivity extends BaseActivity {
     @BindView(R.id.tv_delete)
     TextView tv_delete;
 
+    private WorkStationInfo mWorkStationInfo;
+
+
     @BindView(R.id.rv_enterprise_account)
     RecyclerView rv_enterprise_account;
     private EnterpriseAccountListAdapter mEnterpriseAccountListAdapter;
@@ -59,8 +63,9 @@ public class EnterpriseAccountActivity extends BaseActivity {
     /**
      * @param activity
      */
-    public static void startActivity(Activity activity) {
+    public static void startActivity(Activity activity, WorkStationInfo workStationInfo) {
         Intent intent = new Intent(activity, EnterpriseAccountActivity.class);
+        intent.putExtra("info", workStationInfo);
         activity.startActivity(intent);
     }
 
@@ -71,11 +76,14 @@ public class EnterpriseAccountActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        mWorkStationInfo = (WorkStationInfo) getIntent().getSerializableExtra("info");
+        if (mWorkStationInfo != null) {
+            titlebar_name.setText(mWorkStationInfo.getWork_name());
+        }
         titlebar_back.setOnClickListener(this);
         titlebar_right.setOnClickListener(this);
         ll_add.setOnClickListener(this);
         tv_delete.setOnClickListener(this);
-        titlebar_name.setText(R.string.all_enterprises_account);
         titlebar_right.setText(R.string.delete);
     }
 
