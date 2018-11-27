@@ -21,6 +21,7 @@
     <string name="system_management">System management</string>
     <string name="role_management">Role management</string>
     <string name="user_management">User management</string>
+    <string name="setting">Setting</string>
 
     <string name="search">Search</string>
     <string name="see_detail">See details</string>

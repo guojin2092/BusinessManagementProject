@@ -18,6 +18,7 @@ import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.station.activity.CostumerManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.EnterpriseAccountActivity;
 import com.africa.crm.businessmanagement.main.station.activity.EnterpriseManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.SettingActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SupplierManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SystemManagementActivity;
 import com.africa.crm.businessmanagement.widget.GridItemDecoration;
@@ -122,6 +123,10 @@ public class MainActivity extends BaseActivityProgress {
         workStationInfo10.setWork_type("10");
         workStationInfo10.setWork_name(getString(R.string.system_management));
         mWorkStationInfoList.add(workStationInfo10);
+        WorkStationInfo workStationInfo11 = new WorkStationInfo();
+        workStationInfo11.setWork_type("11");
+        workStationInfo11.setWork_name(getString(R.string.setting));
+        mWorkStationInfoList.add(workStationInfo11);
         setWorkStationDatas(mWorkStationInfoList);
     }
 
@@ -161,6 +166,9 @@ public class MainActivity extends BaseActivityProgress {
                             break;
                         case "10":
                             SystemManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            break;
+                        case "11":
+                            SettingActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         default:
                             ToastUtils.show(MainActivity.this, "暂无该分类");

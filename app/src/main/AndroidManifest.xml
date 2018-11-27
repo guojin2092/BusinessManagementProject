@@ -25,7 +25,12 @@
 
         <activity
             android:name="com.africa.crm.businessmanagement.main.MainActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".main.station.activity.SettingActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".main.station.activity.CostumerManagementActivity"
             android:screenOrientation="landscape"

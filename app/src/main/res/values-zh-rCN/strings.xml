@@ -22,6 +22,7 @@
     <string name="quotation_management">报价单管理</string>
     <string name="sales_order_management">销售单管理</string>
     <string name="system_management">系统管理</string>
+    <string name="setting">设置</string>
 
     <string name="role_management">角色管理</string>
     <string name="user_management">用户管理</string>

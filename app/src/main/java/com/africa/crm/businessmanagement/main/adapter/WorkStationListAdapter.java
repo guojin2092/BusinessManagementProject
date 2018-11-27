@@ -75,6 +75,10 @@ public class WorkStationListAdapter extends BaseQuickAdapter<WorkStationInfo, Ba
                 imgType = R.drawable.iv_1;
                 stringType = mContext.getString(R.string.system_management);
                 break;
+            case 11:
+                imgType = R.drawable.iv_1;
+                stringType = mContext.getString(R.string.setting);
+                break;
         }
 
         iv_work_type.setImageResource(imgType);

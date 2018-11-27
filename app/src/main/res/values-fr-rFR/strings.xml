@@ -20,6 +20,7 @@
     <string name="system_management">Gestion du système</string>
     <string name="role_management">Gestion des rôles</string>
     <string name="user_management">Gestion des utilisateurs</string>
+    <string name="setting">Réglage</string>
 
     <string name="search">chercher</string>
     <string name="see_detail">Voir les détails</string>
