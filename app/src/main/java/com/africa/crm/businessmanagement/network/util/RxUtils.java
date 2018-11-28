@@ -52,21 +52,13 @@ public class RxUtils {
                             .doOnSubscribe(new Consumer<Disposable>() {
                                 @Override
                                 public void accept(@NonNull Disposable disposable) throws Exception {
-                                    if (action) {
-                                        view.showActionLoad();
-                                    } else {
-                                        view.showLoad();
-                                    }
+                                    view.onDialogShow();
                                 }
                             })
                             .doOnComplete(new Action() {
                                 @Override
                                 public void run() throws Exception {
-                                    if (action) {
-                                        view.dismissActionLoad();
-                                    } else {
-                                        view.dismissLoad();
-                                    }
+                                    view.onDialogHide();
                                 }
                             });
                 } else {

@@ -1,39 +1,30 @@
 package com.africa.crm.businessmanagement.network.base;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
 
 import com.africa.crm.businessmanagement.network.error.ComException;
 
 
 /**
- * 作者: 51hs_android
- * 时间: 2017/3/24
- * 简介:
+ * Created by warm on 17/6/17.
  */
 
 public interface BaseView {
 
-    void showLoad();
+    void onDialogShow();
 
-    void showActionLoad();
+    void onDialogHide();
 
-    void dismissLoad();
-
-    void dismissActionLoad();
-
-    void onTakeException(@NonNull ComException e);
-
-    void onTakeException(boolean action, @NonNull ComException e);
+    void onTakeException(@NonNull ComException error);
 
     void reLogin();
 
-    @Deprecated
-    void dismissLoad(boolean isSuccess, String showWord);
+    Context getBVContext();
 
-    Context getContext();
+    FragmentActivity getBVActivity();
 
-    Activity getActivity();
 
 }

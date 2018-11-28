@@ -23,6 +23,7 @@
     <string name="user_management">Gestion des utilisateurs</string>
     <string name="setting">Réglage</string>
 
+    <string name="i_know">Je sais</string>
     <string name="search">chercher</string>
     <string name="see_detail">Voir les détails</string>
     <string name="authority_allocation">Attribution d'autorité</string>

@@ -18,8 +18,8 @@ public class MyMaterialDialog {
      */
     public static MaterialDialog.Builder getMyBuilder(Context context) {
         MaterialDialog.Builder materialDialog = new MaterialDialog.Builder(context);
-        materialDialog.positiveColorRes(R.color.app_main_color);
-        materialDialog.negativeColorRes(R.color.app_main_color);
+        materialDialog.positiveColorRes(R.color.colorPrimary);
+        materialDialog.negativeColorRes(R.color.colorPrimary);
         materialDialog.cancelable(true);
         return materialDialog;
     }
@@ -32,8 +32,8 @@ public class MyMaterialDialog {
      */
     public static MaterialDialog createMaterialDialog(Context context, String message) {
         MaterialDialog.Builder materialProgressDialog = new MaterialDialog.Builder(context);
-        materialProgressDialog.contentColorRes(R.color.app_main_color);
-        materialProgressDialog.widgetColorRes(R.color.app_main_color);
+        materialProgressDialog.contentColorRes(R.color.colorPrimary);
+        materialProgressDialog.widgetColorRes(R.color.colorPrimary);
         materialProgressDialog.cancelable(true);
         materialProgressDialog
                 .content(message)

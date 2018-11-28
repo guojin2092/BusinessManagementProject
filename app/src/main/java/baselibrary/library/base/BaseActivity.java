@@ -23,7 +23,6 @@ import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRxActivity;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
-import baselibrary.library.http.MyHttpRequestManager;
 import baselibrary.library.special.material.MyMaterialDialog;
 import baselibrary.library.util.HideKeyBoardHelper;
 import butterknife.ButterKnife;
@@ -40,26 +39,19 @@ public abstract class BaseActivity extends BaseRxActivity implements OnClickList
     private boolean isAlive = false;
     protected BaseActivity context = null;
     public int epage = 10;
-    /**
-     * 退出时之前的界面进入动画,可在finish();前通过改变它的值来改变动画效果
-     */
-    protected int enterAnim = R.anim.fade;
-    /**
-     * 退出时该界面动画,可在finish();前通过改变它的值来改变动画效果
-     */
-    protected int exitAnim = R.anim.right_push_out;
+
+    // 修改完成提交后的等待
+    private MaterialDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        PushAgent.getInstance(context).onAppStart();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);//限制横屏显示
         initSystemBarTint();
         setView(savedInstanceState);
         isAlive = true;
         context = this;
         ButterKnife.bind(this);
-//        JMessageClient.registerEventReceiver(this);
         initView();
         initData();
 
@@ -179,65 +171,6 @@ public abstract class BaseActivity extends BaseRxActivity implements OnClickList
     }
 
 
-    /**
-     * 打开新的Activity，向左滑入效果
-     *
-     * @param intent
-     */
-    public void toActivity(Intent intent) {
-        toActivity(intent, true);
-    }
-
-    /**
-     * 打开新的Activity
-     *
-     * @param intent
-     * @param showAnimation
-     */
-    public void toActivity(Intent intent, boolean showAnimation) {
-        toActivity(intent, -1, showAnimation);
-    }
-
-    /**
-     * 打开新的Activity，向左滑入效果
-     *
-     * @param intent
-     * @param requestCode
-     */
-    public void toActivity(Intent intent, int requestCode) {
-        toActivity(intent, requestCode, true);
-    }
-
-    /**
-     * 打开新的Activity
-     *
-     * @param intent
-     * @param requestCode
-     * @param showAnimation
-     */
-    public void toActivity(final Intent intent, final int requestCode, final boolean showAnimation) {
-        runUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (intent == null) {
-                    Log.w(TAG, "toActivity  intent == null >> return;");
-                    return;
-                }
-                //fragment中使用context.startActivity会导致在fragment中不能正常接收onActivityResult
-                if (requestCode < 0) {
-                    startActivity(intent);
-                } else {
-                    startActivityForResult(intent, requestCode);
-                }
-                if (showAnimation) {
-                    overridePendingTransition(R.anim.right_push_in, R.anim.hold);
-                } else {
-                    overridePendingTransition(R.anim.null_anim, R.anim.null_anim);
-                }
-            }
-        });
-    }
-
     //show short toast 方法<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
     /**
@@ -291,114 +224,12 @@ public abstract class BaseActivity extends BaseRxActivity implements OnClickList
         }
     }
 
-    /*public void onEvent(LoginStateChangeEvent event) {
-        LoginStateChangeEvent.Reason reason = event.getReason();//获取变更的原因
-        UserInfo myInfo = event.getMyInfo();//获取当前被登出账号的信息
-        MyLog.e(this, "myInfo==" + myInfo);
-        switch (reason) {
-            case user_password_change:
-                //用户密码在服务器端被修改
-                break;
-            case user_logout:
-                if (isBackground(this)) {
-                    //用户换设备登录
-                    CookieManager
-                            .deleteCookie(this);
-                    MyHttpRequestManager.getInstance(
-                            this)
-                            .setHttpCookie(null);
-                    // 清除用户信息
-                    UserInfoManager
-                            .deleteUserInfo(this);
-                    MaterialDialog.Builder materialDialog = new MaterialDialog.Builder(this);
-                    materialDialog.title(getResources().getString(R.string.dialog_login_out_hint))
-                            .positiveText(getResources().getString(R.string.dialog_login_again))
-                            .negativeText(getResources().getString(R.string.dialog_login_out))
-                            .positiveColorRes(R.color.app_theme_bg_color)
-                            .negativeColorRes(R.color.app_theme_bg_color)
-                            .cancelable(false)
-                            .autoDismiss(false)
-                            .canceledOnTouchOutside(false)
-                            .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                    startActivity(LoginActivity.class);
-                                    dialog.dismiss();
-                                }
-                            })
-                            .onNegative(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                    dialog.dismiss();
-                                }
-                            }).show();
-                }
-                break;
-            case user_deleted:
-                //用户被删除
-                break;
-        }
-    }
-
-    *//*判断类是否处于栈顶*//*
-    public boolean isBackground(Context context) {
-        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
-        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
-            if (appProcess.processName.equals(context.getPackageName())) {
-                if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_BACKGROUND) {
-                    MyLog.i(this, "后台--->" + appProcess.processName);
-                    return false;
-                } else {
-                    MyLog.i(this, "前台--->" + appProcess.processName);
-                    return true;
-                }
-            }
-        }
-        return false;
-    }*/
-
     /**
      * 当加载结束可以点击
      */
     protected void canClick() {
 
     }
-
-    // @Override
-    // public void onRequestNetworkFailed(String methodName, String url,
-    // int statusCode, String error) {
-    // Toast.makeText(this, "没有网络!", Toast.LENGTH_SHORT).show();
-    // }
-
-
-    // 修改完成提交后的等待
-    private MaterialDialog progressDialog;
-
-    /**
-     * 加载框,显示文字提示
-     *
-     * @param layoutResID 加载布局
-     * @param message     显示加载提示文字
-     */
-    /*protected void showProgressDialog(int layoutResID, String message) {
-        MyMaterialProgressDialog.createDialog()
-
-        progressDialog.setMessage(message);
-        progressDialog.show();
-    }
-
-    *//**
-     * 加载框,不显示提示
-     *
-     * @param layoutResID 加载布局
-     *//*
-    protected void showProgressDialog(int layoutResID) {
-        if (progressDialog == null) {
-            progressDialog = MyMaterialProgressDialog.createDialog(this, layoutResID);
-        }
-        progressDialog.show();
-    }*/
 
     /**
      * 加载框
@@ -472,41 +303,6 @@ public abstract class BaseActivity extends BaseRxActivity implements OnClickList
     }
 
     /**
-     * 记录一次分享数
-     *
-     * @param extra_id
-     * @param type
-     */
-   /* public void requestInfoShareData(String extra_id, String type) {
-        if (!TextUtils.isEmpty(extra_id)) {
-            RequestParams requestParams = new RequestParams();
-            requestParams.put("act", "like");
-            requestParams.put("type", type);
-            requestParams.put("id", extra_id);
-            MyHttpRequestManager.getInstance(this).netGetRequest("like",
-                    requestParams, ViewBean.class, this);
-        }
-    }*/
-
-    /**
-     * 记一次阅读数
-     *
-     * @param extra_id
-     * @param type
-     */
-   /* public void requestInfoViewData(String extra_id, String type) {
-        if (!TextUtils.isEmpty(extra_id)) {
-            RequestParams requestParams = new RequestParams();
-            requestParams.put("act", "view");
-            requestParams.put("type", type);
-            requestParams.put("id", extra_id);
-            MyHttpRequestManager.getInstance(this).netGetRequest("view",
-                    requestParams, ViewBean.class, this);
-        }
-    }*/
-
-
-    /**
      * 显示popupwindow
      */
     public void showChoicePop(View llContent, View layout) {
@@ -559,28 +355,9 @@ public abstract class BaseActivity extends BaseRxActivity implements OnClickList
     }
 
     @Override
-    public void finish() {
-        super.finish();
-        runUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (enterAnim > 0 && exitAnim > 0) {
-                    try {
-                        overridePendingTransition(enterAnim, exitAnim);
-                    } catch (Exception e) {
-                        Log.e(TAG, "finish overridePendingTransition(enterAnim, exitAnim);" +
-                                " >> catch (Exception e) {  " + e.getMessage());
-                    }
-                }
-            }
-        });
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         isAlive = false;
         context = null;
-        MyHttpRequestManager.getInstance(this).cancelRequests(this, true);
     }
 }

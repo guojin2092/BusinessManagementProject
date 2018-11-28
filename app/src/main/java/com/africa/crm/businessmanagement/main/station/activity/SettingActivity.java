@@ -72,13 +72,13 @@ public class SettingActivity extends BaseActivity {
                 onBackPressed();
                 break;
             case R.id.tv_update_data:
-                ToastUtils.show(getActivity(), "更新数据");
+                ToastUtils.show(getBVActivity(), "更新数据");
                 break;
             case R.id.tv_unload_data:
-                ToastUtils.show(getActivity(), "上传数据");
+                ToastUtils.show(getBVActivity(), "上传数据");
                 break;
             case R.id.tv_login_out:
-                ToastUtils.show(getActivity(), "退出登录");
+                ToastUtils.show(getBVActivity(), "退出登录");
                 break;
         }
     }

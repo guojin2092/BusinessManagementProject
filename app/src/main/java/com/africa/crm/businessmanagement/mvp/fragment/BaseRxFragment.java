@@ -1,10 +1,16 @@
 package com.africa.crm.businessmanagement.mvp.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.view.View;
 
+import com.africa.crm.businessmanagement.R;
+import com.africa.crm.businessmanagement.mvp.activity.BaseRxActivity;
 import com.africa.crm.businessmanagement.network.DataManager;
 import com.africa.crm.businessmanagement.network.base.BaseView;
 import com.africa.crm.businessmanagement.network.error.ComException;
@@ -41,7 +47,6 @@ public class BaseRxFragment extends Fragment implements BaseView {
      */
 
     protected void addDisposable(Disposable disposable) {
-
         mCompositeDisposable.add(disposable);
     }
 
@@ -54,34 +59,38 @@ public class BaseRxFragment extends Fragment implements BaseView {
         }
     }
 
-    @Override
-    public void showLoad() {
 
+    @Override
+    public void onDialogShow() {
+        ((BaseRxActivity) getActivity()).onDialogShow();
     }
 
     @Override
-    public void showActionLoad() {
-
+    public void onDialogHide() {
+        ((BaseRxActivity) getActivity()).onDialogHide();
     }
 
     @Override
-    public void dismissLoad() {
-
+    public void onTakeException(@NonNull ComException error) {
+        toastMag(error);
     }
 
-    @Override
-    public void dismissActionLoad() {
-
+    public final void toastMag(final ComException error) {
+        Snackbar.make(getView() == null ? getActivity().getWindow().getDecorView() : getView(), error.getMessage(), Snackbar.LENGTH_LONG)
+                .setAction(error.getActionName() == null ? getString(R.string.i_know) : error.getActionName()
+                        , new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (error.getListener() != null) {
+                                    error.getListener().errorAction();
+                                }
+                            }
+                        })
+                .show();
     }
 
-    @Override
-    public void onTakeException(@NonNull ComException e) {
-
-    }
-
-    @Override
-    public void onTakeException(boolean action, @NonNull ComException e) {
-
+    public final void toastMsg(String msg) {
+        toastMag(new ComException(msg));
     }
 
     @Override
@@ -90,7 +99,16 @@ public class BaseRxFragment extends Fragment implements BaseView {
     }
 
     @Override
-    public void dismissLoad(boolean isSuccess, String showWord) {
+    public Context getBVContext() {
+        return getContext();
+    }
 
+    @Override
+    public FragmentActivity getBVActivity() {
+        if (getActivity() instanceof BaseRxActivity) {
+            return getActivity();
+        } else {
+            throw new RuntimeException("fragment 需要放到BaseRxActivity上");
+        }
     }
 }

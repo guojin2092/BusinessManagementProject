@@ -36,6 +36,27 @@
         <item name="buttonBarNeutralButtonStyle">?attr/buttonBarButtonStyle</item>
     </style>
 
+    <style name="AppTheme.Dialog.Transparent" parent="android:Theme.Dialog">
+
+        <!--设置全屏，去除stateBar-->
+        <!--<item name="android:windowFullscreen">true</item>-->
+        <!-- 背景透明 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <!-- 浮于Activity之上 -->
+        <item name="android:windowIsFloating">true</item>
+        <!-- 边框 -->
+        <item name="android:windowFrame">@null</item>
+        <!-- Dialog以外的区域模糊效果 -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!-- 无标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 半透明 -->
+        <item name="android:windowIsTranslucent">true</item>
+
+    </style>
+
+
     <style name="AppTheme.ButtonBarButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
         <item name="android:textAppearance">@style/TextAppearance.AppCompat</item>
         <item name="android:textSize">18sp</item>
