@@ -22,8 +22,8 @@ import java.util.List;
  */
 public class WorkStationListAdapter extends BaseQuickAdapter<WorkStationInfo, BaseViewHolder> {
 
-    public WorkStationListAdapter(int layoutResId, @Nullable List<WorkStationInfo> data) {
-        super(layoutResId, data);
+    public WorkStationListAdapter(@Nullable List<WorkStationInfo> data) {
+        super(R.layout.item_work_station_list, data);
     }
 
     @Override
@@ -73,9 +73,13 @@ public class WorkStationListAdapter extends BaseQuickAdapter<WorkStationInfo, Ba
                 break;
             case 10:
                 imgType = R.drawable.iv_1;
-                stringType = mContext.getString(R.string.system_management);
+                stringType = mContext.getString(R.string.delivery_order_management);
                 break;
             case 11:
+                imgType = R.drawable.iv_1;
+                stringType = mContext.getString(R.string.system_management);
+                break;
+            case 12:
                 imgType = R.drawable.iv_1;
                 stringType = mContext.getString(R.string.setting);
                 break;

@@ -21,6 +21,7 @@
     <string name="trading_order_management">交易单管理</string>
     <string name="quotation_management">报价单管理</string>
     <string name="sales_order_management">销售单管理</string>
+    <string name="delivery_order_management">发货单管理</string>
     <string name="system_management">系统管理</string>
     <string name="setting">设置</string>
 
@@ -41,5 +42,10 @@
     <string name="search_enterprise">请输入企业名称或创建时间查询</string>
     <string name="search_enterprise_account">请输入企业账号/名称</string>
     <string name="search_product">请输入产品名称</string>
+    <string name="search_contact">请输入联系人</string>
+    <string name="search_trading_order">请输入交易信息</string>
+    <string name="search_quotation">请输入报价信息</string>
+    <string name="search_sales">请输入销售信息</string>
+    <string name="search_delivery_order">请输入发货信息</string>
 
 </resources>

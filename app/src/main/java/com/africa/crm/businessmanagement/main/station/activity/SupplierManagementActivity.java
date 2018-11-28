@@ -125,6 +125,11 @@ public class SupplierManagementActivity extends BaseActivity {
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int which) {
+                                for (EnterpriseInfoBean enterpriseInfoBean : mSupplierList) {
+                                    if (enterpriseInfoBean.isChosen()) {
+                                        mDeleteList.add(enterpriseInfoBean);
+                                    }
+                                }
                                 for (int i = 0; i < mDeleteList.size(); i++) {
                                     if (mSupplierList.contains(mDeleteList.get(i))) {
                                         int position = mSupplierList.indexOf(mDeleteList.get(i));
@@ -194,9 +199,6 @@ public class SupplierManagementActivity extends BaseActivity {
                 if (mShowCheckBox) {
                     CheckBox cb_choose = (CheckBox) adapter.getViewByPosition(rv_supplier, position, R.id.cb_choose);
                     mSupplierList.get(position).setChosen(!cb_choose.isChecked());
-                    if (mSupplierList.get(position).isChosen()) {
-                        mDeleteList.add(mSupplierList.get(position));
-                    }
                     mSupplierListAdapter.notifyDataSetChanged();
                 } else {
                     SupplierDetailActivity.startActivity(SupplierManagementActivity.this, mSupplierList.get(position));

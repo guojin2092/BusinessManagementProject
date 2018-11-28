@@ -18,6 +18,7 @@
     <string name="trading_order_management">Trading order management</string>
     <string name="quotation_management">Quotation management</string>
     <string name="sales_order_management">Sales order management</string>
+    <string name="delivery_order_management">Delivery order management</string>
     <string name="system_management">System management</string>
     <string name="role_management">Role management</string>
     <string name="user_management">User management</string>
@@ -38,4 +39,10 @@
     <string name="search_enterprise">Please enter the enterprise name or create time query</string>
     <string name="search_enterprise_account">Please enter the enterprise account / name</string>
     <string name="search_product">Please enter the product name</string>
+    <string name="search_contact">Please enter a contact</string>
+    <string name="search_trading_order">Please enter transaction information</string>
+    <string name="search_quotation">Please enter the quote information</string>
+    <string name="search_sales">Please enter sales information</string>
+    <string name="search_delivery_order">Please enter shipping information</string>
+
 </resources>

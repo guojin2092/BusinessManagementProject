@@ -15,13 +15,18 @@ import android.widget.TextView;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.main.adapter.WorkStationListAdapter;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
+import com.africa.crm.businessmanagement.main.station.activity.ContactManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CostumerManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.DeliveryOrderManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.EnterpriseAccountActivity;
 import com.africa.crm.businessmanagement.main.station.activity.EnterpriseManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.ProductManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.QuotationManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.SalesOrderManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SettingActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SupplierManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SystemManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.TradingOrderManagementActivity;
 import com.africa.crm.businessmanagement.widget.GridItemDecoration;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
@@ -122,12 +127,16 @@ public class MainActivity extends BaseActivityProgress {
         mWorkStationInfoList.add(workStationInfo9);
         WorkStationInfo workStationInfo10 = new WorkStationInfo();
         workStationInfo10.setWork_type("10");
-        workStationInfo10.setWork_name(getString(R.string.system_management));
+        workStationInfo10.setWork_name(getString(R.string.delivery_order_management));
         mWorkStationInfoList.add(workStationInfo10);
         WorkStationInfo workStationInfo11 = new WorkStationInfo();
         workStationInfo11.setWork_type("11");
-        workStationInfo11.setWork_name(getString(R.string.setting));
+        workStationInfo11.setWork_name(getString(R.string.system_management));
         mWorkStationInfoList.add(workStationInfo11);
+        WorkStationInfo workStationInfo12 = new WorkStationInfo();
+        workStationInfo12.setWork_type("12");
+        workStationInfo12.setWork_name(getString(R.string.setting));
+        mWorkStationInfoList.add(workStationInfo12);
         setWorkStationDatas(mWorkStationInfoList);
     }
 
@@ -138,7 +147,7 @@ public class MainActivity extends BaseActivityProgress {
      */
     private void setWorkStationDatas(final List<WorkStationInfo> workStationInfoList) {
         if (!ListUtils.isEmpty(workStationInfoList)) {
-            mWorkStationListAdapter = new WorkStationListAdapter(R.layout.item_work_station_list, workStationInfoList);
+            mWorkStationListAdapter = new WorkStationListAdapter(workStationInfoList);
             rv_work_station.setAdapter(mWorkStationListAdapter);
             GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
             rv_work_station.setLayoutManager(layoutManager);
@@ -167,10 +176,25 @@ public class MainActivity extends BaseActivityProgress {
                         case "5":
                             CostumerManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
+                        case "6":
+                            ContactManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            break;
+                        case "7":
+                            TradingOrderManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            break;
+                        case "8":
+                            QuotationManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            break;
+                        case "9":
+                            SalesOrderManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            break;
                         case "10":
-                            SystemManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            DeliveryOrderManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "11":
+                            SystemManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            break;
+                        case "12":
                             SettingActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         default:

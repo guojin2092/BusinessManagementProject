@@ -15,8 +15,8 @@ import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
-import com.africa.crm.businessmanagement.main.station.adapter.ProductListAdapter;
-import com.africa.crm.businessmanagement.main.station.bean.ProductInfoBean;
+import com.africa.crm.businessmanagement.main.station.adapter.ContactListAdapter;
+import com.africa.crm.businessmanagement.main.station.bean.EnterpriseInfoBean;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -37,7 +37,7 @@ import butterknife.BindView;
  * Modification  History:
  * Why & What is modified:
  */
-public class ProductManagementActivity extends BaseActivity {
+public class ContactManagementActivity extends BaseActivity {
     @BindView(R.id.titlebar_back)
     ImageView titlebar_back;
     @BindView(R.id.titlebar_name)
@@ -51,11 +51,11 @@ public class ProductManagementActivity extends BaseActivity {
 
     private WorkStationInfo mWorkStationInfo;
 
-    @BindView(R.id.rv_product)
-    RecyclerView rv_product;
-    private ProductListAdapter mProductListAdapter;
-    private List<ProductInfoBean> mDeleteList = new ArrayList<>();
-    private List<ProductInfoBean> mProductInfoBeanList = new ArrayList<>();
+    @BindView(R.id.rv_contact)
+    RecyclerView rv_contact;
+    private ContactListAdapter mContactListAdapter;
+    private List<EnterpriseInfoBean> mDeleteList = new ArrayList<>();
+    private List<EnterpriseInfoBean> mContactListDatas = new ArrayList<>();
 
     private boolean mShowCheckBox = false;
 
@@ -63,15 +63,14 @@ public class ProductManagementActivity extends BaseActivity {
      * @param activity
      */
     public static void startActivity(Activity activity, WorkStationInfo workStationInfo) {
-        Intent intent = new Intent(activity, ProductManagementActivity.class);
+        Intent intent = new Intent(activity, ContactManagementActivity.class);
         intent.putExtra("info", workStationInfo);
         activity.startActivity(intent);
     }
 
     @Override
     public void setView(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_product_management);
-
+        setContentView(R.layout.activity_contact_management);
     }
 
     @Override
@@ -104,15 +103,15 @@ public class ProductManagementActivity extends BaseActivity {
                     tv_delete.setVisibility(View.GONE);
                     mShowCheckBox = false;
                 }
-                if (mProductListAdapter != null) {
-                    mProductListAdapter.setmIsDeleted(mShowCheckBox);
+                if (mContactListAdapter != null) {
+                    mContactListAdapter.setmIsDeleted(mShowCheckBox);
                 }
                 break;
             case R.id.ll_add:
-                ToastUtils.show(this, "添加产品");
+                ToastUtils.show(this, "添加联系人");
                 break;
             case R.id.tv_delete:
-                new AlertDialog.Builder(ProductManagementActivity.this)
+                new AlertDialog.Builder(ContactManagementActivity.this)
                         .setTitle("温馨提示")
                         .setMessage("是否确认删除？")
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -124,17 +123,17 @@ public class ProductManagementActivity extends BaseActivity {
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int which) {
-                                for (ProductInfoBean productInfoBean : mProductInfoBeanList) {
-                                    if (productInfoBean.isChosen()) {
-                                        mDeleteList.add(productInfoBean);
+                                for (EnterpriseInfoBean enterpriseInfoBean : mContactListDatas) {
+                                    if (enterpriseInfoBean.isChosen()) {
+                                        mDeleteList.add(enterpriseInfoBean);
                                     }
                                 }
                                 for (int i = 0; i < mDeleteList.size(); i++) {
-                                    if (mProductInfoBeanList.contains(mDeleteList.get(i))) {
-                                        int position = mProductInfoBeanList.indexOf(mDeleteList.get(i));
-                                        mProductInfoBeanList.remove(mDeleteList.get(i));
-                                        if (mProductListAdapter != null) {
-                                            mProductListAdapter.notifyItemRemoved(position);
+                                    if (mContactListDatas.contains(mDeleteList.get(i))) {
+                                        int position = mContactListDatas.indexOf(mDeleteList.get(i));
+                                        mContactListDatas.remove(mDeleteList.get(i));
+                                        if (mContactListAdapter != null) {
+                                            mContactListAdapter.notifyItemRemoved(position);
                                         }
                                     }
                                 }
@@ -148,53 +147,59 @@ public class ProductManagementActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        ProductInfoBean productInfoBean = new ProductInfoBean();
-        productInfoBean.setProduct("云茂地产");
-        productInfoBean.setType("地产");
-        productInfoBean.setLocation("上海");
-        productInfoBean.setChosen(false);
-        mProductInfoBeanList.add(productInfoBean);
+        EnterpriseInfoBean enterpriseInfoBean = new EnterpriseInfoBean();
+        enterpriseInfoBean.setIcon("1");
+        enterpriseInfoBean.setCompany("云茂地产");
+        enterpriseInfoBean.setType("科技");
+        enterpriseInfoBean.setLocation("上海");
+        enterpriseInfoBean.setPhone("电话：17861863");
+        enterpriseInfoBean.setChosen(false);
+        mContactListDatas.add(enterpriseInfoBean);
 
-        ProductInfoBean productInfoBean2 = new ProductInfoBean();
-        productInfoBean2.setProduct("西行科技");
-        productInfoBean2.setType("软件");
-        productInfoBean2.setLocation("沈阳");
-        productInfoBean2.setChosen(false);
-        mProductInfoBeanList.add(productInfoBean2);
+        EnterpriseInfoBean enterpriseInfoBean2 = new EnterpriseInfoBean();
+        enterpriseInfoBean2.setIcon("2");
+        enterpriseInfoBean2.setCompany("西行设计");
+        enterpriseInfoBean2.setType("教育");
+        enterpriseInfoBean2.setLocation("沈阳");
+        enterpriseInfoBean2.setPhone("电话：23536464");
+        enterpriseInfoBean.setChosen(false);
+        mContactListDatas.add(enterpriseInfoBean2);
 
-        ProductInfoBean productInfoBean3 = new ProductInfoBean();
-        productInfoBean3.setProduct("兴时科技");
-        productInfoBean3.setType("科技");
-        productInfoBean3.setLocation("江西");
-        productInfoBean3.setChosen(false);
-        mProductInfoBeanList.add(productInfoBean3);
+        EnterpriseInfoBean enterpriseInfoBean3 = new EnterpriseInfoBean();
+        enterpriseInfoBean3.setIcon("3");
+        enterpriseInfoBean3.setCompany("兴时科技");
+        enterpriseInfoBean3.setType("金融服务");
+        enterpriseInfoBean3.setLocation("江西");
+        enterpriseInfoBean3.setPhone("电话：32624626");
+        enterpriseInfoBean3.setChosen(false);
+        mContactListDatas.add(enterpriseInfoBean3);
 
-        setProductListDatas(mProductInfoBeanList);
+        setContactDatas(mContactListDatas);
     }
 
     /**
-     * 设置产品管理数据
+     * 设置企业账号数据
      *
-     * @param productInfoBeanList
+     * @param enterpriseInfoBeanList
      */
-    private void setProductListDatas(final List<ProductInfoBean> productInfoBeanList) {
-        mProductListAdapter = new ProductListAdapter(productInfoBeanList);
-        rv_product.setAdapter(mProductListAdapter);
+    private void setContactDatas(final List<EnterpriseInfoBean> enterpriseInfoBeanList) {
+        mContactListAdapter = new ContactListAdapter(enterpriseInfoBeanList);
+        rv_contact.setAdapter(mContactListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        rv_product.setLayoutManager(layoutManager);
-        rv_product.addItemDecoration(new LineItemDecoration(this, LinearLayoutManager.VERTICAL, 2, ContextCompat.getColor(this, R.color.F2F2F2)));
-        rv_product.setHasFixedSize(true);
-        rv_product.setNestedScrollingEnabled(false);
+        rv_contact.setLayoutManager(layoutManager);
+        rv_contact.addItemDecoration(new LineItemDecoration(this, LinearLayoutManager.VERTICAL, 2, ContextCompat.getColor(this, R.color.F2F2F2)));
+        rv_contact.setHasFixedSize(true);
+        rv_contact.setNestedScrollingEnabled(false);
 
-        mProductListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        mContactListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (mShowCheckBox) {
-                    CheckBox cb_choose = (CheckBox) adapter.getViewByPosition(rv_product, position, R.id.cb_choose);
-                    mProductInfoBeanList.get(position).setChosen(!cb_choose.isChecked());
-                    mProductListAdapter.notifyDataSetChanged();
+                    CheckBox cb_choose = (CheckBox) adapter.getViewByPosition(rv_contact, position, R.id.cb_choose);
+                    mContactListDatas.get(position).setChosen(!cb_choose.isChecked());
+                    mContactListAdapter.notifyDataSetChanged();
                 } else {
-                    ProductDetailActivity.startActivity(ProductManagementActivity.this, mProductInfoBeanList.get(position));
+                    ContactDetailActivity.startActivity(ContactManagementActivity.this, mContactListDatas.get(position));
                 }
             }
         });

@@ -17,6 +17,7 @@
     <string name="trading_order_management">Gestion des ordres de trading</string>
     <string name="quotation_management">Gestion des devis</string>
     <string name="sales_order_management">Gestion des commandes</string>
+    <string name="delivery_order_management">Gestion des bons de livraison</string>
     <string name="system_management">Gestion du système</string>
     <string name="role_management">Gestion des rôles</string>
     <string name="user_management">Gestion des utilisateurs</string>
@@ -37,6 +38,10 @@
     <string name="search_enterprise">Veuillez saisir le nom de l 'entreprise ou créer une requête</string>
     <string name="search_enterprise_account">Veuillez saisir le numéro / nom de l 'entreprise</string>
     <string name="search_product">Veuillez saisir le nom du produit</string>
-
+    <string name="search_contact">S'il vous plaît entrer un contact</string>
+    <string name="search_trading_order">S'il vous plaît entrer les informations de transaction</string>
+    <string name="search_quotation">S'il vous plaît entrer les informations de devis</string>
+    <string name="search_sales">S'il vous plaît entrer les informations de vente</string>
+    <string name="search_delivery_order">S'il vous plaît entrer les informations d'expédition</string>
 
 </resources>

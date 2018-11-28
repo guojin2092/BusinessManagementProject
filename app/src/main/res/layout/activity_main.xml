@@ -33,6 +33,10 @@
                     android:dividerHeight="0px"
                     android:overScrollMode="never" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp" />
+
             </LinearLayout>
         </com.africa.crm.businessmanagement.widget.OverScrollView>
 
@@ -41,7 +45,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
-            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="25dp"
             android:animateLayoutChanges="true"
             android:background="@drawable/message_background"
             android:orientation="horizontal">

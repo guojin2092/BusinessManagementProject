@@ -15,8 +15,9 @@ import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
-import com.africa.crm.businessmanagement.main.station.adapter.ProductListAdapter;
-import com.africa.crm.businessmanagement.main.station.bean.ProductInfoBean;
+import com.africa.crm.businessmanagement.main.station.adapter.DeliveryOrderListAdapter;
+import com.africa.crm.businessmanagement.main.station.adapter.SalesListAdapter;
+import com.africa.crm.businessmanagement.main.station.bean.TradingOrderInfoBean;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -37,7 +38,7 @@ import butterknife.BindView;
  * Modification  History:
  * Why & What is modified:
  */
-public class ProductManagementActivity extends BaseActivity {
+public class DeliveryOrderManagementActivity extends BaseActivity {
     @BindView(R.id.titlebar_back)
     ImageView titlebar_back;
     @BindView(R.id.titlebar_name)
@@ -51,11 +52,11 @@ public class ProductManagementActivity extends BaseActivity {
 
     private WorkStationInfo mWorkStationInfo;
 
-    @BindView(R.id.rv_product)
-    RecyclerView rv_product;
-    private ProductListAdapter mProductListAdapter;
-    private List<ProductInfoBean> mDeleteList = new ArrayList<>();
-    private List<ProductInfoBean> mProductInfoBeanList = new ArrayList<>();
+    @BindView(R.id.rv_delivery_orders)
+    RecyclerView rv_delivery_orders;
+    private DeliveryOrderListAdapter mDeliveryOrderListAdapter;
+    private List<TradingOrderInfoBean> mDeleteList = new ArrayList<>();
+    private List<TradingOrderInfoBean> mTradingOrderInfoBeanList = new ArrayList<>();
 
     private boolean mShowCheckBox = false;
 
@@ -63,15 +64,14 @@ public class ProductManagementActivity extends BaseActivity {
      * @param activity
      */
     public static void startActivity(Activity activity, WorkStationInfo workStationInfo) {
-        Intent intent = new Intent(activity, ProductManagementActivity.class);
+        Intent intent = new Intent(activity, DeliveryOrderManagementActivity.class);
         intent.putExtra("info", workStationInfo);
         activity.startActivity(intent);
     }
 
     @Override
     public void setView(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_product_management);
-
+        setContentView(R.layout.activity_delivery_order_management);
     }
 
     @Override
@@ -104,15 +104,15 @@ public class ProductManagementActivity extends BaseActivity {
                     tv_delete.setVisibility(View.GONE);
                     mShowCheckBox = false;
                 }
-                if (mProductListAdapter != null) {
-                    mProductListAdapter.setmIsDeleted(mShowCheckBox);
+                if (mDeliveryOrderListAdapter != null) {
+                    mDeliveryOrderListAdapter.setmIsDeleted(mShowCheckBox);
                 }
                 break;
             case R.id.ll_add:
-                ToastUtils.show(this, "添加产品");
+                ToastUtils.show(this, "添加发货单");
                 break;
             case R.id.tv_delete:
-                new AlertDialog.Builder(ProductManagementActivity.this)
+                new AlertDialog.Builder(DeliveryOrderManagementActivity.this)
                         .setTitle("温馨提示")
                         .setMessage("是否确认删除？")
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -124,17 +124,17 @@ public class ProductManagementActivity extends BaseActivity {
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int which) {
-                                for (ProductInfoBean productInfoBean : mProductInfoBeanList) {
-                                    if (productInfoBean.isChosen()) {
-                                        mDeleteList.add(productInfoBean);
+                                for (TradingOrderInfoBean tradingOrderInfoBean : mTradingOrderInfoBeanList) {
+                                    if (tradingOrderInfoBean.isChosen()) {
+                                        mDeleteList.add(tradingOrderInfoBean);
                                     }
                                 }
                                 for (int i = 0; i < mDeleteList.size(); i++) {
-                                    if (mProductInfoBeanList.contains(mDeleteList.get(i))) {
-                                        int position = mProductInfoBeanList.indexOf(mDeleteList.get(i));
-                                        mProductInfoBeanList.remove(mDeleteList.get(i));
-                                        if (mProductListAdapter != null) {
-                                            mProductListAdapter.notifyItemRemoved(position);
+                                    if (mTradingOrderInfoBeanList.contains(mDeleteList.get(i))) {
+                                        int position = mTradingOrderInfoBeanList.indexOf(mDeleteList.get(i));
+                                        mTradingOrderInfoBeanList.remove(mDeleteList.get(i));
+                                        if (mDeliveryOrderListAdapter != null) {
+                                            mDeliveryOrderListAdapter.notifyItemRemoved(position);
                                         }
                                     }
                                 }
@@ -148,53 +148,53 @@ public class ProductManagementActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        ProductInfoBean productInfoBean = new ProductInfoBean();
-        productInfoBean.setProduct("云茂地产");
-        productInfoBean.setType("地产");
-        productInfoBean.setLocation("上海");
-        productInfoBean.setChosen(false);
-        mProductInfoBeanList.add(productInfoBean);
+        TradingOrderInfoBean tradingOrderInfoBean = new TradingOrderInfoBean();
+        tradingOrderInfoBean.setCompany("云茂地产");
+        tradingOrderInfoBean.setMoney("187，000.00");
+        tradingOrderInfoBean.setSender("张三");
+        tradingOrderInfoBean.setChosen(false);
+        mTradingOrderInfoBeanList.add(tradingOrderInfoBean);
 
-        ProductInfoBean productInfoBean2 = new ProductInfoBean();
-        productInfoBean2.setProduct("西行科技");
-        productInfoBean2.setType("软件");
-        productInfoBean2.setLocation("沈阳");
-        productInfoBean2.setChosen(false);
-        mProductInfoBeanList.add(productInfoBean2);
+        TradingOrderInfoBean tradingOrderInfoBean2 = new TradingOrderInfoBean();
+        tradingOrderInfoBean2.setCompany("西行设计");
+        tradingOrderInfoBean2.setMoney("196，000.00");
+        tradingOrderInfoBean2.setSender("李四");
+        tradingOrderInfoBean2.setChosen(false);
+        mTradingOrderInfoBeanList.add(tradingOrderInfoBean2);
 
-        ProductInfoBean productInfoBean3 = new ProductInfoBean();
-        productInfoBean3.setProduct("兴时科技");
-        productInfoBean3.setType("科技");
-        productInfoBean3.setLocation("江西");
-        productInfoBean3.setChosen(false);
-        mProductInfoBeanList.add(productInfoBean3);
+        TradingOrderInfoBean tradingOrderInfoBean3 = new TradingOrderInfoBean();
+        tradingOrderInfoBean3.setCompany("西行设计");
+        tradingOrderInfoBean3.setMoney("32，000.00");
+        tradingOrderInfoBean3.setSender("赵六");
+        tradingOrderInfoBean3.setChosen(false);
+        mTradingOrderInfoBeanList.add(tradingOrderInfoBean3);
 
-        setProductListDatas(mProductInfoBeanList);
+        setDeliveryOrderDatas(mTradingOrderInfoBeanList);
     }
 
     /**
-     * 设置产品管理数据
+     * 设置发货单数据
      *
-     * @param productInfoBeanList
+     * @param tradingOrderDatas
      */
-    private void setProductListDatas(final List<ProductInfoBean> productInfoBeanList) {
-        mProductListAdapter = new ProductListAdapter(productInfoBeanList);
-        rv_product.setAdapter(mProductListAdapter);
+    private void setDeliveryOrderDatas(final List<TradingOrderInfoBean> tradingOrderDatas) {
+        mDeliveryOrderListAdapter = new DeliveryOrderListAdapter(tradingOrderDatas);
+        rv_delivery_orders.setAdapter(mDeliveryOrderListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        rv_product.setLayoutManager(layoutManager);
-        rv_product.addItemDecoration(new LineItemDecoration(this, LinearLayoutManager.VERTICAL, 2, ContextCompat.getColor(this, R.color.F2F2F2)));
-        rv_product.setHasFixedSize(true);
-        rv_product.setNestedScrollingEnabled(false);
+        rv_delivery_orders.setLayoutManager(layoutManager);
+        rv_delivery_orders.addItemDecoration(new LineItemDecoration(this, LinearLayoutManager.VERTICAL, 2, ContextCompat.getColor(this, R.color.F2F2F2)));
+        rv_delivery_orders.setHasFixedSize(true);
+        rv_delivery_orders.setNestedScrollingEnabled(false);
 
-        mProductListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        mDeliveryOrderListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (mShowCheckBox) {
-                    CheckBox cb_choose = (CheckBox) adapter.getViewByPosition(rv_product, position, R.id.cb_choose);
-                    mProductInfoBeanList.get(position).setChosen(!cb_choose.isChecked());
-                    mProductListAdapter.notifyDataSetChanged();
+                    CheckBox cb_choose = (CheckBox) adapter.getViewByPosition(rv_delivery_orders, position, R.id.cb_choose);
+                    mTradingOrderInfoBeanList.get(position).setChosen(!cb_choose.isChecked());
+                    mDeliveryOrderListAdapter.notifyDataSetChanged();
                 } else {
-                    ProductDetailActivity.startActivity(ProductManagementActivity.this, mProductInfoBeanList.get(position));
+                    DeliveryOrderDetailActivity.startActivity(DeliveryOrderManagementActivity.this, mTradingOrderInfoBeanList.get(position));
                 }
             }
         });

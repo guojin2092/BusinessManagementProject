@@ -124,6 +124,11 @@ public class EnterpriseAccountActivity extends BaseActivity {
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int which) {
+                                for (EnterpriseInfoBean enterpriseInfoBean : mEnterpriseInfoList) {
+                                    if (enterpriseInfoBean.isChosen()) {
+                                        mDeleteList.add(enterpriseInfoBean);
+                                    }
+                                }
                                 for (int i = 0; i < mDeleteList.size(); i++) {
                                     if (mEnterpriseInfoList.contains(mDeleteList.get(i))) {
                                         int position = mEnterpriseInfoList.indexOf(mDeleteList.get(i));
@@ -193,9 +198,6 @@ public class EnterpriseAccountActivity extends BaseActivity {
                 if (mShowCheckBox) {
                     CheckBox cb_choose = (CheckBox) adapter.getViewByPosition(rv_enterprise_account, position, R.id.cb_choose);
                     mEnterpriseInfoList.get(position).setChosen(!cb_choose.isChecked());
-                    if (mEnterpriseInfoList.get(position).isChosen()) {
-                        mDeleteList.add(mEnterpriseInfoList.get(position));
-                    }
                     mEnterpriseAccountListAdapter.notifyDataSetChanged();
                 } else {
                     EnterpriseAccountDetailActivity.startActivity(EnterpriseAccountActivity.this, mEnterpriseInfoList.get(position));
