@@ -23,6 +23,7 @@ import com.africa.crm.businessmanagement.main.station.activity.EnterpriseManagem
 import com.africa.crm.businessmanagement.main.station.activity.ProductManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.QuotationManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SalesOrderManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.ServiceRecordManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SettingActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SupplierManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SystemManagementActivity;
@@ -131,12 +132,16 @@ public class MainActivity extends BaseActivityProgress {
         mWorkStationInfoList.add(workStationInfo10);
         WorkStationInfo workStationInfo11 = new WorkStationInfo();
         workStationInfo11.setWork_type("11");
-        workStationInfo11.setWork_name(getString(R.string.system_management));
+        workStationInfo11.setWork_name(getString(R.string.service_record_management));
         mWorkStationInfoList.add(workStationInfo11);
         WorkStationInfo workStationInfo12 = new WorkStationInfo();
         workStationInfo12.setWork_type("12");
-        workStationInfo12.setWork_name(getString(R.string.setting));
+        workStationInfo12.setWork_name(getString(R.string.system_management));
         mWorkStationInfoList.add(workStationInfo12);
+        WorkStationInfo workStationInfo13 = new WorkStationInfo();
+        workStationInfo13.setWork_type("13");
+        workStationInfo13.setWork_name(getString(R.string.setting));
+        mWorkStationInfoList.add(workStationInfo13);
         setWorkStationDatas(mWorkStationInfoList);
     }
 
@@ -192,9 +197,12 @@ public class MainActivity extends BaseActivityProgress {
                             DeliveryOrderManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "11":
-                            SystemManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            ServiceRecordManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "12":
+                            SystemManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            break;
+                        case "13":
                             SettingActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         default:

@@ -22,6 +22,7 @@
     <string name="quotation_management">报价单管理</string>
     <string name="sales_order_management">销售单管理</string>
     <string name="delivery_order_management">发货单管理</string>
+    <string name="service_record_management">服务记录管理</string>
     <string name="role_management">角色管理</string>
     <string name="user_management">用户管理</string>
     <string name="system_management">系统管理</string>
@@ -48,5 +49,6 @@
     <string name="search_quotation">请输入报价信息</string>
     <string name="search_sales">请输入销售信息</string>
     <string name="search_delivery_order">请输入发货信息</string>
+    <string name="search_service_record">请输入服务记录信息</string>
 
 </resources>

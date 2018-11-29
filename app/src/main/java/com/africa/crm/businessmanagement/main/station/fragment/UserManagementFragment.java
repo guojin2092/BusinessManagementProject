@@ -101,7 +101,6 @@ public class UserManagementFragment extends BaseFragment {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                     ToastUtils.show(getActivity(), mCostumerInfoBeanList.get(position).getCompany());
-                    CostumerDetailActivity.startActivity(getActivity(), mCostumerInfoBeanList.get(position));
                 }
             });
         }
