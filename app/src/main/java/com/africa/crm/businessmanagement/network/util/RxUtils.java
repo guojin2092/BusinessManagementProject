@@ -1,7 +1,7 @@
 package com.africa.crm.businessmanagement.network.util;
 
 
-import com.africa.crm.businessmanagement.network.base.BaseEntity;
+import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.network.base.BaseView;
 import com.africa.crm.businessmanagement.network.error.ComException;
 

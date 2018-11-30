@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.main.station.adapter.AuthLimitListAdapter;
-import com.africa.crm.businessmanagement.main.station.bean.AuthInfoBean;
+import com.africa.crm.businessmanagement.main.bean.AuthInfoBean;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.gitonway.lee.niftymodaldialogeffects.lib.ColorUtils;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;

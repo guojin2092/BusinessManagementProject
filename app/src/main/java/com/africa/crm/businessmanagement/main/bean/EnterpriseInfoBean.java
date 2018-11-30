@@ -1,4 +1,4 @@
-package com.africa.crm.businessmanagement.main.station.bean;
+package com.africa.crm.businessmanagement.main.bean;
 
 import java.io.Serializable;
 

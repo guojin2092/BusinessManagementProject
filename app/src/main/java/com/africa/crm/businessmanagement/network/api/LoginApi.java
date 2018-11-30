@@ -1,7 +1,7 @@
 package com.africa.crm.businessmanagement.network.api;
 
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
-import com.africa.crm.businessmanagement.network.base.BaseEntity;
+import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 
 import io.reactivex.Observable;
 import retrofit2.http.Field;

@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.main.station.bean.TableInfo;
-import com.africa.crm.businessmanagement.main.station.bean.TableInfoBean;
+import com.africa.crm.businessmanagement.main.bean.TableInfo;
+import com.africa.crm.businessmanagement.main.bean.TableInfoBean;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -12,8 +12,8 @@ import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.main.station.adapter.ServiceTrackingListAdapter;
-import com.africa.crm.businessmanagement.main.station.bean.ServiceRecordInfoBean;
-import com.africa.crm.businessmanagement.main.station.bean.ServiceTrackingInfoBean;
+import com.africa.crm.businessmanagement.main.bean.ServiceRecordInfoBean;
+import com.africa.crm.businessmanagement.main.bean.ServiceTrackingInfoBean;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 

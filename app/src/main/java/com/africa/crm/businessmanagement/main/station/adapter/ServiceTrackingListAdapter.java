@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.main.station.bean.ServiceTrackingInfoBean;
+import com.africa.crm.businessmanagement.main.bean.ServiceTrackingInfoBean;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 

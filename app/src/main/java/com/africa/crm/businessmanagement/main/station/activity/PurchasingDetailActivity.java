@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.main.station.bean.PurchasingInfoBean;
+import com.africa.crm.businessmanagement.main.bean.PurchasingInfoBean;
 
 import baselibrary.library.base.BaseActivity;
 import butterknife.BindView;

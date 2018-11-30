@@ -5,7 +5,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.main.station.bean.AuthInfoBean;
+import com.africa.crm.businessmanagement.main.bean.AuthInfoBean;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 

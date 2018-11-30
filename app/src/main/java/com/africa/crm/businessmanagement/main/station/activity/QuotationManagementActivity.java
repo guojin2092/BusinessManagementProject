@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.station.adapter.QuotationListAdapter;
-import com.africa.crm.businessmanagement.main.station.bean.TradingOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.TradingOrderInfoBean;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;

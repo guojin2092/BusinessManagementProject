@@ -1,4 +1,4 @@
-package com.africa.crm.businessmanagement.main.station.bean;
+package com.africa.crm.businessmanagement.main.bean;
 
 import java.io.Serializable;
 
@@ -11,26 +11,18 @@ import java.io.Serializable;
  * Modification  History:
  * Why & What is modified:
  */
-public class CostumerInfoBean implements Serializable {
-    private String icon;
-    private String company;
+public class ProductInfoBean implements Serializable {
+    private String product;
     private String type;
     private String location;
+    private boolean chosen;
 
-    public String getIcon() {
-        return icon;
+    public String getProduct() {
+        return product;
     }
 
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public String getCompany() {
-        return company;
-    }
-
-    public void setCompany(String company) {
-        this.company = company;
+    public void setProduct(String product) {
+        this.product = product;
     }
 
     public String getType() {
@@ -47,5 +39,13 @@ public class CostumerInfoBean implements Serializable {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public boolean isChosen() {
+        return chosen;
+    }
+
+    public void setChosen(boolean chosen) {
+        this.chosen = chosen;
     }
 }

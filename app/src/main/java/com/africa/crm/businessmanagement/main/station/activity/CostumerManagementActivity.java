@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.station.adapter.CostumerListAdapter;
-import com.africa.crm.businessmanagement.main.station.bean.CostumerInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CostumerInfoBean;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 

@@ -1,4 +1,6 @@
-package com.africa.crm.businessmanagement.network.base;
+package com.africa.crm.businessmanagement.main.bean;
+
+import java.io.Serializable;
 
 /**
  * Project：BusinessManagementProject
@@ -9,7 +11,7 @@ package com.africa.crm.businessmanagement.network.base;
  * Modification  History:
  * Why & What is modified:
  */
-public class BaseEntity<R> {
+public class BaseEntity<R> implements Serializable {
     private boolean success;
     private int status;
     private int code;

@@ -10,10 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.main.station.activity.CostumerDetailActivity;
-import com.africa.crm.businessmanagement.main.station.activity.CostumerManagementActivity;
 import com.africa.crm.businessmanagement.main.station.adapter.CostumerListAdapter;
-import com.africa.crm.businessmanagement.main.station.bean.CostumerInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CostumerInfoBean;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
