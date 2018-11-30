@@ -20,6 +20,8 @@
     <string name="sales_order_management">Sales order management</string>
     <string name="delivery_order_management">Delivery order management</string>
     <string name="service_record_management">Service record management</string>
+    <string name="purchasing_management">Purchasing management</string>
+    <string name="task_management">Task management</string>
     <string name="system_management">System management</string>
     <string name="role_management">Role management</string>
     <string name="user_management">User management</string>
@@ -47,4 +49,6 @@
     <string name="search_sales">Please enter sales information</string>
     <string name="search_delivery_order">Please enter shipping information</string>
     <string name="search_service_record">Please enter service record information</string>
+    <string name="search_purchasing">Please enter the purchase order number</string>
+    <string name="search_task">Please enter the task number</string>
 </resources>

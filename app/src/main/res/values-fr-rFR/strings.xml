@@ -19,6 +19,8 @@
     <string name="sales_order_management">Gestion des commandes</string>
     <string name="delivery_order_management">Gestion des bons de livraison</string>
     <string name="service_record_management">service de gestion des dossiers</string>
+    <string name="purchasing_management">Gestion des achats</string>
+    <string name="task_management">Gestion des tâches</string>
     <string name="system_management">Gestion du système</string>
     <string name="role_management">Gestion des rôles</string>
     <string name="user_management">Gestion des utilisateurs</string>
@@ -46,5 +48,7 @@
     <string name="search_sales">S'il vous plaît entrer les informations de vente</string>
     <string name="search_delivery_order">S'il vous plaît entrer les informations d'expédition</string>
     <string name="search_service_record">S'il vous plaît entrer les informations de l'enregistrement de service</string>
+    <string name="search_purchasing">S'il vous plaît entrer le numéro de commande</string>
+    <string name="search_task">S'il vous plaît entrer le numéro de tâche</string>
 
 </resources>

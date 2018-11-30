@@ -36,6 +36,8 @@ public class ServiceTrackingListAdapter extends BaseQuickAdapter<ServiceTracking
         View view_gray_bottom = helper.getView(R.id.view_gray_bottom);
         TextView tv_service_state = helper.getView(R.id.tv_service_state);
         TextView tv_service_date = helper.getView(R.id.tv_service_date);
+        TextView tv_add_tracking = helper.getView(R.id.tv_add_tracking);
+        helper.addOnClickListener(R.id.tv_add_tracking);
         if (helper.getLayoutPosition() == 0) {
             top_line.setVisibility(View.INVISIBLE);
             view_gray_top.setVisibility(View.GONE);
@@ -53,11 +55,13 @@ public class ServiceTrackingListAdapter extends BaseQuickAdapter<ServiceTracking
             if (helper.getLayoutPosition() == getData().size() - 1) {
                 bottom_line.setVisibility(View.GONE);
                 view_gray_bottom.setVisibility(View.GONE);
+                tv_add_tracking.setVisibility(View.VISIBLE);
             } else {
                 bottom_line.setVisibility(View.VISIBLE);
             }
         } else {
             bottom_line.setVisibility(View.VISIBLE);
+            tv_add_tracking.setVisibility(View.VISIBLE);
         }
         tv_service_state.setText(logisticsBean.getAcceptStation());
         tv_service_date.setText(logisticsBean.getAcceptTime().substring(0, 5) + "\n" + logisticsBean.getAcceptTime().substring(6));

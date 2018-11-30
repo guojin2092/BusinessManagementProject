@@ -121,6 +121,22 @@
             android:name=".main.station.activity.ServiceRecordDetailActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".main.station.activity.PurchasingManagementActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".main.station.activity.PurchasingDetailActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".main.station.activity.TaskManagementActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".main.station.activity.TaskDetailActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
     </application>
 
 </manifest>

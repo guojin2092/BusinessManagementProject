@@ -15,6 +15,7 @@ import com.africa.crm.businessmanagement.main.station.adapter.ServiceTrackingLis
 import com.africa.crm.businessmanagement.main.station.bean.ServiceRecordInfoBean;
 import com.africa.crm.businessmanagement.main.station.bean.ServiceTrackingInfoBean;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,6 +117,15 @@ public class ServiceRecordDetailActivity extends BaseActivity {
             rv_service_tracking.addItemDecoration(new LineItemDecoration(this, DividerItemDecoration.VERTICAL, 0, 0));
             rv_service_tracking.setHasFixedSize(true);
             rv_service_tracking.setNestedScrollingEnabled(false);
+
+            mServiceTrackingListAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+                @Override
+                public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                    if (view.getId() == R.id.tv_add_tracking) {
+                        showShortToast("添加追踪");
+                    }
+                }
+            });
         }
     }
 

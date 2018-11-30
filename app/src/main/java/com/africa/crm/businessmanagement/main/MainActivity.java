@@ -21,12 +21,14 @@ import com.africa.crm.businessmanagement.main.station.activity.DeliveryOrderMana
 import com.africa.crm.businessmanagement.main.station.activity.EnterpriseAccountActivity;
 import com.africa.crm.businessmanagement.main.station.activity.EnterpriseManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.ProductManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.PurchasingManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.QuotationManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SalesOrderManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.ServiceRecordManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SettingActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SupplierManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SystemManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.TaskManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.TradingOrderManagementActivity;
 import com.africa.crm.businessmanagement.widget.GridItemDecoration;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -136,12 +138,20 @@ public class MainActivity extends BaseActivityProgress {
         mWorkStationInfoList.add(workStationInfo11);
         WorkStationInfo workStationInfo12 = new WorkStationInfo();
         workStationInfo12.setWork_type("12");
-        workStationInfo12.setWork_name(getString(R.string.system_management));
+        workStationInfo12.setWork_name(getString(R.string.purchasing_management));
         mWorkStationInfoList.add(workStationInfo12);
         WorkStationInfo workStationInfo13 = new WorkStationInfo();
         workStationInfo13.setWork_type("13");
-        workStationInfo13.setWork_name(getString(R.string.setting));
+        workStationInfo13.setWork_name(getString(R.string.task_management));
         mWorkStationInfoList.add(workStationInfo13);
+        WorkStationInfo workStationInfo14 = new WorkStationInfo();
+        workStationInfo14.setWork_type("14");
+        workStationInfo14.setWork_name(getString(R.string.system_management));
+        mWorkStationInfoList.add(workStationInfo14);
+        WorkStationInfo workStationInfo15 = new WorkStationInfo();
+        workStationInfo15.setWork_type("15");
+        workStationInfo15.setWork_name(getString(R.string.setting));
+        mWorkStationInfoList.add(workStationInfo15);
         setWorkStationDatas(mWorkStationInfoList);
     }
 
@@ -200,9 +210,15 @@ public class MainActivity extends BaseActivityProgress {
                             ServiceRecordManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "12":
-                            SystemManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            PurchasingManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "13":
+                            TaskManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            break;
+                        case "14":
+                            SystemManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            break;
+                        case "15":
                             SettingActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         default:
