@@ -27,7 +27,7 @@ import com.gitonway.lee.niftymodaldialogeffects.lib.effects.BaseEffects;
 
 import java.util.List;
 
-import baseutil.common.util.ListUtils;
+import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 
 
 /**

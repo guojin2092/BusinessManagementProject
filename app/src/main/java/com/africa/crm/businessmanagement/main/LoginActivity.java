@@ -16,7 +16,7 @@ import com.africa.crm.businessmanagement.main.contract.LoginContract;
 import com.africa.crm.businessmanagement.main.presenter.LoginPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
 
-import baseutil.library.base.progress.BaseFragmentProgress;
+import com.africa.crm.businessmanagement.baseutil.library.base.progress.BaseFragmentProgress;
 import butterknife.BindView;
 
 /**

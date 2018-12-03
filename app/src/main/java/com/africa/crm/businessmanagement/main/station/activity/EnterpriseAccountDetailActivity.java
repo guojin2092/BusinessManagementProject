@@ -10,8 +10,8 @@ import android.widget.TextView;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.main.bean.EnterpriseInfoBean;
 
-import baseutil.common.util.ToastUtils;
-import baseutil.library.base.BaseActivity;
+import com.africa.crm.businessmanagement.baseutil.common.util.ToastUtils;
+import com.africa.crm.businessmanagement.baseutil.library.base.BaseActivity;
 import butterknife.BindView;
 
 public class EnterpriseAccountDetailActivity extends BaseActivity {

@@ -18,9 +18,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import baseutil.common.util.ListUtils;
-import baseutil.common.util.ToastUtils;
-import baseutil.library.base.BaseFragment;
+import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
+import com.africa.crm.businessmanagement.baseutil.common.util.ToastUtils;
+import com.africa.crm.businessmanagement.baseutil.library.base.BaseFragment;
 import butterknife.BindView;
 
 /**

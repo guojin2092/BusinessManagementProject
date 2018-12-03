@@ -41,7 +41,7 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
-        <baseutil.library.picker.WheelRecyclerView
+        <com.africa.crm.businessmanagement.baseutil.library.picker.WheelRecyclerView
             android:id="@+id/wheel_province"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

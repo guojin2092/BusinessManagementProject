@@ -24,8 +24,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import baseutil.common.util.ToastUtils;
-import baseutil.library.base.BaseActivity;
+import com.africa.crm.businessmanagement.baseutil.common.util.ToastUtils;
+import com.africa.crm.businessmanagement.baseutil.library.base.BaseActivity;
 import butterknife.BindView;
 
 /**

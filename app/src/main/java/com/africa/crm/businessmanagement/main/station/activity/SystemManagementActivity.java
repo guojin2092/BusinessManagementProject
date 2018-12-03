@@ -16,7 +16,7 @@ import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.station.fragment.RoleManagementFragment;
 import com.africa.crm.businessmanagement.main.station.fragment.UserManagementFragment;
 
-import baseutil.library.base.BaseActivity;
+import com.africa.crm.businessmanagement.baseutil.library.base.BaseActivity;
 import butterknife.BindView;
 
 /**

@@ -20,8 +20,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import baseutil.common.util.ListUtils;
-import baseutil.library.base.BaseActivity;
+import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
+import com.africa.crm.businessmanagement.baseutil.library.base.BaseActivity;
 import butterknife.BindView;
 
 public class ServiceRecordDetailActivity extends BaseActivity {

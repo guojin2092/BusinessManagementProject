@@ -12,7 +12,7 @@ import com.africa.crm.businessmanagement.main.bean.TableInfoBean;
 import java.util.ArrayList;
 import java.util.List;
 
-import baseutil.common.util.ListUtils;
+import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import drawthink.expandablerecyclerview.adapter.BaseRecyclerViewAdapter;
 import drawthink.expandablerecyclerview.bean.RecyclerViewData;
 
