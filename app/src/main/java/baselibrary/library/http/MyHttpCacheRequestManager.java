@@ -4,7 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.loopj.android.http.RequestParams;
-import com.simplesoft.basesimplelibrary.manager.SimpleUserInfoManager;
+import com.simplesoft.baselibrary.manager.SimpleUserInfoManager;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;

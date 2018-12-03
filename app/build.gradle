@@ -81,7 +81,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.2'
 
     /*基础类库*/
-    api project(':basesimplelibrary')
+    api project(':baselibrary')
     /*基础类库*/
 
     implementation 'com.android.support:multidex:1.0.3'

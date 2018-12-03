@@ -9,7 +9,7 @@ import android.widget.ScrollView;
 import com.africa.crm.businessmanagement.R;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
-import com.simplesoft.basesimplelibrary.bean.BaseSimpleBean;
+import com.simplesoft.baselibrary.bean.BaseSimpleBean;
 
 import baselibrary.library.http.MyHttpRequestFinishInterface;
 import baselibrary.library.util.NetUtil;

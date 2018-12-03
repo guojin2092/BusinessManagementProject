@@ -7,7 +7,7 @@ import android.os.Message;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.widget.OaPortUrl;
 import com.google.gson.Gson;
-import com.simplesoft.basesimplelibrary.bean.BaseSimpleBean;
+import com.simplesoft.baselibrary.bean.BaseSimpleBean;
 
 import java.io.IOException;
 

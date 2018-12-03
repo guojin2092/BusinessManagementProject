@@ -1,6 +1,6 @@
 package baselibrary.library.http;
 
-import com.simplesoft.basesimplelibrary.bean.BaseSimpleBean;
+import com.simplesoft.baselibrary.bean.BaseSimpleBean;
 
 /**
  * http请求接口

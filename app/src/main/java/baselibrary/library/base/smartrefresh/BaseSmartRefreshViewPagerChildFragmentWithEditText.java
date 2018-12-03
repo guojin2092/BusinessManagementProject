@@ -8,8 +8,8 @@ import android.widget.ListView;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.widget.ClearEditText;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.simplesoft.basesimplelibrary.http.MyNetworkUtil;
-import com.simplesoft.basesimplelibrary.utils.ToastUtils;
+import com.simplesoft.baselibrary.http.MyNetworkUtil;
+import com.simplesoft.baselibrary.utils.ToastUtils;
 
 import baselibrary.library.base.progress.BaseFragmentProgress;
 

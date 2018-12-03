@@ -10,8 +10,8 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.simplesoft.basesimplelibrary.bean.BaseSimpleBean;
-import com.simplesoft.basesimplelibrary.http.MyHttpRequestFinishInterface;
+import com.simplesoft.baselibrary.bean.BaseSimpleBean;
+import com.simplesoft.baselibrary.http.MyHttpRequestFinishInterface;
 
 import baselibrary.library.base.progress.BaseActivityProgress;
 

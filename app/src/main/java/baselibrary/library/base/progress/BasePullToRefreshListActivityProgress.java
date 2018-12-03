@@ -10,7 +10,7 @@ import android.widget.ListView;
 import com.africa.crm.businessmanagement.R;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.simplesoft.basesimplelibrary.bean.BaseSimpleBean;
+import com.simplesoft.baselibrary.bean.BaseSimpleBean;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

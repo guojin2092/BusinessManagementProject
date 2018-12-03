@@ -5,7 +5,7 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 
 import com.africa.crm.businessmanagement.R;
-import com.simplesoft.basesimplelibrary.bean.BaseSimpleBean;
+import com.simplesoft.baselibrary.bean.BaseSimpleBean;
 
 import baselibrary.library.http.MyHttpRequestFinishInterface;
 import baselibrary.library.special.view.scrollview.NestListView;

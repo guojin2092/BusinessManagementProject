@@ -5,7 +5,7 @@ import android.content.Context;
 import com.africa.crm.businessmanagement.R;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.simplesoft.basesimplelibrary.bean.BaseSimpleBean;
+import com.simplesoft.baselibrary.bean.BaseSimpleBean;
 
 import baselibrary.library.myview.MyLog;
 import cz.msebera.android.httpclient.Header;

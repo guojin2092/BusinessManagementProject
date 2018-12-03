@@ -1,0 +1,93 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        // dex突破65535的限制
+        multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    api 'com.android.support:appcompat-v7:27.1.1'
+    testImplementation 'junit:junit:4.12'
+    api 'com.google.code.gson:gson:2.8.2'
+
+    /*okhttp3*/
+    api 'com.squareup.okhttp3:okhttp:3.11.0'
+    api 'com.squareup.okhttp3:logging-interceptor:3.9.1'
+    /*okhttp3*/
+
+    /*http*/
+    api 'com.loopj.android:android-async-http:1.4.9'
+    /*http*/
+
+    releaseApi 'com.android.support:multidex:1.+'
+    /*64k方法数限制原理与解决 http://www.jianshu.com/p/da138bf975f7*/
+
+    /*SmartRefreshLayout*/
+    api project(':baselibrary:refresh-footer')
+    api project(':baselibrary:refresh-header')
+    api project(':baselibrary:refresh-layout')
+    /*SmartRefreshLayout*/
+
+    api project(':baselibrary:baseOldLib')
+
+    /*下拉刷新控件*/
+    api project(':baselibrary:PullToRefresh')
+    /*下拉刷新控件*/
+
+    /*弹出框动画*/
+    api project(':baselibrary:dialogAnim')
+    /*弹出框动画*/
+
+    /*城市选择*/
+    api project(':baselibrary:indexlib')
+    /*城市选择*/
+
+    /*时间选择器*/
+    api project(':baselibrary:pickerview')
+    /*时间选择器*/
+
+    /*photoview*/
+    api project(':baselibrary:photoview_lib')
+    /*photoview*/
+
+    /*沉浸式状态栏*/
+    api 'com.jaeger.statusbarutil:library:1.4.0'
+    api 'com.readystatesoftware.systembartint:systembartint:1.0.3'
+    /*沉浸式状态栏*/
+
+    /*MD对话框*/
+    api 'com.afollestad.material-dialogs:core:0.9.3.0'
+    /*MD对话框*/
+
+    /*鲁班图片压缩*/
+    api 'top.zibin:Luban:1.1.3'
+    /*鲁班图片压缩*/
+
+    /*picasso*/
+    api 'com.squareup.picasso:picasso:2.71828'
+    api 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2'
+    /*picasso*/
+
+    /*log日志打印*/
+    api 'com.orhanobut:logger:2.1.1'
+    /*log日志打印*/
+}

@@ -1,7 +1,7 @@
 package baselibrary.library.special.ui.user.bean;
 
 
-import com.simplesoft.basesimplelibrary.bean.BaseSimpleBean;
+import com.simplesoft.baselibrary.bean.BaseSimpleBean;
 
 import java.io.Serializable;
 

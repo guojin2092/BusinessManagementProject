@@ -7,7 +7,7 @@ import android.widget.LinearLayout;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.main.LoginActivity;
-import com.simplesoft.basesimplelibrary.bean.BaseSimpleBean;
+import com.simplesoft.baselibrary.bean.BaseSimpleBean;
 
 import baselibrary.library.base.BaseFragment;
 import baselibrary.library.http.MyHttpRequestFinishInterface;
