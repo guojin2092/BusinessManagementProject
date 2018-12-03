@@ -41,7 +41,7 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
-        <baselibrary.library.picker.WheelRecyclerView
+        <baseutil.library.picker.WheelRecyclerView
             android:id="@+id/wheel_province"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

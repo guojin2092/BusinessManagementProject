@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.africa.crm.businessmanagement.mvp.presenter.BasePresenter;
 
-import baselibrary.library.base.BaseActivity;
+import baseutil.library.base.BaseActivity;
 
 /**
  * Project：BusinessManagementProject

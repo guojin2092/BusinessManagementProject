@@ -19,7 +19,7 @@ import com.africa.crm.businessmanagement.main.bean.TableInfoBean;
 import java.util.ArrayList;
 import java.util.List;
 
-import baselibrary.library.base.BaseActivity;
+import baseutil.library.base.BaseActivity;
 import butterknife.BindView;
 import drawthink.expandablerecyclerview.bean.RecyclerViewData;
 import drawthink.expandablerecyclerview.listener.OnRecyclerViewListener;

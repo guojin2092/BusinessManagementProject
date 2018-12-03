@@ -10,8 +10,8 @@ import android.widget.TextView;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.main.bean.PurchasingInfoBean;
 
-import baselibrary.common.util.ToastUtils;
-import baselibrary.library.base.BaseActivity;
+import baseutil.common.util.ToastUtils;
+import baseutil.library.base.BaseActivity;
 import butterknife.BindView;
 
 public class TaskDetailActivity extends BaseActivity {

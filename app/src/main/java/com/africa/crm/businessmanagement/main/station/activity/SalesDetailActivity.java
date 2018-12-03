@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.main.bean.TradingOrderInfoBean;
 
-import baselibrary.library.base.BaseActivity;
+import baseutil.library.base.BaseActivity;
 import butterknife.BindView;
 
 public class SalesDetailActivity extends BaseActivity {

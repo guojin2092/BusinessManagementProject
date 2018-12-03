@@ -22,8 +22,8 @@ import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import java.util.ArrayList;
 import java.util.List;
 
-import baselibrary.common.util.ListUtils;
-import baselibrary.library.base.BaseFragment;
+import baseutil.common.util.ListUtils;
+import baseutil.library.base.BaseFragment;
 import butterknife.BindView;
 
 

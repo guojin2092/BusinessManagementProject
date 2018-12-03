@@ -18,9 +18,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import baselibrary.common.util.ListUtils;
-import baselibrary.common.util.ToastUtils;
-import baselibrary.library.base.BaseFragment;
+import baseutil.common.util.ListUtils;
+import baseutil.common.util.ToastUtils;
+import baseutil.library.base.BaseFragment;
 import butterknife.BindView;
 
 /**

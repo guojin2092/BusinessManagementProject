@@ -3,6 +3,7 @@ package com.africa.crm.businessmanagement.main;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -11,13 +12,12 @@ import android.widget.Toast;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
-import com.africa.crm.businessmanagement.network.error.ComConsumer;
-import com.africa.crm.businessmanagement.network.util.RxUtils;
+import com.africa.crm.businessmanagement.main.contract.LoginContract;
+import com.africa.crm.businessmanagement.main.presenter.LoginPresenter;
+import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
 
-import baselibrary.library.base.progress.BaseActivityProgress;
-import baselibrary.library.base.progress.BaseFragmentProgress;
+import baseutil.library.base.progress.BaseFragmentProgress;
 import butterknife.BindView;
-import io.reactivex.functions.Consumer;
 
 /**
  * Project：BusinessManagementProject
@@ -28,7 +28,7 @@ import io.reactivex.functions.Consumer;
  * Modification  History:
  * Why & What is modified:
  */
-public class LoginActivity extends BaseActivityProgress {
+public class LoginActivity extends BaseMvpActivity<LoginPresenter> implements LoginContract.View {
     @BindView(R.id.tv_login)
     TextView tv_login;
     @BindView(R.id.et_username)
@@ -40,7 +40,7 @@ public class LoginActivity extends BaseActivityProgress {
 
     //登陆成功
     public final static int LOGIN_SUCCESS = 1002;
-    public static final String LOGIN_SUCCESS_OK = "com.simplesoft.resident.login_success";
+    public static final String LOGIN_SUCCESS_OK = "com.africa.crm.businessmanagement.login_success";
 
     /**
      * 在activity中请求回调,显示登录界面
@@ -72,7 +72,6 @@ public class LoginActivity extends BaseActivityProgress {
 
     @Override
     public void initView() {
-        super.initView();
         tv_login.setOnClickListener(this);
     }
 
@@ -86,16 +85,15 @@ public class LoginActivity extends BaseActivityProgress {
         super.onClick(v);
         switch (v.getId()) {
             case R.id.tv_login:
-                addDisposable(mDataManager.getLoginInfo(et_username.getText().toString().trim(), et_password.getText().toString().trim())
-                        .compose(RxUtils.<LoginInfoBean>ioToMain(this))
-                        .subscribe(new Consumer<LoginInfoBean>() {
-                            @Override
-                            public void accept(LoginInfoBean loginInfoBean) throws Exception {
-                                if (loginInfoBean != null) {
-                                    MainActivity.startActivity(LoginActivity.this);
-                                }
-                            }
-                        }, new ComConsumer(LoginActivity.this)));
+                if (TextUtils.isEmpty(et_username.getText().toString().trim())) {
+                    toastMsg("用户名不能为空");
+                    return;
+                }
+                if (TextUtils.isEmpty(et_password.getText().toString().trim())) {
+                    toastMsg("密码不能为空");
+                    return;
+                }
+                mPresenter.getLoginInfo(et_username.getText().toString().trim(), et_password.getText().toString().trim());
                 break;
         }
     }
@@ -114,4 +112,17 @@ public class LoginActivity extends BaseActivityProgress {
         }
         return super.onKeyDown(keyCode, event);
     }
+
+    @Override
+    protected LoginPresenter injectPresenter() {
+        return new LoginPresenter();
+    }
+
+    @Override
+    public void getLoginInfo(LoginInfoBean loginInfoBean) {
+        if (loginInfoBean != null) {
+            MainActivity.startActivity(this);
+        }
+    }
+
 }
