@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
+import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
+import com.africa.crm.businessmanagement.baseutil.library.base.progress.BaseActivityProgress;
 import com.africa.crm.businessmanagement.main.adapter.WorkStationListAdapter;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.station.activity.ContactManagementActivity;
@@ -37,9 +39,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
-import com.africa.crm.businessmanagement.baseutil.common.util.ToastUtils;
-import com.africa.crm.businessmanagement.baseutil.library.base.progress.BaseActivityProgress;
 import butterknife.BindView;
 
 public class MainActivity extends BaseActivityProgress {
@@ -135,28 +134,48 @@ public class MainActivity extends BaseActivityProgress {
         mWorkStationInfoList.add(workStationInfo10);
         WorkStationInfo workStationInfo11 = new WorkStationInfo();
         workStationInfo11.setWork_type("11");
-        workStationInfo11.setWork_name(getString(R.string.service_record_management));
+        workStationInfo11.setWork_name(getString(R.string.payment_management));
         mWorkStationInfoList.add(workStationInfo11);
         WorkStationInfo workStationInfo12 = new WorkStationInfo();
         workStationInfo12.setWork_type("12");
-        workStationInfo12.setWork_name(getString(R.string.purchasing_management));
+        workStationInfo12.setWork_name(getString(R.string.service_record_management));
         mWorkStationInfoList.add(workStationInfo12);
         WorkStationInfo workStationInfo13 = new WorkStationInfo();
         workStationInfo13.setWork_type("13");
-        workStationInfo13.setWork_name(getString(R.string.task_management));
+        workStationInfo13.setWork_name(getString(R.string.inventory_management));
         mWorkStationInfoList.add(workStationInfo13);
         WorkStationInfo workStationInfo14 = new WorkStationInfo();
         workStationInfo14.setWork_type("14");
-        workStationInfo14.setWork_name(getString(R.string.payment_management));
+        workStationInfo14.setWork_name(getString(R.string.purchasing_management));
         mWorkStationInfoList.add(workStationInfo14);
         WorkStationInfo workStationInfo15 = new WorkStationInfo();
         workStationInfo15.setWork_type("15");
-        workStationInfo15.setWork_name(getString(R.string.system_management));
+        workStationInfo15.setWork_name(getString(R.string.task_management));
         mWorkStationInfoList.add(workStationInfo15);
         WorkStationInfo workStationInfo16 = new WorkStationInfo();
         workStationInfo16.setWork_type("16");
-        workStationInfo16.setWork_name(getString(R.string.setting));
+        workStationInfo16.setWork_name(getString(R.string.pdf_report_management));
         mWorkStationInfoList.add(workStationInfo16);
+        WorkStationInfo workStationInfo17 = new WorkStationInfo();
+        workStationInfo17.setWork_type("17");
+        workStationInfo17.setWork_name(getString(R.string.packaging_data_management));
+        mWorkStationInfoList.add(workStationInfo17);
+        WorkStationInfo workStationInfo18 = new WorkStationInfo();
+        workStationInfo18.setWork_type("18");
+        workStationInfo18.setWork_name(getString(R.string.statistical_report_forms));
+        mWorkStationInfoList.add(workStationInfo18);
+        WorkStationInfo workStationInfo19 = new WorkStationInfo();
+        workStationInfo19.setWork_type("19");
+        workStationInfo19.setWork_name(getString(R.string.enterprise_expenditure_management));
+        mWorkStationInfoList.add(workStationInfo19);
+        WorkStationInfo workStationInfo20 = new WorkStationInfo();
+        workStationInfo20.setWork_type("20");
+        workStationInfo20.setWork_name(getString(R.string.system_management));
+        mWorkStationInfoList.add(workStationInfo20);
+        WorkStationInfo workStationInfo21 = new WorkStationInfo();
+        workStationInfo21.setWork_type("21");
+        workStationInfo21.setWork_name(getString(R.string.setting));
+        mWorkStationInfoList.add(workStationInfo21);
         setWorkStationDatas(mWorkStationInfoList);
     }
 
@@ -212,25 +231,37 @@ public class MainActivity extends BaseActivityProgress {
                             DeliveryOrderManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "11":
-                            ServiceRecordManagementActivity.startActivity(MainActivity.this, workStationInfo);
-                            break;
-                        case "12":
-                            PurchasingManagementActivity.startActivity(MainActivity.this, workStationInfo);
-                            break;
-                        case "13":
-                            TaskManagementActivity.startActivity(MainActivity.this, workStationInfo);
-                            break;
-                        case "14":
                             PaymentManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
+                        case "12":
+                            ServiceRecordManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            break;
+                        case "13":
+                            showShortToast(getString(R.string.inventory_management));
+                            break;
+                        case "14":
+                            PurchasingManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            break;
                         case "15":
-                            SystemManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            TaskManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "16":
-                            SettingActivity.startActivity(MainActivity.this, workStationInfo);
+                            showShortToast(getString(R.string.pdf_report_management));
                             break;
-                        default:
-                            ToastUtils.show(MainActivity.this, "暂无该分类");
+                        case "17":
+                            showShortToast(getString(R.string.packaging_data_management));
+                            break;
+                        case "18":
+                            showShortToast(getString(R.string.statistical_report_forms));
+                            break;
+                        case "19":
+                            showShortToast(getString(R.string.statistical_report_forms));
+                            break;
+                        case "20":
+                            SystemManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            break;
+                        case "21":
+                            SettingActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                     }
                 }

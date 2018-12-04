@@ -72,35 +72,54 @@ public class WorkStationListAdapter extends BaseQuickAdapter<WorkStationInfo, Ba
                 stringType = mContext.getString(R.string.sales_order_management);
                 break;
             case 10:
-                imgType = R.drawable.iv_1;
+                imgType = R.drawable.iv_10;
                 stringType = mContext.getString(R.string.delivery_order_management);
                 break;
             case 11:
-                imgType = R.drawable.iv_1;
-                stringType = mContext.getString(R.string.service_record_management);
-                break;
-            case 12:
-                imgType = R.drawable.iv_1;
-                stringType = mContext.getString(R.string.purchasing_management);
-                break;
-            case 13:
-                imgType = R.drawable.iv_1;
-                stringType = mContext.getString(R.string.task_management);
-                break;
-            case 14:
-                imgType = R.drawable.iv_1;
+                imgType = R.drawable.iv_11;
                 stringType = mContext.getString(R.string.payment_management);
                 break;
+            case 12:
+                imgType = R.drawable.iv_12;
+                stringType = mContext.getString(R.string.service_record_management);
+                break;
+            case 13:
+                imgType = R.drawable.iv_13;
+                stringType = mContext.getString(R.string.inventory_management);
+                break;
+            case 14:
+                imgType = R.drawable.iv_14;
+                stringType = mContext.getString(R.string.purchasing_management);
+                break;
             case 15:
-                imgType = R.drawable.iv_1;
-                stringType = mContext.getString(R.string.system_management);
+                imgType = R.drawable.iv_15;
+                stringType = mContext.getString(R.string.task_management);
                 break;
             case 16:
-                imgType = R.drawable.iv_1;
+                imgType = R.drawable.iv_16;
+                stringType = mContext.getString(R.string.pdf_report_management);
+                break;
+            case 17:
+                imgType = R.drawable.iv_17;
+                stringType = mContext.getString(R.string.packaging_data_management);
+                break;
+            case 18:
+                imgType = R.drawable.iv_18;
+                stringType = mContext.getString(R.string.statistical_report_forms);
+                break;
+            case 19:
+                imgType = R.drawable.iv_19;
+                stringType = mContext.getString(R.string.enterprise_expenditure_management);
+                break;
+            case 20:
+                imgType = R.drawable.iv_20;
+                stringType = mContext.getString(R.string.system_management);
+                break;
+            case 21:
+                imgType = R.drawable.iv_21;
                 stringType = mContext.getString(R.string.setting);
                 break;
         }
-
         iv_work_type.setImageResource(imgType);
         tv_work_type.setText(stringType);
     }
