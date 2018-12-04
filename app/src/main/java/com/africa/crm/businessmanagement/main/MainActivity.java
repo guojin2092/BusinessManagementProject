@@ -20,6 +20,7 @@ import com.africa.crm.businessmanagement.main.station.activity.CostumerManagemen
 import com.africa.crm.businessmanagement.main.station.activity.DeliveryOrderManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.EnterpriseAccountActivity;
 import com.africa.crm.businessmanagement.main.station.activity.EnterpriseManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.PaymentManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.ProductManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.PurchasingManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.QuotationManagementActivity;
@@ -146,12 +147,16 @@ public class MainActivity extends BaseActivityProgress {
         mWorkStationInfoList.add(workStationInfo13);
         WorkStationInfo workStationInfo14 = new WorkStationInfo();
         workStationInfo14.setWork_type("14");
-        workStationInfo14.setWork_name(getString(R.string.system_management));
+        workStationInfo14.setWork_name(getString(R.string.payment_management));
         mWorkStationInfoList.add(workStationInfo14);
         WorkStationInfo workStationInfo15 = new WorkStationInfo();
         workStationInfo15.setWork_type("15");
-        workStationInfo15.setWork_name(getString(R.string.setting));
+        workStationInfo15.setWork_name(getString(R.string.system_management));
         mWorkStationInfoList.add(workStationInfo15);
+        WorkStationInfo workStationInfo16 = new WorkStationInfo();
+        workStationInfo16.setWork_type("16");
+        workStationInfo16.setWork_name(getString(R.string.setting));
+        mWorkStationInfoList.add(workStationInfo16);
         setWorkStationDatas(mWorkStationInfoList);
     }
 
@@ -216,9 +221,12 @@ public class MainActivity extends BaseActivityProgress {
                             TaskManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "14":
-                            SystemManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            PaymentManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "15":
+                            SystemManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            break;
+                        case "16":
                             SettingActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         default:

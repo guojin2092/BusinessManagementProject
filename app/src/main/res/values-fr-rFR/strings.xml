@@ -25,6 +25,7 @@
     <string name="role_management">Gestion des rôles</string>
     <string name="user_management">Gestion des utilisateurs</string>
     <string name="setting">Réglage</string>
+    <string name="payment_management">Gestion des factures</string>
 
     <string name="i_know">Je sais</string>
     <string name="search">chercher</string>
@@ -50,5 +51,6 @@
     <string name="search_service_record">S'il vous plaît entrer les informations de l'enregistrement de service</string>
     <string name="search_purchasing">S'il vous plaît entrer le numéro de commande</string>
     <string name="search_task">S'il vous plaît entrer le numéro de tâche</string>
+    <string name="search_payment">Veuillez saisir les informations de paiement.</string>
 
 </resources>

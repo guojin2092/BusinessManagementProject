@@ -26,6 +26,7 @@
     <string name="role_management">Role management</string>
     <string name="user_management">User management</string>
     <string name="setting">Setting</string>
+    <string name="payment_management">Payment management</string>
 
     <string name="i_know">I know</string>
     <string name="search">Search</string>
@@ -51,5 +52,6 @@
     <string name="search_service_record">Please enter service record information</string>
     <string name="search_purchasing">Please enter the purchase order number</string>
     <string name="search_task">Please enter the task number</string>
+    <string name="search_payment">Please enter Payment Information</string>
 
 </resources>

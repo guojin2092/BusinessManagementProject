@@ -29,6 +29,7 @@
     <string name="user_management">用户管理</string>
     <string name="system_management">系统管理</string>
     <string name="setting">设置</string>
+    <string name="payment_management">付款单管理</string>
 
     <string name="i_know">我知道了</string>
     <string name="search">查询</string>
@@ -54,5 +55,6 @@
     <string name="search_service_record">请输入服务记录信息</string>
     <string name="search_purchasing">请输入采购订单编号</string>
     <string name="search_task">请输入任务编号</string>
+    <string name="search_payment">请输入付款单信息</string>
 
 </resources>

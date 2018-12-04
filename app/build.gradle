@@ -30,7 +30,7 @@ android {
         //greendao配置
         greendao {
             schemaVersion 1//数据库版本号
-            daoPackage 'com.africa.crm.businessmanagement.greendao'//设置DaoMaster、DaoSession、Dao包名
+            daoPackage 'com.africa.crm.businessmanagement.main.dao'//设置DaoMaster、DaoSession、Dao包名
             targetGenDir 'src/main/java'//设置DaoMaster、DaoSession、Dao目录
             //targetGenDirTest：设置生成单元测试目录
             //generateTests：设置自动生成单元测试用例

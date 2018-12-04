@@ -1,6 +1,7 @@
 package com.africa.crm.businessmanagement.main.bean;
 
-import java.io.Serializable;
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * Project：BusinessManagementProject
@@ -11,7 +12,8 @@ import java.io.Serializable;
  * Modification  History:
  * Why & What is modified:
  */
-public class LoginInfoBean implements Serializable {
+@Entity
+public class LoginInfoBean {
     private int id;//用户Id
     private String createTime;//创建时间
     private String phone;//电话号
@@ -23,92 +25,90 @@ public class LoginInfoBean implements Serializable {
     private String type;//用户类型，1：系统管理员，2：企业用户
     private String passWord;//密码
     private int version;//版本号
-
-    public int getId() {
-        return id;
+    @Generated(hash = 488650808)
+    public LoginInfoBean(int id, String createTime, String phone, String email,
+            String updateTime, boolean isdeleted, String userName, String companyId,
+            String type, String passWord, int version) {
+        this.id = id;
+        this.createTime = createTime;
+        this.phone = phone;
+        this.email = email;
+        this.updateTime = updateTime;
+        this.isdeleted = isdeleted;
+        this.userName = userName;
+        this.companyId = companyId;
+        this.type = type;
+        this.passWord = passWord;
+        this.version = version;
     }
-
+    @Generated(hash = 410655696)
+    public LoginInfoBean() {
+    }
+    public int getId() {
+        return this.id;
+    }
     public void setId(int id) {
         this.id = id;
     }
-
     public String getCreateTime() {
-        return createTime;
+        return this.createTime;
     }
-
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
-
     public String getPhone() {
-        return phone;
+        return this.phone;
     }
-
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
     public String getEmail() {
-        return email;
+        return this.email;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
-
     public String getUpdateTime() {
-        return updateTime;
+        return this.updateTime;
     }
-
     public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
     }
-
-    public boolean isIsdeleted() {
-        return isdeleted;
+    public boolean getIsdeleted() {
+        return this.isdeleted;
     }
-
     public void setIsdeleted(boolean isdeleted) {
         this.isdeleted = isdeleted;
     }
-
     public String getUserName() {
-        return userName;
+        return this.userName;
     }
-
     public void setUserName(String userName) {
         this.userName = userName;
     }
-
     public String getCompanyId() {
-        return companyId;
+        return this.companyId;
     }
-
     public void setCompanyId(String companyId) {
         this.companyId = companyId;
     }
-
     public String getType() {
-        return type;
+        return this.type;
     }
-
     public void setType(String type) {
         this.type = type;
     }
-
     public String getPassWord() {
-        return passWord;
+        return this.passWord;
     }
-
     public void setPassWord(String passWord) {
         this.passWord = passWord;
     }
-
     public int getVersion() {
-        return version;
+        return this.version;
     }
-
     public void setVersion(int version) {
         this.version = version;
     }
+
 }
