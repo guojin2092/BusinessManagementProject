@@ -145,6 +145,18 @@
             android:name=".main.station.activity.PaymentDetailActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".main.station.activity.InventoryManagementActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".main.station.activity.InventoryDetailActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".main.station.activity.PdfReportManagementActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
     </application>
 
 </manifest>

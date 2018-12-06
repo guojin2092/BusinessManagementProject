@@ -46,6 +46,8 @@
     <string name="save">Save</string>
     <string name="edit">edit</string>
     <string name="cancel">Cancel</string>
+    <string name="out_of_stock">out of stock</string>
+    <string name="storage">storage</string>
     <string name="search_enterprise">Please enter the enterprise name or create time query</string>
     <string name="search_enterprise_account">Please enter the enterprise account / name</string>
     <string name="search_product">Please enter the product name</string>
@@ -58,4 +60,5 @@
     <string name="search_purchasing">Please enter the purchase order number</string>
     <string name="search_task">Please enter the task number</string>
     <string name="search_payment">Please enter Payment Information</string>
+    <string name="search_pdf_report">Please enter a PDF name</string>
 </resources>

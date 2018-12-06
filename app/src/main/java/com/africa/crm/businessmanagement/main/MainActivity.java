@@ -25,7 +25,9 @@ import com.africa.crm.businessmanagement.main.station.activity.CostumerManagemen
 import com.africa.crm.businessmanagement.main.station.activity.DeliveryOrderManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.EnterpriseAccountActivity;
 import com.africa.crm.businessmanagement.main.station.activity.EnterpriseManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.InventoryManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.PaymentManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.PdfReportManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.ProductManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.PurchasingManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.QuotationManagementActivity;
@@ -206,6 +208,8 @@ public class MainActivity extends BaseMvpActivity<MainPresenter> implements Main
      *
      * @param workStationInfoList
      */
+
+
     private void setWorkStationDatas(final List<WorkStationInfo> workStationInfoList) {
         if (!ListUtils.isEmpty(workStationInfoList)) {
             mWorkStationListAdapter = new WorkStationListAdapter(workStationInfoList);
@@ -259,7 +263,7 @@ public class MainActivity extends BaseMvpActivity<MainPresenter> implements Main
                             ServiceRecordManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "13":
-                            showShortToast(getString(R.string.inventory_management));
+                            InventoryManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "14":
                             PurchasingManagementActivity.startActivity(MainActivity.this, workStationInfo);
@@ -268,7 +272,7 @@ public class MainActivity extends BaseMvpActivity<MainPresenter> implements Main
                             TaskManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "16":
-                            showShortToast(getString(R.string.pdf_report_management));
+                            PdfReportManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "17":
                             showShortToast(getString(R.string.packaging_data_management));
@@ -277,7 +281,7 @@ public class MainActivity extends BaseMvpActivity<MainPresenter> implements Main
                             showShortToast(getString(R.string.statistical_report_forms));
                             break;
                         case "19":
-                            showShortToast(getString(R.string.statistical_report_forms));
+                            showShortToast(getString(R.string.enterprise_expenditure_management));
                             break;
                         case "20":
                             SystemManagementActivity.startActivity(MainActivity.this, workStationInfo);

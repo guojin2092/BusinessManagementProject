@@ -45,6 +45,8 @@
     <string name="save">Enregistrer</string>
     <string name="edit">Édition</string>
     <string name="cancel">Annuler</string>
+    <string name="out_of_stock">Sortie</string>
+    <string name="storage">Entrée</string>
     <string name="search_enterprise">Veuillez saisir le nom de l 'entreprise ou créer une requête</string>
     <string name="search_enterprise_account">Veuillez saisir le numéro / nom de l 'entreprise</string>
     <string name="search_product">Veuillez saisir le nom du produit</string>
@@ -57,5 +59,6 @@
     <string name="search_purchasing">S'il vous plaît entrer le numéro de commande</string>
     <string name="search_task">S'il vous plaît entrer le numéro de tâche</string>
     <string name="search_payment">Veuillez saisir les informations de paiement.</string>
+    <string name="search_pdf_report">Please enter a PDF name</string>
 
 </resources>

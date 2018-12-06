@@ -49,6 +49,8 @@
     <string name="save">保存</string>
     <string name="edit">编辑</string>
     <string name="cancel">取消</string>
+    <string name="out_of_stock">出库</string>
+    <string name="storage">入库</string>
     <string name="search_enterprise">请输入企业名称或创建时间查询</string>
     <string name="search_enterprise_account">请输入企业账号/名称</string>
     <string name="search_product">请输入产品名称</string>
@@ -61,5 +63,6 @@
     <string name="search_purchasing">请输入采购订单编号</string>
     <string name="search_task">请输入任务编号</string>
     <string name="search_payment">请输入付款单信息</string>
+    <string name="search_pdf_report">请输入PDF名称</string>
 
 </resources>

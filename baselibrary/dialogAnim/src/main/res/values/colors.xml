@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="app_main_color">#EC9719</color>
+    <color name="app_main_color">#516996</color>
     <color name="write">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="text_color">#FFFFFF</color>
@@ -11,5 +11,6 @@
     <color name="btn_press_color">#66000000</color>
     <color name="btn_unpress_color">#22000000</color>
     <color name="shouye_red">#FF0000</color>
+    <color name="a666666">#666666</color>
 
 </resources>

@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ScrollView
+        <com.africa.crm.businessmanagement.widget.OverScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none">
@@ -358,7 +358,7 @@
                     android:visibility="invisible" />
 
             </LinearLayout>
-        </ScrollView>
+        </com.africa.crm.businessmanagement.widget.OverScrollView>
 
         <TextView
             android:id="@+id/tv_save"
