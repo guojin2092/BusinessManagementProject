@@ -1,6 +1,9 @@
 package com.africa.crm.businessmanagement.network;
 
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
+import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 
@@ -17,4 +20,5 @@ public interface HttpHelper {
 
     Observable<LoginInfoBean> getLoginInfo(String userName, String passWord);
 
+    Observable<List<MainStationInfoBean>> getMainStationInfo(String id);
 }

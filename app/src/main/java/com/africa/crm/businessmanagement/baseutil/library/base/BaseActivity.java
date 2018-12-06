@@ -54,7 +54,6 @@ public abstract class BaseActivity extends BaseRxActivity implements OnClickList
         ButterKnife.bind(this);
         initView();
         initData();
-
     }
 
     /**

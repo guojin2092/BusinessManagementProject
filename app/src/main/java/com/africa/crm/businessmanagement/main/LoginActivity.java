@@ -11,12 +11,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.africa.crm.businessmanagement.R;
+import com.africa.crm.businessmanagement.baseutil.library.base.progress.BaseFragmentProgress;
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
 import com.africa.crm.businessmanagement.main.contract.LoginContract;
+import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.presenter.LoginPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
 
-import com.africa.crm.businessmanagement.baseutil.library.base.progress.BaseFragmentProgress;
 import butterknife.BindView;
 
 /**
@@ -40,7 +41,6 @@ public class LoginActivity extends BaseMvpActivity<LoginPresenter> implements Lo
 
     //登陆成功
     public final static int LOGIN_SUCCESS = 1002;
-    public static final String LOGIN_SUCCESS_OK = "com.africa.crm.businessmanagement.login_success";
 
     /**
      * 在activity中请求回调,显示登录界面
@@ -119,8 +119,13 @@ public class LoginActivity extends BaseMvpActivity<LoginPresenter> implements Lo
     }
 
     @Override
+    protected void requestData() {
+    }
+
+    @Override
     public void getLoginInfo(LoginInfoBean loginInfoBean) {
         if (loginInfoBean != null) {
+            UserInfoManager.saveUserLoginInfo(this, loginInfoBean);
             MainActivity.startActivity(this);
         }
     }

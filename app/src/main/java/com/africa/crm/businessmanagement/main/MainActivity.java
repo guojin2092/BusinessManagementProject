@@ -14,9 +14,12 @@ import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
-import com.africa.crm.businessmanagement.baseutil.library.base.progress.BaseActivityProgress;
 import com.africa.crm.businessmanagement.main.adapter.WorkStationListAdapter;
+import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
+import com.africa.crm.businessmanagement.main.contract.MainContract;
+import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
+import com.africa.crm.businessmanagement.main.presenter.MainPresenter;
 import com.africa.crm.businessmanagement.main.station.activity.ContactManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CostumerManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.DeliveryOrderManagementActivity;
@@ -33,6 +36,7 @@ import com.africa.crm.businessmanagement.main.station.activity.SupplierManagemen
 import com.africa.crm.businessmanagement.main.station.activity.SystemManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.TaskManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.TradingOrderManagementActivity;
+import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
 import com.africa.crm.businessmanagement.widget.GridItemDecoration;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
@@ -41,7 +45,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class MainActivity extends BaseActivityProgress {
+public class MainActivity extends BaseMvpActivity<MainPresenter> implements MainContract.View {
     @BindView(R.id.titlebar_back)
     ImageView titlebar_back;
     @BindView(R.id.titlebar_name)
@@ -71,8 +75,20 @@ public class MainActivity extends BaseActivityProgress {
     }
 
     @Override
+    protected MainPresenter injectPresenter() {
+        return new MainPresenter();
+    }
+
+    @Override
+    protected void requestData() {
+        long userId = UserInfoManager.getUserLoginInfo(this).getId();
+        if (userId != 0) {
+            mPresenter.getMainStationInfo(String.valueOf(userId));
+        }
+    }
+
+    @Override
     public void initView() {
-        super.initView();
         titlebar_back.setVisibility(View.GONE);
         titlebar_name.setText(getString(R.string.work_station));
 
@@ -179,6 +195,12 @@ public class MainActivity extends BaseActivityProgress {
         setWorkStationDatas(mWorkStationInfoList);
     }
 
+
+    @Override
+    public void getMainStationInfo(List<MainStationInfoBean> mainStationInfoBeanList) {
+
+    }
+
     /**
      * 设置工作台数据
      *
@@ -268,4 +290,5 @@ public class MainActivity extends BaseActivityProgress {
             });
         }
     }
+
 }

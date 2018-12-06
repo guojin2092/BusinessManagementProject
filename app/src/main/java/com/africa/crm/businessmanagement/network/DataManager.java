@@ -1,6 +1,9 @@
 package com.africa.crm.businessmanagement.network;
 
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
+import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 
@@ -29,4 +32,10 @@ public class DataManager implements HttpHelper {
     public Observable<LoginInfoBean> getLoginInfo(String userName, String passWord) {
         return mHttpHelper.getLoginInfo(userName, passWord);
     }
+
+    @Override
+    public Observable<List<MainStationInfoBean>> getMainStationInfo(String id) {
+        return mHttpHelper.getMainStationInfo(id);
+    }
+
 }
