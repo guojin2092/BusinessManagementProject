@@ -38,7 +38,7 @@
                     android:gravity="center"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:text="入库"
+                    android:text="上传PDF文件"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 
@@ -94,7 +94,7 @@
                     android:gravity="center"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:text="数量"
+                    android:text="文件名"
                     android:textColor="@color/A606060"
                     android:textSize="18sp" />
 
@@ -103,7 +103,7 @@
                     android:layout_height="match_parent"
                     android:background="@color/B9B9B9" />
 
-                <EditText
+                <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="7"
@@ -112,7 +112,7 @@
                     android:paddingTop="10dp"
                     android:paddingRight="@dimen/activity_horizontal_margin"
                     android:paddingBottom="10dp"
-                    android:text="12"
+                    android:text="劳动合同"
                     android:textColor="@color/A606060"
                     android:textSize="18sp" />
 
@@ -187,6 +187,21 @@
 
         </LinearLayout>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <ImageView
+                android:id="@+id/iv_add_pdf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingTop="30dp"
+                android:src="@drawable/iv_upload_img" />
+
+        </FrameLayout>
+
         <LinearLayout
             android:id="@+id/contentPanel"
             android:layout_width="match_parent"
@@ -199,14 +214,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/bg_button"
                 android:paddingLeft="30dp"
                 android:paddingTop="5dp"
                 android:paddingRight="30dp"
                 android:paddingBottom="5dp"
-                android:text="@string/save"
+                android:text="上传"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:visibility="visible" />

@@ -14,14 +14,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.baseutil.common.util.ToastUtils;
 import com.africa.crm.businessmanagement.baseutil.library.base.BaseActivity;
 import com.africa.crm.businessmanagement.main.bean.PdfInfoBean;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.station.adapter.PdfReportListAdapter;
+import com.africa.crm.businessmanagement.main.station.dialog.AddPdfDialog;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,8 @@ public class PdfReportManagementActivity extends BaseActivity {
 
     private boolean mShowCheckBox = false;
 
+    private AddPdfDialog mAddPdfDialog;
+
     /**
      * @param activity
      */
@@ -84,6 +87,7 @@ public class PdfReportManagementActivity extends BaseActivity {
         ll_add.setOnClickListener(this);
         tv_delete.setOnClickListener(this);
         titlebar_right.setText(R.string.delete);
+        mAddPdfDialog = AddPdfDialog.getInstance(this);
     }
 
     @Override
@@ -108,7 +112,23 @@ public class PdfReportManagementActivity extends BaseActivity {
                 }
                 break;
             case R.id.ll_add:
-                ToastUtils.show(this, "添加任务订单");
+                mAddPdfDialog.isCancelableOnTouchOutside(false)
+                        .withDuration(300)
+                        .withEffect(Effectstype.Fadein)
+                        .setCancelClick(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                mAddPdfDialog.dismiss();
+                            }
+                        })
+                        .setSaveClick(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                mAddPdfDialog.dismiss();
+                            }
+                        })
+                        .show();
+
                 break;
             case R.id.tv_delete:
                 new AlertDialog.Builder(PdfReportManagementActivity.this)

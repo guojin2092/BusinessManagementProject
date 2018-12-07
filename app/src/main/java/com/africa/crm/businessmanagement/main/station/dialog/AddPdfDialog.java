@@ -21,9 +21,9 @@ import com.gitonway.lee.niftymodaldialogeffects.lib.effects.BaseEffects;
 
 
 /**
- * 库存管理
+ * 上传PDF文件
  */
-public class InventoryDialog extends Dialog implements DialogInterface {
+public class AddPdfDialog extends Dialog implements DialogInterface {
 
     private static Context tmpContext;
 
@@ -55,15 +55,15 @@ public class InventoryDialog extends Dialog implements DialogInterface {
 
     private boolean isCancelable = true;
 
-    private static InventoryDialog instance;
+    private static AddPdfDialog instance;
 
-    public InventoryDialog(Context context) {
+    public AddPdfDialog(Context context) {
         super(context);
         init(context);
 
     }
 
-    public InventoryDialog(Context context, int theme) {
+    public AddPdfDialog(Context context, int theme) {
         super(context, theme);
         init(context);
     }
@@ -78,12 +78,12 @@ public class InventoryDialog extends Dialog implements DialogInterface {
 
     }
 
-    public static InventoryDialog getInstance(Context context) {
+    public static AddPdfDialog getInstance(Context context) {
 
         if (instance == null || !tmpContext.equals(context)) {
-            synchronized (InventoryDialog.class) {
+            synchronized (AddPdfDialog.class) {
                 if (instance == null || !tmpContext.equals(context)) {
-                    instance = new InventoryDialog(context, R.style.dialog_untran);
+                    instance = new AddPdfDialog(context, R.style.dialog_untran);
                 }
             }
         }
@@ -94,7 +94,7 @@ public class InventoryDialog extends Dialog implements DialogInterface {
 
     private void init(Context context) {
 
-        mDialogView = View.inflate(context, R.layout.dialog_inventory, null);
+        mDialogView = View.inflate(context, R.layout.dialog_add_pdf, null);
 
         mLinearLayoutView = (LinearLayout) mDialogView.findViewById(R.id.parentPanel);
         mRelativeLayoutView = (RelativeLayout) mDialogView.findViewById(R.id.main);
@@ -128,103 +128,103 @@ public class InventoryDialog extends Dialog implements DialogInterface {
         });
     }
 
-    public InventoryDialog withDividerColor(String colorString) {
+    public AddPdfDialog withDividerColor(String colorString) {
         mDivider.setBackgroundColor(Color.parseColor(colorString));
         return this;
     }
 
-    public InventoryDialog withDividerColor(int color) {
+    public AddPdfDialog withDividerColor(int color) {
         mDivider.setBackgroundColor(color);
         return this;
     }
 
 
-    public InventoryDialog withTitle(CharSequence title) {
+    public AddPdfDialog withTitle(CharSequence title) {
         toggleView(mLinearLayoutTopView, title);
         mTitle.setText(title);
         return this;
     }
 
-    public InventoryDialog withTitleColor(String colorString) {
+    public AddPdfDialog withTitleColor(String colorString) {
         mTitle.setTextColor(Color.parseColor(colorString));
         return this;
     }
 
-    public InventoryDialog withTitleColor(int color) {
+    public AddPdfDialog withTitleColor(int color) {
         mTitle.setTextColor(color);
         return this;
     }
 
-    public InventoryDialog withMessage(int textResId) {
+    public AddPdfDialog withMessage(int textResId) {
         toggleView(mLinearLayoutMsgView, textResId);
         mMessage.setText(textResId);
         return this;
     }
 
-    public InventoryDialog withMessage(CharSequence msg) {
+    public AddPdfDialog withMessage(CharSequence msg) {
         toggleView(mLinearLayoutMsgView, msg);
         mMessage.setText(msg);
         return this;
     }
 
-    public InventoryDialog withMessageColor(String colorString) {
+    public AddPdfDialog withMessageColor(String colorString) {
         mMessage.setTextColor(Color.parseColor(colorString));
         return this;
     }
 
-    public InventoryDialog withMessageColor(int color) {
+    public AddPdfDialog withMessageColor(int color) {
         mMessage.setTextColor(color);
         return this;
     }
 
-    public InventoryDialog withDialogColor(String colorString) {
+    public AddPdfDialog withDialogColor(String colorString) {
         mLinearLayoutView.getBackground().setColorFilter(ColorUtils.getColorFilter(Color
                 .parseColor(colorString)));
         return this;
     }
 
-    public InventoryDialog withDialogColor(int color) {
+    public AddPdfDialog withDialogColor(int color) {
         mLinearLayoutView.getBackground().setColorFilter(ColorUtils.getColorFilter(color));
         return this;
     }
 
-    public InventoryDialog withIcon(int drawableResId) {
+    public AddPdfDialog withIcon(int drawableResId) {
         mIcon.setImageResource(drawableResId);
         return this;
     }
 
-    public InventoryDialog withIcon(Drawable icon) {
+    public AddPdfDialog withIcon(Drawable icon) {
         mIcon.setImageDrawable(icon);
         return this;
     }
 
-    public InventoryDialog setCancelClick(View.OnClickListener click) {
+    public AddPdfDialog setCancelClick(View.OnClickListener click) {
         mIcon.setOnClickListener(click);
         return this;
     }
 
-    public InventoryDialog withDuration(int duration) {
+    public AddPdfDialog withDuration(int duration) {
         this.mDuration = duration;
         return this;
     }
 
-    public InventoryDialog withEffect(Effectstype type) {
+    public AddPdfDialog withEffect(Effectstype type) {
         this.type = type;
         return this;
     }
 
-    public InventoryDialog setSaveClick(View.OnClickListener click) {
+    public AddPdfDialog setSaveClick(View.OnClickListener click) {
         tv_save.setOnClickListener(click);
         return this;
     }
 
-    public InventoryDialog isCancelableOnTouchOutside(boolean cancelable) {
+    public AddPdfDialog isCancelableOnTouchOutside(boolean cancelable) {
         this.isCancelable = cancelable;
         this.setCanceledOnTouchOutside(cancelable);
         return this;
     }
 
-    public InventoryDialog isCancelable(boolean cancelable) {
+    public AddPdfDialog isCancelable(boolean cancelable) {
         this.isCancelable = cancelable;
         this.setCancelable(cancelable);
         return this;
