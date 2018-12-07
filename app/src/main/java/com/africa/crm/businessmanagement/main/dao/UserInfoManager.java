@@ -20,7 +20,6 @@ public class UserInfoManager {
     public static final String ID = "id";
     public static final String UPDATE_TIME = "updateTime";
     public static final String IS_DELETED = "isdeleted";
-    public static final String ROLES = "roles";
     public static final String USER_NAME = "userName";
     public static final String COMPANY_ID = "companyId";
     public static final String TYPE = "type";
@@ -29,6 +28,11 @@ public class UserInfoManager {
     public static final String CREATE_TIME = "createTime";
     public static final String PHONE = "phone";
     public static final String EMAIL = "email";
+
+    public static final String ROLE_ID = "roleId";
+    public static final String ROLE_TYPE_NAME = "roleTypeName";
+    public static final String ROLE_CODE = "roleCode";
+    public static final String ROLE_NAME = "roleName";
 
 
     /**
@@ -48,6 +52,10 @@ public class UserInfoManager {
         editor.putString(CREATE_TIME, userInfoBean.getCreateTime());
         editor.putString(PHONE, userInfoBean.getPhone());
         editor.putString(EMAIL, userInfoBean.getEmail());
+        editor.putString(ROLE_ID, userInfoBean.getRoleId());
+        editor.putString(ROLE_CODE, userInfoBean.getRoleCode());
+        editor.putString(ROLE_TYPE_NAME, userInfoBean.getRoleTypeName());
+        editor.putString(ROLE_NAME, userInfoBean.getRoleName());
         editor.commit();
     }
 
@@ -68,6 +76,10 @@ public class UserInfoManager {
         loginInfoBean.setCreateTime(sharedPreferences.getString(CREATE_TIME, ""));
         loginInfoBean.setPhone(sharedPreferences.getString(PHONE, ""));
         loginInfoBean.setEmail(sharedPreferences.getString(EMAIL, ""));
+        loginInfoBean.setRoleId(sharedPreferences.getString(ROLE_ID, ""));
+        loginInfoBean.setRoleCode(sharedPreferences.getString(ROLE_CODE, ""));
+        loginInfoBean.setRoleTypeName(sharedPreferences.getString(ROLE_TYPE_NAME, ""));
+        loginInfoBean.setRoleName(sharedPreferences.getString(ROLE_NAME, ""));
         return loginInfoBean;
     }
 

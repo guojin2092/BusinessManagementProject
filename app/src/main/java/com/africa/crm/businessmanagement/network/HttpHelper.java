@@ -1,7 +1,9 @@
 package com.africa.crm.businessmanagement.network;
 
+import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
 import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 
 import java.util.List;
 
@@ -21,4 +23,7 @@ public interface HttpHelper {
     Observable<LoginInfoBean> getLoginInfo(String userName, String passWord);
 
     Observable<List<MainStationInfoBean>> getMainStationInfo(String id);
+
+    Observable<UserManagementInfoBean> getUserList(int page, int rows, String userName, String type, String companyId, String state);
+
 }

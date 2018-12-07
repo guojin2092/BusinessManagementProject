@@ -34,15 +34,11 @@ public class RxUtils {
         return ioToMain(null);
     }
 
-    public static <T> ObservableTransformer<T, T> ioToMain(BaseView view) {
-        return ioToMain(view, false);
-    }
-
 
     /**
      * 处理线程调度,在加载开始和成功时，会自动进行加载动画，用于操作时试用，比如点击某个按钮进行操作，
      */
-    public static <T> ObservableTransformer<T, T> ioToMain(final BaseView view, final boolean action) {
+    public static <T> ObservableTransformer<T, T> ioToMain(final BaseView view) {
         return new ObservableTransformer<T, T>() {
             @Override
             public ObservableSource<T> apply(@NonNull Observable<T> upstream) {

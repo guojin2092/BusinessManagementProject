@@ -1,7 +1,9 @@
 package com.africa.crm.businessmanagement.network;
 
+import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
 import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 import com.africa.crm.businessmanagement.network.api.LoginApi;
 import com.africa.crm.businessmanagement.network.api.MainApi;
 import com.africa.crm.businessmanagement.network.retrofit.RetrofitHelper;
@@ -44,6 +46,11 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<List<MainStationInfoBean>> getMainStationInfo(String id) {
         return mainApi.getMainStationInfo(id).compose(RxUtils.<List<MainStationInfoBean>>handleResult());
+    }
+
+    @Override
+    public Observable<UserManagementInfoBean> getUserList(int page, int rows, String userName, String type, String companyId, String state) {
+        return mainApi.getUserList(page, rows, userName, type, companyId, state).compose(RxUtils.<UserManagementInfoBean>handleResult());
     }
 
 }

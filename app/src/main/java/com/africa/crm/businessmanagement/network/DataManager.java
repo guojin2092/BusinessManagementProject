@@ -1,7 +1,9 @@
 package com.africa.crm.businessmanagement.network;
 
+import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
 import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 
 import java.util.List;
 
@@ -36,6 +38,11 @@ public class DataManager implements HttpHelper {
     @Override
     public Observable<List<MainStationInfoBean>> getMainStationInfo(String id) {
         return mHttpHelper.getMainStationInfo(id);
+    }
+
+    @Override
+    public Observable<UserManagementInfoBean> getUserList(int page, int rows, String userName, String type, String companyId, String state) {
+        return mHttpHelper.getUserList(page, rows, userName, type, companyId, state);
     }
 
 }

@@ -16,7 +16,6 @@ public class LoginInfoBean implements Serializable {
     private long id;//用户Id
     private String updateTime;//更新日期
     private boolean isdeleted;//是否删除
-    private List<Roles> roles;//角色权限
     private String userName;//用户名
     private String companyId;//所属公司ID
     private String type;//用户类型，1：系统管理员，2：企业用户
@@ -25,6 +24,11 @@ public class LoginInfoBean implements Serializable {
     private String createTime;//创建时间
     private String phone;//电话号
     private String email;//电子邮件
+
+    private String roleId;//角色Id
+    private String roleTypeName;//角色类型
+    private String roleCode;//角色Code root:超级管理员，companyRoot:企业管理员，companySales:企业销售员
+    private String roleName;//角色名称
 
     public long getId() {
         return id;
@@ -48,14 +52,6 @@ public class LoginInfoBean implements Serializable {
 
     public void setIsdeleted(boolean isdeleted) {
         this.isdeleted = isdeleted;
-    }
-
-    public List<Roles> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Roles> roles) {
-        this.roles = roles;
     }
 
     public String getUserName() {
@@ -120,5 +116,37 @@ public class LoginInfoBean implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
+    }
+
+    public String getRoleTypeName() {
+        return roleTypeName;
+    }
+
+    public void setRoleTypeName(String roleTypeName) {
+        this.roleTypeName = roleTypeName;
+    }
+
+    public String getRoleCode() {
+        return roleCode;
+    }
+
+    public void setRoleCode(String roleCode) {
+        this.roleCode = roleCode;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 }

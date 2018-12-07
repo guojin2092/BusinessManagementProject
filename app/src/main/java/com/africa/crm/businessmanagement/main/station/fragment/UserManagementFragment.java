@@ -10,17 +10,20 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.main.station.adapter.CostumerListAdapter;
-import com.africa.crm.businessmanagement.main.bean.CostumerInfoBean;
+import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
+import com.africa.crm.businessmanagement.baseutil.common.util.ToastUtils;
+import com.africa.crm.businessmanagement.main.bean.UserInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
+import com.africa.crm.businessmanagement.main.station.adapter.UserListAdapter;
+import com.africa.crm.businessmanagement.main.station.contract.UserManagementContract;
+import com.africa.crm.businessmanagement.main.station.presenter.UserManagementPresenter;
+import com.africa.crm.businessmanagement.mvp.fragment.BaseRefreshMvpFragment;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
-import com.africa.crm.businessmanagement.baseutil.common.util.ToastUtils;
-import com.africa.crm.businessmanagement.baseutil.library.base.BaseFragment;
 import butterknife.BindView;
 
 /**
@@ -32,11 +35,12 @@ import butterknife.BindView;
  * Modification  History:
  * Why & What is modified:
  */
-public class UserManagementFragment extends BaseFragment {
+public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagementPresenter> implements UserManagementContract.View {
+    private View mRootView;
     @BindView(R.id.rv_costumer)
     RecyclerView rv_costumer;
-    private CostumerListAdapter mCostumerListAdapter;
-    private List<CostumerInfoBean> mCostumerInfoBeanList = new ArrayList<>();
+    private UserListAdapter mUserListAdapter;
+    private List<UserInfoBean> mUserInfoBeanList = new ArrayList<>();
 
 
     public static UserManagementFragment newInstance() {
@@ -47,65 +51,83 @@ public class UserManagementFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_user_management, container, false);
+        mRootView = inflater.inflate(R.layout.fragment_user_management, container, false);
+        return mRootView;
+    }
+
+    @Override
+    protected View getFragmentProgress() {
+        return mRootView;
     }
 
     @Override
     public void initView() {
-    }
+        mUserListAdapter = new UserListAdapter(mUserInfoBeanList);
+        rv_costumer.setAdapter(mUserListAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        rv_costumer.setLayoutManager(layoutManager);
+        rv_costumer.addItemDecoration(new LineItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 2, ContextCompat.getColor(getActivity(), R.color.F2F2F2)));
+        rv_costumer.setHasFixedSize(true);
+        rv_costumer.setNestedScrollingEnabled(false);
 
-    @Override
-    public void initData() {
-        CostumerInfoBean costumerInfoBean = new CostumerInfoBean();
-        costumerInfoBean.setIcon("1");
-        costumerInfoBean.setCompany("云茂地产");
-        costumerInfoBean.setType("科技");
-        costumerInfoBean.setLocation("上海");
-        mCostumerInfoBeanList.add(costumerInfoBean);
-
-        CostumerInfoBean costumerInfoBean2 = new CostumerInfoBean();
-        costumerInfoBean2.setIcon("2");
-        costumerInfoBean2.setCompany("西行设计");
-        costumerInfoBean2.setType("教育");
-        costumerInfoBean2.setLocation("沈阳");
-        mCostumerInfoBeanList.add(costumerInfoBean2);
-
-        CostumerInfoBean costumerInfoBean3 = new CostumerInfoBean();
-        costumerInfoBean3.setIcon("3");
-        costumerInfoBean3.setCompany("兴时科技");
-        costumerInfoBean3.setType("金融服务");
-        costumerInfoBean3.setLocation("江西");
-        mCostumerInfoBeanList.add(costumerInfoBean3);
-
-        setCostomerData(mCostumerInfoBeanList);
-    }
-
-    /**
-     * 设置客户数据
-     *
-     * @param mCostumerInfoBeanList
-     */
-    private void setCostomerData(final List<CostumerInfoBean> mCostumerInfoBeanList) {
-        if (!ListUtils.isEmpty(mCostumerInfoBeanList)) {
-            mCostumerListAdapter = new CostumerListAdapter(mCostumerInfoBeanList);
-            rv_costumer.setAdapter(mCostumerListAdapter);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-            rv_costumer.setLayoutManager(layoutManager);
-            rv_costumer.addItemDecoration(new LineItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 2, ContextCompat.getColor(getActivity(), R.color.F2F2F2)));
-            rv_costumer.setHasFixedSize(true);
-            rv_costumer.setNestedScrollingEnabled(false);
-
-            mCostumerListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        if (!ListUtils.isEmpty(mUserInfoBeanList)) {
+            mUserListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    ToastUtils.show(getActivity(), mCostumerInfoBeanList.get(position).getCompany());
+                    ToastUtils.show(getActivity(), mUserInfoBeanList.get(position).getRoleName());
                 }
             });
         }
     }
 
     @Override
+    protected UserManagementPresenter initPresenter() {
+        return new UserManagementPresenter();
+    }
+
+    @Override
+    protected void pullDownRefresh(int page) {
+        mPresenter.getUserList(page, rows, "", "", "", "");
+    }
+
+    @Override
+    public void getUserList(UserManagementInfoBean userManagementInfoBean) {
+        if (page == 1) {
+            if (ListUtils.isEmpty(userManagementInfoBean.getRows())) {
+                layout_no_data.setVisibility(View.VISIBLE);
+                rv_costumer.setVisibility(View.GONE);
+                return;
+            } else {
+                layout_no_data.setVisibility(View.GONE);
+                rv_costumer.setVisibility(View.VISIBLE);
+            }
+            mUserInfoBeanList.clear();
+            rv_costumer.smoothScrollToPosition(0);
+        }
+        if (mRefreshLayout != null) {
+            if (ListUtils.isEmpty(userManagementInfoBean.getRows()) && page > 1) {
+                mRefreshLayout.finishLoadmoreWithNoMoreData();
+            } else {
+                mRefreshLayout.finishLoadmore();
+            }
+        }
+        if (!ListUtils.isEmpty(userManagementInfoBean.getRows())) {
+            mUserInfoBeanList.addAll(userManagementInfoBean.getRows());
+            if (mUserListAdapter != null) {
+                mUserListAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    @Override
+    public void initData() {
+
+    }
+
+
+    @Override
     public void release() {
 
     }
+
 }
