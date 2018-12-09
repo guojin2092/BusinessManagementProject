@@ -47,6 +47,7 @@ public class MySpinner extends FrameLayout {
     private int arrowDrawableResId;
     private int backgroundSelector;
     private int arrowDrawableTint;
+    private String hintText;
 
     private PopupWindow popupWindow;
     private ListView listView;
@@ -86,7 +87,8 @@ public class MySpinner extends FrameLayout {
         tv_choose_type.setBackgroundResource(backgroundSelector);
         arrowDrawableTint = typedArray.getColor(R.styleable.MySpinner_arrowTint, Integer.MAX_VALUE);
         arrowDrawableResId = typedArray.getResourceId(R.styleable.MySpinner_arrowDrawable, R.drawable.arrow);
-
+        hintText = typedArray.getString(R.styleable.MySpinner_hintText);
+        tv_choose_type.setHint(hintText);
 
         listView = new ListView(context);
         // Set the spinner's id into the listview to make it pretend to be the right parent in

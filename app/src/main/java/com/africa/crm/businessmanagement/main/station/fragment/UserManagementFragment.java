@@ -178,10 +178,10 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
                 UserDetailActivity.startActivity(getBVActivity(), "");
                 break;
             case R.id.tv_search:
-                if (TextUtils.isEmpty(et_search_username.getText().toString().trim()) && TextUtils.isEmpty(et_search_nickname.getText().toString().trim()) && TextUtils.isEmpty(spinner_type.getText()) && TextUtils.isEmpty(spinner_state.getText())) {
+                /*if (TextUtils.isEmpty(et_search_username.getText().toString().trim()) && TextUtils.isEmpty(et_search_nickname.getText().toString().trim()) && TextUtils.isEmpty(spinner_type.getText()) && TextUtils.isEmpty(spinner_state.getText())) {
                     toastMsg("请输入查询条件");
                     return;
-                }
+                }*/
                 page = 1;
                 pullDownRefresh(page);
                 break;

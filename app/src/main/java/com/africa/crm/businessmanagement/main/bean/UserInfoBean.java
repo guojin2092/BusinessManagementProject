@@ -12,16 +12,18 @@ import java.io.Serializable;
  * Why & What is modified:
  */
 public class UserInfoBean implements Serializable {
+    private String id;
     private String head;//头像
     private String companyId;//所属公司ID
     private String createTime;
     private String companyName;//所属公司名称
     private String name;//昵称
     private String roleName;//角色名称
-    private String id;
     private String state;//1：正常，2：禁用
+    private String stateName;
     private String userName;//用户名
     private String type;//1：系统用户，2：企业用户
+    private String typeName;
     private boolean chosen;
 
     public String getHead() {
@@ -110,5 +112,21 @@ public class UserInfoBean implements Serializable {
 
     public void setChosen(boolean chosen) {
         this.chosen = chosen;
+    }
+
+    public String getStateName() {
+        return stateName;
+    }
+
+    public void setStateName(String stateName) {
+        this.stateName = stateName;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
     }
 }

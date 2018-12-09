@@ -97,7 +97,7 @@
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@color/F1F4F9"
                         android:gravity="center"
@@ -112,8 +112,8 @@
                         android:layout_height="match_parent"
                         android:background="@color/B9B9B9" />
 
-                    <TextView
-                        android:id="@+id/tv_company_name"
+                    <EditText
+                        android:id="@+id/et_company_name"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -121,7 +121,6 @@
                         android:gravity="center"
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
-                        android:text="云茂地产"
                         android:textColor="@color/A606060"
                         android:textSize="18sp" />
 
@@ -149,7 +148,7 @@
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@color/F1F4F9"
                         android:gravity="center"
@@ -164,8 +163,8 @@
                         android:layout_height="match_parent"
                         android:background="@color/B9B9B9" />
 
-                    <TextView
-                        android:id="@+id/tv_number"
+                    <EditText
+                        android:id="@+id/et_number"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -173,7 +172,6 @@
                         android:gravity="center"
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
-                        android:text="1245315"
                         android:textColor="@color/A606060"
                         android:textSize="18sp" />
 
@@ -201,7 +199,7 @@
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@color/F1F4F9"
                         android:gravity="center"
@@ -216,8 +214,8 @@
                         android:layout_height="match_parent"
                         android:background="@color/B9B9B9" />
 
-                    <TextView
-                        android:id="@+id/tv_type"
+                    <EditText
+                        android:id="@+id/et_type"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -225,7 +223,6 @@
                         android:gravity="center"
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
-                        android:text="房地产"
                         android:textColor="@color/A606060"
                         android:textSize="18sp" />
 
@@ -253,7 +250,7 @@
 
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@color/F1F4F9"
                         android:gravity="center"
@@ -268,8 +265,8 @@
                         android:layout_height="match_parent"
                         android:background="@color/B9B9B9" />
 
-                    <TextView
-                        android:id="@+id/tv_sort"
+                    <EditText
+                        android:id="@+id/et_sort"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -277,7 +274,6 @@
                         android:gravity="center"
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
-                        android:text="0008"
                         android:textColor="@color/A606060"
                         android:textSize="18sp" />
 

@@ -43,6 +43,7 @@
     <string name="add">Add</string>
     <string name="delete">Delete</string>
     <string name="check">Check</string>
+    <string name="change">Modify</string>
     <string name="save">Save</string>
     <string name="edit">edit</string>
     <string name="cancel">Cancel</string>

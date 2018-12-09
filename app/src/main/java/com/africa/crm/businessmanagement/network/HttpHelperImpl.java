@@ -5,6 +5,8 @@ import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
 import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
+import com.africa.crm.businessmanagement.main.bean.RoleLimitInfoBean;
+import com.africa.crm.businessmanagement.main.bean.RoleManagementInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 import com.africa.crm.businessmanagement.network.api.LoginApi;
@@ -79,5 +81,30 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<List<RoleInfoBean>> getAllRoles(String name) {
         return mainApi.getAllRoles(name).compose(RxUtils.<List<RoleInfoBean>>handleResult());
+    }
+
+    @Override
+    public Observable<RoleManagementInfoBean> getRoleList(int page, int rows, String roleName, String roleCode, String typeName) {
+        return mainApi.getRoleList(page, rows, roleName, roleCode, typeName).compose(RxUtils.<RoleManagementInfoBean>handleResult());
+    }
+
+    @Override
+    public Observable<RoleInfoBean> getRoleInfo(String id) {
+        return mainApi.getRoleInfo(id).compose(RxUtils.<RoleInfoBean>handleResult());
+    }
+
+    @Override
+    public Observable<BaseEntity> saveRoleInfo(String userId, String id, String roleName, String roleCode, String typeName, String orderNum) {
+        return mainApi.saveRoleInfo(userId, id, roleName, roleCode, typeName, orderNum);
+    }
+
+    @Override
+    public Observable<List<RoleLimitInfoBean>> getRoleLimit(String id) {
+        return mainApi.getRoleLimit(id).compose(RxUtils.<List<RoleLimitInfoBean>>handleResult());
+    }
+
+    @Override
+    public Observable<BaseEntity> saveRoleLimit(String id, String resourceIds, String btnIds) {
+        return mainApi.saveRoleLimit(id, resourceIds, btnIds);
     }
 }

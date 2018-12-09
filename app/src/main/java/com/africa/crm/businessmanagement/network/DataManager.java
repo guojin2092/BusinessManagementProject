@@ -5,6 +5,8 @@ import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
 import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
+import com.africa.crm.businessmanagement.main.bean.RoleLimitInfoBean;
+import com.africa.crm.businessmanagement.main.bean.RoleManagementInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 
@@ -71,6 +73,31 @@ public class DataManager implements HttpHelper {
     @Override
     public Observable<List<RoleInfoBean>> getAllRoles(String name) {
         return mHttpHelper.getAllRoles(name);
+    }
+
+    @Override
+    public Observable<RoleManagementInfoBean> getRoleList(int page, int rows, String roleName, String roleCode, String typeName) {
+        return mHttpHelper.getRoleList(page, rows, roleName, roleCode, typeName);
+    }
+
+    @Override
+    public Observable<RoleInfoBean> getRoleInfo(String id) {
+        return mHttpHelper.getRoleInfo(id);
+    }
+
+    @Override
+    public Observable<BaseEntity> saveRoleInfo(String userId, String id, String roleName, String roleCode, String typeName, String orderNum) {
+        return mHttpHelper.saveRoleInfo(userId, id, roleName, roleCode, typeName, orderNum);
+    }
+
+    @Override
+    public Observable<List<RoleLimitInfoBean>> getRoleLimit(String id) {
+        return mHttpHelper.getRoleLimit(id);
+    }
+
+    @Override
+    public Observable<BaseEntity> saveRoleLimit(String id, String resourceIds, String btnIds) {
+        return mHttpHelper.saveRoleLimit(id, resourceIds, btnIds);
     }
 
 }

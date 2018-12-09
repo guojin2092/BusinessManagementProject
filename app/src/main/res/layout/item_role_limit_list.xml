@@ -58,6 +58,7 @@
             android:background="@color/B9B9B9" />
 
         <RelativeLayout
+            android:id="@+id/rl_limit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="7"
@@ -86,6 +87,21 @@
                     android:textSize="15sp" />
 
                 <CheckBox
+                    android:id="@+id/cb_modify"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:button="@drawable/checkbox_style" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="@string/change"
+                    android:textColor="@color/A606060"
+                    android:textSize="15sp" />
+
+                <CheckBox
                     android:id="@+id/cb_delete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -100,20 +116,6 @@
                     android:textColor="@color/A606060"
                     android:textSize="15sp" />
 
-                <CheckBox
-                    android:id="@+id/cb_check"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:button="@drawable/checkbox_style" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="@string/check"
-                    android:textColor="@color/A606060"
-                    android:textSize="15sp" />
             </LinearLayout>
         </RelativeLayout>
 

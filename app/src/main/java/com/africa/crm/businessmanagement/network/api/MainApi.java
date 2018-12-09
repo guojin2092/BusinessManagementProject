@@ -4,6 +4,8 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
+import com.africa.crm.businessmanagement.main.bean.RoleLimitInfoBean;
+import com.africa.crm.businessmanagement.main.bean.RoleManagementInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 
@@ -52,4 +54,24 @@ public interface MainApi {
     @FormUrlEncoded
     @POST("role/queryAll")
     Observable<BaseEntity<List<RoleInfoBean>>> getAllRoles(@Field("name") String name);
+
+    @FormUrlEncoded
+    @POST("role/grid")
+    Observable<BaseEntity<RoleManagementInfoBean>> getRoleList(@Field("page") int page, @Field("rows") int rows, @Field("roleName") String roleName, @Field("roleCode") String roleCode, @Field("typeName") String typeName);
+
+    @FormUrlEncoded
+    @POST("role/getInfo")
+    Observable<BaseEntity<RoleInfoBean>> getRoleInfo(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("role/save")
+    Observable<BaseEntity> saveRoleInfo(@Field("userId") String userId, @Field("id") String id, @Field("roleName") String roleName, @Field("roleCode") String roleCode, @Field("typeName") String typeName, @Field("orderNum") String orderNum);
+
+    @FormUrlEncoded
+    @POST("role/getRoleResourceAndBtn")
+    Observable<BaseEntity<List<RoleLimitInfoBean>>> getRoleLimit(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("role/saveRoleResource")
+    Observable<BaseEntity> saveRoleLimit(@Field("id") String id, @Field("resourceIds") String resourceIds, @Field("btnIds") String btnIds);
 }

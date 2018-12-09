@@ -128,13 +128,13 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
         spinner_type.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
-                mType = dicInfo.getName();
+                mType = dicInfo.getId();
             }
         });
         spinner_state.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
-                mState = dicInfo.getName();
+                mState = dicInfo.getId();
             }
         });
     }
@@ -188,6 +188,10 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
                     toastMsg("尚未选择账号角色");
                     return;
                 }
+                if (et_password.getText().toString().trim().length() < 6) {
+                    toastMsg("密码不得小于6位");
+                    return;
+                }
                 mPresenter.saveOrcreateUser(mUserId, et_account.getText().toString().trim(), mType, mRoleId, et_password.getText().toString().trim(), et_nickname.getText().toString().trim(), et_phone.getText().toString().trim(), et_address.getText().toString().trim(), et_email.getText().toString().trim(), mState, mCompanyId, mHeadUrl);
                 break;
         }
@@ -195,6 +199,10 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
 
     @Override
     public void getUserInfo(UserInfo userInfo) {
+        mType = userInfo.getType();
+        mState = userInfo.getState();
+        mRoleId = userInfo.getRoleId();
+        mCompanyId = userInfo.getCompanyId();
         et_account.setText(userInfo.getUserName());
         et_nickname.setText(userInfo.getName());
         et_phone.setText(userInfo.getPhone());
@@ -237,7 +245,7 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
     public void getAllRoles(List<RoleInfoBean> roleInfoBeanList) {
         if (!ListUtils.isEmpty(roleInfoBeanList)) {
             for (RoleInfoBean roleInfoBean : roleInfoBeanList) {
-                DicInfo dicInfo = new DicInfo(roleInfoBean.getRoleName(), roleInfoBean.getRoleCode());
+                DicInfo dicInfo = new DicInfo(roleInfoBean.getRoleName(), roleInfoBean.getId());
                 mSpinnerRoleList.add(dicInfo);
             }
             spinner_role.setListDatas(getBVActivity(), mSpinnerRoleList);

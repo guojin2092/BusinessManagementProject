@@ -5,7 +5,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.main.bean.CostumerInfoBean;
+import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -20,31 +20,18 @@ import java.util.List;
  * Modification  History:
  * Why & What is modified:
  */
-public class RoleListAdapter extends BaseQuickAdapter<CostumerInfoBean, BaseViewHolder> {
-    public RoleListAdapter(@Nullable List<CostumerInfoBean> data) {
+public class RoleListAdapter extends BaseQuickAdapter<RoleInfoBean, BaseViewHolder> {
+    public RoleListAdapter(@Nullable List<RoleInfoBean> data) {
         super(R.layout.item_role_list, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, CostumerInfoBean item) {
+    protected void convert(BaseViewHolder helper, RoleInfoBean item) {
         ImageView iv_icon = helper.getView(R.id.iv_icon);
         TextView tv_company = helper.getView(R.id.tv_company);
         helper.addOnClickListener(R.id.tv_see_detail);
         helper.addOnClickListener(R.id.tv_auth_allocation);
-        int icon = Integer.valueOf(item.getIcon());
-        int iconSrc = 0;
-        switch (icon) {
-            case 1:
-                iconSrc = R.drawable.iv_head_icon1;
-                break;
-            case 2:
-                iconSrc = R.drawable.iv_head_icon2;
-                break;
-            case 3:
-                iconSrc = R.drawable.iv_head_icon3;
-                break;
-        }
-        iv_icon.setImageResource(iconSrc);
-        tv_company.setText(item.getCompany());
+        iv_icon.setImageResource(R.drawable.iv_head_icon1);
+        tv_company.setText(item.getRoleName());
     }
 }

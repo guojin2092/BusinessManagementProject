@@ -18,16 +18,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
+import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
+import com.africa.crm.businessmanagement.main.bean.RoleLimitInfoBean;
 import com.africa.crm.businessmanagement.main.station.adapter.AuthLimitListAdapter;
-import com.africa.crm.businessmanagement.main.bean.AuthInfoBean;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.gitonway.lee.niftymodaldialogeffects.lib.ColorUtils;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.gitonway.lee.niftymodaldialogeffects.lib.effects.BaseEffects;
 
 import java.util.List;
-
-import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 
 
 /**
@@ -81,13 +80,13 @@ public class RoleAuthLimitDialog extends Dialog implements DialogInterface {
         init(context);
     }
 
-    public RoleAuthLimitDialog(Context context, int theme, List<AuthInfoBean> list) {
+    public RoleAuthLimitDialog(Context context, int theme, List<RoleLimitInfoBean> list) {
         super(context, theme);
         init(context);
         setLimitDatas(list);
     }
 
-    private void setLimitDatas(List<AuthInfoBean> authInfoBeanList) {
+    private void setLimitDatas(List<RoleLimitInfoBean> authInfoBeanList) {
         if (!ListUtils.isEmpty(authInfoBeanList)) {
             mAuthLimitListAdapter = new AuthLimitListAdapter(authInfoBeanList);
             rv_auth_limit.setAdapter(mAuthLimitListAdapter);
@@ -101,6 +100,14 @@ public class RoleAuthLimitDialog extends Dialog implements DialogInterface {
 
     }
 
+    public RecyclerView getRecyclerView() {
+        return rv_auth_limit;
+    }
+
+    public AuthLimitListAdapter getAdapter() {
+        return mAuthLimitListAdapter;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,8 +118,9 @@ public class RoleAuthLimitDialog extends Dialog implements DialogInterface {
 
     }
 
-    public static RoleAuthLimitDialog getInstance(Context context, List<AuthInfoBean> list) {
+    public static RoleAuthLimitDialog getInstance(Context context, List<RoleLimitInfoBean> list) {
 
+/*
         if (instance == null || !tmpContext.equals(context)) {
             synchronized (RoleAuthLimitDialog.class) {
                 if (instance == null || !tmpContext.equals(context)) {
@@ -120,6 +128,8 @@ public class RoleAuthLimitDialog extends Dialog implements DialogInterface {
                 }
             }
         }
+*/
+        instance = new RoleAuthLimitDialog(context, R.style.dialog_untran, list);
         tmpContext = context;
         return instance;
 

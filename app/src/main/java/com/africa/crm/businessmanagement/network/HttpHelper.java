@@ -5,6 +5,8 @@ import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
 import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
+import com.africa.crm.businessmanagement.main.bean.RoleLimitInfoBean;
+import com.africa.crm.businessmanagement.main.bean.RoleManagementInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 
@@ -39,4 +41,13 @@ public interface HttpHelper {
 
     Observable<List<RoleInfoBean>> getAllRoles(String name);
 
+    Observable<RoleManagementInfoBean> getRoleList(int page, int rows, String roleName, String roleCode, String typeName);
+
+    Observable<RoleInfoBean> getRoleInfo(String id);
+
+    Observable<BaseEntity> saveRoleInfo(String userId, String id, String roleName, String roleCode, String typeName, String orderNum);
+
+    Observable<List<RoleLimitInfoBean>> getRoleLimit(String id);
+
+    Observable<BaseEntity> saveRoleLimit(String id, String resourceIds, String btnIds);
 }
