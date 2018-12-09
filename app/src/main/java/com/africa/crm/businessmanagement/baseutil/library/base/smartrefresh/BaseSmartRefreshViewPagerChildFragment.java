@@ -30,7 +30,7 @@ public abstract class BaseSmartRefreshViewPagerChildFragment extends BaseFragmen
     @Override
     public void initView() {
         super.initView();
-        getView().findViewById(R.id.btn_net_refresh).setOnClickListener(this);
+//        getView().findViewById(R.id.btn_net_refresh).setOnClickListener(this);
         listView = (ListView) getView().findViewById(R.id.list_view);
         listView.setOnItemClickListener(this);
     }
@@ -40,7 +40,7 @@ public abstract class BaseSmartRefreshViewPagerChildFragment extends BaseFragmen
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()) {
-            case R.id.btn_net_refresh:
+           /* case R.id.btn_net_refresh:
                 if (MyNetworkUtil.isNetworkConnected(getActivity())) {
                     //默认请求第一页
                     page = 1;
@@ -48,7 +48,7 @@ public abstract class BaseSmartRefreshViewPagerChildFragment extends BaseFragmen
                 } else {
                     ToastUtils.show(getActivity(), "网络没有连接，请检查网络");
                 }
-                break;
+                break;*/
             default:
                 break;
         }

@@ -19,14 +19,27 @@ import io.reactivex.functions.Consumer;
  * Why & What is modified:
  */
 public class UserManagementPresenter extends RxPresenter<UserManagementContract.View> implements UserManagementContract.Presenter {
+
     @Override
-    public void getUserList(int page, int rows, String userName, String type, String companyId, String state) {
-        addDisposable(mDataManager.getUserList(page, rows, userName, type, companyId, state)
+    public void getUserList(int page, int rows, String userName, String type, String companyId, String state, String name) {
+        addDisposable(mDataManager.getUserList(page, rows, userName, type, companyId, state, name)
                 .compose(RxUtils.<UserManagementInfoBean>ioToMain(mView))
                 .subscribe(new Consumer<UserManagementInfoBean>() {
                     @Override
                     public void accept(UserManagementInfoBean userManagementInfoBean) throws Exception {
                         mView.getUserList(userManagementInfoBean);
+                    }
+                }, new ComConsumer(mView)));
+    }
+
+    @Override
+    public void deleteUser(String id) {
+        addDisposable(mDataManager.deleteUser(id)
+                .compose(RxUtils.<BaseEntity>ioToMain())
+                .subscribe(new Consumer<BaseEntity>() {
+                    @Override
+                    public void accept(BaseEntity baseEntity) throws Exception {
+                        mView.deleteUser(baseEntity);
                     }
                 }, new ComConsumer(mView)));
     }

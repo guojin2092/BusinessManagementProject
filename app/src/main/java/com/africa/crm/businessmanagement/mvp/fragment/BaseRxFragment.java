@@ -72,10 +72,10 @@ public class BaseRxFragment extends Fragment implements BaseView {
 
     @Override
     public void onTakeException(@NonNull ComException error) {
-        toastMag(error);
+        toastMsg(error);
     }
 
-    public final void toastMag(final ComException error) {
+    public final void toastMsg(final ComException error) {
         Snackbar.make(getView() == null ? getActivity().getWindow().getDecorView() : getView(), error.getMessage(), Snackbar.LENGTH_LONG)
                 .setAction(error.getActionName() == null ? getString(R.string.i_know) : error.getActionName()
                         , new View.OnClickListener() {
@@ -90,7 +90,7 @@ public class BaseRxFragment extends Fragment implements BaseView {
     }
 
     public final void toastMsg(String msg) {
-        toastMag(new ComException(msg));
+        toastMsg(new ComException(msg));
     }
 
     @Override

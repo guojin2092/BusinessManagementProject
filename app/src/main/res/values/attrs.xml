@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <declare-styleable name="WheelRecyclerView">
         <attr name="itemHeight" format="dimension" />
         <attr name="selectTextSize" format="dimension" />
@@ -25,6 +25,12 @@
     <declare-styleable name="MyRecycleListView">
         <attr name="paddingBottomNoButtons" format="dimension" />
         <attr name="paddingTopNoTitle" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="MySpinner">
+        <attr name="arrowTint" format="color" />
+        <attr name="arrowDrawable" format="reference|color"/>
+        <attr name="backgroundSelector" format="integer"/>
     </declare-styleable>
 
 </resources>

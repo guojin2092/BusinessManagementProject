@@ -7,23 +7,119 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <EditText
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="60dp"
-        android:layout_marginTop="45dp"
-        android:layout_marginRight="60dp"
-        android:layout_marginBottom="45dp"
-        android:background="@drawable/et_bg_search"
-        android:drawableRight="@drawable/iv_search_logo"
-        android:hint="@string/search"
-        android:paddingLeft="30dp"
-        android:paddingTop="12dp"
-        android:paddingRight="30dp"
-        android:paddingBottom="12dp"
-        android:textColor="@color/a333333"
-        android:textColorHint="@color/C4C4C4"
-        android:textSize="18sp" />
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/et_search_username"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/et_bg_search"
+                    android:hint="请输入用户名"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:textColor="@color/a333333"
+                    android:textColorHint="@color/C4C4C4"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/et_search_nickname"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/et_bg_search"
+                    android:hint="请输入昵称"
+                    android:paddingLeft="30dp"
+                    android:paddingRight="30dp"
+                    android:textColor="@color/a333333"
+                    android:textColorHint="@color/C4C4C4"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tv_search"
+                    android:layout_width="120dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:background="@drawable/bg_search"
+                    android:drawableLeft="@drawable/iv_search_logo_white"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="2dp"
+                    android:text="查询"
+                    android:textColor="@color/white"
+                    android:textSize="18sp" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <com.africa.crm.businessmanagement.widget.MySpinner
+                    android:id="@+id/spinner_type"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    android:hint="请选择用户类别"
+                    android:textColorHint="@color/C4C4C4"
+                    android:textSize="18sp"
+                    app:arrowTint="@color/A606060"
+                    app:backgroundSelector="@drawable/background_selector" />
+
+                <com.africa.crm.businessmanagement.widget.MySpinner
+                    android:id="@+id/spinner_state"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="30dp"
+                    android:layout_weight="1"
+                    android:hint="请选择状态"
+                    android:textColorHint="@color/C4C4C4"
+                    android:textSize="18sp"
+                    app:arrowTint="@color/A606060"
+                    app:backgroundSelector="@drawable/background_selector" />
+
+                <TextView
+                    android:id="@+id/titlebar_right"
+                    android:layout_width="120dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="5dp"
+                    android:text="删除"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="18sp" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -37,7 +133,7 @@
             app:srlPrimaryColor="@color/app_main_color">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_costumer"
+                android:id="@+id/rv_user"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:overScrollMode="never" />
@@ -48,6 +144,22 @@
                 app:srlClassicsSpinnerStyle="Translate" />
 
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+        <TextView
+            android:id="@+id/tv_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="60dp"
+            android:background="@drawable/bg_button"
+            android:paddingLeft="38dp"
+            android:paddingTop="8dp"
+            android:paddingRight="38dp"
+            android:paddingBottom="8dp"
+            android:text="@string/delete"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/ll_add"

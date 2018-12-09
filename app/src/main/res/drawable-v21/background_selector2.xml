@@ -1,0 +1,15 @@
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/colorPrimaryDark">
+    <item>
+        <selector>
+            <item
+                android:drawable="@drawable/spinner_bg_white2"
+                android:state_checked="false" />
+            <item
+                android:drawable="@drawable/spinner_bg_gray2"
+                android:state_checked="true" />
+            <item android:drawable="@drawable/spinner_bg_white2" />
+
+        </selector>
+    </item>
+</ripple>

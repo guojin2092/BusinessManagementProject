@@ -2,6 +2,8 @@ package com.africa.crm.businessmanagement.main.station.adapter;
 
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,9 +24,19 @@ import java.util.List;
  * Why & What is modified:
  */
 public class UserListAdapter extends BaseQuickAdapter<UserInfoBean, BaseViewHolder> {
+    private boolean mIsDeleted = false;
 
     public UserListAdapter(@Nullable List<UserInfoBean> data) {
         super(R.layout.item_user_list, data);
+    }
+
+    public boolean ismIsDeleted() {
+        return mIsDeleted;
+    }
+
+    public void setmIsDeleted(boolean mIsDeleted) {
+        this.mIsDeleted = mIsDeleted;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -32,6 +44,8 @@ public class UserListAdapter extends BaseQuickAdapter<UserInfoBean, BaseViewHold
         ImageView iv_head = helper.getView(R.id.iv_head);
         TextView tv_company = helper.getView(R.id.tv_company);
         TextView tv_role_name = helper.getView(R.id.tv_role_name);
+        CheckBox cb_choose = helper.getView(R.id.cb_choose);
+
 
         iv_head.setImageResource(R.drawable.iv_head_icon1);
         if (!TextUtils.isEmpty(item.getCompanyName())) {
@@ -40,5 +54,16 @@ public class UserListAdapter extends BaseQuickAdapter<UserInfoBean, BaseViewHold
             tv_company.setText("暂无");
         }
         tv_role_name.setText(item.getRoleName());
+
+        if (mIsDeleted) {
+            cb_choose.setVisibility(View.VISIBLE);
+        } else {
+            cb_choose.setVisibility(View.GONE);
+        }
+        if (item.isChosen()) {
+            cb_choose.setChecked(true);
+        } else {
+            cb_choose.setChecked(false);
+        }
     }
 }

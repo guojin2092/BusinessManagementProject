@@ -128,7 +128,7 @@ public class OverScrollView extends FrameLayout implements OnTouchListener
 	private boolean mFillViewport;
 
 	/**
-	 * Whether arrow scrolling is animated.
+	 * Whether arrow_black scrolling is animated.
 	 */
 	private boolean mSmoothScrollingEnabled = true;
 
@@ -275,7 +275,7 @@ public class OverScrollView extends FrameLayout implements OnTouchListener
 
 	/**
 	 * @return The maximum amount this scroll view will scroll in response to an
-	 *         arrow event.
+	 *         arrow_black event.
 	 */
 	public int getMaxScrollAmount()
 	{
@@ -394,7 +394,7 @@ public class OverScrollView extends FrameLayout implements OnTouchListener
 	}
 
 	/**
-	 * @return Whether arrow scrolling will animate its transition.
+	 * @return Whether arrow_black scrolling will animate its transition.
 	 */
 	public boolean isSmoothScrollingEnabled()
 	{
@@ -402,10 +402,10 @@ public class OverScrollView extends FrameLayout implements OnTouchListener
 	}
 
 	/**
-	 * Set whether arrow scrolling will animate its transition.
+	 * Set whether arrow_black scrolling will animate its transition.
 	 * 
 	 * @param smoothScrollingEnabled
-	 *            whether arrow scrolling will animate its transition
+	 *            whether arrow_black scrolling will animate its transition
 	 */
 	public void setSmoothScrollingEnabled(boolean smoothScrollingEnabled)
 	{
@@ -1013,10 +1013,10 @@ public class OverScrollView extends FrameLayout implements OnTouchListener
 	}
 
 	/**
-	 * Handle scrolling in response to an up or down arrow click.
+	 * Handle scrolling in response to an up or down arrow_black click.
 	 * 
 	 * @param direction
-	 *            The direction corresponding to the arrow key that was pressed
+	 *            The direction corresponding to the arrow_black key that was pressed
 	 * @return True if we consumed the event, false otherwise
 	 */
 	public boolean arrowScroll(int direction)

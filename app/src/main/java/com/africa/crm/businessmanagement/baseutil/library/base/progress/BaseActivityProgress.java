@@ -32,7 +32,7 @@ public abstract class BaseActivityProgress extends BaseActivity implements MyHtt
     protected Button btn_net_refresh;
     protected LinearLayout rlNoData;
     protected ImageView iv_return;
-    protected Button btn_no_data_back;
+//    protected Button btn_no_data_back;
 
     @Override
     public void initView() {
@@ -42,14 +42,14 @@ public abstract class BaseActivityProgress extends BaseActivity implements MyHtt
             progressBar.setVisibility(View.VISIBLE);
         rlNoData = (LinearLayout) findViewById(R.id.layout_no_data);
         iv_return = (ImageView) findViewById(R.id.iv_return);
-        btn_no_data_back = (Button) findViewById(R.id.btn_no_data_back);
+//        btn_no_data_back = (Button) findViewById(R.id.btn_no_data_back);
 
         if (iv_return != null) {
             iv_return.setOnClickListener(this);
         }
-        if (btn_no_data_back != null) {
-            btn_no_data_back.setOnClickListener(this);
-        }
+//        if (btn_no_data_back != null) {
+//            btn_no_data_back.setOnClickListener(this);
+//        }
     }
 
 
@@ -114,10 +114,6 @@ public abstract class BaseActivityProgress extends BaseActivity implements MyHtt
         }
         if (frameLayout != null)
             frameLayout.setVisibility(View.GONE);
-        if (btn_net_refresh == null) {
-            btn_net_refresh = (Button) findViewById(R.id.btn_net_refresh);
-            btn_net_refresh.setOnClickListener(this);
-        }
         if (networkErrorLayout == null) {
             networkErrorLayout = (LinearLayout) findViewById(R.id.layout_network_error);
         }
@@ -137,7 +133,6 @@ public abstract class BaseActivityProgress extends BaseActivity implements MyHtt
             return;
         }
         switch (v.getId()) {
-            case R.id.btn_net_refresh:
             case R.id.layout_network_error:
                 if (MyNetworkUtil.isNetworkConnected(getApplication())) {
                     //默认请求第一页
@@ -147,7 +142,6 @@ public abstract class BaseActivityProgress extends BaseActivity implements MyHtt
                 }
                 break;
             case R.id.iv_return:
-            case R.id.btn_no_data_back:
                 finish();
                 break;
         }

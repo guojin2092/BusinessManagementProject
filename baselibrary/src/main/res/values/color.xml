@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--主题色-->
-    <color name="app_main_color">#EC9719</color>
+    <color name="app_main_color">#516996</color>
     <!--主题色-->
     <!--默认背景色-->
     <color name="default_background_color">#EFEFEF</color>

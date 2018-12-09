@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/F2F2F2"
+    android:orientation="vertical">
+
+    <include layout="@layout/titlebar" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:orientation="horizontal"
+                        android:paddingTop="@dimen/activity_horizontal_margin"
+                        android:paddingBottom="@dimen/activity_horizontal_margin">
+
+                        <ImageView
+                            android:id="@+id/iv_icon"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:layout_marginRight="30dp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/iv_no_icon" />
+
+                        <TextView
+                            android:id="@+id/tv_add_icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical"
+                            android:text="点击添加头像"
+                            android:textColor="@color/A768DBD"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <TextView
+                    style="@style/product_title_blue"
+                    android:text="用户信息：" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/product_title_black"
+                            android:text="账号：" />
+
+                        <EditText
+                            android:id="@+id/et_account"
+                            style="@style/product_et_blue" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/product_title_black"
+                            android:text="昵称：" />
+
+                        <EditText
+                            android:id="@+id/et_nickname"
+                            style="@style/product_et_blue" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/product_title_black"
+                            android:text="密码：" />
+
+                        <EditText
+                            android:id="@+id/et_password"
+                            style="@style/product_et_blue" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/product_title_black"
+                            android:text="电话：" />
+
+                        <EditText
+                            android:id="@+id/et_phone"
+                            style="@style/product_et_blue"
+                            android:inputType="phone" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/product_title_black"
+                            android:text="地址：" />
+
+                        <EditText
+                            android:id="@+id/et_address"
+                            style="@style/product_et_blue" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/product_title_black"
+                            android:text="邮箱：" />
+
+                        <EditText
+                            android:id="@+id/et_email"
+                            style="@style/product_et_blue" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/product_title_black"
+                            android:text="分类：" />
+
+                        <com.africa.crm.businessmanagement.widget.MySpinner
+                            android:id="@+id/spinner_type"
+                            style="@style/product_et_blue"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"
+                            app:backgroundSelector="@drawable/background_selector2" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/product_title_black"
+                            android:text="所属企业：" />
+
+                        <com.africa.crm.businessmanagement.widget.MySpinner
+                            android:id="@+id/spinner_company"
+                            style="@style/product_et_blue"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"
+                            app:backgroundSelector="@drawable/background_selector2" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/product_title_black"
+                            android:text="状态：" />
+
+                        <com.africa.crm.businessmanagement.widget.MySpinner
+                            android:id="@+id/spinner_state"
+                            style="@style/product_et_blue"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"
+                            app:backgroundSelector="@drawable/background_selector2" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/product_title_black"
+                            android:text="角色：" />
+
+                        <com.africa.crm.businessmanagement.widget.MySpinner
+                            android:id="@+id/spinner_role"
+                            style="@style/product_et_blue"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"
+                            app:backgroundSelector="@drawable/background_selector2" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="30dp"
+                    android:background="@drawable/bg_button"
+                    android:paddingLeft="38dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="38dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/save"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:visibility="invisible" />
+
+            </LinearLayout>
+        </ScrollView>
+
+        <TextView
+            android:id="@+id/tv_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/bg_button"
+            android:paddingLeft="38dp"
+            android:paddingTop="8dp"
+            android:paddingRight="38dp"
+            android:paddingBottom="8dp"
+            android:text="@string/save"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+</LinearLayout>

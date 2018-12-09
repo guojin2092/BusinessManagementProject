@@ -126,6 +126,7 @@
     <style name="product_title_style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
         <item name="android:textSize">18sp</item>
         <item name="android:paddingTop">15dp</item>
         <item name="android:paddingBottom">15dp</item>
@@ -141,6 +142,8 @@
     </style>
 
     <style name="product_et_blue" parent="product_title_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/A586686</item>
         <item name="android:background">@drawable/null_drawable</item>
     </style>

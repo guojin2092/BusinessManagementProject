@@ -1,8 +1,11 @@
 package com.africa.crm.businessmanagement.network;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
+import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
 import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
+import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 
 import java.util.List;
@@ -24,6 +27,16 @@ public interface HttpHelper {
 
     Observable<List<MainStationInfoBean>> getMainStationInfo(String id);
 
-    Observable<UserManagementInfoBean> getUserList(int page, int rows, String userName, String type, String companyId, String state);
+    Observable<UserManagementInfoBean> getUserList(int page, int rows, String userName, String type, String companyId, String state, String name);
+
+    Observable<BaseEntity> deleteUser(String id);
+
+    Observable<UserInfo> getUserInfo(String id);
+
+    Observable<BaseEntity> saveOrcreateUser(String id, String userName, String type, String roleIds, String passWord, String name, String phone, String address, String email, String state, String companyId, String head);
+
+    Observable<List<DicInfo>> getAllCompany(String name);
+
+    Observable<List<RoleInfoBean>> getAllRoles(String name);
 
 }
