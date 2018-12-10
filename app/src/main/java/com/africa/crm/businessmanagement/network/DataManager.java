@@ -1,7 +1,10 @@
 package com.africa.crm.businessmanagement.network;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
+import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
+import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
 import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
@@ -41,6 +44,11 @@ public class DataManager implements HttpHelper {
     }
 
     @Override
+    public Observable<List<DicInfo>> getDicByCode(String code) {
+        return mHttpHelper.getDicByCode(code);
+    }
+
+    @Override
     public Observable<List<MainStationInfoBean>> getMainStationInfo(String id) {
         return mHttpHelper.getMainStationInfo(id);
     }
@@ -66,7 +74,7 @@ public class DataManager implements HttpHelper {
     }
 
     @Override
-    public Observable<List<DicInfo>> getAllCompany(String name) {
+    public Observable<List<DicInfo2>> getAllCompany(String name) {
         return mHttpHelper.getAllCompany(name);
     }
 
@@ -98,6 +106,26 @@ public class DataManager implements HttpHelper {
     @Override
     public Observable<BaseEntity> saveRoleLimit(String id, String resourceIds, String btnIds) {
         return mHttpHelper.saveRoleLimit(id, resourceIds, btnIds);
+    }
+
+    @Override
+    public Observable<CompanyInfoBean> getCompanyInfoList(int page, int rows, String name) {
+        return mHttpHelper.getCompanyInfoList(page, rows, name);
+    }
+
+    @Override
+    public Observable<BaseEntity> deleteCompanyInfo(String id) {
+        return mHttpHelper.deleteCompanyInfo(id);
+    }
+
+    @Override
+    public Observable<CompanyInfo> getCompanyInfoDetail(String id) {
+        return mHttpHelper.getCompanyInfoDetail(id);
+    }
+
+    @Override
+    public Observable<BaseEntity> saveCompanyInfo(String id, String head, String name, String code, String type, String address, String phone, String email, String mid, String area, String profession, String numA, String state) {
+        return mHttpHelper.saveCompanyInfo(id, head, name, code, type, address, phone, email, mid, area, profession, numA, state);
     }
 
 }

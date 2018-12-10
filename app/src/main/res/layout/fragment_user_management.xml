@@ -114,84 +114,11 @@
                     android:textColor="@color/colorPrimary"
                     android:textSize="18sp" />
 
-
             </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            android:id="@+id/smart_refresh_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:srlAccentColor="@android:color/white"
-            app:srlPrimaryColor="@color/app_main_color">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_user"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:overScrollMode="never" />
-
-            <com.scwang.smartrefresh.layout.footer.ClassicsFooter
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:srlClassicsSpinnerStyle="Translate" />
-
-        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-
-        <TextView
-            android:id="@+id/tv_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="60dp"
-            android:background="@drawable/bg_button"
-            android:paddingLeft="38dp"
-            android:paddingTop="8dp"
-            android:paddingRight="38dp"
-            android:paddingBottom="8dp"
-            android:text="@string/delete"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:visibility="gone" />
-
-        <include layout="@layout/layout_request_no_data" />
-
-        <LinearLayout
-            android:id="@+id/ll_add"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="bottom|right"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="80dp"
-            android:background="@drawable/btn_add"
-            android:gravity="center_horizontal"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/iv_add_logo" />
-
-            <TextView
-                android:id="@+id/tv_add"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="@string/add"
-                android:textColor="@color/A8F6812"
-                android:textSize="16sp" />
-        </LinearLayout>
-
-        <include layout="@layout/layout_request_network_error" />
-
-    </FrameLayout>
-
+    <include layout="@layout/layout_refresh_list" />
 </LinearLayout>

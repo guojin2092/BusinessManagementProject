@@ -25,6 +25,7 @@ public abstract class BaseMvpFragment<P extends IBasePresenter> extends BaseRxFr
         super.onCreate(savedInstanceState);
         mPresenter = initPresenter();
         mPresenter.attach(this);
+        requestData();
     }
 
     @Override
@@ -32,4 +33,9 @@ public abstract class BaseMvpFragment<P extends IBasePresenter> extends BaseRxFr
         super.onDestroy();
         mPresenter.detach();
     }
+
+    /**
+     * 请求初始化数据
+     */
+    protected abstract void requestData();
 }

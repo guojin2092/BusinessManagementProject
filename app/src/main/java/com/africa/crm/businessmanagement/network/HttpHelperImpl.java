@@ -1,7 +1,10 @@
 package com.africa.crm.businessmanagement.network;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
+import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
+import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
 import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
@@ -49,6 +52,11 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
+    public Observable<List<DicInfo>> getDicByCode(String code) {
+        return loginApi.getDicByCode(code).compose(RxUtils.<List<DicInfo>>handleResult());
+    }
+
+    @Override
     public Observable<List<MainStationInfoBean>> getMainStationInfo(String id) {
         return mainApi.getMainStationInfo(id).compose(RxUtils.<List<MainStationInfoBean>>handleResult());
     }
@@ -74,8 +82,8 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
-    public Observable<List<DicInfo>> getAllCompany(String name) {
-        return mainApi.getAllCompany(name).compose(RxUtils.<List<DicInfo>>handleResult());
+    public Observable<List<DicInfo2>> getAllCompany(String name) {
+        return mainApi.getAllCompany(name).compose(RxUtils.<List<DicInfo2>>handleResult());
     }
 
     @Override
@@ -106,5 +114,25 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<BaseEntity> saveRoleLimit(String id, String resourceIds, String btnIds) {
         return mainApi.saveRoleLimit(id, resourceIds, btnIds);
+    }
+
+    @Override
+    public Observable<CompanyInfoBean> getCompanyInfoList(int page, int rows, String name) {
+        return mainApi.getCompanyInfoList(page, rows, name).compose(RxUtils.<CompanyInfoBean>handleResult());
+    }
+
+    @Override
+    public Observable<BaseEntity> deleteCompanyInfo(String id) {
+        return mainApi.deleteCompanyInfo(id);
+    }
+
+    @Override
+    public Observable<CompanyInfo> getCompanyInfoDetail(String id) {
+        return mainApi.getCompanyInfoDetail(id).compose(RxUtils.<CompanyInfo>handleResult());
+    }
+
+    @Override
+    public Observable<BaseEntity> saveCompanyInfo(String id, String head, String name, String code, String type, String address, String phone, String email, String mid, String area, String profession, String numA, String state) {
+        return mainApi.saveCompanyInfo(id, head, name, code, type, address, phone, email, mid, area, profession, numA, state);
     }
 }

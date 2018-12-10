@@ -43,7 +43,7 @@
     <string name="exit_app">再按一次退出程序</string>
     <string name="role_detail">角色详情</string>
     <string name="permission_assignment">权限分配</string>
-    <string name="add">添加</string>
+    <string name="add">新增</string>
     <string name="delete">删除</string>
     <string name="check">查看</string>
     <string name="change">修改</string>
@@ -52,6 +52,9 @@
     <string name="cancel">取消</string>
     <string name="out_of_stock">出库</string>
     <string name="storage">入库</string>
+    <string name="tips">温馨提示</string>
+    <string name="confirm_delete">是否确认删除？</string>
+    <string name="OK">确认</string>
     <string name="search_enterprise">请输入企业名称或创建时间查询</string>
     <string name="search_enterprise_account">请输入企业账号/名称</string>
     <string name="search_product">请输入产品名称</string>

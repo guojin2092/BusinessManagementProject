@@ -2,6 +2,7 @@ package com.africa.crm.businessmanagement.main.station.contract;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
+import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.mvp.presenter.IBasePresenter;
@@ -25,7 +26,7 @@ public class UserDetailContract {
 
         void saveOrcreateUser(BaseEntity baseEntity);
 
-        void getAllCompany(List<DicInfo> dicInfoList);
+        void getAllCompany(List<DicInfo2> dicInfoList);
 
         void getAllRoles(List<RoleInfoBean> roleInfoBeanList);
     }

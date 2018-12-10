@@ -16,7 +16,7 @@ import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
 import com.africa.crm.businessmanagement.main.contract.LoginContract;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.presenter.LoginPresenter;
-import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
+import com.africa.crm.businessmanagement.mvp.activity.BaseEasyMvpActivity;
 
 import butterknife.BindView;
 
@@ -29,7 +29,7 @@ import butterknife.BindView;
  * Modification  History:
  * Why & What is modified:
  */
-public class LoginActivity extends BaseMvpActivity<LoginPresenter> implements LoginContract.View {
+public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implements LoginContract.View {
     @BindView(R.id.tv_login)
     TextView tv_login;
     @BindView(R.id.et_username)

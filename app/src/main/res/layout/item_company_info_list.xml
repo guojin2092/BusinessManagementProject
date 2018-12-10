@@ -36,7 +36,6 @@
             android:id="@+id/tv_company"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="云茂地产"
             android:textColor="@color/A606060"
             android:textSize="22sp" />
 
@@ -50,7 +49,6 @@
             android:paddingTop="1dp"
             android:paddingRight="20dp"
             android:paddingBottom="1dp"
-            android:text="科技"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/sp_16" />
     </LinearLayout>
@@ -62,7 +60,6 @@
         android:layout_gravity="center_vertical"
         android:drawableLeft="@drawable/iv_location_logo"
         android:drawablePadding="10dp"
-        android:text="上海"
         android:textColor="@color/B2B2B2"
         android:textSize="20sp" />
 </LinearLayout>

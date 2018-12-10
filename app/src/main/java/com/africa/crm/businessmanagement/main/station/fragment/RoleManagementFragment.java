@@ -59,8 +59,8 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
     @BindView(R.id.ll_add)
     LinearLayout ll_add;
 
-    @BindView(R.id.rv_role)
-    RecyclerView rv_role;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
     private RoleListAdapter mRoleListAdapter;
     private List<RoleInfoBean> mRoleList = new ArrayList<>();
 
@@ -160,6 +160,11 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
     }
 
     @Override
+    protected void requestData() {
+        pullDownRefresh(page);
+    }
+
+    @Override
     protected void pullDownRefresh(int page) {
         mPresenter.getRoleList(page, rows, et_search_roleName.getText().toString().trim(), et_search_roleCode.getText().toString().trim(), "");
     }
@@ -172,18 +177,12 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
     @Override
     public void initData() {
         mRoleListAdapter = new RoleListAdapter(mRoleList);
-        rv_role.setAdapter(mRoleListAdapter);
+        recyclerView.setAdapter(mRoleListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        rv_role.setLayoutManager(layoutManager);
-        rv_role.addItemDecoration(new LineItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 2, ContextCompat.getColor(getActivity(), R.color.F2F2F2)));
-        rv_role.setHasFixedSize(true);
-        rv_role.setNestedScrollingEnabled(false);
-    }
-
-
-    @Override
-    public void release() {
-
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new LineItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 2, ContextCompat.getColor(getActivity(), R.color.F2F2F2)));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setNestedScrollingEnabled(false);
     }
 
     @Override
@@ -200,7 +199,7 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
                 mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
             }
             mRoleList.clear();
-            rv_role.smoothScrollToPosition(0);
+            recyclerView.smoothScrollToPosition(0);
         }
         if (mRefreshLayout != null) {
             if (ListUtils.isEmpty(roleManagementInfoBean.getRows()) && page > 1) {
@@ -364,4 +363,11 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
             mRoleAuthLimitDialog.dismiss();
         }
     }
+
+
+    @Override
+    public void release() {
+
+    }
+
 }

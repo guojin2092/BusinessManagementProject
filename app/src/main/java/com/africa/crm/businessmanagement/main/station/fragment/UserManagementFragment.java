@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
+import com.africa.crm.businessmanagement.eventbus.AddOrSaveUserEvent;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.UserInfoBean;
@@ -32,6 +33,9 @@ import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,8 +67,8 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
     @BindView(R.id.et_search_nickname)
     EditText et_search_nickname;
 
-    @BindView(R.id.rv_user)
-    RecyclerView rv_user;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
     private UserListAdapter mUserListAdapter;
     private List<UserInfoBean> mDeleteList = new ArrayList<>();
     private List<UserInfoBean> mUserInfoBeanList = new ArrayList<>();
@@ -97,6 +101,12 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
         return userManagementFragment;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -112,6 +122,11 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
     @Override
     protected UserManagementPresenter initPresenter() {
         return new UserManagementPresenter();
+    }
+
+    @Override
+    protected void requestData() {
+        pullDownRefresh(page);
     }
 
     @Override
@@ -135,23 +150,23 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
         spinner_state.setListDatas(getBVActivity(), mSpinnerStateList);
 
         mUserListAdapter = new UserListAdapter(mUserInfoBeanList);
-        rv_user.setAdapter(mUserListAdapter);
-        rv_user.setLayoutManager(new LinearLayoutManager(getActivity()));
-        rv_user.addItemDecoration(new LineItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 2, ContextCompat.getColor(getActivity(), R.color.F2F2F2)));
-        rv_user.setHasFixedSize(true);
-        rv_user.setNestedScrollingEnabled(false);
+        recyclerView.setAdapter(mUserListAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.addItemDecoration(new LineItemDecoration(getActivity(), LinearLayoutManager.VERTICAL, 2, ContextCompat.getColor(getActivity(), R.color.F2F2F2)));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setNestedScrollingEnabled(false);
 
         spinner_type.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
-                mType = dicInfo.getId();
+                mType = dicInfo.getCode();
             }
         });
 
         spinner_state.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
-                mState = dicInfo.getId();
+                mState = dicInfo.getCode();
             }
         });
     }
@@ -212,15 +227,15 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
                     }
                 }
                 mDeleteDialog = new AlertDialog.Builder(getBVActivity())
-                        .setTitle("温馨提示")
-                        .setMessage("是否确认删除？")
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        .setTitle(R.string.tips)
+                        .setMessage(R.string.confirm_delete)
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int which) {
                                 mDeleteDialog.dismiss();
                             }
                         })
-                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int which) {
                                 for (int i = 0; i < mDeleteList.size(); i++) {
@@ -254,7 +269,7 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
                 mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
             }
             mUserInfoBeanList.clear();
-            rv_user.smoothScrollToPosition(0);
+            recyclerView.smoothScrollToPosition(0);
         }
         if (mRefreshLayout != null) {
             if (ListUtils.isEmpty(userManagementInfoBean.getRows()) && page > 1) {
@@ -274,7 +289,7 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                     if (mShowCheckBox) {
-                        CheckBox cb_choose = (CheckBox) adapter.getViewByPosition(rv_user, position, R.id.cb_choose);
+                        CheckBox cb_choose = (CheckBox) adapter.getViewByPosition(recyclerView, position, R.id.cb_choose);
                         mUserInfoBeanList.get(position).setChosen(!cb_choose.isChecked());
                         mUserListAdapter.notifyDataSetChanged();
                     } else {
@@ -310,6 +325,12 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
         }
     }
 
+    @Subscribe
+    public void Event(AddOrSaveUserEvent addOrSaveUserEvent) {
+        toastMsg(addOrSaveUserEvent.getMsg());
+        requestData();
+    }
+
     @Override
     public void onTakeException(@NonNull ComException error) {
         super.onTakeException(error);
@@ -320,7 +341,7 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
 
     @Override
     public void release() {
-
+        EventBus.getDefault().unregister(this);
     }
 
 }

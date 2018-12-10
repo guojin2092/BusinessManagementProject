@@ -24,7 +24,7 @@ import com.africa.crm.businessmanagement.main.station.activity.ContactManagement
 import com.africa.crm.businessmanagement.main.station.activity.CostumerManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.DeliveryOrderManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.EnterpriseAccountActivity;
-import com.africa.crm.businessmanagement.main.station.activity.EnterpriseManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.CompanyInfoManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.InventoryManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.PaymentManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.PdfReportManagementActivity;
@@ -38,7 +38,7 @@ import com.africa.crm.businessmanagement.main.station.activity.SupplierManagemen
 import com.africa.crm.businessmanagement.main.station.activity.SystemManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.TaskManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.TradingOrderManagementActivity;
-import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
+import com.africa.crm.businessmanagement.mvp.activity.BaseEasyMvpActivity;
 import com.africa.crm.businessmanagement.widget.GridItemDecoration;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
@@ -47,7 +47,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class MainActivity extends BaseMvpActivity<MainPresenter> implements MainContract.View {
+public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements MainContract.View {
     @BindView(R.id.titlebar_back)
     ImageView titlebar_back;
     @BindView(R.id.titlebar_name)
@@ -227,7 +227,7 @@ public class MainActivity extends BaseMvpActivity<MainPresenter> implements Main
                     String type = workStationInfoList.get(position).getWork_type();
                     switch (type) {
                         case "1":
-                            EnterpriseManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            CompanyInfoManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "2":
                             EnterpriseAccountActivity.startActivity(MainActivity.this, workStationInfo);

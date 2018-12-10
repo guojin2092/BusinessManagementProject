@@ -11,15 +11,18 @@ import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
-import com.africa.crm.businessmanagement.baseutil.common.util.ToastUtils;
+import com.africa.crm.businessmanagement.eventbus.AddOrSaveUserEvent;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
+import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.main.station.contract.UserDetailContract;
 import com.africa.crm.businessmanagement.main.station.presenter.UserDetailPresenter;
-import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
+import com.africa.crm.businessmanagement.mvp.activity.BaseEasyMvpActivity;
 import com.africa.crm.businessmanagement.widget.MySpinner;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +38,7 @@ import butterknife.BindView;
  * Modification  History:
  * Why & What is modified:
  */
-public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> implements UserDetailContract.View {
+public class UserDetailActivity extends BaseEasyMvpActivity<UserDetailPresenter> implements UserDetailContract.View {
     @BindView(R.id.titlebar_back)
     ImageView titlebar_back;
     @BindView(R.id.titlebar_name)
@@ -112,9 +115,10 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
         if (!TextUtils.isEmpty(mUserId)) {
             titlebar_right.setText(R.string.edit);
             tv_save.setText(R.string.save);
+            setEditTextInput(false);
         } else {
             titlebar_right.setVisibility(View.GONE);
-            tv_save.setText("新建");
+            tv_save.setText(R.string.add);
             tv_save.setVisibility(View.VISIBLE);
         }
 
@@ -128,13 +132,13 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
         spinner_type.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
-                mType = dicInfo.getId();
+                mType = dicInfo.getCode();
             }
         });
         spinner_state.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
-                mState = dicInfo.getId();
+                mState = dicInfo.getCode();
             }
         });
     }
@@ -169,9 +173,11 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
                     if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
                         titlebar_right.setText(R.string.cancel);
                         tv_save.setVisibility(View.VISIBLE);
+                        setEditTextInput(true);
                     } else {
                         titlebar_right.setText(R.string.edit);
                         tv_save.setVisibility(View.GONE);
+                        setEditTextInput(false);
                     }
                 }
                 break;
@@ -197,6 +203,25 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
         }
     }
 
+    /**
+     * 控制输入框是否可输入
+     *
+     * @param canInput
+     */
+    private void setEditTextInput(boolean canInput) {
+        tv_add_icon.setEnabled(canInput);
+        et_account.setEnabled(canInput);
+        et_nickname.setEnabled(canInput);
+        et_password.setEnabled(canInput);
+        et_phone.setEnabled(canInput);
+        et_address.setEnabled(canInput);
+        et_email.setEnabled(canInput);
+        spinner_type.getTextView().setEnabled(canInput);
+        spinner_company.getTextView().setEnabled(canInput);
+        spinner_state.getTextView().setEnabled(canInput);
+        spinner_role.getTextView().setEnabled(canInput);
+    }
+
     @Override
     public void getUserInfo(UserInfo userInfo) {
         mType = userInfo.getType();
@@ -216,26 +241,29 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
     @Override
     public void saveOrcreateUser(BaseEntity baseEntity) {
         if (baseEntity.isSuccess()) {
-            String toastString = "";
+            String msg = "";
             if (TextUtils.isEmpty(mUserId)) {
-                toastString = "角色创建成功";
+                msg = "角色创建成功";
             } else {
-                toastString = "角色修改成功";
+                msg = "角色修改成功";
             }
-            ToastUtils.show(this, toastString);
+            EventBus.getDefault().post(new AddOrSaveUserEvent(msg));
             finish();
         }
     }
 
     @Override
-    public void getAllCompany(List<DicInfo> dicInfoList) {
+    public void getAllCompany(List<DicInfo2> dicInfoList) {
         if (!ListUtils.isEmpty(dicInfoList)) {
-            mSpinnerCompanyList.addAll(dicInfoList);
+            for (int i = 0; i < dicInfoList.size(); i++) {
+                DicInfo dicInfo = new DicInfo(dicInfoList.get(i).getName(), dicInfoList.get(i).getId());
+                mSpinnerCompanyList.add(dicInfo);
+            }
             spinner_company.setListDatas(getBVActivity(), mSpinnerCompanyList);
             spinner_company.addOnItemClickListener(new MySpinner.OnItemClickListener() {
                 @Override
                 public void onItemClick(DicInfo dicInfo, int position) {
-                    mCompanyId = dicInfo.getId();
+                    mCompanyId = dicInfo.getCode();
                 }
             });
         }
@@ -252,7 +280,7 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
             spinner_role.addOnItemClickListener(new MySpinner.OnItemClickListener() {
                 @Override
                 public void onItemClick(DicInfo dicInfo, int position) {
-                    mRoleId = dicInfo.getId();
+                    mRoleId = dicInfo.getCode();
                 }
             });
         }

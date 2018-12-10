@@ -1,7 +1,10 @@
 package com.africa.crm.businessmanagement.network.api;
 
-import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
+import com.africa.crm.businessmanagement.main.bean.DicInfo;
+import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 import retrofit2.http.Field;
@@ -22,4 +25,9 @@ public interface LoginApi {
     @FormUrlEncoded
     @POST("login/doLogin")
     Observable<BaseEntity<LoginInfoBean>> getLoginInfo(@Field("userName") String userName, @Field("passWord") String passWord);
+
+    @FormUrlEncoded
+    @POST("dic/getDicByCode")
+    Observable<BaseEntity<List<DicInfo>>> getDicByCode(@Field("code") String code);
+
 }

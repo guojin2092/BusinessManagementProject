@@ -12,27 +12,28 @@ import java.io.Serializable;
  * Why & What is modified:
  */
 public class DicInfo implements Serializable {
-    private String name;
-    private String id;
+    private String text;
+    private String code;
 
-    public DicInfo(String name, String id) {
-        this.name = name;
-        this.id = id;
+    public DicInfo(String text, String code) {
+        this.text = text;
+        this.code = code;
     }
 
-    public String getName() {
-        return name;
+    public String getText() {
+        return text;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public String getId() {
-        return id;
+    public String getCode() {
+        return code;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setCode(String code) {
+        this.code = code;
     }
+
 }

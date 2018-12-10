@@ -48,6 +48,9 @@
     <string name="cancel">Annuler</string>
     <string name="out_of_stock">Sortie</string>
     <string name="storage">Entrée</string>
+    <string name="tips">Pourboires</string>
+    <string name="confirm_delete">Confirmez-vous la suppression?</string>
+    <string name="OK">Ok</string>
     <string name="search_enterprise">Veuillez saisir le nom de l 'entreprise ou créer une requête</string>
     <string name="search_enterprise_account">Veuillez saisir le numéro / nom de l 'entreprise</string>
     <string name="search_product">Veuillez saisir le nom du produit</string>

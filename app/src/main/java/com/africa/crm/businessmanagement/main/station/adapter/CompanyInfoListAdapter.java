@@ -1,13 +1,14 @@
 package com.africa.crm.businessmanagement.main.station.adapter;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.main.bean.EnterpriseInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -22,11 +23,11 @@ import java.util.List;
  * Modification  History:
  * Why & What is modified:
  */
-public class EnterpriseListAdapter extends BaseQuickAdapter<EnterpriseInfoBean, BaseViewHolder> {
+public class CompanyInfoListAdapter extends BaseQuickAdapter<CompanyInfo, BaseViewHolder> {
     private boolean mIsDeleted = false;
 
-    public EnterpriseListAdapter(@Nullable List<EnterpriseInfoBean> data) {
-        super(R.layout.item_enterprise_list, data);
+    public CompanyInfoListAdapter(@Nullable List<CompanyInfo> data) {
+        super(R.layout.item_company_info_list, data);
     }
 
     public boolean ismIsDeleted() {
@@ -39,39 +40,32 @@ public class EnterpriseListAdapter extends BaseQuickAdapter<EnterpriseInfoBean, 
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, EnterpriseInfoBean item) {
+    protected void convert(BaseViewHolder helper, CompanyInfo item) {
         ImageView iv_icon = helper.getView(R.id.iv_icon);
         TextView tv_company = helper.getView(R.id.tv_company);
         TextView tv_type = helper.getView(R.id.tv_type);
         TextView tv_location = helper.getView(R.id.tv_location);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
-        int icon = Integer.valueOf(item.getIcon());
-        int iconSrc = 0;
-        switch (icon) {
-            case 1:
-                iconSrc = R.drawable.iv_head_icon1;
-                break;
-            case 2:
-                iconSrc = R.drawable.iv_head_icon2;
-                break;
-            case 3:
-                iconSrc = R.drawable.iv_head_icon3;
-                break;
+        iv_icon.setImageResource(R.drawable.iv_head_icon1);
+        tv_company.setText(item.getName());
+        if (!TextUtils.isEmpty(item.getType())) {
+            tv_type.setVisibility(View.VISIBLE);
+            tv_type.setText(item.getTypeName());
+        } else {
+            tv_type.setVisibility(View.GONE);
         }
-        iv_icon.setImageResource(iconSrc);
-        tv_company.setText(item.getCompany());
-        tv_type.setText(item.getType());
-        tv_location.setText(item.getLocation());
+        if (!TextUtils.isEmpty(item.getArea())) {
+            tv_location.setVisibility(View.VISIBLE);
+            tv_location.setText(item.getArea());
+        } else {
+            tv_location.setVisibility(View.GONE);
+        }
+        cb_choose.setChecked(item.isChosen());
         if (mIsDeleted) {
             cb_choose.setVisibility(View.VISIBLE);
         } else {
             cb_choose.setVisibility(View.GONE);
-        }
-        if (item.isChosen()) {
-            cb_choose.setChecked(true);
-        } else {
-            cb_choose.setChecked(false);
         }
     }
 }

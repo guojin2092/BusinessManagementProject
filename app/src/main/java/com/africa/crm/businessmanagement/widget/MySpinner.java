@@ -102,10 +102,10 @@ public class MySpinner extends FrameLayout {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mList.get(position).getId().equals("0")) {
+                if (mList.get(position).getCode().equals("0")) {
                     tv_choose_type.setText("");
                 } else {
-                    tv_choose_type.setText(mList.get(position).getName());
+                    tv_choose_type.setText(mList.get(position).getText());
                 }
                 dismissDropDown();
                 if (onItemClickListener != null) {
@@ -190,6 +190,10 @@ public class MySpinner extends FrameLayout {
         return textString;
     }
 
+    public TextView getTextView() {
+        return tv_choose_type;
+    }
+
     public void setText(String text) {
         tv_choose_type.setText(text);
     }
@@ -231,7 +235,7 @@ public class MySpinner extends FrameLayout {
                 holder = (ViewHolder) convertView.getTag();
             }
             DicInfo dicInfo = mDicInfoList.get(position);
-            holder.tv_type.setText(dicInfo.getName());
+            holder.tv_type.setText(dicInfo.getText());
             if (position == mDicInfoList.size() - 1) {
                 holder.view_bottom.setVisibility(GONE);
             } else {

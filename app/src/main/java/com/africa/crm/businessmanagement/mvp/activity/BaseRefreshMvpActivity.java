@@ -1,7 +1,10 @@
 package com.africa.crm.businessmanagement.mvp.activity;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
@@ -26,19 +29,28 @@ import butterknife.BindView;
  * Why & What is modified:
  */
 public abstract class BaseRefreshMvpActivity<P extends BasePresenter> extends BaseActivity {
+    @BindView(R.id.smart_refresh_layout)
+    protected RefreshLayout mRefreshLayout;
+    @BindView(R.id.titlebar_back)
+    protected ImageView titlebar_back;
+    @BindView(R.id.titlebar_name)
+    protected TextView titlebar_name;
+    @BindView(R.id.titlebar_right)
+    protected TextView titlebar_right;
+    @BindView(R.id.tv_back)
+    protected TextView tv_back;
+    @BindView(R.id.tv_refresh)
+    protected TextView tv_refresh;
+    @BindView(R.id.layout_no_data)
+    protected LinearLayout layout_no_data;
+    @BindView(R.id.layout_network_error)
+    protected LinearLayout layout_network_error;
+    @BindView(R.id.tv_load_local)
+    protected TextView tv_load_local;
 
     protected P mPresenter;
-
     protected int page = 1;
-    protected int epage = 20; // 每页显示多少条数据
-    @BindView(R.id.smart_refresh_layout)
-    RefreshLayout mRefreshLayout;
-    @BindView(R.id.tv_back)
-    TextView tv_back;
-    @BindView(R.id.tv_refresh)
-    TextView tv_refresh;
-    @BindView(R.id.tv_load_local)
-    TextView tv_load_local;
+    protected int rows = 20; // 每页显示多少条数据
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +58,15 @@ public abstract class BaseRefreshMvpActivity<P extends BasePresenter> extends Ba
         mPresenter = injectPresenter();
         mPresenter.attach(this);
         initSmartRefreshListView();
+        requestData();
     }
 
     /**
      * 初始化listview和初始化进度条
      */
     protected void initSmartRefreshListView() {
+        titlebar_back.setOnClickListener(this);
+        titlebar_right.setOnClickListener(this);
         tv_back.setOnClickListener(this);
         tv_refresh.setOnClickListener(this);
         tv_load_local.setOnClickListener(this);
@@ -59,7 +74,7 @@ public abstract class BaseRefreshMvpActivity<P extends BasePresenter> extends Ba
         //自动加载更多
         mRefreshLayout.setEnableAutoLoadmore(true);
         //触发自动刷新
-//            mRefreshLayout.autoRefresh();
+//        mRefreshLayout.autoRefresh();
         //添加头布局
 //            mRefreshLayout.setRefreshHeader(new ClassicsHeader(getContext()));
         //添加尾布局
@@ -97,7 +112,8 @@ public abstract class BaseRefreshMvpActivity<P extends BasePresenter> extends Ba
     @Override
     public void onClick(View view) {
         super.onClick(view);
-        switch (view.getId()){
+        switch (view.getId()) {
+            case R.id.titlebar_back:
             case R.id.tv_back:
                 getBVActivity().onBackPressed();
                 break;
@@ -117,6 +133,11 @@ public abstract class BaseRefreshMvpActivity<P extends BasePresenter> extends Ba
     }
 
     protected abstract P injectPresenter();
+
+    /**
+     * 请求初始化数据
+     */
+    protected abstract void requestData();
 
     /**
      * 请求页数数据

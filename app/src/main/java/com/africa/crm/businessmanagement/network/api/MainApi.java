@@ -1,7 +1,10 @@
 package com.africa.crm.businessmanagement.network.api;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
+import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
+import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleLimitInfoBean;
@@ -34,7 +37,6 @@ public interface MainApi {
     @FormUrlEncoded
     @POST("user/grid")
     Observable<BaseEntity<UserManagementInfoBean>> getUserList(@Field("page") int page, @Field("rows") int rows, @Field("userName") String userName, @Field("type") String type, @Field("companyId") String companyId, @Field("state") String state, @Field("name") String name);
-
     @FormUrlEncoded
     @POST("user/deleteById")
     Observable<BaseEntity> deleteUser(@Field("id") String id);
@@ -49,7 +51,7 @@ public interface MainApi {
 
     @FormUrlEncoded
     @POST("company/queryAll")
-    Observable<BaseEntity<List<DicInfo>>> getAllCompany(@Field("name") String name);
+    Observable<BaseEntity<List<DicInfo2>>> getAllCompany(@Field("name") String name);
 
     @FormUrlEncoded
     @POST("role/queryAll")
@@ -74,4 +76,20 @@ public interface MainApi {
     @FormUrlEncoded
     @POST("role/saveRoleResource")
     Observable<BaseEntity> saveRoleLimit(@Field("id") String id, @Field("resourceIds") String resourceIds, @Field("btnIds") String btnIds);
+
+    @FormUrlEncoded
+    @POST("company/grid")
+    Observable<BaseEntity<CompanyInfoBean>> getCompanyInfoList(@Field("page") int page, @Field("rows") int rows, @Field("name") String name);
+
+    @FormUrlEncoded
+    @POST("company/deleteById")
+    Observable<BaseEntity> deleteCompanyInfo(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("company/getInfo")
+    Observable<BaseEntity<CompanyInfo>> getCompanyInfoDetail(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("company/save")
+    Observable<BaseEntity> saveCompanyInfo(@Field("id") String id, @Field("head") String head, @Field("name") String name, @Field("code") String code, @Field("type") String type, @Field("address") String address, @Field("phone") String phone, @Field("email") String email, @Field("mid") String mid, @Field("area") String area, @Field("profession") String profession, @Field("numA") String numA, @Field("state") String state);
 }

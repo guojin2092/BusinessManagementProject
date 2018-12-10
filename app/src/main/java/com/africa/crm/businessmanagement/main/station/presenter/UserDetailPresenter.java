@@ -2,6 +2,7 @@ package com.africa.crm.businessmanagement.main.station.presenter;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
+import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.main.station.contract.UserDetailContract;
@@ -51,10 +52,10 @@ public class UserDetailPresenter extends RxPresenter<UserDetailContract.View> im
     @Override
     public void getAllCompany(String name) {
         addDisposable(mDataManager.getAllCompany(name)
-                .compose(RxUtils.<List<DicInfo>>ioToMain(mView))
-                .subscribe(new Consumer<List<DicInfo>>() {
+                .compose(RxUtils.<List<DicInfo2>>ioToMain(mView))
+                .subscribe(new Consumer<List<DicInfo2>>() {
                     @Override
-                    public void accept(List<DicInfo> dicInfoList) throws Exception {
+                    public void accept(List<DicInfo2> dicInfoList) throws Exception {
                         mView.getAllCompany(dicInfoList);
                     }
                 }, new ComConsumer(mView)));

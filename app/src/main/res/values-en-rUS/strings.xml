@@ -49,6 +49,9 @@
     <string name="cancel">Cancel</string>
     <string name="out_of_stock">out of stock</string>
     <string name="storage">storage</string>
+    <string name="tips">Tips</string>
+    <string name="confirm_delete">Do you confirm the deletion?</string>
+    <string name="OK">OK</string>
     <string name="search_enterprise">Please enter the enterprise name or create time query</string>
     <string name="search_enterprise_account">Please enter the enterprise account / name</string>
     <string name="search_product">Please enter the product name</string>

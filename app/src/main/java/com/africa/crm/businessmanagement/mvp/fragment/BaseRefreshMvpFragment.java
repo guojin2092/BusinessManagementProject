@@ -32,7 +32,7 @@ public abstract class BaseRefreshMvpFragment<P extends IBasePresenter> extends B
 
     protected int page = 1;
     protected int rows = 20; // 每页显示多少条数据
-    public RefreshLayout mRefreshLayout;
+    protected RefreshLayout mRefreshLayout;
     protected LinearLayout layout_no_data;
     protected LinearLayout layout_network_error;
     protected TextView tv_back;
@@ -50,6 +50,7 @@ public abstract class BaseRefreshMvpFragment<P extends IBasePresenter> extends B
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initPullToRefreshListView();
+        requestData();
     }
 
     /**
@@ -70,7 +71,7 @@ public abstract class BaseRefreshMvpFragment<P extends IBasePresenter> extends B
             //自动加载更多
             mRefreshLayout.setEnableAutoLoadmore(true);
             //触发自动刷新
-            mRefreshLayout.autoRefresh();
+//            mRefreshLayout.autoRefresh();
             //添加头布局
 //            mRefreshLayout.setRefreshHeader(new ClassicsHeader(getContext()));
             //添加尾布局
@@ -128,6 +129,11 @@ public abstract class BaseRefreshMvpFragment<P extends IBasePresenter> extends B
     }
 
     protected abstract P initPresenter();
+
+    /**
+     * 请求初始化数据
+     */
+    protected abstract void requestData();
 
     /**
      * 请求页数数据
