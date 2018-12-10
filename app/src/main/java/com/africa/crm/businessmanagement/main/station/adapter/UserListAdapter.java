@@ -60,10 +60,6 @@ public class UserListAdapter extends BaseQuickAdapter<UserInfoBean, BaseViewHold
         } else {
             cb_choose.setVisibility(View.GONE);
         }
-        if (item.isChosen()) {
-            cb_choose.setChecked(true);
-        } else {
-            cb_choose.setChecked(false);
-        }
+        cb_choose.setChecked(item.isChosen());
     }
 }

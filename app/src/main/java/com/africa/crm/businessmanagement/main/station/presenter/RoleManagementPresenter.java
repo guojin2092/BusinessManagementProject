@@ -37,18 +37,6 @@ public class RoleManagementPresenter extends RxPresenter<RoleManagementContract.
     }
 
     @Override
-    public void getAllRoles(String name) {
-        addDisposable(mDataManager.getAllRoles(name)
-                .compose(RxUtils.<List<RoleInfoBean>>ioToMain(mView))
-                .subscribe(new Consumer<List<RoleInfoBean>>() {
-                    @Override
-                    public void accept(List<RoleInfoBean> roleInfoBeanList) throws Exception {
-                        mView.getAllRoles(roleInfoBeanList);
-                    }
-                }, new ComConsumer(mView)));
-    }
-
-    @Override
     public void getRoleInfo(String id) {
         addDisposable(mDataManager.getRoleInfo(id)
                 .compose(RxUtils.<RoleInfoBean>ioToMain(mView))

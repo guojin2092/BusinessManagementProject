@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.UserInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
+import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.activity.UserDetailActivity;
 import com.africa.crm.businessmanagement.main.station.adapter.UserListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.UserManagementContract;
@@ -81,6 +81,7 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
 
     private List<DicInfo> mSpinnerTypeList = new ArrayList<>();
     private String mType = "";
+    private String mCompanyId = "";
     /**
      * 用户状态
      */
@@ -127,10 +128,12 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
     public void initData() {
         mSpinnerTypeList.add(new DicInfo("系统管理用户", "1"));
         mSpinnerTypeList.add(new DicInfo("企业用户", "2"));
+
         spinner_type.setListDatas(getBVActivity(), mSpinnerTypeList);
         mSpinnerStateList.add(new DicInfo("正常", "1"));
         mSpinnerStateList.add(new DicInfo("禁用", "2"));
         spinner_state.setListDatas(getBVActivity(), mSpinnerStateList);
+
         mUserListAdapter = new UserListAdapter(mUserInfoBeanList);
         rv_user.setAdapter(mUserListAdapter);
         rv_user.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -141,14 +144,14 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
         spinner_type.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
-                mType = dicInfo.getName();
+                mType = dicInfo.getId();
             }
         });
 
         spinner_state.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
-                mState = dicInfo.getName();
+                mState = dicInfo.getId();
             }
         });
     }
@@ -182,10 +185,32 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
                     toastMsg("请输入查询条件");
                     return;
                 }*/
+                if (mType.equals("1")) {
+                    mCompanyId = "";
+                } else if (mType.equals("2")) {
+                    mCompanyId = UserInfoManager.getUserLoginInfo(getBVActivity()).getCompanyId();
+                }
                 page = 1;
                 pullDownRefresh(page);
                 break;
             case R.id.tv_delete:
+                mDeleteList.clear();
+                for (UserInfoBean userInfoBean : mUserInfoBeanList) {
+                    if (userInfoBean.isChosen()) {
+                        mDeleteList.add(userInfoBean);
+                    }
+                }
+                if (ListUtils.isEmpty(mDeleteList)) {
+                    toastMsg("尚未选择删除项");
+                    return;
+                }
+                String userId = String.valueOf(UserInfoManager.getUserLoginInfo(getBVActivity()).getId());
+                for (UserInfoBean userInfoBean : mDeleteList) {
+                    if (userInfoBean.getId().equals(userId)) {
+                        toastMsg("个人账号不能删除");
+                        return;
+                    }
+                }
                 mDeleteDialog = new AlertDialog.Builder(getBVActivity())
                         .setTitle("温馨提示")
                         .setMessage("是否确认删除？")
@@ -198,15 +223,9 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
                         .setPositiveButton("确认", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int which) {
-                                for (UserInfoBean userInfoBean : mUserInfoBeanList) {
-                                    if (userInfoBean.isChosen()) {
-                                        mDeleteList.add(userInfoBean);
-                                    }
-                                }
                                 for (int i = 0; i < mDeleteList.size(); i++) {
                                     mPresenter.deleteUser(mDeleteList.get(i).getId());
                                 }
-
                             }
                         })
                         .show();
@@ -218,7 +237,7 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
     protected void pullDownRefresh(int page) {
         mSearchUserNameText = et_search_username.getText().toString().trim();
         mSearchNickNameText = et_search_nickname.getText().toString().trim();
-        mPresenter.getUserList(page, rows, mSearchUserNameText, mType, "", mState, mSearchNickNameText);
+        mPresenter.getUserList(page, rows, mSearchUserNameText, mType, mCompanyId, mState, mSearchNickNameText);
     }
 
     @Override
@@ -279,11 +298,13 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
                     }
                 }
             }
-            titlebar_right.setText(R.string.delete);
-            tv_delete.setVisibility(View.GONE);
-            mShowCheckBox = false;
-            if (mUserListAdapter != null) {
-                mUserListAdapter.setmIsDeleted(mShowCheckBox);
+            if (ListUtils.isEmpty(mUserInfoBeanList)) {
+                titlebar_right.setText(R.string.delete);
+                tv_delete.setVisibility(View.GONE);
+                mShowCheckBox = false;
+                layout_network_error.setVisibility(View.GONE);
+                mRefreshLayout.getLayout().setVisibility(View.GONE);
+                layout_no_data.setVisibility(View.VISIBLE);
             }
             mDeleteDialog.dismiss();
         }

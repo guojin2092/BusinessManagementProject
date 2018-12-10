@@ -23,8 +23,6 @@ public class RoleManagementContract {
 
         void getRoleList(RoleManagementInfoBean roleManagementInfoBean);
 
-        void getAllRoles(List<RoleInfoBean> roleInfoBeanList);
-
         void getRoleInfo(RoleInfoBean roleInfoBean);
 
         void saveRoleInfo(BaseEntity baseEntity);
@@ -36,8 +34,6 @@ public class RoleManagementContract {
 
     public interface Presenter extends IBasePresenter<RoleManagementContract.View> {
         void getRoleList(int page, int rows, String roleName, String roleCode, String typeName);
-
-        void getAllRoles(String name);
 
         void getRoleInfo(String id);
 

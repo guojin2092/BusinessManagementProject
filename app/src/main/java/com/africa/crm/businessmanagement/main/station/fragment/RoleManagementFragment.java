@@ -18,7 +18,6 @@ import android.widget.TextView;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
-import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleLimitInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleManagementInfoBean;
@@ -31,7 +30,6 @@ import com.africa.crm.businessmanagement.main.station.presenter.RoleManagementPr
 import com.africa.crm.businessmanagement.mvp.fragment.BaseRefreshMvpFragment;
 import com.africa.crm.businessmanagement.network.error.ComException;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
-import com.africa.crm.businessmanagement.widget.MySpinner;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 
@@ -66,11 +64,6 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
     private RoleListAdapter mRoleListAdapter;
     private List<RoleInfoBean> mRoleList = new ArrayList<>();
 
-    @BindView(R.id.spinner_role_type)
-    MySpinner spinner_role_type;
-    private List<DicInfo> mSpinnerRoleList = new ArrayList<>();
-    private String mRoleId = "";
-
     private RoleDetailDialog mRoleDetailDialog;
     private RoleDetailDialog mAddRoleDialog;
     private String mType = "";//1是创建 2是修改
@@ -100,7 +93,6 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(getBVActivity()).getId());
-        mPresenter.getAllRoles("");
     }
 
     @Override
@@ -154,8 +146,7 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
                                 toastMsg("尚未填写排序号");
                                 return;
                             }
-                            String userId = String.valueOf(UserInfoManager.getUserLoginInfo(getBVActivity()).getId());
-                            mPresenter.saveRoleInfo(userId, "", roleInfoBean.getRoleName(), roleInfoBean.getRoleCode(), roleInfoBean.getTypeName(), roleInfoBean.getOrderNum());
+                            mPresenter.saveRoleInfo(mUserId, "", roleInfoBean.getRoleName(), roleInfoBean.getRoleCode(), roleInfoBean.getTypeName(), roleInfoBean.getOrderNum());
                         }
                     }
                 });
@@ -170,7 +161,7 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
 
     @Override
     protected void pullDownRefresh(int page) {
-        mPresenter.getRoleList(page, rows, et_search_roleName.getText().toString().trim(), et_search_roleCode.getText().toString().trim(), mRoleId);
+        mPresenter.getRoleList(page, rows, et_search_roleName.getText().toString().trim(), et_search_roleCode.getText().toString().trim(), "");
     }
 
     @Override
@@ -239,24 +230,6 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
                 }
             }
         });
-
-    }
-
-    @Override
-    public void getAllRoles(List<RoleInfoBean> roleInfoBeanList) {
-        if (!ListUtils.isEmpty(roleInfoBeanList)) {
-            for (RoleInfoBean roleInfoBean : roleInfoBeanList) {
-                DicInfo dicInfo = new DicInfo(roleInfoBean.getRoleName(), roleInfoBean.getId());
-                mSpinnerRoleList.add(dicInfo);
-            }
-            spinner_role_type.setListDatas(getBVActivity(), mSpinnerRoleList);
-            spinner_role_type.addOnItemClickListener(new MySpinner.OnItemClickListener() {
-                @Override
-                public void onItemClick(DicInfo dicInfo, int position) {
-                    mRoleId = dicInfo.getId();
-                }
-            });
-        }
 
     }
 
