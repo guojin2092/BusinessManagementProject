@@ -1,23 +1,22 @@
 package com.africa.crm.businessmanagement.main.station.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.baseutil.library.base.BaseActivity;
+import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.PackingDataInfoBean;
-import com.africa.crm.businessmanagement.main.bean.ServiceTrackingInfoBean;
-import com.africa.crm.businessmanagement.main.station.adapter.ServiceTrackingListAdapter;
-import com.africa.crm.businessmanagement.widget.LineItemDecoration;
-import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.africa.crm.businessmanagement.main.station.dialog.AddPackagingDataDialog;
+import com.africa.crm.businessmanagement.main.station.dialog.PackagingDataListDialog;
+import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +32,15 @@ public class PackagingDataDetailActivity extends BaseActivity {
     TextView titlebar_right;
     @BindView(R.id.tv_save)
     TextView tv_save;
+    @BindView(R.id.ll_add)
+    LinearLayout ll_add;
+    @BindView(R.id.tv_preview)
+    TextView tv_preview;
     private PackingDataInfoBean mPackingDataInfoBean;
 
-    @BindView(R.id.rv_service_tracking)
-    RecyclerView rv_service_tracking;
-    private ServiceTrackingListAdapter mServiceTrackingListAdapter;
-    private List<ServiceTrackingInfoBean> mServiceTrackingInfoBeans = new ArrayList<>();
+    private AddPackagingDataDialog mAddPackagingDataDialog;
+    private PackagingDataListDialog mPackagingDataListDialog;
+    private List<DicInfo> mPartList = new ArrayList<>();
 
     /**
      * @param activity
@@ -62,7 +64,10 @@ public class PackagingDataDetailActivity extends BaseActivity {
         titlebar_back.setOnClickListener(this);
         titlebar_right.setOnClickListener(this);
         tv_save.setOnClickListener(this);
+        ll_add.setOnClickListener(this);
+        tv_preview.setOnClickListener(this);
         titlebar_right.setText(R.string.edit);
+        mAddPackagingDataDialog = AddPackagingDataDialog.getInstance(this);
     }
 
     @Override
@@ -81,6 +86,53 @@ public class PackagingDataDetailActivity extends BaseActivity {
                     tv_save.setVisibility(View.GONE);
                 }
                 break;
+            case R.id.tv_preview:
+                mPackagingDataListDialog.isCancelableOnTouchOutside(false)
+                        .withDuration(300)
+                        .withEffect(Effectstype.Fadein)
+                        .setCancelClick(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                mPackagingDataListDialog.dismiss();
+                            }
+                        })
+                        .setSaveClick(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                mPackagingDataListDialog.dismiss();
+                            }
+                        })
+                        .show();
+                break;
+            case R.id.ll_add:
+                mAddPackagingDataDialog.isCancelableOnTouchOutside(false)
+                        .withDuration(300)
+                        .withEffect(Effectstype.Fadein)
+                        .setCancelClick(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                mAddPackagingDataDialog.dismiss();
+                            }
+                        })
+                        .show();
+                mAddPackagingDataDialog.addOnSaveClickListener(new AddPackagingDataDialog.OnSaveClickListener() {
+                    @Override
+                    public void onSaveClick(DicInfo dicInfo) {
+                        if (TextUtils.isEmpty(dicInfo.getText())) {
+                            toastMsg("尚未填写模块");
+                            return;
+                        }
+                        if (TextUtils.isEmpty(dicInfo.getCode())) {
+                            toastMsg("尚未填写数量");
+                            return;
+                        }
+                        mPartList.add(dicInfo);
+                        PackagingDataListDialog.getInstance(PackagingDataDetailActivity.this, mPartList);
+                        toastMsg("包装模块添加成功");
+                        mAddPackagingDataDialog.dismiss();
+                    }
+                });
+                break;
             case R.id.tv_save:
                 showShortToast("保存数据");
                 break;
@@ -89,42 +141,11 @@ public class PackagingDataDetailActivity extends BaseActivity {
 
     @Override
     public void initData() {
-        ServiceTrackingInfoBean serviceTrackingInfoBean = new ServiceTrackingInfoBean();
-        serviceTrackingInfoBean.setAcceptStation("已下单（订单开始处理）");
-        serviceTrackingInfoBean.setAcceptTime("11-12 10：20");
-        mServiceTrackingInfoBeans.add(serviceTrackingInfoBean);
-
-        ServiceTrackingInfoBean serviceTrackingInfoBean2 = new ServiceTrackingInfoBean();
-        serviceTrackingInfoBean2.setAcceptStation("添加订单描述");
-        serviceTrackingInfoBean2.setAcceptTime("11-13 10：20");
-        mServiceTrackingInfoBeans.add(serviceTrackingInfoBean2);
-
-        ServiceTrackingInfoBean serviceTrackingInfoBean3 = new ServiceTrackingInfoBean();
-        serviceTrackingInfoBean3.setAcceptStation("添加订单描述");
-        serviceTrackingInfoBean3.setAcceptTime("11-14 11：30");
-        mServiceTrackingInfoBeans.add(serviceTrackingInfoBean3);
-
-        setServiceRecordDatas(mServiceTrackingInfoBeans);
-    }
-
-    private void setServiceRecordDatas(List<ServiceTrackingInfoBean> serviceRecordDatas) {
-        if (!ListUtils.isEmpty(serviceRecordDatas)) {
-            mServiceTrackingListAdapter = new ServiceTrackingListAdapter(serviceRecordDatas);
-            rv_service_tracking.setAdapter(mServiceTrackingListAdapter);
-            rv_service_tracking.setLayoutManager(new LinearLayoutManager(this));
-            rv_service_tracking.addItemDecoration(new LineItemDecoration(this, DividerItemDecoration.VERTICAL, 0, 0));
-            rv_service_tracking.setHasFixedSize(true);
-            rv_service_tracking.setNestedScrollingEnabled(false);
-
-            mServiceTrackingListAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-                @Override
-                public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                    if (view.getId() == R.id.tv_add_tracking) {
-                        showShortToast("添加追踪");
-                    }
-                }
-            });
-        }
+        mPartList = new ArrayList<>();
+        mPartList.add(new DicInfo("A模块", "10"));
+        mPartList.add(new DicInfo("B模块", "20"));
+        mPartList.add(new DicInfo("C模块", "30"));
+        mPackagingDataListDialog = PackagingDataListDialog.getInstance(this, mPartList);
     }
 
 }

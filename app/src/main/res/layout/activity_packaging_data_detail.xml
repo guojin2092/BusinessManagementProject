@@ -171,6 +171,7 @@
 
         </LinearLayout>
 
+        <include layout="@layout/layout_add" />
 
     </FrameLayout>
 
