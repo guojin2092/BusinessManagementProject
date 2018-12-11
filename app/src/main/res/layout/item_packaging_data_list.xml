@@ -21,13 +21,13 @@
         android:layout_weight="1">
 
         <TextView
-            android:id="@+id/tv_name"
+            android:id="@+id/tv_package_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
             android:layout_marginTop="45dp"
             android:layout_marginBottom="45dp"
-            android:text="張三"
+            android:text="包装数据量"
             android:textColor="@color/A606060"
             android:textSize="22sp"
             android:textStyle="bold" />
@@ -39,13 +39,28 @@
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tv_company_name"
+            android:id="@+id/tv_start_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="交易名称·····"
+            android:text="2018-10-18"
+            android:textColor="@color/A586683"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="~"
+            android:textColor="@color/A586683"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tv_end_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2018-12-18"
             android:textColor="@color/A586683"
             android:textSize="20sp" />
 
@@ -58,13 +73,13 @@
         android:layout_weight="1">
 
         <TextView
-            android:id="@+id/tv_date"
+            android:id="@+id/tv_remark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
             android:drawablePadding="10dp"
-            android:text="订单编号"
-            android:textColor="@color/B2B2B2"
+            android:text="请求服务"
+            android:textColor="@color/A586683"
             android:textSize="20sp" />
 
     </FrameLayout>

@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="佣金（¥）："
-            android:textColor="@color/A586686"
+            android:textColor="@color/A586683"
             android:textSize="20sp" />
 
         <TextView
@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="187，000.00"
-            android:textColor="@color/A586686"
+            android:textColor="@color/A586683"
             android:textSize="20sp" />
 
     </LinearLayout>

@@ -38,7 +38,7 @@
                     android:layout_width="1dp"
                     android:layout_height="5dp"
                     android:layout_gravity="center_horizontal"
-                    android:background="@color/A586686" />
+                    android:background="@color/A586683" />
 
                 <LinearLayout
                     android:layout_width="20dp"
@@ -51,7 +51,7 @@
                         android:layout_width="1dp"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:background="@color/A586686" />
+                        android:background="@color/A586683" />
 
                     <ImageView
                         android:id="@+id/view_circle"
@@ -64,7 +64,7 @@
                         android:layout_width="1dp"
                         android:layout_height="0dp"
                         android:layout_weight="1"
-                        android:background="@color/A586686" />
+                        android:background="@color/A586683" />
 
                 </LinearLayout>
 
@@ -73,7 +73,7 @@
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
-                    android:background="@color/A586686" />
+                    android:background="@color/A586683" />
 
             </LinearLayout>
 

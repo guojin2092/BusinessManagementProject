@@ -20,12 +20,13 @@ import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.contract.MainContract;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.presenter.MainPresenter;
+import com.africa.crm.businessmanagement.main.station.activity.CompanyInfoManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.ContactManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CostumerManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.DeliveryOrderManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.EnterpriseAccountActivity;
-import com.africa.crm.businessmanagement.main.station.activity.CompanyInfoManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.InventoryManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.PackagingDataManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.PaymentManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.PdfReportManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.ProductManagementActivity;
@@ -275,7 +276,7 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
                             PdfReportManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "17":
-                            showShortToast(getString(R.string.packaging_data_management));
+                            PackagingDataManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "18":
                             showShortToast(getString(R.string.statistical_report_forms));

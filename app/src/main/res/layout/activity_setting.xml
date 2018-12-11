@@ -36,7 +36,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="35dp"
                 android:text="张某某"
-                android:textColor="@color/A586686"
+                android:textColor="@color/A586683"
                 android:textSize="18sp" />
 
         </LinearLayout>
@@ -188,7 +188,7 @@
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
             android:text="退出登录"
-            android:textColor="@color/A586686"
+            android:textColor="@color/A586683"
             android:textSize="22sp" />
 
     </LinearLayout>

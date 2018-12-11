@@ -134,7 +134,7 @@
     </style>
 
     <style name="product_title_blue" parent="product_title_style">
-        <item name="android:textColor">@color/A586686</item>
+        <item name="android:textColor">@color/A586683</item>
     </style>
 
     <style name="product_title_black" parent="product_title_style">
@@ -144,7 +144,7 @@
     <style name="product_et_blue" parent="product_title_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/A586686</item>
+        <item name="android:textColor">@color/A586683</item>
         <item name="android:background">@drawable/null_drawable</item>
     </style>
 </resources>
