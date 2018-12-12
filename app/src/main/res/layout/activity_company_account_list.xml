@@ -2,23 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/F2F2F2"
-    android:gravity="center"
     android:orientation="vertical">
+
+    <include layout="@layout/titlebar" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
         android:orientation="horizontal"
         android:padding="20dp">
 
         <EditText
-            android:id="@+id/et_search_roleName"
+            android:id="@+id/et_account"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@drawable/et_bg_search"
-            android:hint="请输入角色名称"
+            android:hint="请输入账号"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
             android:textColor="@color/a333333"
@@ -26,13 +27,13 @@
             android:textSize="18sp" />
 
         <EditText
-            android:id="@+id/et_search_roleCode"
+            android:id="@+id/et_nickname"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginLeft="30dp"
             android:layout_weight="1"
             android:background="@drawable/et_bg_search"
-            android:hint="请输入角色编码"
+            android:hint="请输入昵称"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
             android:textColor="@color/a333333"

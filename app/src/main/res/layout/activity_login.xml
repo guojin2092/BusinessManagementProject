@@ -58,7 +58,7 @@
                         android:id="@+id/et_username"
                         style="@style/MyEditText"
                         android:hint="@string/username_hint"
-                        android:text="sy" />
+                        android:text="ggjj" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -78,7 +78,7 @@
                         style="@style/MyEditText"
                         android:hint="@string/password_hint"
                         android:inputType="textPassword"
-                        android:text="123456" />
+                        android:text="111111" />
                 </LinearLayout>
 
                 <TextView

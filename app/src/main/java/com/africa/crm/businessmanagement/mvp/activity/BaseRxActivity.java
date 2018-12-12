@@ -15,6 +15,7 @@ import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.network.DataManager;
 import com.africa.crm.businessmanagement.network.base.BaseView;
 import com.africa.crm.businessmanagement.network.error.ComException;
+import com.africa.crm.businessmanagement.network.error.ErrorMsg;
 import com.africa.crm.businessmanagement.widget.LoadingDialog;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -92,7 +93,7 @@ public abstract class BaseRxActivity extends AppCompatActivity implements BaseVi
 
     public final void toastMsg(final ComException error) {
         Snackbar.make(findViewById(R.id.titlebar) == null ? getWindow().getDecorView() : findViewById(R.id.titlebar)
-                , error.getMessage()
+                , ErrorMsg.showErrorMsg(error.getMessage())
                 , Snackbar.LENGTH_LONG)
                 .setAction(error.getActionName() == null ? getString(R.string.i_know) : error.getActionName()
                         , new View.OnClickListener() {
@@ -128,4 +129,5 @@ public abstract class BaseRxActivity extends AppCompatActivity implements BaseVi
     public void reLogin() {
 
     }
+
 }

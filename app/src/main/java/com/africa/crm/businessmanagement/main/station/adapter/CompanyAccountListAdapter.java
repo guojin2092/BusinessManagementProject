@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.main.bean.EnterpriseInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -22,11 +22,11 @@ import java.util.List;
  * Modification  History:
  * Why & What is modified:
  */
-public class EnterpriseAccountListAdapter extends BaseQuickAdapter<EnterpriseInfoBean, BaseViewHolder> {
+public class CompanyAccountListAdapter extends BaseQuickAdapter<CompanyInfo, BaseViewHolder> {
     private boolean mIsDeleted = false;
 
-    public EnterpriseAccountListAdapter(@Nullable List<EnterpriseInfoBean> data) {
-        super(R.layout.item_enterprise_account_list, data);
+    public CompanyAccountListAdapter(@Nullable List<CompanyInfo> data) {
+        super(R.layout.item_company_account_list, data);
     }
 
     public boolean ismIsDeleted() {
@@ -39,39 +39,22 @@ public class EnterpriseAccountListAdapter extends BaseQuickAdapter<EnterpriseInf
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, EnterpriseInfoBean item) {
+    protected void convert(BaseViewHolder helper, CompanyInfo item) {
         ImageView iv_icon = helper.getView(R.id.iv_icon);
         TextView tv_company = helper.getView(R.id.tv_company);
         TextView tv_location = helper.getView(R.id.tv_location);
         TextView tv_company_account = helper.getView(R.id.tv_company_account);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
-        int icon = Integer.valueOf(item.getIcon());
-        int iconSrc = 0;
-        switch (icon) {
-            case 1:
-                iconSrc = R.drawable.iv_head_icon1;
-                break;
-            case 2:
-                iconSrc = R.drawable.iv_head_icon2;
-                break;
-            case 3:
-                iconSrc = R.drawable.iv_head_icon3;
-                break;
-        }
-        iv_icon.setImageResource(iconSrc);
-        tv_company.setText(item.getCompany());
-        tv_location.setText(item.getLocation());
-        tv_company_account.setText(item.getAccount());
+        iv_icon.setImageResource(R.drawable.iv_head_icon1);
+        tv_company.setText(item.getName());
+        tv_location.setText(item.getArea());
+        tv_company_account.setText("企业账号：" + item.getUserName());
+        cb_choose.setChecked(item.isChosen());
         if (mIsDeleted) {
             cb_choose.setVisibility(View.VISIBLE);
         } else {
             cb_choose.setVisibility(View.GONE);
-        }
-        if (item.isChosen()) {
-            cb_choose.setChecked(true);
-        } else {
-            cb_choose.setChecked(false);
         }
     }
 

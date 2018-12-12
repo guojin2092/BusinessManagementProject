@@ -24,18 +24,6 @@ import io.reactivex.functions.Consumer;
 public class CompanyInfoPresenter extends RxPresenter<CompanyInfoContract.View> implements CompanyInfoContract.Presenter {
 
     @Override
-    public void getCompanyInfoDetail(String id) {
-        addDisposable(mDataManager.getCompanyInfoDetail(id)
-                .compose(RxUtils.<CompanyInfo>ioToMain(mView))
-                .subscribe(new Consumer<CompanyInfo>() {
-                    @Override
-                    public void accept(CompanyInfo companyInfo) throws Exception {
-                        mView.getCompanyInfoDetail(companyInfo);
-                    }
-                }, new ComConsumer(mView)));
-    }
-
-    @Override
     public void getCompanyType(String code) {
         addDisposable(mDataManager.getDicByCode(code)
                 .compose(RxUtils.<List<DicInfo>>ioToMain())
@@ -59,6 +47,17 @@ public class CompanyInfoPresenter extends RxPresenter<CompanyInfoContract.View> 
                 }, new ComConsumer(mView)));
     }
 
+    @Override
+    public void getCompanyInfoDetail(String id) {
+        addDisposable(mDataManager.getCompanyInfoDetail(id)
+                .compose(RxUtils.<CompanyInfo>ioToMain(mView))
+                .subscribe(new Consumer<CompanyInfo>() {
+                    @Override
+                    public void accept(CompanyInfo companyInfo) throws Exception {
+                        mView.getCompanyInfoDetail(companyInfo);
+                    }
+                }, new ComConsumer(mView)));
+    }
 
     @Override
     public void saveCompanyInfo(String id, String head, String name, String code, String type, String address, String phone, String email, String mid, String area, String profession, String numA, String state) {

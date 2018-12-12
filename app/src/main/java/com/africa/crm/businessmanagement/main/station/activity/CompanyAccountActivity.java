@@ -7,9 +7,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -17,14 +15,15 @@ import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
-import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyEvent;
+import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyAccountEvent;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
-import com.africa.crm.businessmanagement.main.station.adapter.CompanyInfoListAdapter;
-import com.africa.crm.businessmanagement.main.station.contract.CompanyInfoManagementContract;
-import com.africa.crm.businessmanagement.main.station.presenter.CompanyInfoManagementPresenter;
+import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
+import com.africa.crm.businessmanagement.main.station.adapter.CompanyAccountListAdapter;
+import com.africa.crm.businessmanagement.main.station.contract.CompanyAccountContract;
+import com.africa.crm.businessmanagement.main.station.presenter.CompanyAccountPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.widget.KeyboardUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
@@ -44,13 +43,17 @@ import butterknife.BindView;
  * Author:  guojin
  * Version:
  * Description：
- * Date：2018/11/26 0026 16:05
+ * Date：2018/11/27 0027 9:04
  * Modification  History:
  * Why & What is modified:
  */
-public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<CompanyInfoManagementPresenter> implements CompanyInfoManagementContract.View {
-    @BindView(R.id.et_search)
-    EditText et_search;
+public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccountPresenter> implements CompanyAccountContract.View {
+    @BindView(R.id.et_account)
+    EditText et_account;
+    @BindView(R.id.et_nickname)
+    EditText et_nickname;
+    @BindView(R.id.tv_search)
+    TextView tv_search;
     @BindView(R.id.ll_add)
     LinearLayout ll_add;
     @BindView(R.id.tv_delete)
@@ -58,7 +61,7 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
-    private CompanyInfoListAdapter mCompanyInfoListAdapter;
+    private CompanyAccountListAdapter mCompanyAccountListAdapter;
     private List<CompanyInfo> mCompanyInfoList = new ArrayList<>();
     private List<CompanyInfo> mDeleteList = new ArrayList<>();
     private boolean mShowCheckBox = false;
@@ -66,11 +69,13 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
     private WorkStationInfo mWorkStationInfo;
     private AlertDialog mDeleteDialog;
 
+    private String mCompanyId = "";
+
     /**
      * @param activity
      */
     public static void startActivity(Activity activity, WorkStationInfo workStationInfo) {
-        Intent intent = new Intent(activity, CompanyInfoManagementActivity.class);
+        Intent intent = new Intent(activity, CompanyAccountActivity.class);
         intent.putExtra("info", workStationInfo);
         activity.startActivity(intent);
     }
@@ -83,24 +88,27 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
 
     @Override
     public void setView(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_company_info_management);
+        setContentView(R.layout.activity_company_account_list);
     }
 
     @Override
     public void initView() {
+        mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
         mWorkStationInfo = (WorkStationInfo) getIntent().getSerializableExtra("info");
         if (mWorkStationInfo != null) {
             titlebar_name.setText(mWorkStationInfo.getWork_name());
         }
-        et_search.setHint(R.string.search_enterprise);
+        et_account.setHint("请输入账号");
+        et_nickname.setHint("请输入昵称");
+        tv_search.setOnClickListener(this);
         ll_add.setOnClickListener(this);
         tv_delete.setOnClickListener(this);
         titlebar_right.setText(R.string.delete);
     }
 
     @Override
-    protected CompanyInfoManagementPresenter injectPresenter() {
-        return new CompanyInfoManagementPresenter();
+    protected CompanyAccountPresenter injectPresenter() {
+        return new CompanyAccountPresenter();
     }
 
     @Override
@@ -110,37 +118,28 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
 
     @Override
     public void pullDownRefresh(int page) {
-        mPresenter.getCompanyInfoList(page, rows, et_search.getText().toString().trim());
+        mPresenter.getCompanyAccounList(page, rows, mCompanyId, et_account.getText().toString().trim(), et_nickname.getText().toString().trim());
     }
 
     @Override
     public void initData() {
-        mCompanyInfoListAdapter = new CompanyInfoListAdapter(mCompanyInfoList);
-        recyclerView.setAdapter(mCompanyInfoListAdapter);
+        mCompanyAccountListAdapter = new CompanyAccountListAdapter(mCompanyInfoList);
+        recyclerView.setAdapter(mCompanyAccountListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new LineItemDecoration(this, LinearLayoutManager.VERTICAL, 2, ContextCompat.getColor(this, R.color.F2F2F2)));
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
-
-        et_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    page = 1;
-                    pullDownRefresh(page);
-                    KeyboardUtil.hideKeyboard(et_search);
-                    return true;
-                }
-                return false;
-            }
-        });
     }
 
     @Override
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()) {
+            case R.id.tv_search:
+                page = 1;
+                pullDownRefresh(page);
+                break;
             case R.id.titlebar_right:
                 if (titlebar_right.getText().toString().equals(getString(R.string.delete))) {
                     titlebar_right.setText(R.string.cancel);
@@ -151,12 +150,12 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
                     tv_delete.setVisibility(View.GONE);
                     mShowCheckBox = false;
                 }
-                if (mCompanyInfoListAdapter != null) {
-                    mCompanyInfoListAdapter.setmIsDeleted(mShowCheckBox);
+                if (mCompanyAccountListAdapter != null) {
+                    mCompanyAccountListAdapter.setmIsDeleted(mShowCheckBox);
                 }
                 break;
             case R.id.ll_add:
-                CompanyInfoDetailActivity.startActivity(CompanyInfoManagementActivity.this, "");
+                CompanyAccountDetailActivity.startActivity(CompanyAccountActivity.this, "");
                 break;
             case R.id.tv_delete:
                 mDeleteList.clear();
@@ -169,7 +168,7 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
                     toastMsg("尚未选择删除项");
                     return;
                 }
-                mDeleteDialog = new AlertDialog.Builder(CompanyInfoManagementActivity.this)
+                mDeleteDialog = new AlertDialog.Builder(CompanyAccountActivity.this)
                         .setTitle(R.string.tips)
                         .setMessage(R.string.confirm_delete)
                         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -182,7 +181,7 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
                             @Override
                             public void onClick(DialogInterface dialogInterface, int which) {
                                 for (int i = 0; i < mDeleteList.size(); i++) {
-                                    mPresenter.deleteCompanyInfo(mDeleteList.get(i).getId());
+                                    mPresenter.deleteCompanyAccount(mDeleteList.get(i).getId());
                                 }
                             }
                         })
@@ -191,15 +190,28 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
         }
     }
 
+    @Subscribe
+    public void Event(AddOrSaveCompanyAccountEvent addOrSaveCompanyAccountEvent) {
+        toastMsg(addOrSaveCompanyAccountEvent.getMsg());
+        requestData();
+    }
+
     @Override
-    public void getCompanyInfoList(CompanyInfoBean companyInfoBean) {
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void getCompanyAccounList(CompanyInfoBean companyInfoBean) {
         if (companyInfoBean != null) {
             if (page == 1) {
                 if (ListUtils.isEmpty(companyInfoBean.getRows())) {
                     layout_network_error.setVisibility(View.GONE);
                     mRefreshLayout.getLayout().setVisibility(View.GONE);
                     layout_no_data.setVisibility(View.VISIBLE);
-                    KeyboardUtil.clearInputBox(et_search);
+                    KeyboardUtil.clearInputBox(et_account);
+                    KeyboardUtil.clearInputBox(et_nickname);
                     return;
                 } else {
                     layout_no_data.setVisibility(View.GONE);
@@ -218,36 +230,37 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
             }
             if (!ListUtils.isEmpty(companyInfoBean.getRows())) {
                 mCompanyInfoList.addAll(companyInfoBean.getRows());
-                if (mCompanyInfoListAdapter != null) {
-                    mCompanyInfoListAdapter.notifyDataSetChanged();
+                if (mCompanyAccountListAdapter != null) {
+                    mCompanyAccountListAdapter.notifyDataSetChanged();
                 }
             }
             if (!ListUtils.isEmpty(mCompanyInfoList)) {
-                mCompanyInfoListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                mCompanyAccountListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                         if (mShowCheckBox) {
                             CheckBox cb_choose = (CheckBox) adapter.getViewByPosition(recyclerView, position, R.id.cb_choose);
                             mCompanyInfoList.get(position).setChosen(!cb_choose.isChecked());
-                            mCompanyInfoListAdapter.notifyDataSetChanged();
+                            mCompanyAccountListAdapter.notifyDataSetChanged();
                         } else {
-                            CompanyInfoDetailActivity.startActivity(CompanyInfoManagementActivity.this, mCompanyInfoList.get(position).getId());
+                            CompanyAccountDetailActivity.startActivity(CompanyAccountActivity.this, mCompanyInfoList.get(position).getId());
                         }
                     }
                 });
             }
         }
+
     }
 
     @Override
-    public void deleteCompanyInfo(BaseEntity baseEntity) {
+    public void deleteCompanyAccount(BaseEntity baseEntity) {
         if (baseEntity.isSuccess()) {
             for (int i = 0; i < mDeleteList.size(); i++) {
                 if (mCompanyInfoList.contains(mDeleteList.get(i))) {
                     int position = mCompanyInfoList.indexOf(mDeleteList.get(i));
                     mCompanyInfoList.remove(mDeleteList.get(i));
-                    if (mCompanyInfoListAdapter != null) {
-                        mCompanyInfoListAdapter.notifyItemRemoved(position);
+                    if (mCompanyAccountListAdapter != null) {
+                        mCompanyAccountListAdapter.notifyItemRemoved(position);
                     }
                 }
             }
@@ -261,17 +274,6 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
             }
             mDeleteDialog.dismiss();
         }
-    }
 
-    @Subscribe
-    public void Event(AddOrSaveCompanyEvent addOrSaveCompanyEvent) {
-        toastMsg(addOrSaveCompanyEvent.getMsg());
-        requestData();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 }

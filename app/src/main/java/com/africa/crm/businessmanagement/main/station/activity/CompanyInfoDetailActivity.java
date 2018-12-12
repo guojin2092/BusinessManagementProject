@@ -17,6 +17,7 @@ import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyInfoContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyInfoPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
+import com.africa.crm.businessmanagement.network.error.ErrorMsg;
 import com.africa.crm.businessmanagement.widget.MySpinner;
 
 import org.greenrobot.eventbus.EventBus;
@@ -250,6 +251,8 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
             }
             EventBus.getDefault().post(new AddOrSaveCompanyEvent(toastString));
             finish();
+        } else {
+            toastMsg(ErrorMsg.showErrorMsg(baseEntity.getReturnMsg()));
         }
     }
 }

@@ -1,6 +1,7 @@
 package com.africa.crm.businessmanagement.network;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
+import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
@@ -126,6 +127,26 @@ public class DataManager implements HttpHelper {
     @Override
     public Observable<BaseEntity> saveCompanyInfo(String id, String head, String name, String code, String type, String address, String phone, String email, String mid, String area, String profession, String numA, String state) {
         return mHttpHelper.saveCompanyInfo(id, head, name, code, type, address, phone, email, mid, area, profession, numA, state);
+    }
+
+    @Override
+    public Observable<CompanyInfoBean> getCompanyAccounList(int page, int rows, String companyId, String userName, String name) {
+        return mHttpHelper.getCompanyAccounList(page, rows, companyId, userName, name);
+    }
+
+    @Override
+    public Observable<BaseEntity> deleteCompanyAccount(String id) {
+        return mHttpHelper.deleteCompanyAccount(id);
+    }
+
+    @Override
+    public Observable<CompanyAccountInfo> getCompanyAccountDetail(String id) {
+        return mHttpHelper.getCompanyAccountDetail(id);
+    }
+
+    @Override
+    public Observable<BaseEntity> saveCompanyAccount(String id, String userName, String type, String roleId, String passWord, String name, String phone, String address, String email, String state, String companyId, String head) {
+        return mHttpHelper.saveCompanyAccount(id, userName, type, roleId, passWord, name, phone, address, email, state, companyId, head);
     }
 
 }

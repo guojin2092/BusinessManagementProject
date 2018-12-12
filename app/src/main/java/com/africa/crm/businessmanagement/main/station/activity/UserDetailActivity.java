@@ -20,6 +20,7 @@ import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.main.station.contract.UserDetailContract;
 import com.africa.crm.businessmanagement.main.station.presenter.UserDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseEasyMvpActivity;
+import com.africa.crm.businessmanagement.network.error.ErrorMsg;
 import com.africa.crm.businessmanagement.widget.MySpinner;
 
 import org.greenrobot.eventbus.EventBus;
@@ -231,6 +232,7 @@ public class UserDetailActivity extends BaseEasyMvpActivity<UserDetailPresenter>
         et_account.setText(userInfo.getUserName());
         et_nickname.setText(userInfo.getName());
         et_phone.setText(userInfo.getPhone());
+        et_address.setText(userInfo.getAddress());
         et_email.setText(userInfo.getEmail());
         spinner_type.setText(userInfo.getTypeName());
         spinner_company.setText(userInfo.getCompanyName());
@@ -243,12 +245,14 @@ public class UserDetailActivity extends BaseEasyMvpActivity<UserDetailPresenter>
         if (baseEntity.isSuccess()) {
             String msg = "";
             if (TextUtils.isEmpty(mUserId)) {
-                msg = "角色创建成功";
+                msg = "用户创建成功";
             } else {
-                msg = "角色修改成功";
+                msg = "用户修改成功";
             }
             EventBus.getDefault().post(new AddOrSaveUserEvent(msg));
             finish();
+        } else {
+            toastMsg(ErrorMsg.showErrorMsg(baseEntity.getReturnMsg()));
         }
     }
 

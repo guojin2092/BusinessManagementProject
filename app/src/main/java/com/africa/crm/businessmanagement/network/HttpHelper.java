@@ -1,6 +1,7 @@
 package com.africa.crm.businessmanagement.network;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
+import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
@@ -63,4 +64,12 @@ public interface HttpHelper {
     Observable<CompanyInfo> getCompanyInfoDetail(String id);
 
     Observable<BaseEntity> saveCompanyInfo(String id, String head, String name, String code, String type, String address, String phone, String email, String mid, String area, String profession, String numA, String state);
+
+    Observable<CompanyInfoBean> getCompanyAccounList(int page, int rows, String companyId, String userName, String name);
+
+    Observable<BaseEntity> deleteCompanyAccount(String id);
+
+    Observable<CompanyAccountInfo> getCompanyAccountDetail(String id);
+
+    Observable<BaseEntity> saveCompanyAccount(String id, String userName, String type, String roleId, String passWord, String name, String phone, String address, String email, String state, String companyId, String head);
 }

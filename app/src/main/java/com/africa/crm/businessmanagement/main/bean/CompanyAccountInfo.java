@@ -11,7 +11,7 @@ import java.io.Serializable;
  * Modification  History:
  * Why & What is modified:
  */
-public class CompanyInfo implements Serializable {
+public class CompanyAccountInfo implements Serializable {
     private String area;//地区
     private String profession;//行业
     private String code;//编号
@@ -23,13 +23,17 @@ public class CompanyInfo implements Serializable {
     private String head;//头像
     private String createTime;
     private String phone;//联系电话
-    private String name;//企业名称
-    private String id;//企业id
+    private String name;//昵称
+    private String id;//
     private String state;//状态 1：正常 2：禁用
     private String stateName;
     private String email;//邮箱
-    private String userName;//企业账号
-    private String companyId;//企业id
+    private String userName;//用户名
+    private String companyName;//企业名称
+    private String roleName;//角色名称
+    private String roleCode;//角色编码
+    private String roleTypeName;//角色分类
+    private String roleId;//角色Id
 
     private boolean chosen;
 
@@ -177,11 +181,43 @@ public class CompanyInfo implements Serializable {
         this.userName = userName;
     }
 
-    public String getCompanyId() {
-        return companyId;
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public String getRoleCode() {
+        return roleCode;
+    }
+
+    public void setRoleCode(String roleCode) {
+        this.roleCode = roleCode;
+    }
+
+    public String getRoleTypeName() {
+        return roleTypeName;
+    }
+
+    public void setRoleTypeName(String roleTypeName) {
+        this.roleTypeName = roleTypeName;
+    }
+
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
     }
 }

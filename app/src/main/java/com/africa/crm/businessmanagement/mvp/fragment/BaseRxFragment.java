@@ -14,6 +14,7 @@ import com.africa.crm.businessmanagement.mvp.activity.BaseRxActivity;
 import com.africa.crm.businessmanagement.network.DataManager;
 import com.africa.crm.businessmanagement.network.base.BaseView;
 import com.africa.crm.businessmanagement.network.error.ComException;
+import com.africa.crm.businessmanagement.network.error.ErrorMsg;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -76,7 +77,7 @@ public class BaseRxFragment extends Fragment implements BaseView {
     }
 
     public final void toastMsg(final ComException error) {
-        Snackbar.make(getView() == null ? getActivity().getWindow().getDecorView() : getView(), error.getMessage(), Snackbar.LENGTH_LONG)
+        Snackbar.make(getView() == null ? getActivity().getWindow().getDecorView() : getView(), ErrorMsg.showErrorMsg(error.getMessage()), Snackbar.LENGTH_LONG)
                 .setAction(error.getActionName() == null ? getString(R.string.i_know) : error.getActionName()
                         , new View.OnClickListener() {
                             @Override
