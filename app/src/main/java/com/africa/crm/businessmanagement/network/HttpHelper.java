@@ -4,6 +4,8 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
@@ -72,4 +74,13 @@ public interface HttpHelper {
     Observable<CompanyAccountInfo> getCompanyAccountDetail(String id);
 
     Observable<BaseEntity> saveCompanyAccount(String id, String userName, String type, String roleId, String passWord, String name, String phone, String address, String email, String state, String companyId, String head);
+
+    Observable<CompanySupplierInfoBean> getCompanySupplierList(int page, int rows, String companyId, String name, String type);
+
+    Observable<BaseEntity> deleteCompanySupplier(String id);
+
+    Observable<CompanySupplierInfo> getCompanySupplierDetail(String id);
+
+    Observable<BaseEntity> saveCompanySupplier(String id, String companyId, String head, String name, String type, String address, String phone, String email, String zipCode, String area, String remark);
+
 }

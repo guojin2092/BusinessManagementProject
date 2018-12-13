@@ -4,6 +4,8 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
@@ -109,4 +111,20 @@ public interface MainApi {
     @FormUrlEncoded
     @POST("companyUser/save")
     Observable<BaseEntity> saveCompanyAccount(@Field("id") String id, @Field("userName") String userName, @Field("type") String type, @Field("roleIds") String roleId, @Field("passWord") String passWord, @Field("name") String name, @Field("phone") String phone, @Field("address") String address, @Field("email") String email, @Field("state") String state, @Field("companyId") String companyId, @Field("head") String head);
+
+    @FormUrlEncoded
+    @POST("supplier/grid")
+    Observable<BaseEntity<CompanySupplierInfoBean>> getCompanySupplierList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("name") String name, @Field("type") String type);
+
+    @FormUrlEncoded
+    @POST("supplier/deleteById")
+    Observable<BaseEntity> deleteCompanySupplier(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("supplier/getInfo")
+    Observable<BaseEntity<CompanySupplierInfo>> getCompanySupplierDetail(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("supplier/save")
+    Observable<BaseEntity> saveCompanySupplier(@Field("id") String id, @Field("companyId") String companyId, @Field("head") String head, @Field("name") String name, @Field("type") String type, @Field("address") String address, @Field("phone") String phone, @Field("email") String email, @Field("zipCode") String zipCode, @Field("area") String area, @Field("remark") String remark);
 }

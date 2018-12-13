@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
@@ -48,7 +49,6 @@ public class UserDetailActivity extends BaseEasyMvpActivity<UserDetailPresenter>
     TextView titlebar_right;
     @BindView(R.id.tv_save)
     TextView tv_save;
-    private String mUserId = "";
 
     @BindView(R.id.iv_icon)
     ImageView iv_icon;
@@ -60,6 +60,8 @@ public class UserDetailActivity extends BaseEasyMvpActivity<UserDetailPresenter>
     EditText et_nickname;
     @BindView(R.id.et_password)
     EditText et_password;
+    @BindView(R.id.ll_password)
+    LinearLayout ll_password;
     @BindView(R.id.et_phone)
     EditText et_phone;
     @BindView(R.id.et_address)
@@ -89,6 +91,7 @@ public class UserDetailActivity extends BaseEasyMvpActivity<UserDetailPresenter>
     private String mRoleId = "";
 
     private String mHeadUrl = "";
+    private String mUserId = "";
 
     /**
      * @param activity
@@ -114,10 +117,12 @@ public class UserDetailActivity extends BaseEasyMvpActivity<UserDetailPresenter>
         tv_save.setOnClickListener(this);
 
         if (!TextUtils.isEmpty(mUserId)) {
+            ll_password.setVisibility(View.GONE);
             titlebar_right.setText(R.string.edit);
             tv_save.setText(R.string.save);
             setEditTextInput(false);
         } else {
+            ll_password.setVisibility(View.VISIBLE);
             titlebar_right.setVisibility(View.GONE);
             tv_save.setText(R.string.add);
             tv_save.setVisibility(View.VISIBLE);
@@ -195,9 +200,15 @@ public class UserDetailActivity extends BaseEasyMvpActivity<UserDetailPresenter>
                     toastMsg("尚未选择账号角色");
                     return;
                 }
-                if (et_password.getText().toString().trim().length() < 6) {
-                    toastMsg("密码不得小于6位");
-                    return;
+                if (TextUtils.isEmpty(mUserId)) {
+                    if (TextUtils.isEmpty(et_password.getText().toString().trim())) {
+                        toastMsg("尚未填写密码");
+                        return;
+                    }
+                    if (et_password.getText().toString().trim().length() < 6) {
+                        toastMsg("密码不得小于6位");
+                        return;
+                    }
                 }
                 mPresenter.saveOrcreateUser(mUserId, et_account.getText().toString().trim(), mType, mRoleId, et_password.getText().toString().trim(), et_nickname.getText().toString().trim(), et_phone.getText().toString().trim(), et_address.getText().toString().trim(), et_email.getText().toString().trim(), mState, mCompanyId, mHeadUrl);
                 break;

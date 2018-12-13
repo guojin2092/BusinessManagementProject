@@ -35,7 +35,7 @@ import com.africa.crm.businessmanagement.main.station.activity.QuotationManageme
 import com.africa.crm.businessmanagement.main.station.activity.SalesOrderManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.ServiceRecordManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SettingActivity;
-import com.africa.crm.businessmanagement.main.station.activity.SupplierManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.CompanySupplierManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SystemManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.TaskManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.TradingOrderManagementActivity;
@@ -234,7 +234,7 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
                             CompanyAccountActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "3":
-                            SupplierManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            CompanySupplierManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "4":
                             ProductManagementActivity.startActivity(MainActivity.this, workStationInfo);

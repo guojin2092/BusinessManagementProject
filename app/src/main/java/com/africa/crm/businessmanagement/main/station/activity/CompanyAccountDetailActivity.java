@@ -99,9 +99,8 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
 
     @Override
     public void initView() {
+        super.initView();
         mCompanyId = getIntent().getStringExtra("companyId");
-        titlebar_back.setOnClickListener(this);
-        titlebar_right.setOnClickListener(this);
         titlebar_right.setText(R.string.edit);
         titlebar_name.setText("企业账号详情");
         tv_save.setOnClickListener(this);
@@ -111,6 +110,8 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
             titlebar_right.setText(R.string.edit);
             tv_save.setText(R.string.save);
             spinner_role.setEnabled(false);
+            et_role_name.setEnabled(false);
+            et_role_code.setEnabled(false);
             setEditTextInput(false);
         } else {
             ll_password.setVisibility(View.VISIBLE);
@@ -118,6 +119,8 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
             spinner_role.setEnabled(true);
             tv_save.setText(R.string.add);
             tv_save.setVisibility(View.VISIBLE);
+            et_role_name.setEnabled(true);
+            et_role_code.setEnabled(true);
         }
 
         spinner_type.setText("企业用户");
@@ -196,8 +199,6 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
         et_username.setEnabled(canInput);
         et_nickname.setEnabled(canInput);
         et_company_name.setEnabled(canInput);
-        et_role_name.setEnabled(canInput);
-        et_role_code.setEnabled(canInput);
         spinner_role.getTextView().setEnabled(canInput);
         et_address.setEnabled(canInput);
         et_email.setEnabled(canInput);
@@ -219,16 +220,18 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
     }
 
     @Override
-    public void getAllRoles(List<RoleInfoBean> roleInfoBeanList) {
+    public void getAllRoles(final List<RoleInfoBean> roleInfoBeanList) {
         if (!ListUtils.isEmpty(roleInfoBeanList)) {
             for (RoleInfoBean roleInfoBean : roleInfoBeanList) {
-                DicInfo dicInfo = new DicInfo(roleInfoBean.getRoleName(), roleInfoBean.getId());
+                DicInfo dicInfo = new DicInfo(roleInfoBean.getTypeName(), roleInfoBean.getId());
                 mSpinnerRoleList.add(dicInfo);
             }
             spinner_role.setListDatas(getBVActivity(), mSpinnerRoleList);
             spinner_role.addOnItemClickListener(new MySpinner.OnItemClickListener() {
                 @Override
                 public void onItemClick(DicInfo dicInfo, int position) {
+                    et_role_code.setText(roleInfoBeanList.get(position).getRoleCode());
+                    et_role_name.setText(roleInfoBeanList.get(position).getRoleName());
                     mRoleId = dicInfo.getCode();
                 }
             });

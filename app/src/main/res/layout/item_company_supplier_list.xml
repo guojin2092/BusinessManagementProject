@@ -33,19 +33,17 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tv_company"
+            android:id="@+id/tv_supplier_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="云茂地产"
             android:textColor="@color/A606060"
             android:textSize="22sp" />
 
         <TextView
-            android:id="@+id/tv_company_account"
+            android:id="@+id/tv_company_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
-            android:text="企业账号：12345678"
             android:textColor="#768DBD"
             android:textSize="14sp" />
 
@@ -58,7 +56,6 @@
         android:layout_gravity="center_vertical"
         android:drawableLeft="@drawable/iv_location_logo"
         android:drawablePadding="10dp"
-        android:text="上海"
         android:textColor="@color/B2B2B2"
         android:textSize="20sp" />
 </LinearLayout>

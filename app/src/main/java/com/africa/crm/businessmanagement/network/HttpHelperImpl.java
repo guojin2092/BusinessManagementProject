@@ -4,6 +4,8 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
@@ -155,5 +157,25 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<BaseEntity> saveCompanyAccount(String id, String userName, String type, String roleId, String passWord, String name, String phone, String address, String email, String state, String companyId, String head) {
         return mainApi.saveCompanyAccount(id, userName, type, roleId, passWord, name, phone, address, email, state, companyId, head);
+    }
+
+    @Override
+    public Observable<CompanySupplierInfoBean> getCompanySupplierList(int page, int rows, String companyId, String name, String type) {
+        return mainApi.getCompanySupplierList(page, rows, companyId, name, type).compose(RxUtils.<CompanySupplierInfoBean>handleResult());
+    }
+
+    @Override
+    public Observable<BaseEntity> deleteCompanySupplier(String id) {
+        return mainApi.deleteCompanySupplier(id);
+    }
+
+    @Override
+    public Observable<CompanySupplierInfo> getCompanySupplierDetail(String id) {
+        return mainApi.getCompanySupplierDetail(id).compose(RxUtils.<CompanySupplierInfo>handleResult());
+    }
+
+    @Override
+    public Observable<BaseEntity> saveCompanySupplier(String id, String companyId, String head, String name, String type, String address, String phone, String email, String zipCode, String area, String remark) {
+        return mainApi.saveCompanySupplier(id, companyId, head, name, type, address, phone, email, zipCode, area, remark);
     }
 }
