@@ -4,13 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.main.bean.EnterpriseInfoBean;
-
 import com.africa.crm.businessmanagement.baseutil.library.base.BaseActivity;
+
 import butterknife.BindView;
 
 /**
@@ -23,7 +23,6 @@ import butterknife.BindView;
  * Why & What is modified:
  */
 public class ContactDetailActivity extends BaseActivity {
-    @BindView(R.id.titlebar_back)
     ImageView titlebar_back;
     @BindView(R.id.titlebar_name)
     TextView titlebar_name;
@@ -33,17 +32,26 @@ public class ContactDetailActivity extends BaseActivity {
     TextView tv_add_address;
     @BindView(R.id.tv_save)
     TextView tv_save;
-    private EnterpriseInfoBean mContactInfo;
+
+    @BindView(R.id.iv_icon)
+    ImageView iv_icon;
+    @BindView(R.id.tv_add_icon)
+    TextView tv_add_icon;
+    @BindView(R.id.et_name)
+    EditText et_name;
+    @BindView(R.id.et_job)
+    EditText et_job;
+
+    private String mContactId = "";//联系人ID
 
     /**
      * @param activity
      */
-    public static void startActivity(Activity activity, EnterpriseInfoBean enterpriseInfoBean) {
+    public static void startActivity(Activity activity, String id) {
         Intent intent = new Intent(activity, ContactDetailActivity.class);
-        intent.putExtra("info", enterpriseInfoBean);
+        intent.putExtra("contactId", id);
         activity.startActivity(intent);
     }
-
 
     @Override
     public void setView(Bundle savedInstanceState) {
@@ -52,10 +60,8 @@ public class ContactDetailActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        mContactInfo = (EnterpriseInfoBean) getIntent().getSerializableExtra("info");
-        if (mContactInfo != null) {
-            titlebar_name.setText(mContactInfo.getCompany());
-        }
+        mContactId = getIntent().getStringExtra("contactId");
+        titlebar_name.setText("联系人详情");
         titlebar_back.setOnClickListener(this);
         titlebar_right.setOnClickListener(this);
         tv_add_address.setOnClickListener(this);
@@ -67,9 +73,6 @@ public class ContactDetailActivity extends BaseActivity {
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()) {
-            case R.id.titlebar_back:
-                onBackPressed();
-                break;
             case R.id.titlebar_right:
                 if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
                     titlebar_right.setText(R.string.cancel);

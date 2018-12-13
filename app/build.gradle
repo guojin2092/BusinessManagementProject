@@ -6,13 +6,13 @@ android {
         debug {
             keyAlias 'crm'
             keyPassword '00000000'
-            storeFile file('E:/1private_projects/BusinessManagementProject/africa_crm.jks')
+            storeFile file('../africa_crm.jks')
             storePassword '00000000'
         }
         release {
             keyAlias 'crm'
             keyPassword '00000000'
-            storeFile file('E:/1private_projects/BusinessManagementProject/africa_crm.jks')
+            storeFile file('../africa_crm.jks')
             storePassword '00000000'
         }
     }

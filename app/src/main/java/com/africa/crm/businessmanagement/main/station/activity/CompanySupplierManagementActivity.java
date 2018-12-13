@@ -26,6 +26,7 @@ import com.africa.crm.businessmanagement.main.station.adapter.CompanySupplierLis
 import com.africa.crm.businessmanagement.main.station.contract.CompanySupplierContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanySupplierPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
+import com.africa.crm.businessmanagement.network.error.ErrorMsg;
 import com.africa.crm.businessmanagement.widget.KeyboardUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
@@ -98,14 +99,12 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
 
     @Override
     public void initView() {
+        super.initView();
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
         mWorkStationInfo = (WorkStationInfo) getIntent().getSerializableExtra("info");
         if (mWorkStationInfo != null) {
             titlebar_name.setText(mWorkStationInfo.getWork_name());
         }
-        titlebar_right.setText(R.string.delete);
-        titlebar_back.setOnClickListener(this);
-        titlebar_right.setOnClickListener(this);
         ll_add.setOnClickListener(this);
         tv_delete.setOnClickListener(this);
         tv_search.setOnClickListener(this);
@@ -145,9 +144,6 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
             case R.id.tv_search:
                 page = 1;
                 pullDownRefresh(page);
-                break;
-            case R.id.titlebar_back:
-                onBackPressed();
                 break;
             case R.id.titlebar_right:
                 if (titlebar_right.getText().toString().equals(getString(R.string.delete))) {
@@ -283,6 +279,8 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
                 layout_no_data.setVisibility(View.VISIBLE);
             }
             mDeleteDialog.dismiss();
+        } else {
+            ErrorMsg.showErrorMsg(baseEntity.getReturnMsg());
         }
 
     }

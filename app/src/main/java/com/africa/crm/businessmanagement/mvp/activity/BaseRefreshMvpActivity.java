@@ -61,16 +61,20 @@ public abstract class BaseRefreshMvpActivity<P extends BasePresenter> extends Ba
         requestData();
     }
 
-    /**
-     * 初始化listview和初始化进度条
-     */
-    protected void initSmartRefreshListView() {
+    @Override
+    public void initView() {
         titlebar_back.setOnClickListener(this);
         titlebar_right.setOnClickListener(this);
         tv_back.setOnClickListener(this);
         tv_refresh.setOnClickListener(this);
         tv_load_local.setOnClickListener(this);
+        titlebar_right.setText(R.string.delete);
+    }
 
+    /**
+     * 初始化listview和初始化进度条
+     */
+    protected void initSmartRefreshListView() {
         //自动加载更多
         mRefreshLayout.setEnableAutoLoadmore(true);
         //触发自动刷新

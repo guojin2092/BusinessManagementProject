@@ -25,6 +25,7 @@ import com.africa.crm.businessmanagement.main.station.adapter.CompanyAccountList
 import com.africa.crm.businessmanagement.main.station.contract.CompanyAccountContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyAccountPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
+import com.africa.crm.businessmanagement.network.error.ErrorMsg;
 import com.africa.crm.businessmanagement.widget.KeyboardUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
@@ -93,6 +94,7 @@ public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccoun
 
     @Override
     public void initView() {
+        super.initView();
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
         mWorkStationInfo = (WorkStationInfo) getIntent().getSerializableExtra("info");
         if (mWorkStationInfo != null) {
@@ -101,7 +103,6 @@ public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccoun
         tv_search.setOnClickListener(this);
         ll_add.setOnClickListener(this);
         tv_delete.setOnClickListener(this);
-        titlebar_right.setText(R.string.delete);
     }
 
     @Override
@@ -271,6 +272,8 @@ public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccoun
                 layout_no_data.setVisibility(View.VISIBLE);
             }
             mDeleteDialog.dismiss();
+        } else {
+            ErrorMsg.showErrorMsg(baseEntity.getReturnMsg());
         }
 
     }

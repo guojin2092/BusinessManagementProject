@@ -26,6 +26,7 @@ import com.africa.crm.businessmanagement.main.station.adapter.CompanyInfoListAda
 import com.africa.crm.businessmanagement.main.station.contract.CompanyInfoManagementContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyInfoManagementPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
+import com.africa.crm.businessmanagement.network.error.ErrorMsg;
 import com.africa.crm.businessmanagement.widget.KeyboardUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
@@ -88,6 +89,7 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
 
     @Override
     public void initView() {
+        super.initView();
         mWorkStationInfo = (WorkStationInfo) getIntent().getSerializableExtra("info");
         if (mWorkStationInfo != null) {
             titlebar_name.setText(mWorkStationInfo.getWork_name());
@@ -260,6 +262,8 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
                 layout_no_data.setVisibility(View.VISIBLE);
             }
             mDeleteDialog.dismiss();
+        } else {
+            ErrorMsg.showErrorMsg(baseEntity.getReturnMsg());
         }
     }
 

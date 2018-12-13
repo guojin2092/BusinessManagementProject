@@ -2,6 +2,7 @@ package com.africa.crm.businessmanagement.network.api;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyContactInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
@@ -127,4 +128,12 @@ public interface MainApi {
     @FormUrlEncoded
     @POST("supplier/save")
     Observable<BaseEntity> saveCompanySupplier(@Field("id") String id, @Field("companyId") String companyId, @Field("head") String head, @Field("name") String name, @Field("type") String type, @Field("address") String address, @Field("phone") String phone, @Field("email") String email, @Field("zipCode") String zipCode, @Field("area") String area, @Field("remark") String remark);
+
+    @FormUrlEncoded
+    @POST("contact/grid")
+    Observable<BaseEntity<CompanyContactInfoBean>> getCompanyContactList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("fromType") String fromType);
+
+    @FormUrlEncoded
+    @POST("contact/deleteById")
+    Observable<BaseEntity> deleteCompanyContact(@Field("id") String id);
 }

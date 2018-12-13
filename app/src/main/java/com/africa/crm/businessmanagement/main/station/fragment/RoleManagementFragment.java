@@ -29,6 +29,7 @@ import com.africa.crm.businessmanagement.main.station.dialog.RoleDetailDialog;
 import com.africa.crm.businessmanagement.main.station.presenter.RoleManagementPresenter;
 import com.africa.crm.businessmanagement.mvp.fragment.BaseRefreshMvpFragment;
 import com.africa.crm.businessmanagement.network.error.ComException;
+import com.africa.crm.businessmanagement.network.error.ErrorMsg;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
@@ -331,6 +332,8 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
             mRoleAuthLimitDialog.dismiss();
             page = 1;
             pullDownRefresh(page);
+        } else {
+            toastMsg(ErrorMsg.showErrorMsg(baseEntity.getReturnMsg()));
         }
     }
 
@@ -346,6 +349,8 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
             }
             page = 1;
             pullDownRefresh(page);
+        } else {
+            toastMsg(ErrorMsg.showErrorMsg(baseEntity.getReturnMsg()));
         }
     }
 

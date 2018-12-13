@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.main.bean.EnterpriseInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -22,10 +22,10 @@ import java.util.List;
  * Modification  History:
  * Why & What is modified:
  */
-public class ContactListAdapter extends BaseQuickAdapter<EnterpriseInfoBean, BaseViewHolder> {
+public class ContactListAdapter extends BaseQuickAdapter<CompanyContactInfo, BaseViewHolder> {
     private boolean mIsDeleted = false;
 
-    public ContactListAdapter(@Nullable List<EnterpriseInfoBean> data) {
+    public ContactListAdapter(@Nullable List<CompanyContactInfo> data) {
         super(R.layout.item_contact_list, data);
     }
 
@@ -39,39 +39,22 @@ public class ContactListAdapter extends BaseQuickAdapter<EnterpriseInfoBean, Bas
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, EnterpriseInfoBean item) {
+    protected void convert(BaseViewHolder helper, CompanyContactInfo item) {
         ImageView iv_icon = helper.getView(R.id.iv_icon);
-        TextView tv_company = helper.getView(R.id.tv_company);
+        TextView tv_name = helper.getView(R.id.tv_name);
         TextView tv_location = helper.getView(R.id.tv_location);
         TextView tv_phone_number = helper.getView(R.id.tv_phone_number);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
-        int icon = Integer.valueOf(item.getIcon());
-        int iconSrc = 0;
-        switch (icon) {
-            case 1:
-                iconSrc = R.drawable.iv_head_icon1;
-                break;
-            case 2:
-                iconSrc = R.drawable.iv_head_icon2;
-                break;
-            case 3:
-                iconSrc = R.drawable.iv_head_icon3;
-                break;
-        }
-        iv_icon.setImageResource(iconSrc);
-        tv_company.setText(item.getCompany());
-        tv_location.setText(item.getLocation());
+        iv_icon.setImageResource(R.drawable.iv_head_icon1);
+        tv_name.setText(item.getName());
         tv_phone_number.setText(item.getPhone());
+        tv_location.setText(item.getAddress());
+        cb_choose.setChecked(item.isChosen());
         if (mIsDeleted) {
             cb_choose.setVisibility(View.VISIBLE);
         } else {
             cb_choose.setVisibility(View.GONE);
-        }
-        if (item.isChosen()) {
-            cb_choose.setChecked(true);
-        } else {
-            cb_choose.setChecked(false);
         }
     }
 

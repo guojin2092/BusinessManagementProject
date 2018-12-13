@@ -2,6 +2,7 @@ package com.africa.crm.businessmanagement.network;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyContactInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
@@ -169,6 +170,16 @@ public class DataManager implements HttpHelper {
     @Override
     public Observable<BaseEntity> saveCompanySupplier(String id, String companyId, String head, String name, String type, String address, String phone, String email, String zipCode, String area, String remark) {
         return mHttpHelper.saveCompanySupplier(id, companyId, head, name, type, address, phone, email, zipCode, area, remark);
+    }
+
+    @Override
+    public Observable<CompanyContactInfoBean> getCompanyContactList(int page, int rows, String companyId, String userId, String name, String fromType) {
+        return mHttpHelper.getCompanyContactList(page, rows, companyId, userId, name, fromType);
+    }
+
+    @Override
+    public Observable<BaseEntity> deleteCompanyContact(String id) {
+        return mHttpHelper.deleteCompanyContact(id);
     }
 
 }

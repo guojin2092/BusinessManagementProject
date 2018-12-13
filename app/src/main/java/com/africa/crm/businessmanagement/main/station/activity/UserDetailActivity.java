@@ -21,6 +21,7 @@ import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.main.station.contract.UserDetailContract;
 import com.africa.crm.businessmanagement.main.station.presenter.UserDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseEasyMvpActivity;
+import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
 import com.africa.crm.businessmanagement.widget.MySpinner;
 
@@ -40,13 +41,7 @@ import butterknife.BindView;
  * Modification  History:
  * Why & What is modified:
  */
-public class UserDetailActivity extends BaseEasyMvpActivity<UserDetailPresenter> implements UserDetailContract.View {
-    @BindView(R.id.titlebar_back)
-    ImageView titlebar_back;
-    @BindView(R.id.titlebar_name)
-    TextView titlebar_name;
-    @BindView(R.id.titlebar_right)
-    TextView titlebar_right;
+public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> implements UserDetailContract.View {
     @BindView(R.id.tv_save)
     TextView tv_save;
 
@@ -110,10 +105,9 @@ public class UserDetailActivity extends BaseEasyMvpActivity<UserDetailPresenter>
 
     @Override
     public void initView() {
+        super.initView();
         mUserId = getIntent().getStringExtra("userId");
         titlebar_name.setText("用户详情");
-        titlebar_back.setOnClickListener(this);
-        titlebar_right.setOnClickListener(this);
         tv_save.setOnClickListener(this);
 
         if (!TextUtils.isEmpty(mUserId)) {
