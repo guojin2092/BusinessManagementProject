@@ -101,7 +101,6 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
     public void initView() {
         super.initView();
         mCompanyId = getIntent().getStringExtra("companyId");
-        titlebar_right.setText(R.string.edit);
         titlebar_name.setText("企业账号详情");
         tv_save.setOnClickListener(this);
 
@@ -147,9 +146,6 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()) {
-            case R.id.titlebar_back:
-                onBackPressed();
-                break;
             case R.id.titlebar_right:
                 if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
                     titlebar_right.setText(R.string.cancel);

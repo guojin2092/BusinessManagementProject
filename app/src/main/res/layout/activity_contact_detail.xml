@@ -120,15 +120,15 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="所属用户昵称" />
+                            android:text="所属企业名称：" />
 
                         <EditText
-                            android:id="@+id/et_from_nickname"
+                            android:id="@+id/et_from_company_name"
                             style="@style/product_et_blue" />
                     </LinearLayout>
 
-
                     <LinearLayout
+                        android:id="@+id/ll_from_user"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -136,11 +136,17 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="所属企业名称：" />
+                            android:text="所属用户" />
 
-                        <EditText
-                            android:id="@+id/et_from_company_name"
-                            style="@style/product_et_blue" />
+                        <com.africa.crm.businessmanagement.widget.MySpinner
+                            android:id="@+id/spinner_from_user"
+                            style="@style/product_et_blue"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"
+                            app:backgroundSelector="@drawable/background_selector2" />
                     </LinearLayout>
 
                     <LinearLayout

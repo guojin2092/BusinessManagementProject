@@ -2,6 +2,7 @@ package com.africa.crm.businessmanagement.network;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
@@ -83,6 +84,11 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<BaseEntity> saveOrcreateUser(String id, String userName, String type, String roleIds, String passWord, String name, String phone, String address, String email, String state, String companyId, String head) {
         return mainApi.saveOrcreateUser(id, userName, type, roleIds, passWord, name, phone, address, email, state, companyId, head);
+    }
+
+    @Override
+    public Observable<List<DicInfo2>> getAllCompanyUser(String companyId) {
+        return mainApi.getAllCompanyUser(companyId).compose(RxUtils.<List<DicInfo2>>handleResult());
     }
 
     @Override
@@ -189,4 +195,15 @@ public class HttpHelperImpl implements HttpHelper {
     public Observable<BaseEntity> deleteCompanyContact(String id) {
         return mainApi.deleteCompanyContact(id);
     }
+
+    @Override
+    public Observable<CompanyContactInfo> getContactDetail(String id) {
+        return mainApi.getContactDetail(id).compose(RxUtils.<CompanyContactInfo>handleResult());
+    }
+
+    @Override
+    public Observable<BaseEntity> saveCompanyContact(String id, String companyId, String userId, String head, String name, String fromType, String address, String mailAddress, String phone, String tel, String email, String job, String remark) {
+        return mainApi.saveCompanyContact(id, companyId, userId, head, name, fromType, address, mailAddress, phone, tel, email, job, remark);
+    }
+
 }

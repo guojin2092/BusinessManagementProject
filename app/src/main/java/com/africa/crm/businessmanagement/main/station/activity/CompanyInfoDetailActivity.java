@@ -86,7 +86,6 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     public void initView() {
         super.initView();
         mCompanyId = getIntent().getStringExtra("companyId");
-        titlebar_right.setText(R.string.edit);
         tv_save.setOnClickListener(this);
         titlebar_name.setText("企业详情");
 

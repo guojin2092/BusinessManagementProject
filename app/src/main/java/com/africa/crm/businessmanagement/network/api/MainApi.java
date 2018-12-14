@@ -2,6 +2,7 @@ package com.africa.crm.businessmanagement.network.api;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
@@ -106,6 +107,10 @@ public interface MainApi {
     Observable<BaseEntity> deleteCompanyAccount(@Field("id") String id);
 
     @FormUrlEncoded
+    @POST("companyUser/queryAll")
+    Observable<BaseEntity<List<DicInfo2>>> getAllCompanyUser(@Field("companyId") String companyId);
+
+    @FormUrlEncoded
     @POST("companyUser/getInfo")
     Observable<BaseEntity<CompanyAccountInfo>> getCompanyAccountDetail(@Field("id") String id);
 
@@ -136,4 +141,12 @@ public interface MainApi {
     @FormUrlEncoded
     @POST("contact/deleteById")
     Observable<BaseEntity> deleteCompanyContact(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("contact/getInfo")
+    Observable<BaseEntity<CompanyContactInfo>> getContactDetail(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("contact/save")
+    Observable<BaseEntity> saveCompanyContact(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("head") String head, @Field("name") String name, @Field("fromType") String fromType, @Field("address") String address, @Field("mailAddress") String mailAddress, @Field("phone") String phone, @Field("tel") String tel, @Field("email") String email, @Field("job") String job, @Field("remark") String remark);
 }
