@@ -204,6 +204,7 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
 
     @Override
     public void getState(List<DicInfo> dicInfoList) {
+        mSpinnerStateList.clear();
         mSpinnerStateList.addAll(dicInfoList);
         spinner_state.setListDatas(this, mSpinnerStateList);
 
@@ -217,6 +218,7 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
 
     @Override
     public void getAllRoles(final List<RoleInfoBean> roleInfoBeanList) {
+        mSpinnerRoleList.clear();
         if (!ListUtils.isEmpty(roleInfoBeanList)) {
             for (RoleInfoBean roleInfoBean : roleInfoBeanList) {
                 DicInfo dicInfo = new DicInfo(roleInfoBean.getTypeName(), roleInfoBean.getId());

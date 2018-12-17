@@ -215,6 +215,7 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
 
     @Override
     public void getCompanyType(List<DicInfo> dicInfoList) {
+        mSpinnerCompanyTypeList.clear();
         mSpinnerCompanyTypeList.addAll(dicInfoList);
         spinner_type.setListDatas(this, mSpinnerCompanyTypeList);
 
@@ -228,6 +229,7 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
 
     @Override
     public void getState(List<DicInfo> dicInfoList) {
+        mSpinnerStateList.clear();
         mSpinnerStateList.addAll(dicInfoList);
         spinner_state.setListDatas(this, mSpinnerStateList);
 

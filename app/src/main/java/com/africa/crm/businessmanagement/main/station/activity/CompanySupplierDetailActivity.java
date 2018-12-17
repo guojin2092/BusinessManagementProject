@@ -169,6 +169,7 @@ public class CompanySupplierDetailActivity extends BaseMvpActivity<CompanySuppli
 
     @Override
     public void getSupplierType(List<DicInfo> dicInfoList) {
+        mSpinnerCompanyTypeList.clear();
         mSpinnerCompanyTypeList.addAll(dicInfoList);
         spinner_type.setListDatas(this, mSpinnerCompanyTypeList);
 

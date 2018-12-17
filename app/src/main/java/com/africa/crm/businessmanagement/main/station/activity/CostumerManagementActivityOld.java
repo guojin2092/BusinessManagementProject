@@ -12,18 +12,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
+import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
+import com.africa.crm.businessmanagement.baseutil.common.util.ToastUtils;
+import com.africa.crm.businessmanagement.baseutil.library.base.progress.BaseActivityProgress;
+import com.africa.crm.businessmanagement.main.bean.CostumerInfoBean;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.station.adapter.CostumerListAdapter;
-import com.africa.crm.businessmanagement.main.bean.CostumerInfoBean;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
-import com.africa.crm.businessmanagement.baseutil.common.util.ToastUtils;
-import com.africa.crm.businessmanagement.baseutil.library.base.progress.BaseActivityProgress;
 import butterknife.BindView;
 
 /**
@@ -35,7 +35,7 @@ import butterknife.BindView;
  * Modification  History:
  * Why & What is modified:
  */
-public class CostumerManagementActivity extends BaseActivityProgress {
+public class CostumerManagementActivityOld extends BaseActivityProgress {
     @BindView(R.id.titlebar_back)
     ImageView titlebar_back;
     @BindView(R.id.titlebar_name)
@@ -54,7 +54,7 @@ public class CostumerManagementActivity extends BaseActivityProgress {
      * @param activity
      */
     public static void startActivity(Activity activity, WorkStationInfo workStationInfo) {
-        Intent intent = new Intent(activity, CostumerManagementActivity.class);
+        Intent intent = new Intent(activity, CostumerManagementActivityOld.class);
         intent.putExtra("info", workStationInfo);
         activity.startActivity(intent);
     }
@@ -62,7 +62,7 @@ public class CostumerManagementActivity extends BaseActivityProgress {
 
     @Override
     public void setView(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_customer_management_list);
+        setContentView(R.layout.activity_customer_management_old_list);
     }
 
     @Override
@@ -133,8 +133,8 @@ public class CostumerManagementActivity extends BaseActivityProgress {
             mCostumerListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                    ToastUtils.show(CostumerManagementActivity.this, mCostumerInfoBeanList.get(position).getCompany());
-                    CostumerDetailActivity.startActivity(CostumerManagementActivity.this, mCostumerInfoBeanList.get(position));
+                    ToastUtils.show(CostumerManagementActivityOld.this, mCostumerInfoBeanList.get(position).getCompany());
+                    CostumerDetailActivityOld.startActivity(CostumerManagementActivityOld.this, mCostumerInfoBeanList.get(position));
                 }
             });
         }

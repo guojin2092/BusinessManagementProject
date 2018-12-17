@@ -77,27 +77,34 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="联系人姓名" />
+                            android:text="姓名" />
 
                         <EditText
                             android:id="@+id/et_name"
                             style="@style/product_et_blue" />
                     </LinearLayout>
 
-
                     <LinearLayout
+                        android:id="@+id/ll_from_user"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="职位：" />
+                            android:text="所属用户" />
 
-                        <EditText
-                            android:id="@+id/et_job"
-                            style="@style/product_et_blue" />
+                        <com.africa.crm.businessmanagement.widget.MySpinner
+                            android:id="@+id/spinner_from_user"
+                            style="@style/product_et_blue"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"
+                            app:backgroundSelector="@drawable/background_selector2" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -128,27 +135,21 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/ll_from_user"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="horizontal"
-                        android:visibility="gone">
+                        android:orientation="horizontal">
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="所属用户" />
+                            android:text="员工数量：" />
 
-                        <com.africa.crm.businessmanagement.widget.MySpinner
-                            android:id="@+id/spinner_from_user"
+                        <EditText
+                            android:id="@+id/et_company_staff_num"
                             style="@style/product_et_blue"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:paddingLeft="0dp"
-                            android:paddingTop="0dp"
-                            android:paddingBottom="0dp"
-                            app:backgroundSelector="@drawable/background_selector2" />
+                            android:inputType="number" />
                     </LinearLayout>
+
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -158,10 +159,10 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="供应商来源" />
+                            android:text="行业：" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
-                            android:id="@+id/spinner_from_type"
+                            android:id="@+id/spinner_industry"
                             style="@style/product_et_blue"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -190,12 +191,12 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="手机：" />
+                            android:text="年收入：" />
 
                         <EditText
-                            android:id="@+id/et_telephone"
+                            android:id="@+id/et_income"
                             style="@style/product_et_blue"
-                            android:inputType="phone" />
+                            android:inputType="number" />
 
                     </LinearLayout>
 
@@ -224,53 +225,11 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="邮箱" />
-
-                        <EditText
-                            android:id="@+id/et_email"
-                            style="@style/product_et_blue" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:background="@color/white"
-                    android:orientation="horizontal"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/costumer_title_style"
-                            android:text="地址：" />
+                            android:text="地址" />
 
                         <EditText
                             android:id="@+id/et_address"
                             style="@style/product_et_blue" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/costumer_title_style"
-                            android:text="邮寄地址：" />
-
-                        <EditText
-                            android:id="@+id/et_zip_address"
-                            style="@style/product_et_blue" />
-
                     </LinearLayout>
 
                 </LinearLayout>

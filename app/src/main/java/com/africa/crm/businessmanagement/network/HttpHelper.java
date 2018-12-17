@@ -2,6 +2,8 @@ package com.africa.crm.businessmanagement.network;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyClientInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyClientInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
@@ -94,4 +96,13 @@ public interface HttpHelper {
     Observable<CompanyContactInfo> getContactDetail(String id);
 
     Observable<BaseEntity> saveCompanyContact(String id, String companyId, String userId, String head, String name, String fromType, String address, String mailAddress, String phone, String tel, String email, String job, String remark);
+
+    Observable<CompanyClientInfoBean> getCompanyClientList(int page, int rows, String companyId, String userId, String name, String industry);
+
+    Observable<BaseEntity> deleteCompanyClient(String id);
+
+    Observable<CompanyClientInfo> getCompanyClientDetail(String id);
+
+    Observable<BaseEntity> saveCompanyClient(String id, String companyId, String userId, String head, String name, String industry, String address, String workerNum, String tel, String yearIncome, String remark);
+
 }

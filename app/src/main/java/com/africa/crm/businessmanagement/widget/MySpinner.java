@@ -102,7 +102,7 @@ public class MySpinner extends FrameLayout {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (mList.get(position).getCode().equals("0")) {
+                if (mList.get(position).getCode().equals("")) {
                     tv_choose_type.setText("");
                 } else {
                     tv_choose_type.setText(mList.get(position).getText());
@@ -180,6 +180,7 @@ public class MySpinner extends FrameLayout {
 
     public void setListDatas(Context context, List<DicInfo> list) {
         mList = list;
+        mList.add(new DicInfo("不选择", ""));
         myAdapter = new MyAdapter(context, mList);
         listView.setAdapter(myAdapter);
         myAdapter.notifyDataSetChanged();

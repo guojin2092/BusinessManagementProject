@@ -21,9 +21,10 @@ import com.africa.crm.businessmanagement.main.contract.MainContract;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.presenter.MainPresenter;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyAccountActivity;
+import com.africa.crm.businessmanagement.main.station.activity.CompanyClientManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.CompanyContactManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyInfoManagementActivity;
-import com.africa.crm.businessmanagement.main.station.activity.ContactManagementActivity;
-import com.africa.crm.businessmanagement.main.station.activity.CostumerManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.CompanySupplierManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.DeliveryOrderManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.InventoryManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.PackagingDataManagementActivity;
@@ -35,7 +36,6 @@ import com.africa.crm.businessmanagement.main.station.activity.QuotationManageme
 import com.africa.crm.businessmanagement.main.station.activity.SalesOrderManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.ServiceRecordManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SettingActivity;
-import com.africa.crm.businessmanagement.main.station.activity.CompanySupplierManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SystemManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.TaskManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.TradingOrderManagementActivity;
@@ -240,10 +240,10 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
                             ProductManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "5":
-                            CostumerManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            CompanyClientManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "6":
-                            ContactManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            CompanyContactManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "7":
                             TradingOrderManagementActivity.startActivity(MainActivity.this, workStationInfo);

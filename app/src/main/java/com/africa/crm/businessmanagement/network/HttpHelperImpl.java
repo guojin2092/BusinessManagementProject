@@ -2,6 +2,8 @@ package com.africa.crm.businessmanagement.network;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyClientInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyClientInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
@@ -204,6 +206,26 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<BaseEntity> saveCompanyContact(String id, String companyId, String userId, String head, String name, String fromType, String address, String mailAddress, String phone, String tel, String email, String job, String remark) {
         return mainApi.saveCompanyContact(id, companyId, userId, head, name, fromType, address, mailAddress, phone, tel, email, job, remark);
+    }
+
+    @Override
+    public Observable<CompanyClientInfoBean> getCompanyClientList(int page, int rows, String companyId, String userId, String name, String industry) {
+        return mainApi.getCompanyClientList(page, rows, companyId, userId, name, industry).compose(RxUtils.<CompanyClientInfoBean>handleResult());
+    }
+
+    @Override
+    public Observable<BaseEntity> deleteCompanyClient(String id) {
+        return mainApi.deleteCompanyClient(id);
+    }
+
+    @Override
+    public Observable<CompanyClientInfo> getCompanyClientDetail(String id) {
+        return mainApi.getCompanyClientDetail(id).compose(RxUtils.<CompanyClientInfo>handleResult());
+    }
+
+    @Override
+    public Observable<BaseEntity> saveCompanyClient(String id, String companyId, String userId, String head, String name, String industry, String address, String workerNum, String tel, String yearIncome, String remark) {
+        return mainApi.saveCompanyClient(id, companyId, userId, head, name, industry, address, workerNum, tel, yearIncome, remark);
     }
 
 }

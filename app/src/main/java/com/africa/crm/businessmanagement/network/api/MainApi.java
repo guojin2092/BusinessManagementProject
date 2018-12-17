@@ -2,6 +2,8 @@ package com.africa.crm.businessmanagement.network.api;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyClientInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyClientInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
@@ -149,4 +151,20 @@ public interface MainApi {
     @FormUrlEncoded
     @POST("contact/save")
     Observable<BaseEntity> saveCompanyContact(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("head") String head, @Field("name") String name, @Field("fromType") String fromType, @Field("address") String address, @Field("mailAddress") String mailAddress, @Field("phone") String phone, @Field("tel") String tel, @Field("email") String email, @Field("job") String job, @Field("remark") String remark);
+
+    @FormUrlEncoded
+    @POST("customer/grid")
+    Observable<BaseEntity<CompanyClientInfoBean>> getCompanyClientList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("industry") String industry);
+
+    @FormUrlEncoded
+    @POST("customer/deleteById")
+    Observable<BaseEntity> deleteCompanyClient(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("customer/getInfo")
+    Observable<BaseEntity<CompanyClientInfo>> getCompanyClientDetail(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("customer/save")
+    Observable<BaseEntity> saveCompanyClient(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("head") String head, @Field("name") String name, @Field("industry") String industry, @Field("address") String address, @Field("workerNum") String workerNum, @Field("tel") String tel, @Field("yearIncome") String yearIncome, @Field("remark") String remark);
 }

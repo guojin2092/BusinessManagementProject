@@ -12,14 +12,15 @@ import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
-import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyContactEvent;
+import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyClientEvent;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
-import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyClientInfo;
+import com.africa.crm.businessmanagement.main.bean.CostumerInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
-import com.africa.crm.businessmanagement.main.station.contract.CompanyContactDetailContract;
-import com.africa.crm.businessmanagement.main.station.presenter.CompanyContactPresenter;
+import com.africa.crm.businessmanagement.main.station.contract.CompanyClientDetailContract;
+import com.africa.crm.businessmanagement.main.station.presenter.CompanyClientDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
 import com.africa.crm.businessmanagement.widget.MySpinner;
@@ -36,11 +37,11 @@ import butterknife.BindView;
  * Author:  guojin
  * Version:
  * Description：
- * Date：2018/11/28 0028 9:03
+ * Date：2018/11/15 0015 10:34
  * Modification  History:
  * Why & What is modified:
  */
-public class ContactDetailActivity extends BaseMvpActivity<CompanyContactPresenter> implements CompanyContactDetailContract.View {
+public class CompanyClientDetailActivity extends BaseMvpActivity<CompanyClientDetailPresenter> implements CompanyClientDetailContract.View {
     @BindView(R.id.iv_icon)
     ImageView iv_icon;
     @BindView(R.id.tv_add_icon)
@@ -49,28 +50,24 @@ public class ContactDetailActivity extends BaseMvpActivity<CompanyContactPresent
     TextView tv_save;
     @BindView(R.id.et_name)
     EditText et_name;
-    @BindView(R.id.et_job)
-    EditText et_job;
     @BindView(R.id.et_from_company_name)
     EditText et_from_company_name;
-    @BindView(R.id.et_telephone)
-    EditText et_telephone;
+    @BindView(R.id.et_company_staff_num)
+    EditText et_company_staff_num;
+    @BindView(R.id.et_income)
+    EditText et_income;
     @BindView(R.id.et_phone)
     EditText et_phone;
-    @BindView(R.id.et_email)
-    EditText et_email;
     @BindView(R.id.et_address)
     EditText et_address;
-    @BindView(R.id.et_zip_address)
-    EditText et_zip_address;
     @BindView(R.id.et_remark)
     EditText et_remark;
 
-    @BindView(R.id.spinner_from_type)
-    MySpinner spinner_from_type;
-    private static final String CONTACT_FROM_TYPE = "CONTACTFROMTYPE";
-    private List<DicInfo> mSpinnerFromTypeList = new ArrayList<>();
-    private String mFromType = "";
+    @BindView(R.id.spinner_industry)
+    MySpinner spinner_industry;
+    private static final String CONTACT_INDUSTRY_TYPE = "INDUSTRYTYPE";
+    private List<DicInfo> mSpinnerIndustryList = new ArrayList<>();
+    private String mIndustryType = "";
 
     @BindView(R.id.ll_from_user)
     LinearLayout ll_from_user;
@@ -79,41 +76,40 @@ public class ContactDetailActivity extends BaseMvpActivity<CompanyContactPresent
     private List<DicInfo> mSpinnerCompanyUserList = new ArrayList<>();
     private String mFromUserId = "";
 
+    private String mClientId = "";//联系人Id
     private String mRoleCode = "";//角色code
-    private String mContactId = "";//联系人ID
     private String mCompanyId = "";
     private String mHeadUrl = "";//头像地址
-
 
     /**
      * @param activity
      */
     public static void startActivity(Activity activity, String id) {
-        Intent intent = new Intent(activity, ContactDetailActivity.class);
-        intent.putExtra("contactId", id);
+        Intent intent = new Intent(activity, CompanyClientDetailActivity.class);
+        intent.putExtra("clientId", id);
         activity.startActivity(intent);
     }
 
     @Override
     public void setView(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_contact_detail);
+        setContentView(R.layout.activity_company_client_detail);
     }
 
     @Override
-    protected CompanyContactPresenter injectPresenter() {
-        return new CompanyContactPresenter();
+    protected CompanyClientDetailPresenter injectPresenter() {
+        return new CompanyClientDetailPresenter();
     }
 
     @Override
     public void initView() {
         super.initView();
-        mContactId = getIntent().getStringExtra("contactId");
+        mClientId = getIntent().getStringExtra("clientId");
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
         mRoleCode = UserInfoManager.getUserLoginInfo(this).getRoleCode();
-        titlebar_name.setText("联系人详情");
+        titlebar_name.setText("客户详情");
         tv_save.setOnClickListener(this);
 
-        if (!TextUtils.isEmpty(mContactId)) {
+        if (!TextUtils.isEmpty(mClientId)) {
             titlebar_right.setText(R.string.edit);
             tv_save.setText(R.string.save);
             setEditTextInput(false);
@@ -121,23 +117,6 @@ public class ContactDetailActivity extends BaseMvpActivity<CompanyContactPresent
             titlebar_right.setVisibility(View.GONE);
             tv_save.setText(R.string.add);
             tv_save.setVisibility(View.VISIBLE);
-        }
-    }
-
-
-    @Override
-    public void initData() {
-    }
-
-    @Override
-    protected void requestData() {
-        if ("companyRoot".equals(mRoleCode)) {
-            ll_from_user.setVisibility(View.VISIBLE);
-            mPresenter.getAllCompanyUsers(mCompanyId);
-        }
-        mPresenter.getFromType(CONTACT_FROM_TYPE);
-        if (!TextUtils.isEmpty(mContactId)) {
-            mPresenter.getContactDetail(mContactId);
         }
     }
 
@@ -167,14 +146,52 @@ public class ContactDetailActivity extends BaseMvpActivity<CompanyContactPresent
                 } else {
                     userId = mFromUserId;
                 }
-                mPresenter.saveCompanyContact(mContactId, mCompanyId, userId, mHeadUrl, et_name.getText().toString().trim(), mFromType, et_address.getText().toString().trim(), et_zip_address.getText().toString().trim(), et_telephone.getText().toString().trim(), et_phone.getText().toString().trim(), et_email.getText().toString().trim(), et_job.getText().toString().trim(), et_remark.getText().toString().trim());
+                mPresenter.saveCompanyClient(mClientId, mCompanyId, userId, mHeadUrl, et_name.getText().toString().trim(), mIndustryType, et_address.getText().toString().trim(), et_company_staff_num.getText().toString().trim(), et_phone.getText().toString().trim(), et_income.getText().toString().trim(), et_remark.getText().toString().trim());
                 break;
         }
     }
 
+    @Override
+    protected void requestData() {
+        if ("companyRoot".equals(mRoleCode)) {
+            ll_from_user.setVisibility(View.VISIBLE);
+            mPresenter.getAllCompanyUsers(mCompanyId);
+        } else {
+            ll_from_user.setVisibility(View.GONE);
+        }
+        mPresenter.getIndustry(CONTACT_INDUSTRY_TYPE);
+        if (!TextUtils.isEmpty(mClientId)) {
+            mPresenter.getCompanyClientDetail(mClientId);
+        }
+
+    }
+
+    @Override
+    public void initData() {
+
+    }
+
+    /**
+     * 控制输入框是否可输入
+     *
+     * @param canInput
+     */
+    private void setEditTextInput(boolean canInput) {
+        tv_add_icon.setEnabled(canInput);
+        et_name.setEnabled(canInput);
+        spinner_from_user.getTextView().setEnabled(canInput);
+        et_from_company_name.setEnabled(canInput);
+        et_company_staff_num.setEnabled(canInput);
+        spinner_industry.getTextView().setEnabled(canInput);
+        et_income.setEnabled(canInput);
+        et_phone.setEnabled(canInput);
+        et_address.setEnabled(canInput);
+        et_remark.setEnabled(canInput);
+    }
 
     @Override
     public void getAllCompanyUsers(List<DicInfo2> dicInfo2List) {
+        mSpinnerCompanyUserList.clear();
         if (!ListUtils.isEmpty(dicInfo2List)) {
             for (DicInfo2 dicInfo2 : dicInfo2List) {
                 DicInfo dicInfo = new DicInfo(dicInfo2.getName(), dicInfo2.getId());
@@ -188,69 +205,48 @@ public class ContactDetailActivity extends BaseMvpActivity<CompanyContactPresent
                 }
             });
         }
-
     }
 
     @Override
-    public void getFromType(List<DicInfo> dicInfoList) {
-        mSpinnerFromTypeList.addAll(dicInfoList);
-        spinner_from_type.setListDatas(this, mSpinnerFromTypeList);
+    public void getIndustry(List<DicInfo> dicInfoList) {
+        mSpinnerIndustryList.clear();
+        mSpinnerIndustryList.addAll(dicInfoList);
+        spinner_industry.setListDatas(this, mSpinnerIndustryList);
 
-        spinner_from_type.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+        spinner_industry.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
-                mFromType = dicInfo.getCode();
+                mIndustryType = dicInfo.getCode();
             }
         });
     }
 
-    /**
-     * 控制输入框是否可输入
-     *
-     * @param canInput
-     */
-    private void setEditTextInput(boolean canInput) {
-        tv_add_icon.setEnabled(canInput);
-        et_name.setEnabled(canInput);
-        et_job.setEnabled(canInput);
-        et_from_company_name.setEnabled(canInput);
-        spinner_from_user.getTextView().setEnabled(canInput);
-        spinner_from_type.getTextView().setEnabled(canInput);
-        et_telephone.setEnabled(canInput);
-        et_phone.setEnabled(canInput);
-        et_email.setEnabled(canInput);
-        et_address.setEnabled(canInput);
-        et_zip_address.setEnabled(canInput);
-        et_remark.setEnabled(canInput);
+    @Override
+    public void getCompanyClientDetail(CompanyClientInfo companyClientInfo) {
+        et_name.setText(companyClientInfo.getName());
+        spinner_from_user.setText(companyClientInfo.getUserNickName());
+        mFromUserId = companyClientInfo.getUserId();
+        et_from_company_name.setText(companyClientInfo.getCompanyName());
+        et_company_staff_num.setText(companyClientInfo.getIndustryName());
+        mIndustryType = companyClientInfo.getIndustry();
+        spinner_industry.setText(companyClientInfo.getIndustryName());
+        mIndustryType = companyClientInfo.getIndustry();
+        et_income.setText(companyClientInfo.getYearIncome());
+        et_phone.setText(companyClientInfo.getTel());
+        et_address.setText(companyClientInfo.getAddress());
+        et_remark.setText(companyClientInfo.getRemark());
     }
 
     @Override
-    public void getContactDetail(CompanyContactInfo companyContactInfo) {
-        if (companyContactInfo != null) {
-            et_name.setText(companyContactInfo.getName());
-            et_job.setText(companyContactInfo.getJob());
-            et_from_company_name.setText(companyContactInfo.getCompanyName());
-            spinner_from_type.setText(companyContactInfo.getFromTypeName());
-            mFromType = companyContactInfo.getFromType();
-            et_telephone.setText(companyContactInfo.getPhone());
-            et_phone.setText(companyContactInfo.getTel());
-            et_email.setText(companyContactInfo.getEmail());
-            et_address.setText(companyContactInfo.getAddress());
-            et_zip_address.setText(companyContactInfo.getMailAddress());
-            et_remark.setText(companyContactInfo.getRemark());
-        }
-    }
-
-    @Override
-    public void saveCompanyContact(BaseEntity baseEntity) {
+    public void saveCompanyClient(BaseEntity baseEntity) {
         if (baseEntity.isSuccess()) {
             String toastString = "";
-            if (TextUtils.isEmpty(mContactId)) {
-                toastString = "企业联系人创建成功";
+            if (TextUtils.isEmpty(mClientId)) {
+                toastString = "企业客户创建成功";
             } else {
-                toastString = "企业联系人修改成功";
+                toastString = "企业客户修改成功";
             }
-            EventBus.getDefault().post(new AddOrSaveCompanyContactEvent(toastString));
+            EventBus.getDefault().post(new AddOrSaveCompanyClientEvent(toastString));
             finish();
         } else {
             toastMsg(ErrorMsg.showErrorMsg(baseEntity.getReturnMsg()));

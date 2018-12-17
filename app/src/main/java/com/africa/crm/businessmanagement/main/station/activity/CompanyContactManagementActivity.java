@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
-import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyContactEvent;
+import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyClientEvent;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfoBean;
@@ -50,7 +50,7 @@ import butterknife.BindView;
  * Modification  History:
  * Why & What is modified:
  */
-public class ContactManagementActivity extends BaseRefreshMvpActivity<ContactManagementPresenter> implements ContactManagementContract.View {
+public class CompanyContactManagementActivity extends BaseRefreshMvpActivity<ContactManagementPresenter> implements ContactManagementContract.View {
     @BindView(R.id.et_name)
     EditText et_name;
     @BindView(R.id.tv_search)
@@ -82,7 +82,7 @@ public class ContactManagementActivity extends BaseRefreshMvpActivity<ContactMan
      * @param activity
      */
     public static void startActivity(Activity activity, WorkStationInfo workStationInfo) {
-        Intent intent = new Intent(activity, ContactManagementActivity.class);
+        Intent intent = new Intent(activity, CompanyContactManagementActivity.class);
         intent.putExtra("info", workStationInfo);
         activity.startActivity(intent);
     }
@@ -130,8 +130,7 @@ public class ContactManagementActivity extends BaseRefreshMvpActivity<ContactMan
 
     @Override
     protected void requestData() {
-        mPresenter.getFromType(FROM_TYPE_CODE
-        );
+        mPresenter.getFromType(FROM_TYPE_CODE);
         pullDownRefresh(page);
     }
 
@@ -169,7 +168,7 @@ public class ContactManagementActivity extends BaseRefreshMvpActivity<ContactMan
                 }
                 break;
             case R.id.ll_add:
-                ContactDetailActivity.startActivity(ContactManagementActivity.this, "");
+                CompanyContactDetailActivity.startActivity(CompanyContactManagementActivity.this, "");
                 break;
             case R.id.tv_delete:
                 mDeleteList.clear();
@@ -182,7 +181,7 @@ public class ContactManagementActivity extends BaseRefreshMvpActivity<ContactMan
                     toastMsg("尚未选择删除项");
                     return;
                 }
-                mDeleteDialog = new AlertDialog.Builder(ContactManagementActivity.this)
+                mDeleteDialog = new AlertDialog.Builder(CompanyContactManagementActivity.this)
                         .setTitle(R.string.tips)
                         .setMessage(R.string.confirm_delete)
                         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -207,6 +206,7 @@ public class ContactManagementActivity extends BaseRefreshMvpActivity<ContactMan
 
     @Override
     public void getFromType(List<DicInfo> dicInfoList) {
+        mFromTypeList.clear();
         mFromTypeList.addAll(dicInfoList);
         spinner_from_type.setListDatas(this, mFromTypeList);
 
@@ -259,7 +259,7 @@ public class ContactManagementActivity extends BaseRefreshMvpActivity<ContactMan
                             mContactListDatas.get(position).setChosen(!cb_choose.isChecked());
                             mContactListAdapter.notifyDataSetChanged();
                         } else {
-                            ContactDetailActivity.startActivity(ContactManagementActivity.this, mContactListDatas.get(position).getId());
+                            CompanyContactDetailActivity.startActivity(CompanyContactManagementActivity.this, mContactListDatas.get(position).getId());
                         }
                     }
                 });
@@ -295,8 +295,8 @@ public class ContactManagementActivity extends BaseRefreshMvpActivity<ContactMan
     }
 
     @Subscribe
-    public void Event(AddOrSaveCompanyContactEvent addOrSaveCompanyContactEvent) {
-        toastMsg(addOrSaveCompanyContactEvent.getMsg());
+    public void Event(AddOrSaveCompanyClientEvent addOrSaveCompanyClientEvent) {
+        toastMsg(addOrSaveCompanyClientEvent.getMsg());
         requestData();
     }
 
