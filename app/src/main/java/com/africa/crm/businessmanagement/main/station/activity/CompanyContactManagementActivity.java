@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -109,6 +112,26 @@ public class CompanyContactManagementActivity extends BaseRefreshMvpActivity<Con
         ll_add.setOnClickListener(this);
         tv_delete.setOnClickListener(this);
         tv_search.setOnClickListener(this);
+
+        et_name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!TextUtils.isEmpty(charSequence.toString())) {
+                    spinner_from_type.setText("");
+                    mFromType = "";
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     @Override
@@ -214,6 +237,9 @@ public class CompanyContactManagementActivity extends BaseRefreshMvpActivity<Con
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
                 mFromType = dicInfo.getCode();
+                if (!TextUtils.isEmpty(mFromType)) {
+                    et_name.setText("");
+                }
             }
         });
     }

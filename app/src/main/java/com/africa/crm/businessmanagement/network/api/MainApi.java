@@ -8,6 +8,8 @@ import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyProductInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
@@ -167,4 +169,20 @@ public interface MainApi {
     @FormUrlEncoded
     @POST("customer/save")
     Observable<BaseEntity> saveCompanyClient(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("head") String head, @Field("name") String name, @Field("industry") String industry, @Field("address") String address, @Field("workerNum") String workerNum, @Field("tel") String tel, @Field("yearIncome") String yearIncome, @Field("remark") String remark);
+
+    @FormUrlEncoded
+    @POST("product/grid")
+    Observable<BaseEntity<CompanyProductInfoBean>> getCompanyProductList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("name") String name, @Field("type") String type);
+
+    @FormUrlEncoded
+    @POST("product/deleteById")
+    Observable<BaseEntity> deleteCompanyProduct(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("product/getInfo")
+    Observable<BaseEntity<CompanyProductInfo>> getCompanyProductDetail(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("product/save")
+    Observable<BaseEntity> saveCompanyProduct(@Field("id") String id, @Field("companyId") String companyId, @Field("name") String name, @Field("code") String code, @Field("supplierName") String supplierName, @Field("makerName") String makerName, @Field("type") String type, @Field("unitPrice") String unitPrice, @Field("unit") String unit, @Field("stockNum") String stockNum, @Field("warnNum") String warnNum, @Field("remark") String remark);
 }

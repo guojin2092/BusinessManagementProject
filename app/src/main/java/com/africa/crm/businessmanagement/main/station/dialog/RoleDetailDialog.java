@@ -125,6 +125,10 @@ public class RoleDetailDialog extends Dialog implements DialogInterface {
         et_number = mDialogView.findViewById(R.id.et_number);
         et_type = mDialogView.findViewById(R.id.et_type);
         et_sort = mDialogView.findViewById(R.id.et_sort);
+        et_company_name.setEnabled(false);
+        et_number.setEnabled(false);
+        et_type.setEnabled(false);
+        et_sort.setEnabled(false);
 
         mTitle = (TextView) mDialogView.findViewById(R.id.alertTitle);
         mMessage = (TextView) mDialogView.findViewById(R.id.message);

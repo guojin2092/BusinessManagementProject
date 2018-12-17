@@ -20,7 +20,6 @@ import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.main.station.contract.UserDetailContract;
 import com.africa.crm.businessmanagement.main.station.presenter.UserDetailPresenter;
-import com.africa.crm.businessmanagement.mvp.activity.BaseEasyMvpActivity;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
 import com.africa.crm.businessmanagement.widget.MySpinner;
@@ -63,27 +62,28 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
     EditText et_address;
     @BindView(R.id.et_email)
     EditText et_email;
-    @BindView(R.id.spinner_type)
-    MySpinner spinner_type;
     @BindView(R.id.spinner_company)
     MySpinner spinner_company;
-    @BindView(R.id.spinner_state)
-    MySpinner spinner_state;
     @BindView(R.id.spinner_role)
     MySpinner spinner_role;
-
-
-    private List<DicInfo> mSpinnerTypeList = new ArrayList<>();
-    private String mType = "";
-
-    private List<DicInfo> mSpinnerStateList = new ArrayList<>();
-    private String mState = "";
 
     private List<DicInfo> mSpinnerCompanyList = new ArrayList<>();
     private String mCompanyId = "";
 
     private List<DicInfo> mSpinnerRoleList = new ArrayList<>();
     private String mRoleId = "";
+
+    @BindView(R.id.spinner_type)
+    MySpinner spinner_type;
+    private static final String CONTACT_USER_TYPE = "USERTYPE";
+    private List<DicInfo> mSpinnerUserList = new ArrayList<>();
+    private String mUserType = "";
+
+    @BindView(R.id.spinner_state)
+    MySpinner spinner_state;
+    private static final String CONTACT_STATE_TYPE = "STATE";
+    private List<DicInfo> mSpinnerStateList = new ArrayList<>();
+    private String mStateType = "";
 
     private String mHeadUrl = "";
     private String mUserId = "";
@@ -109,7 +109,7 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
         mUserId = getIntent().getStringExtra("userId");
         titlebar_name.setText("用户详情");
         tv_save.setOnClickListener(this);
-
+        spinner_type.getTextView().setEnabled(false);
         if (!TextUtils.isEmpty(mUserId)) {
             ll_password.setVisibility(View.GONE);
             titlebar_right.setText(R.string.edit);
@@ -122,25 +122,6 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
             tv_save.setVisibility(View.VISIBLE);
         }
 
-        mSpinnerTypeList.add(new DicInfo("系统管理用户", "1"));
-        mSpinnerTypeList.add(new DicInfo("企业用户", "2"));
-        spinner_type.setListDatas(getBVActivity(), mSpinnerTypeList);
-        mSpinnerStateList.add(new DicInfo("正常", "1"));
-        mSpinnerStateList.add(new DicInfo("禁用", "2"));
-        spinner_state.setListDatas(getBVActivity(), mSpinnerStateList);
-
-        spinner_type.addOnItemClickListener(new MySpinner.OnItemClickListener() {
-            @Override
-            public void onItemClick(DicInfo dicInfo, int position) {
-                mType = dicInfo.getCode();
-            }
-        });
-        spinner_state.addOnItemClickListener(new MySpinner.OnItemClickListener() {
-            @Override
-            public void onItemClick(DicInfo dicInfo, int position) {
-                mState = dicInfo.getCode();
-            }
-        });
     }
 
     @Override
@@ -155,10 +136,12 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
 
     @Override
     protected void requestData() {
-        if (!TextUtils.isEmpty(mUserId))
-            mPresenter.getUserInfo(mUserId);
+        mPresenter.getUserType(CONTACT_USER_TYPE);
+        mPresenter.getStateType(CONTACT_STATE_TYPE);
         mPresenter.getAllCompany("");
         mPresenter.getAllRoles("");
+        if (!TextUtils.isEmpty(mUserId))
+            mPresenter.getUserInfo(mUserId);
     }
 
     @Override
@@ -204,7 +187,13 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
                         return;
                     }
                 }
-                mPresenter.saveOrcreateUser(mUserId, et_account.getText().toString().trim(), mType, mRoleId, et_password.getText().toString().trim(), et_nickname.getText().toString().trim(), et_phone.getText().toString().trim(), et_address.getText().toString().trim(), et_email.getText().toString().trim(), mState, mCompanyId, mHeadUrl);
+                if (mRoleId.equals("13") || mRoleId.equals("14")) {
+                    if (TextUtils.isEmpty(mCompanyId)) {
+                        toastMsg("尚未选择所属企业");
+                        return;
+                    }
+                }
+                mPresenter.saveOrcreateUser(mUserId, et_account.getText().toString().trim(), mUserType, mRoleId, et_password.getText().toString().trim(), et_nickname.getText().toString().trim(), et_phone.getText().toString().trim(), et_address.getText().toString().trim(), et_email.getText().toString().trim(), mStateType, mCompanyId, mHeadUrl);
                 break;
         }
     }
@@ -222,16 +211,42 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
         et_phone.setEnabled(canInput);
         et_address.setEnabled(canInput);
         et_email.setEnabled(canInput);
-        spinner_type.getTextView().setEnabled(canInput);
-        spinner_company.getTextView().setEnabled(canInput);
         spinner_state.getTextView().setEnabled(canInput);
         spinner_role.getTextView().setEnabled(canInput);
     }
 
     @Override
+    public void getUserType(List<DicInfo> dicInfoList) {
+        mSpinnerUserList.clear();
+        mSpinnerUserList.addAll(dicInfoList);
+        spinner_type.setListDatas(this, mSpinnerUserList);
+
+        spinner_type.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+            @Override
+            public void onItemClick(DicInfo dicInfo, int position) {
+                mUserType = dicInfo.getCode();
+            }
+        });
+    }
+
+    @Override
+    public void getStateType(List<DicInfo> dicInfoList) {
+        mSpinnerStateList.clear();
+        mSpinnerStateList.addAll(dicInfoList);
+        spinner_state.setListDatas(this, mSpinnerStateList);
+
+        spinner_state.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+            @Override
+            public void onItemClick(DicInfo dicInfo, int position) {
+                mStateType = dicInfo.getCode();
+            }
+        });
+    }
+
+    @Override
     public void getUserInfo(UserInfo userInfo) {
-        mType = userInfo.getType();
-        mState = userInfo.getState();
+        mUserType = userInfo.getType();
+        mStateType = userInfo.getState();
         mRoleId = userInfo.getRoleId();
         mCompanyId = userInfo.getCompanyId();
         et_account.setText(userInfo.getUserName());
@@ -290,6 +305,19 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
                 @Override
                 public void onItemClick(DicInfo dicInfo, int position) {
                     mRoleId = dicInfo.getCode();
+                    if (mRoleId.equals("13") || mRoleId.equals("14")) {
+                        spinner_type.setText("企业用户");
+                        mUserType = "2";
+                        spinner_company.getTextView().setEnabled(true);
+                    } else if (mRoleId.equals("1")) {
+                        spinner_type.setText("系统用户");
+                        mUserType = "1";
+                        spinner_company.getTextView().setEnabled(false);
+                    } else {
+                        mUserType = "";
+                        spinner_type.setText("");
+                        spinner_company.getTextView().setEnabled(false);
+                    }
                 }
             });
         }

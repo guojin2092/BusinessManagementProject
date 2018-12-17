@@ -7,6 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -136,6 +139,52 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
         tv_delete.setOnClickListener(this);
         tv_search.setOnClickListener(this);
         titlebar_right.setText(R.string.delete);
+
+        et_search_username.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!TextUtils.isEmpty(charSequence.toString())) {
+                    et_search_nickname.setText("");
+                    spinner_type.setText("");
+                    mType = "";
+                    spinner_state.setText("");
+                    mState = "";
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        et_search_nickname.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!TextUtils.isEmpty(charSequence.toString())) {
+                    et_search_username.setText("");
+                    spinner_type.setText("");
+                    mType = "";
+                    spinner_state.setText("");
+                    mState = "";
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
     }
 
 
@@ -160,6 +209,12 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
                 mType = dicInfo.getCode();
+                if (!TextUtils.isEmpty(mType)) {
+                    spinner_state.setText("");
+                    mState = "";
+                    et_search_username.setText("");
+                    et_search_nickname.setText("");
+                }
             }
         });
 
@@ -167,6 +222,12 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
                 mState = dicInfo.getCode();
+                if (!TextUtils.isEmpty(mType)) {
+                    spinner_type.setText("");
+                    mType = "";
+                    et_search_username.setText("");
+                    et_search_nickname.setText("");
+                }
             }
         });
     }

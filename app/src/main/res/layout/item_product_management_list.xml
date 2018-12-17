@@ -73,7 +73,8 @@
             android:drawablePadding="10dp"
             android:text="上海"
             android:textColor="@color/B2B2B2"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:visibility="gone" />
 
     </FrameLayout>
 </LinearLayout>

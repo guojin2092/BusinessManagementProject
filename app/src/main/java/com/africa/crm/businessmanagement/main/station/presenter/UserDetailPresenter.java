@@ -25,6 +25,31 @@ import io.reactivex.functions.Consumer;
  */
 public class UserDetailPresenter extends RxPresenter<UserDetailContract.View> implements UserDetailContract.Presenter {
     @Override
+    public void getUserType(String code) {
+        addDisposable(mDataManager.getDicByCode(code)
+                .compose(RxUtils.<List<DicInfo>>ioToMain())
+                .subscribe(new Consumer<List<DicInfo>>() {
+                    @Override
+                    public void accept(List<DicInfo> dicInfoList) throws Exception {
+                        mView.getUserType(dicInfoList);
+                    }
+                }, new ComConsumer(mView)));
+
+    }
+
+    @Override
+    public void getStateType(String code) {
+        addDisposable(mDataManager.getDicByCode(code)
+                .compose(RxUtils.<List<DicInfo>>ioToMain())
+                .subscribe(new Consumer<List<DicInfo>>() {
+                    @Override
+                    public void accept(List<DicInfo> dicInfoList) throws Exception {
+                        mView.getStateType(dicInfoList);
+                    }
+                }, new ComConsumer(mView)));
+    }
+
+    @Override
     public void getUserInfo(String id) {
         addDisposable(mDataManager.getUserInfo(id)
                 .compose(RxUtils.<UserInfo>ioToMain(mView))

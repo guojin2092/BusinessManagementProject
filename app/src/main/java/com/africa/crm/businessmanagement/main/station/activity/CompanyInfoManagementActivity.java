@@ -94,7 +94,7 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
         if (mWorkStationInfo != null) {
             titlebar_name.setText(mWorkStationInfo.getWork_name());
         }
-        et_search.setHint(R.string.search_enterprise);
+        et_search.setHint("请输入企业名称查询");
         ll_add.setOnClickListener(this);
         tv_delete.setOnClickListener(this);
         titlebar_right.setText(R.string.delete);

@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.africa.crm.businessmanagement.widget.OverScrollView
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none">
@@ -108,7 +108,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="联系电话" />
+                            android:text="联系电话:" />
 
                         <EditText
                             android:id="@+id/et_phone_number"
@@ -150,7 +150,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="地址" />
+                            android:text="地址:" />
 
                         <EditText
                             android:id="@+id/et_address"
@@ -222,7 +222,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="可开账号数量" />
+                            android:text="可开账号数量:" />
 
                         <EditText
                             android:id="@+id/et_numA"
@@ -301,7 +301,7 @@
                     android:visibility="invisible" />
 
             </LinearLayout>
-        </com.africa.crm.businessmanagement.widget.OverScrollView>
+        </ScrollView>
 
         <TextView
             android:id="@+id/tv_save"

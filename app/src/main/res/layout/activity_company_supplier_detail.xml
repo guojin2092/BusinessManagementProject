@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.africa.crm.businessmanagement.widget.OverScrollView
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none">
@@ -87,7 +87,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="供应商类型" />
+                            android:text="供应商类型:" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
                             android:id="@+id/spinner_type"
@@ -119,7 +119,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="邮箱" />
+                            android:text="邮箱:" />
 
                         <EditText
                             android:id="@+id/et_email"
@@ -193,7 +193,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="邮编" />
+                            android:text="邮编:" />
 
                         <EditText
                             android:id="@+id/et_zip_code"
@@ -240,7 +240,7 @@
                     android:visibility="invisible" />
 
             </LinearLayout>
-        </com.africa.crm.businessmanagement.widget.OverScrollView>
+        </ScrollView>
 
         <TextView
             android:id="@+id/tv_save"

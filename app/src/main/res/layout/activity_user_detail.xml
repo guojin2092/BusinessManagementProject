@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.africa.crm.businessmanagement.widget.OverScrollView
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none">
@@ -201,6 +201,58 @@
 
                         <TextView
                             style="@style/product_title_black"
+                            android:text="角色：" />
+
+                        <com.africa.crm.businessmanagement.widget.MySpinner
+                            android:id="@+id/spinner_role"
+                            style="@style/product_et_blue"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"
+                            app:backgroundSelector="@drawable/background_selector2" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/product_title_black"
+                            android:text="状态：" />
+
+                        <com.africa.crm.businessmanagement.widget.MySpinner
+                            android:id="@+id/spinner_state"
+                            style="@style/product_et_blue"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"
+                            app:backgroundSelector="@drawable/background_selector2" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/product_title_black"
                             android:text="分类：" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
@@ -239,58 +291,6 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:background="@color/white"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/product_title_black"
-                            android:text="状态：" />
-
-                        <com.africa.crm.businessmanagement.widget.MySpinner
-                            android:id="@+id/spinner_state"
-                            style="@style/product_et_blue"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:paddingLeft="0dp"
-                            android:paddingTop="0dp"
-                            android:paddingBottom="0dp"
-                            app:backgroundSelector="@drawable/background_selector2" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/product_title_black"
-                            android:text="角色：" />
-
-                        <com.africa.crm.businessmanagement.widget.MySpinner
-                            android:id="@+id/spinner_role"
-                            style="@style/product_et_blue"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:paddingLeft="0dp"
-                            android:paddingTop="0dp"
-                            android:paddingBottom="0dp"
-                            app:backgroundSelector="@drawable/background_selector2" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -308,7 +308,7 @@
                     android:visibility="invisible" />
 
             </LinearLayout>
-        </com.africa.crm.businessmanagement.widget.OverScrollView>
+        </ScrollView>
 
         <TextView
             android:id="@+id/tv_save"

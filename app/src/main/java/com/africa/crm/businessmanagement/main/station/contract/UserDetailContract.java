@@ -21,6 +21,9 @@ import java.util.List;
  */
 public class UserDetailContract {
     public interface View extends BaseView {
+        void getUserType(List<DicInfo> dicInfoList);
+
+        void getStateType(List<DicInfo> dicInfoList);
 
         void getUserInfo(UserInfo userInfo);
 
@@ -32,6 +35,9 @@ public class UserDetailContract {
     }
 
     public interface Presenter extends IBasePresenter<UserDetailContract.View> {
+        void getUserType(String code);
+
+        void getStateType(String code);
 
         void getUserInfo(String id);
 

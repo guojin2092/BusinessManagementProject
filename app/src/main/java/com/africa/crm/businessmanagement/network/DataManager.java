@@ -8,6 +8,8 @@ import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyProductInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
@@ -218,6 +220,26 @@ public class DataManager implements HttpHelper {
     @Override
     public Observable<BaseEntity> saveCompanyClient(String id, String companyId, String userId, String head, String name, String industry, String address, String workerNum, String tel, String yearIncome, String remark) {
         return mHttpHelper.saveCompanyClient(id, companyId, userId, head, name, industry, address, workerNum, tel, yearIncome, remark);
+    }
+
+    @Override
+    public Observable<CompanyProductInfoBean> getCompanyProductList(int page, int rows, String companyId, String name, String type) {
+        return mHttpHelper.getCompanyProductList(page, rows, companyId, name, type);
+    }
+
+    @Override
+    public Observable<BaseEntity> deleteCompanyProduct(String id) {
+        return mHttpHelper.deleteCompanyProduct(id);
+    }
+
+    @Override
+    public Observable<CompanyProductInfo> getCompanyProductDetail(String id) {
+        return mHttpHelper.getCompanyProductDetail(id);
+    }
+
+    @Override
+    public Observable<BaseEntity> saveCompanyProduct(String id, String companyId, String name, String code, String supplierName, String makerName, String type, String unitPrice, String unit, String stockNum, String warnNum, String remark) {
+        return mHttpHelper.saveCompanyProduct(id, companyId, name, code, supplierName, makerName, type, unitPrice, unit, stockNum, warnNum, remark);
     }
 
 }

@@ -62,9 +62,12 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
     @BindView(R.id.tv_save)
     TextView tv_save;
 
+
     @BindView(R.id.spinner_type)
     MySpinner spinner_type;
-    private String mCompanyType = "2";
+    private static final String COMPANY_TYPE = "COMPANYTYPE";
+    private List<DicInfo> mSpinnerCompanyList = new ArrayList<>();
+    private String mCompanyType = "";
 
     @BindView(R.id.spinner_state)
     MySpinner spinner_state;
@@ -121,10 +124,6 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
             et_role_name.setEnabled(true);
             et_role_code.setEnabled(true);
         }
-
-        spinner_type.setText("企业用户");
-        mCompanyType = "2";
-        spinner_type.setEnabled(false);
     }
 
 
@@ -135,6 +134,7 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
 
     @Override
     protected void requestData() {
+        mPresenter.getCompanyType(COMPANY_TYPE);
         mPresenter.getState(STATE_CODE);
         mPresenter.getAllRoles("");
         if (!TextUtils.isEmpty(mCompanyId)) {
@@ -162,6 +162,12 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
                     toastMsg("尚未填写用户名");
                     return;
                 }
+                if (TextUtils.isEmpty(mCompanyId)) {
+                    if (TextUtils.isEmpty(et_password.getText().toString().trim())) {
+                        toastMsg("尚未填写密码");
+                        return;
+                    }
+                }
                 if (TextUtils.isEmpty(mRoleId)) {
                     toastMsg("尚未选择角色分类");
                     return;
@@ -173,12 +179,6 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
                 if (TextUtils.isEmpty(mState)) {
                     toastMsg("尚未选择企业状态");
                     return;
-                }
-                if (TextUtils.isEmpty(mCompanyId)) {
-                    if (TextUtils.isEmpty(et_password.getText().toString().trim())) {
-                        toastMsg("尚未填写密码");
-                        return;
-                    }
                 }
                 String ownCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
                 mPresenter.saveCompanyAccount(mCompanyId, et_username.getText().toString().trim(), mCompanyType, mRoleId, et_password.getText().toString().trim(), et_nickname.getText().toString().trim(), et_phone.getText().toString().trim(), et_address.getText().toString().trim(), et_email.getText().toString().trim(), mState, ownCompanyId, mHeadUrl);
@@ -203,6 +203,20 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
     }
 
     @Override
+    public void getCompanyType(List<DicInfo> dicInfoList) {
+        mSpinnerCompanyList.clear();
+        mSpinnerCompanyList.addAll(dicInfoList);
+        spinner_type.setListDatas(this, mSpinnerCompanyList);
+
+        spinner_type.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+            @Override
+            public void onItemClick(DicInfo dicInfo, int position) {
+                mCompanyType = dicInfo.getCode();
+            }
+        });
+    }
+
+    @Override
     public void getState(List<DicInfo> dicInfoList) {
         mSpinnerStateList.clear();
         mSpinnerStateList.addAll(dicInfoList);
@@ -219,22 +233,26 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
     @Override
     public void getAllRoles(final List<RoleInfoBean> roleInfoBeanList) {
         mSpinnerRoleList.clear();
-        if (!ListUtils.isEmpty(roleInfoBeanList)) {
-            for (RoleInfoBean roleInfoBean : roleInfoBeanList) {
-                DicInfo dicInfo = new DicInfo(roleInfoBean.getTypeName(), roleInfoBean.getId());
-                mSpinnerRoleList.add(dicInfo);
-            }
-            spinner_role.setListDatas(getBVActivity(), mSpinnerRoleList);
-            spinner_role.addOnItemClickListener(new MySpinner.OnItemClickListener() {
-                @Override
-                public void onItemClick(DicInfo dicInfo, int position) {
-                    et_role_code.setText(roleInfoBeanList.get(position).getRoleCode());
-                    et_role_name.setText(roleInfoBeanList.get(position).getRoleName());
-                    mRoleId = dicInfo.getCode();
+        if (roleInfoBeanList.size() == 3) {
+            mSpinnerRoleList.add(new DicInfo(roleInfoBeanList.get(0).getRoleName(), roleInfoBeanList.get(0).getId()));
+            mSpinnerRoleList.add(new DicInfo(roleInfoBeanList.get(1).getRoleName(), roleInfoBeanList.get(1).getId()));
+        } else {
+            if (!ListUtils.isEmpty(roleInfoBeanList)) {
+                for (RoleInfoBean roleInfoBean : roleInfoBeanList) {
+                    DicInfo dicInfo = new DicInfo(roleInfoBean.getTypeName(), roleInfoBean.getId());
+                    mSpinnerRoleList.add(dicInfo);
                 }
-            });
+            }
         }
-
+        spinner_role.setListDatas(getBVActivity(), mSpinnerRoleList);
+        spinner_role.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+            @Override
+            public void onItemClick(DicInfo dicInfo, int position) {
+                et_role_code.setText(roleInfoBeanList.get(position).getRoleCode());
+                et_role_name.setText(roleInfoBeanList.get(position).getRoleName());
+                mRoleId = dicInfo.getCode();
+            }
+        });
     }
 
     @Override

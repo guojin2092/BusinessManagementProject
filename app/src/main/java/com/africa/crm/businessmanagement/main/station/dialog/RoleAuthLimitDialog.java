@@ -25,6 +25,7 @@ import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.gitonway.lee.niftymodaldialogeffects.lib.ColorUtils;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.gitonway.lee.niftymodaldialogeffects.lib.effects.BaseEffects;
+import com.infrastructure.utils.ScreenUtil;
 
 import java.util.List;
 
@@ -83,10 +84,10 @@ public class RoleAuthLimitDialog extends Dialog implements DialogInterface {
     public RoleAuthLimitDialog(Context context, int theme, List<RoleLimitInfoBean> list) {
         super(context, theme);
         init(context);
-        setLimitDatas(list);
+        setLimitDatas(context, list);
     }
 
-    private void setLimitDatas(List<RoleLimitInfoBean> authInfoBeanList) {
+    private void setLimitDatas(Context context, List<RoleLimitInfoBean> authInfoBeanList) {
         if (!ListUtils.isEmpty(authInfoBeanList)) {
             mAuthLimitListAdapter = new AuthLimitListAdapter(authInfoBeanList);
             rv_auth_limit.setAdapter(mAuthLimitListAdapter);
@@ -95,6 +96,14 @@ public class RoleAuthLimitDialog extends Dialog implements DialogInterface {
             rv_auth_limit.addItemDecoration(new LineItemDecoration(getContext(), LinearLayoutManager.VERTICAL, 0, ContextCompat.getColor(getContext(), R.color.transparent)));
             rv_auth_limit.setHasFixedSize(true);
             rv_auth_limit.setNestedScrollingEnabled(false);
+
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) rv_auth_limit.getLayoutParams();
+            if (authInfoBeanList.size() > 5) {
+                lp.height = ScreenUtil.getScreenHeight(context) * 3 / 7;
+            } else {
+                lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            }
+            rv_auth_limit.setLayoutParams(lp);
 
         }
 

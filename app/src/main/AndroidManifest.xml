@@ -74,11 +74,11 @@
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".main.station.activity.ProductManagementActivity"
+            android:name=".main.station.activity.CompanyProductManagementActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".main.station.activity.ProductDetailActivity"
+            android:name=".main.station.activity.CompanyProductDetailActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity

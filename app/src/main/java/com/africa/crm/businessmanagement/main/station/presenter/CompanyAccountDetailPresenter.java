@@ -25,6 +25,18 @@ import io.reactivex.functions.Consumer;
 public class CompanyAccountDetailPresenter extends RxPresenter<CompanyAccountDetailContract.View> implements CompanyAccountDetailContract.Presenter {
 
     @Override
+    public void getCompanyType(String code) {
+        addDisposable(mDataManager.getDicByCode(code)
+                .compose(RxUtils.<List<DicInfo>>ioToMain())
+                .subscribe(new Consumer<List<DicInfo>>() {
+                    @Override
+                    public void accept(List<DicInfo> dicInfoList) throws Exception {
+                        mView.getCompanyType(dicInfoList);
+                    }
+                }, new ComConsumer(mView)));
+    }
+
+    @Override
     public void getState(String code) {
         addDisposable(mDataManager.getDicByCode(code)
                 .compose(RxUtils.<List<DicInfo>>ioToMain())
