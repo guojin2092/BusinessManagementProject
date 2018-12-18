@@ -298,10 +298,10 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="企业类型：" />
+                            android:text="用户类型：" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
-                            android:id="@+id/spinner_type"
+                            android:id="@+id/spinner_user_type"
                             style="@style/product_et_blue"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"

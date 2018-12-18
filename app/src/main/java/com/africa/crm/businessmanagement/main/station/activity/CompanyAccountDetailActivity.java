@@ -63,11 +63,11 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
     TextView tv_save;
 
 
-    @BindView(R.id.spinner_type)
-    MySpinner spinner_type;
-    private static final String COMPANY_TYPE = "COMPANYTYPE";
-    private List<DicInfo> mSpinnerCompanyList = new ArrayList<>();
-    private String mCompanyType = "";
+    @BindView(R.id.spinner_user_type)
+    MySpinner spinner_user_type;
+    private static final String USER_TYPE = "USERTYPE";
+    private List<DicInfo> mSpinnerUserTypeList = new ArrayList<>();
+    private String mUserType = "";
 
     @BindView(R.id.spinner_state)
     MySpinner spinner_state;
@@ -106,7 +106,9 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
         mCompanyId = getIntent().getStringExtra("companyId");
         titlebar_name.setText("企业账号详情");
         tv_save.setOnClickListener(this);
-
+        spinner_user_type.getTextView().setEnabled(false);
+        spinner_user_type.setText("企业用户");
+        mUserType = "2";
         if (!TextUtils.isEmpty(mCompanyId)) {
             ll_password.setVisibility(View.GONE);
             titlebar_right.setText(R.string.edit);
@@ -134,7 +136,7 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
 
     @Override
     protected void requestData() {
-        mPresenter.getCompanyType(COMPANY_TYPE);
+//        mPresenter.getCompanyType(USER_TYPE);
         mPresenter.getState(STATE_CODE);
         mPresenter.getAllRoles("");
         if (!TextUtils.isEmpty(mCompanyId)) {
@@ -172,16 +174,16 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
                     toastMsg("尚未选择角色分类");
                     return;
                 }
-                if (TextUtils.isEmpty(mCompanyType)) {
-                    toastMsg("尚未选择企业类型");
+                /*if (TextUtils.isEmpty(mUserType)) {
+                    toastMsg("尚未选择用户类型");
                     return;
-                }
+                }*/
                 if (TextUtils.isEmpty(mState)) {
                     toastMsg("尚未选择企业状态");
                     return;
                 }
                 String ownCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
-                mPresenter.saveCompanyAccount(mCompanyId, et_username.getText().toString().trim(), mCompanyType, mRoleId, et_password.getText().toString().trim(), et_nickname.getText().toString().trim(), et_phone.getText().toString().trim(), et_address.getText().toString().trim(), et_email.getText().toString().trim(), mState, ownCompanyId, mHeadUrl);
+                mPresenter.saveCompanyAccount(mCompanyId, et_username.getText().toString().trim(), mUserType, mRoleId, et_password.getText().toString().trim(), et_nickname.getText().toString().trim(), et_phone.getText().toString().trim(), et_address.getText().toString().trim(), et_email.getText().toString().trim(), mState, ownCompanyId, mHeadUrl);
                 break;
         }
     }
@@ -203,17 +205,17 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
     }
 
     @Override
-    public void getCompanyType(List<DicInfo> dicInfoList) {
-        mSpinnerCompanyList.clear();
-        mSpinnerCompanyList.addAll(dicInfoList);
-        spinner_type.setListDatas(this, mSpinnerCompanyList);
+    public void getUserType(List<DicInfo> dicInfoList) {
+        /*mSpinnerUserTypeList.clear();
+        mSpinnerUserTypeList.addAll(dicInfoList);
+        spinner_user_type.setListDatas(this, mSpinnerUserTypeList);
 
-        spinner_type.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+        spinner_user_type.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
-                mCompanyType = dicInfo.getCode();
+                mUserType = dicInfo.getCode();
             }
-        });
+        });*/
     }
 
     @Override
@@ -267,8 +269,8 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
         et_address.setText(companyAccountInfo.getAddress());
         et_email.setText(companyAccountInfo.getEmail());
         et_phone.setText(companyAccountInfo.getPhone());
-        spinner_type.setText(companyAccountInfo.getTypeName());
-        mCompanyType = companyAccountInfo.getType();
+        spinner_user_type.setText(companyAccountInfo.getTypeName());
+        mUserType = companyAccountInfo.getType();
         spinner_state.setText(companyAccountInfo.getStateName());
         mState = companyAccountInfo.getState();
     }

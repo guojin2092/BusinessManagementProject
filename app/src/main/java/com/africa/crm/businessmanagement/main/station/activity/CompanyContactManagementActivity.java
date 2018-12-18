@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyClientEvent;
+import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyContactEvent;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfoBean;
@@ -321,8 +322,8 @@ public class CompanyContactManagementActivity extends BaseRefreshMvpActivity<Con
     }
 
     @Subscribe
-    public void Event(AddOrSaveCompanyClientEvent addOrSaveCompanyClientEvent) {
-        toastMsg(addOrSaveCompanyClientEvent.getMsg());
+    public void Event(AddOrSaveCompanyContactEvent addOrSaveCompanyContactEvent) {
+        toastMsg(addOrSaveCompanyContactEvent.getMsg());
         requestData();
     }
 
