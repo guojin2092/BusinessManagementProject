@@ -6,7 +6,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.main.bean.TradingOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -21,11 +21,11 @@ import java.util.List;
  * Modification  History:
  * Why & What is modified:
  */
-public class QuotationListAdapter extends BaseQuickAdapter<TradingOrderInfoBean, BaseViewHolder> {
+public class QuotationListAdapter extends BaseQuickAdapter<CompanyQuotationInfo, BaseViewHolder> {
     private boolean mIsDeleted = false;
 
-    public QuotationListAdapter(@Nullable List<TradingOrderInfoBean> data) {
-        super(R.layout.item_quotation_list, data);
+    public QuotationListAdapter(@Nullable List<CompanyQuotationInfo> data) {
+        super(R.layout.item_company_quotation_list, data);
     }
 
     public boolean ismIsDeleted() {
@@ -38,24 +38,20 @@ public class QuotationListAdapter extends BaseQuickAdapter<TradingOrderInfoBean,
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, TradingOrderInfoBean item) {
-        TextView tv_company_name = helper.getView(R.id.tv_company_name);
-        TextView tv_quoter = helper.getView(R.id.tv_quoter);
-        TextView tv_date = helper.getView(R.id.tv_date);
+    protected void convert(BaseViewHolder helper, CompanyQuotationInfo item) {
+        TextView tv_quotation_name = helper.getView(R.id.tv_quotation_name);
+        TextView tv_customer_name = helper.getView(R.id.tv_customer_name);
+        TextView tv_validity_date = helper.getView(R.id.tv_validity_date);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
-        tv_company_name.setText(item.getCompany());
-        tv_quoter.setText(item.getQuoter());
-        tv_date.setText(item.getDate());
+        tv_quotation_name.setText(item.getName());
+        tv_customer_name.setText(item.getCustomerName());
+        tv_validity_date.setText(item.getTermOfValidity());
+        cb_choose.setChecked(item.isChosen());
         if (mIsDeleted) {
             cb_choose.setVisibility(View.VISIBLE);
         } else {
             cb_choose.setVisibility(View.GONE);
-        }
-        if (item.isChosen()) {
-            cb_choose.setChecked(true);
-        } else {
-            cb_choose.setChecked(false);
         }
     }
 

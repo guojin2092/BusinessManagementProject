@@ -21,13 +21,13 @@
         android:layout_weight="1">
 
         <TextView
-            android:id="@+id/tv_company_name"
+            android:id="@+id/tv_sales_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
             android:layout_marginTop="45dp"
             android:layout_marginBottom="45dp"
-            android:text="云茂地产"
+            android:text="销售单名称"
             android:textColor="@color/A606060"
             android:textSize="22sp"
             android:textStyle="bold" />
@@ -52,7 +52,7 @@
             android:id="@+id/tv_money"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="187，000.00"
+            android:text="1870"
             android:textColor="@color/A586683"
             android:textSize="20sp" />
 
@@ -65,12 +65,12 @@
         android:layout_weight="1">
 
         <TextView
-            android:id="@+id/tv_quoter"
+            android:id="@+id/tv_customer_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
             android:drawablePadding="10dp"
-            android:text="订单所有者·"
+            android:text="客户名称"
             android:textColor="@color/B2B2B2"
             android:textSize="20sp" />
 

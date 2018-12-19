@@ -10,6 +10,10 @@ import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
@@ -114,5 +118,21 @@ public interface HttpHelper {
     Observable<CompanyProductInfo> getCompanyProductDetail(String id);
 
     Observable<BaseEntity> saveCompanyProduct(String id, String companyId, String name, String code, String supplierName, String makerName, String type, String unitPrice, String unit, String stockNum, String warnNum, String remark);
+
+    Observable<CompanyQuotationInfoBean> getCompanyQuotationList(int page, int rows, String companyId, String userId, String name, String createTimes, String createTimee);
+
+    Observable<BaseEntity> deleteCompanyQuotation(String id);
+
+    Observable<CompanyQuotationInfo> getCompanyQuotationDetail(String id);
+
+    Observable<BaseEntity> saveCompanyQuotation(String id, String companyId, String userId, String name, String customerName, String contactName, String termOfValidity, String sendAddress, String sendAddressZipCode, String destinationAddress, String destinationAddressZipCode, String products, String clause, String remark);
+
+    Observable<CompanySalesOrderInfoBean> getCompanySalesOrderList(int page, int rows, String companyId, String userId, String name, String state, String createTimes, String createTimee);
+
+    Observable<BaseEntity> deleteCompanySalesOrder(String id);
+
+    Observable<CompanySalesOrderInfo> getCompanySalesOrderDetail(String id);
+
+    Observable<BaseEntity> saveCompanySalesOrder(String id, String companyId, String userId, String name, String customerName, String contactName, String saleCommission, String state, String sendAddress, String sendAddressZipCode, String destinationAddress, String destinationAddressZipCode, String products, String clause, String remark);
 
 }

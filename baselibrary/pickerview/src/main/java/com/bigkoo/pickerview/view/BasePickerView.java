@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
@@ -55,6 +56,7 @@ public class BasePickerView {
     protected View clickView;//是通过哪个View弹出的
 
     private boolean isAnim = true;
+
     public BasePickerView(Context context) {
         this.context = context;
 
@@ -117,8 +119,8 @@ public class BasePickerView {
 
 
     /**
-     * @param v (是通过哪个View弹出的)
-     * @param isAnim  是否显示动画效果
+     * @param v      (是通过哪个View弹出的)
+     * @param isAnim 是否显示动画效果
      */
     public void show(View v, boolean isAnim) {
         this.clickView = v;
@@ -161,7 +163,7 @@ public class BasePickerView {
      */
     private void onAttached(View view) {
         decorView.addView(view);
-        if(isAnim){
+        if (isAnim) {
             contentContainer.startAnimation(inAnim);
         }
     }
@@ -189,7 +191,7 @@ public class BasePickerView {
                 return;
             }
 
-            if (isAnim){
+            if (isAnim) {
                 //消失动画
                 outAnim.setAnimationListener(new Animation.AnimationListener() {
                     @Override
@@ -336,6 +338,15 @@ public class BasePickerView {
                     }
                 }
             });
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM);
+            params.leftMargin = 0;
+            params.rightMargin = 0;
+            contentContainer.setLayoutParams(params);
+            Window dialogWindow = mDialog.getWindow();
+            if (dialogWindow != null) {
+                dialogWindow.setWindowAnimations(R.style.picker_view_slide_anim);//修改动画样式
+                dialogWindow.setGravity(Gravity.BOTTOM);//改成Bottom,底部显示
+            }
         }
 
     }
@@ -350,6 +361,14 @@ public class BasePickerView {
         if (mDialog != null) {
             mDialog.dismiss();
         }
+    }
+
+    public ViewGroup getDialogContainerLayout() {
+        return contentContainer;
+    }
+
+    public Dialog getDialog() {
+        return mDialog;
     }
 
     public boolean isDialog() {

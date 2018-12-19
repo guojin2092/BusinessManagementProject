@@ -10,6 +10,10 @@ import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
@@ -185,4 +189,36 @@ public interface MainApi {
     @FormUrlEncoded
     @POST("product/save")
     Observable<BaseEntity> saveCompanyProduct(@Field("id") String id, @Field("companyId") String companyId, @Field("name") String name, @Field("code") String code, @Field("supplierName") String supplierName, @Field("makerName") String makerName, @Field("type") String type, @Field("unitPrice") String unitPrice, @Field("unit") String unit, @Field("stockNum") String stockNum, @Field("warnNum") String warnNum, @Field("remark") String remark);
+
+    @FormUrlEncoded
+    @POST("quotationOrder/grid")
+    Observable<BaseEntity<CompanyQuotationInfoBean>> getCompanyQuotationList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("createTimes") String createTimes, @Field("createTimee") String createTimee);
+
+    @FormUrlEncoded
+    @POST("quotationOrder/deleteById")
+    Observable<BaseEntity> deleteCompanyQuotation(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("quotationOrder/getInfo")
+    Observable<BaseEntity<CompanyQuotationInfo>> getCompanyQuotationDetail(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("quotationOrder/save")
+    Observable<BaseEntity> saveCompanyQuotation(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("customerName") String customerName, @Field("contactName") String contactName, @Field("termOfValidity") String termOfValidity, @Field("sendAddress") String sendAddress, @Field("sendAddressZipCode") String sendAddressZipCode, @Field("destinationAddress") String destinationAddress, @Field("destinationAddressZipCode") String destinationAddressZipCode, @Field("products") String products, @Field("clause") String clause, @Field("remark") String remark);
+
+    @FormUrlEncoded
+    @POST("salesOrder/grid")
+    Observable<BaseEntity<CompanySalesOrderInfoBean>> getCompanySalesOrderList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("state") String state, @Field("createTimes") String createTimes, @Field("createTimee") String createTimee);
+
+    @FormUrlEncoded
+    @POST("salesOrder/deleteById")
+    Observable<BaseEntity> deleteCompanySalesOrder(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("salesOrder/getInfo")
+    Observable<BaseEntity<CompanySalesOrderInfo>> getCompanySalesOrderDetail(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("salesOrder/save")
+    Observable<BaseEntity> saveCompanySalesOrder(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("customerName") String customerName, @Field("contactName") String contactName, @Field("saleCommission") String saleCommission, @Field("state") String state, @Field("sendAddress") String sendAddress, @Field("sendAddressZipCode") String sendAddressZipCode, @Field("destinationAddress") String destinationAddress, @Field("destinationAddressZipCode") String destinationAddressZipCode, @Field("products") String products, @Field("clause") String clause, @Field("remark") String remark);
 }

@@ -98,19 +98,19 @@
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".main.station.activity.QuotationManagementActivity"
+            android:name=".main.station.activity.CompanyQuotationManagementActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".main.station.activity.QuotationDetailActivity"
+            android:name=".main.station.activity.CompanyQuotationDetailActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".main.station.activity.SalesOrderManagementActivity"
+            android:name=".main.station.activity.CompanySalesOrderManagementActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".main.station.activity.SalesDetailActivity"
+            android:name=".main.station.activity.CompanySaleOrdersDetailActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity

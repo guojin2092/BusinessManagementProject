@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 /**
  * Project：BusinessManagementProject
@@ -30,11 +31,11 @@ public class KeyboardUtil {
     /**
      * 清空输入框
      *
-     * @param editText
+     * @param textView
      */
-    public static void clearInputBox(EditText editText) {
-        if (!TextUtils.isEmpty(editText.getText().toString().trim())) {
-            editText.setText("");
+    public static void clearInputBox(TextView textView) {
+        if (!TextUtils.isEmpty(textView.getText().toString().trim())) {
+            textView.setText("");
         }
     }
 }

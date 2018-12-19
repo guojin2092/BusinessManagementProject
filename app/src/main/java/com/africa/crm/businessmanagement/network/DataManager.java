@@ -10,6 +10,10 @@ import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
@@ -240,6 +244,46 @@ public class DataManager implements HttpHelper {
     @Override
     public Observable<BaseEntity> saveCompanyProduct(String id, String companyId, String name, String code, String supplierName, String makerName, String type, String unitPrice, String unit, String stockNum, String warnNum, String remark) {
         return mHttpHelper.saveCompanyProduct(id, companyId, name, code, supplierName, makerName, type, unitPrice, unit, stockNum, warnNum, remark);
+    }
+
+    @Override
+    public Observable<CompanyQuotationInfoBean> getCompanyQuotationList(int page, int rows, String companyId, String userId, String name, String createTimes, String createTimee) {
+        return mHttpHelper.getCompanyQuotationList(page, rows, companyId, userId, name, createTimes, createTimee);
+    }
+
+    @Override
+    public Observable<BaseEntity> deleteCompanyQuotation(String id) {
+        return mHttpHelper.deleteCompanyQuotation(id);
+    }
+
+    @Override
+    public Observable<CompanyQuotationInfo> getCompanyQuotationDetail(String id) {
+        return mHttpHelper.getCompanyQuotationDetail(id);
+    }
+
+    @Override
+    public Observable<BaseEntity> saveCompanyQuotation(String id, String companyId, String userId, String name, String customerName, String contactName, String termOfValidity, String sendAddress, String sendAddressZipCode, String destinationAddress, String destinationAddressZipCode, String products, String clause, String remark) {
+        return mHttpHelper.saveCompanyQuotation(id, companyId, userId, name, customerName, contactName, termOfValidity, sendAddress, sendAddressZipCode, destinationAddress, destinationAddressZipCode, products, clause, remark);
+    }
+
+    @Override
+    public Observable<CompanySalesOrderInfoBean> getCompanySalesOrderList(int page, int rows, String companyId, String userId, String name, String state, String createTimes, String createTimee) {
+        return mHttpHelper.getCompanySalesOrderList(page, rows, companyId, userId, name, state, createTimes, createTimee);
+    }
+
+    @Override
+    public Observable<BaseEntity> deleteCompanySalesOrder(String id) {
+        return mHttpHelper.deleteCompanySalesOrder(id);
+    }
+
+    @Override
+    public Observable<CompanySalesOrderInfo> getCompanySalesOrderDetail(String id) {
+        return mHttpHelper.getCompanySalesOrderDetail(id);
+    }
+
+    @Override
+    public Observable<BaseEntity> saveCompanySalesOrder(String id, String companyId, String userId, String name, String customerName, String contactName, String saleCommission, String state, String sendAddress, String sendAddressZipCode, String destinationAddress, String destinationAddressZipCode, String products, String clause, String remark) {
+        return mHttpHelper.saveCompanySalesOrder(id, companyId, userId, name, customerName, contactName, saleCommission, state, sendAddress, sendAddressZipCode, destinationAddress, destinationAddressZipCode, products, clause, remark);
     }
 
 }
