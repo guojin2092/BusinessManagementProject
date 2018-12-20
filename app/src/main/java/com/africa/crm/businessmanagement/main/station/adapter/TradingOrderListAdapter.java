@@ -6,7 +6,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.main.bean.TradingOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfo;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -21,10 +21,10 @@ import java.util.List;
  * Modification  History:
  * Why & What is modified:
  */
-public class TradingOrderListAdapter extends BaseQuickAdapter<TradingOrderInfoBean, BaseViewHolder> {
+public class TradingOrderListAdapter extends BaseQuickAdapter<CompanyTradingOrderInfo, BaseViewHolder> {
     private boolean mIsDeleted = false;
 
-    public TradingOrderListAdapter(@Nullable List<TradingOrderInfoBean> data) {
+    public TradingOrderListAdapter(@Nullable List<CompanyTradingOrderInfo> data) {
         super(R.layout.item_trading_order_list, data);
     }
 
@@ -38,24 +38,20 @@ public class TradingOrderListAdapter extends BaseQuickAdapter<TradingOrderInfoBe
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, TradingOrderInfoBean item) {
-        TextView tv_company_name = helper.getView(R.id.tv_company_name);
+    protected void convert(BaseViewHolder helper, CompanyTradingOrderInfo item) {
+        TextView tv_order_name = helper.getView(R.id.tv_order_name);
         TextView tv_money = helper.getView(R.id.tv_money);
-        TextView tv_date = helper.getView(R.id.tv_date);
+        TextView tv_clue_source = helper.getView(R.id.tv_clue_source);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
-        tv_company_name.setText(item.getCompany());
-        tv_money.setText(item.getMoney());
-        tv_date.setText(item.getDate());
+        tv_order_name.setText(item.getName());
+        tv_money.setText(item.getPrice());
+        tv_clue_source.setText(item.getClueSource());
+        cb_choose.setChecked(item.isChosen());
         if (mIsDeleted) {
             cb_choose.setVisibility(View.VISIBLE);
         } else {
             cb_choose.setVisibility(View.GONE);
-        }
-        if (item.isChosen()) {
-            cb_choose.setChecked(true);
-        } else {
-            cb_choose.setChecked(false);
         }
     }
 

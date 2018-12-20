@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.africa.crm.businessmanagement.widget.OverScrollView
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none">
@@ -39,77 +39,12 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="联系人所有者：" />
+                            android:text="交易单名称：" />
 
-                        <TextView
-                            style="@style/product_title_blue"
-                            android:drawableRight="@drawable/iv_arrow_down"
-                            android:drawablePadding="@dimen/activity_horizontal_margin"
-                            android:paddingLeft="0dp"
-                            android:text="姚" />
-
+                        <EditText
+                            android:id="@+id/et_order_name"
+                            style="@style/product_et_blue" />
                     </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/product_title_black"
-                            android:text="金额（¥）：" />
-
-                        <TextView
-                            style="@style/product_title_blue"
-                            android:paddingLeft="0dp"
-                            android:text="10000" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:background="@color/white"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/product_title_black"
-                            android:text="交易名称：" />
-
-                        <EditText style="@style/product_et_blue" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/product_title_black"
-                            android:text="预计成交时间：" />
-
-                        <EditText style="@style/product_et_blue" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:background="@color/white"
-                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -121,7 +56,9 @@
                             style="@style/product_title_black"
                             android:text="客户名称：" />
 
-                        <EditText style="@style/product_et_blue" />
+                        <EditText
+                            android:id="@+id/et_customer_name"
+                            style="@style/product_et_blue" />
 
                     </LinearLayout>
 
@@ -133,15 +70,13 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="阶段：" />
+                            android:text="联系人名称：" />
 
-                        <TextView
-                            style="@style/product_title_blue"
-                            android:drawableRight="@drawable/iv_arrow_down"
-                            android:drawablePadding="@dimen/activity_horizontal_margin"
-                            android:paddingLeft="0dp" />
-
+                        <EditText
+                            android:id="@+id/et_contact_name"
+                            style="@style/product_et_blue" />
                     </LinearLayout>
+
 
                 </LinearLayout>
 
@@ -160,45 +95,12 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="类型：" />
+                            android:text="金额：" />
 
-                        <EditText style="@style/product_et_blue" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/product_title_black"
-                            android:text="可能性：" />
-
-                        <EditText style="@style/product_et_blue" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:background="@color/white"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/product_title_black"
-                            android:text="下一步：" />
-
-                        <EditText style="@style/product_et_blue" />
+                        <EditText
+                            android:id="@+id/et_money"
+                            style="@style/product_et_blue"
+                            android:inputType="number" />
 
                     </LinearLayout>
 
@@ -210,9 +112,12 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="预计收益（¥）：" />
+                            android:text="预计收益：" />
 
-                        <EditText style="@style/product_et_blue" />
+                        <EditText
+                            android:id="@+id/et_income"
+                            style="@style/product_et_blue"
+                            android:inputType="number" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -234,7 +139,9 @@
                             style="@style/product_title_black"
                             android:text="线索来源：" />
 
-                        <EditText style="@style/product_et_blue" />
+                        <EditText
+                            android:id="@+id/et_thread_from"
+                            style="@style/product_et_blue" />
 
                     </LinearLayout>
 
@@ -246,36 +153,15 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="市场活动源：" />
+                            android:text="可能性(%)：" />
 
-                        <EditText style="@style/product_et_blue" />
+                        <EditText
+                            android:id="@+id/et_possibility"
+                            style="@style/product_et_blue"
+                            android:inputType="number" />
                     </LinearLayout>
 
                 </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:background="@color/white"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/product_title_black"
-                            android:text="联系人姓名：" />
-
-                        <EditText style="@style/product_et_blue" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
 
                 <TextView
                     style="@style/product_title_blue"
@@ -289,6 +175,7 @@
                     android:orientation="horizontal">
 
                     <EditText
+                        android:id="@+id/et_remark"
                         style="@style/product_et_blue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -314,7 +201,7 @@
                     android:visibility="invisible" />
 
             </LinearLayout>
-        </com.africa.crm.businessmanagement.widget.OverScrollView>
+        </ScrollView>
 
         <TextView
             android:id="@+id/tv_save"
@@ -331,6 +218,10 @@
             android:textColor="@color/white"
             android:textSize="18sp"
             android:visibility="gone" />
+
+        <include layout="@layout/layout_request_no_data" />
+
+        <include layout="@layout/layout_request_network_error" />
 
     </FrameLayout>
 

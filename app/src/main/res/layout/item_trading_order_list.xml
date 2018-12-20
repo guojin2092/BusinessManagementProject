@@ -21,13 +21,13 @@
         android:layout_weight="1">
 
         <TextView
-            android:id="@+id/tv_company_name"
+            android:id="@+id/tv_order_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
             android:layout_marginTop="45dp"
             android:layout_marginBottom="45dp"
-            android:text="云茂地产"
+            android:text="交易单名称"
             android:textColor="@color/A606060"
             android:textSize="22sp"
             android:textStyle="bold" />
@@ -44,7 +44,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="交易（¥）："
+            android:text="金额（¥）："
             android:textColor="@color/A586683"
             android:textSize="20sp" />
 
@@ -65,12 +65,12 @@
         android:layout_weight="1">
 
         <TextView
-            android:id="@+id/tv_date"
+            android:id="@+id/tv_clue_source"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
             android:drawablePadding="10dp"
-            android:text="2018-12-1"
+            android:text="线索来源"
             android:textColor="@color/B2B2B2"
             android:textSize="20sp" />
 

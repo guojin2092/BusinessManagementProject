@@ -18,18 +18,18 @@ import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
-import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyQuotationEvent;
+import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyTradingOrderEvent;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
-import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
-import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.UserInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
-import com.africa.crm.businessmanagement.main.station.adapter.QuotationListAdapter;
-import com.africa.crm.businessmanagement.main.station.contract.CompanyQuotationContract;
-import com.africa.crm.businessmanagement.main.station.presenter.CompanyQuotationPresenter;
+import com.africa.crm.businessmanagement.main.station.adapter.TradingOrderListAdapter;
+import com.africa.crm.businessmanagement.main.station.contract.CompanyTradingOrderContract;
+import com.africa.crm.businessmanagement.main.station.presenter.CompanyTradingOrderPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
 import com.africa.crm.businessmanagement.widget.KeyboardUtil;
@@ -58,7 +58,7 @@ import butterknife.BindView;
  * Modification  History:
  * Why & What is modified:
  */
-public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<CompanyQuotationPresenter> implements CompanyQuotationContract.View {
+public class CompanyTradingOrderManagementActivity extends BaseRefreshMvpActivity<CompanyTradingOrderPresenter> implements CompanyTradingOrderContract.View {
     @BindView(R.id.ll_manager)
     LinearLayout ll_manager;
     @BindView(R.id.et_quotation_name_a)
@@ -84,9 +84,9 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
-    private QuotationListAdapter mQuotationListAdapter;
-    private List<CompanyQuotationInfo> mDeleteList = new ArrayList<>();
-    private List<CompanyQuotationInfo> mCompanyQuotationInfoList = new ArrayList<>();
+    private TradingOrderListAdapter mTradingOrderListAdapter;
+    private List<CompanyTradingOrderInfo> mDeleteList = new ArrayList<>();
+    private List<CompanyTradingOrderInfo> mTradingOrderInfoBeanList = new ArrayList<>();
 
     private WorkStationInfo mWorkStationInfo;
     private boolean mShowCheckBox = false;
@@ -97,12 +97,11 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
     private TimePickerView pvStartTime, pvEndTime;
     private Date mStartDate, mEndDate;
 
-
     /**
      * @param activity
      */
     public static void startActivity(Activity activity, WorkStationInfo workStationInfo) {
-        Intent intent = new Intent(activity, CompanyQuotationManagementActivity.class);
+        Intent intent = new Intent(activity, CompanyTradingOrderManagementActivity.class);
         intent.putExtra("info", workStationInfo);
         activity.startActivity(intent);
     }
@@ -115,7 +114,7 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
 
     @Override
     public void setView(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_company_quotation_management);
+        setContentView(R.layout.activity_company_trading_order_management);
     }
 
     @Override
@@ -221,8 +220,8 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
     }
 
     @Override
-    protected CompanyQuotationPresenter injectPresenter() {
-        return new CompanyQuotationPresenter();
+    protected CompanyTradingOrderPresenter injectPresenter() {
+        return new CompanyTradingOrderPresenter();
     }
 
     @Override
@@ -234,11 +233,12 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
     @Override
     public void pullDownRefresh(int page) {
         if (mRoleCode.equals("companyRoot")) {
-            mPresenter.getCompanyQuotationList(page, rows, mCompanyId, mUserId, et_quotation_name_a.getText().toString().trim(), tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
+            mPresenter.getCompanyTradingOrderList(page, rows, mCompanyId, mUserId, et_quotation_name_a.getText().toString().trim(), tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
         } else {
-            mPresenter.getCompanyQuotationList(page, rows, mCompanyId, String.valueOf(UserInfoManager.getUserLoginInfo(this).getId()), et_quotation_name_b.getText().toString().trim(), tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
+            mPresenter.getCompanyTradingOrderList(page, rows, mCompanyId, String.valueOf(UserInfoManager.getUserLoginInfo(this).getId()), et_quotation_name_b.getText().toString().trim(), tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
         }
     }
+
 
     @Override
     public void onClick(View v) {
@@ -266,25 +266,25 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
                     tv_delete.setVisibility(View.GONE);
                     mShowCheckBox = false;
                 }
-                if (mQuotationListAdapter != null) {
-                    mQuotationListAdapter.setmIsDeleted(mShowCheckBox);
+                if (mTradingOrderListAdapter != null) {
+                    mTradingOrderListAdapter.setmIsDeleted(mShowCheckBox);
                 }
                 break;
             case R.id.ll_add:
-                CompanyQuotationDetailActivity.startActivity(CompanyQuotationManagementActivity.this, "");
+                CompanyTradingOrderDetailActivity.startActivity(CompanyTradingOrderManagementActivity.this, "");
                 break;
             case R.id.tv_delete:
                 mDeleteList.clear();
-                for (CompanyQuotationInfo companyQuotationInfo : mCompanyQuotationInfoList) {
-                    if (companyQuotationInfo.isChosen()) {
-                        mDeleteList.add(companyQuotationInfo);
+                for (CompanyTradingOrderInfo companyTradingOrderInfo : mTradingOrderInfoBeanList) {
+                    if (companyTradingOrderInfo.isChosen()) {
+                        mDeleteList.add(companyTradingOrderInfo);
                     }
                 }
                 if (ListUtils.isEmpty(mDeleteList)) {
                     toastMsg("尚未选择删除项");
                     return;
                 }
-                mDeleteDialog = new AlertDialog.Builder(CompanyQuotationManagementActivity.this)
+                mDeleteDialog = new AlertDialog.Builder(CompanyTradingOrderManagementActivity.this)
                         .setTitle(R.string.tips)
                         .setMessage(R.string.confirm_delete)
                         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -297,7 +297,7 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
                             @Override
                             public void onClick(DialogInterface dialogInterface, int which) {
                                 for (int i = 0; i < mDeleteList.size(); i++) {
-                                    mPresenter.deleteCompanyQuotation(mDeleteList.get(i).getId());
+                                    mPresenter.deleteCompanyTradingOrder(mDeleteList.get(i).getId());
                                 }
                             }
                         })
@@ -306,17 +306,17 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
         }
     }
 
+
     @Override
     public void initData() {
-        mQuotationListAdapter = new QuotationListAdapter(mCompanyQuotationInfoList);
-        recyclerView.setAdapter(mQuotationListAdapter);
+        mTradingOrderListAdapter = new TradingOrderListAdapter(mTradingOrderInfoBeanList);
+        recyclerView.setAdapter(mTradingOrderListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new LineItemDecoration(this, LinearLayoutManager.VERTICAL, 2, ContextCompat.getColor(this, R.color.F2F2F2)));
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
     }
-
 
     @Override
     public void getCompanyUserList(UserManagementInfoBean userManagementInfoBean) {
@@ -338,10 +338,10 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
     }
 
     @Override
-    public void getCompanyQuotationList(CompanyQuotationInfoBean companyQuotationInfoBean) {
-        if (companyQuotationInfoBean != null) {
+    public void getCompanyTradingOrderList(CompanyTradingOrderInfoBean companyTradingOrderInfoBean) {
+        if (companyTradingOrderInfoBean != null) {
             if (page == 1) {
-                if (ListUtils.isEmpty(companyQuotationInfoBean.getRows())) {
+                if (ListUtils.isEmpty(companyTradingOrderInfoBean.getRows())) {
                     layout_network_error.setVisibility(View.GONE);
                     mRefreshLayout.getLayout().setVisibility(View.GONE);
                     layout_no_data.setVisibility(View.VISIBLE);
@@ -357,52 +357,53 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
                     layout_network_error.setVisibility(View.GONE);
                     mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
                 }
-                mCompanyQuotationInfoList.clear();
+                mTradingOrderInfoBeanList.clear();
                 recyclerView.smoothScrollToPosition(0);
             }
             if (mRefreshLayout != null) {
-                if (ListUtils.isEmpty(companyQuotationInfoBean.getRows()) && page > 1) {
+                if (ListUtils.isEmpty(companyTradingOrderInfoBean.getRows()) && page > 1) {
                     mRefreshLayout.finishLoadmoreWithNoMoreData();
                 } else {
                     mRefreshLayout.finishLoadmore();
                 }
             }
-            if (!ListUtils.isEmpty(companyQuotationInfoBean.getRows())) {
-                mCompanyQuotationInfoList.addAll(companyQuotationInfoBean.getRows());
-                if (mQuotationListAdapter != null) {
-                    mQuotationListAdapter.notifyDataSetChanged();
+            if (!ListUtils.isEmpty(companyTradingOrderInfoBean.getRows())) {
+                mTradingOrderInfoBeanList.addAll(companyTradingOrderInfoBean.getRows());
+                if (mTradingOrderListAdapter != null) {
+                    mTradingOrderListAdapter.notifyDataSetChanged();
                 }
             }
-            if (!ListUtils.isEmpty(mCompanyQuotationInfoList)) {
-                mQuotationListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            if (!ListUtils.isEmpty(mTradingOrderInfoBeanList)) {
+                mTradingOrderListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                         if (mShowCheckBox) {
                             CheckBox cb_choose = (CheckBox) adapter.getViewByPosition(recyclerView, position, R.id.cb_choose);
-                            mCompanyQuotationInfoList.get(position).setChosen(!cb_choose.isChecked());
-                            mQuotationListAdapter.notifyDataSetChanged();
+                            mTradingOrderInfoBeanList.get(position).setChosen(!cb_choose.isChecked());
+                            mTradingOrderListAdapter.notifyDataSetChanged();
                         } else {
-                            CompanyQuotationDetailActivity.startActivity(CompanyQuotationManagementActivity.this, mCompanyQuotationInfoList.get(position).getId());
+                            CompanyTradingOrderDetailActivity.startActivity(CompanyTradingOrderManagementActivity.this, mTradingOrderInfoBeanList.get(position).getId());
                         }
                     }
                 });
             }
         }
+
     }
 
     @Override
-    public void deleteCompanyQuotation(BaseEntity baseEntity) {
+    public void deleteCompanyTradingOrder(BaseEntity baseEntity) {
         if (baseEntity.isSuccess()) {
             for (int i = 0; i < mDeleteList.size(); i++) {
-                if (mCompanyQuotationInfoList.contains(mDeleteList.get(i))) {
-                    int position = mCompanyQuotationInfoList.indexOf(mDeleteList.get(i));
-                    mCompanyQuotationInfoList.remove(mDeleteList.get(i));
-                    if (mQuotationListAdapter != null) {
-                        mQuotationListAdapter.notifyItemRemoved(position);
+                if (mTradingOrderInfoBeanList.contains(mDeleteList.get(i))) {
+                    int position = mTradingOrderInfoBeanList.indexOf(mDeleteList.get(i));
+                    mTradingOrderInfoBeanList.remove(mDeleteList.get(i));
+                    if (mTradingOrderListAdapter != null) {
+                        mTradingOrderListAdapter.notifyItemRemoved(position);
                     }
                 }
             }
-            if (ListUtils.isEmpty(mCompanyQuotationInfoList)) {
+            if (ListUtils.isEmpty(mTradingOrderInfoBeanList)) {
                 titlebar_right.setText(R.string.delete);
                 tv_delete.setVisibility(View.GONE);
                 mShowCheckBox = false;
@@ -417,8 +418,8 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
     }
 
     @Subscribe
-    public void Event(AddOrSaveCompanyQuotationEvent addOrSaveCompanyQuotationEvent) {
-        toastMsg(addOrSaveCompanyQuotationEvent.getMsg());
+    public void Event(AddOrSaveCompanyTradingOrderEvent addOrSaveCompanyTradingOrderEvent) {
+        toastMsg(addOrSaveCompanyTradingOrderEvent.getMsg());
         requestData();
     }
 

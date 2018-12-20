@@ -16,6 +16,8 @@ import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
@@ -221,4 +223,20 @@ public interface MainApi {
     @FormUrlEncoded
     @POST("salesOrder/save")
     Observable<BaseEntity> saveCompanySalesOrder(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("customerName") String customerName, @Field("contactName") String contactName, @Field("saleCommission") String saleCommission, @Field("state") String state, @Field("sendAddress") String sendAddress, @Field("sendAddressZipCode") String sendAddressZipCode, @Field("destinationAddress") String destinationAddress, @Field("destinationAddressZipCode") String destinationAddressZipCode, @Field("products") String products, @Field("clause") String clause, @Field("remark") String remark);
+
+    @FormUrlEncoded
+    @POST("tradingOrder/grid")
+    Observable<BaseEntity<CompanyTradingOrderInfoBean>> getCompanyTradingOrderList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("createTimes") String createTimes, @Field("createTimee") String createTimee);
+
+    @FormUrlEncoded
+    @POST("tradingOrder/deleteById")
+    Observable<BaseEntity> deleteCompanyTradingOrder(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("tradingOrder/getInfo")
+    Observable<BaseEntity<CompanyTradingOrderInfo>> getCompanyTradingOrderDetail(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("tradingOrder/save")
+    Observable<BaseEntity> saveCompanyTradingOrder(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("customerName") String customerName, @Field("price") String price, @Field("estimateProfit") String estimateProfit, @Field("contactName") String contactName, @Field("possibility") String possibility, @Field("clueSource") String clueSource, @Field("remark") String remark);
 }

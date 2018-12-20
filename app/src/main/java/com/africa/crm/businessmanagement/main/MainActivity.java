@@ -25,6 +25,7 @@ import com.africa.crm.businessmanagement.main.station.activity.CompanyClientMana
 import com.africa.crm.businessmanagement.main.station.activity.CompanyContactManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyInfoManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanySupplierManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.CompanyTradingOrderManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.DeliveryOrderManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.InventoryManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.PackagingDataManagementActivity;
@@ -38,7 +39,6 @@ import com.africa.crm.businessmanagement.main.station.activity.ServiceRecordMana
 import com.africa.crm.businessmanagement.main.station.activity.SettingActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SystemManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.TaskManagementActivity;
-import com.africa.crm.businessmanagement.main.station.activity.TradingOrderManagementActivity;
 import com.africa.crm.businessmanagement.mvp.activity.BaseEasyMvpActivity;
 import com.africa.crm.businessmanagement.widget.GridItemDecoration;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -246,7 +246,7 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
                             CompanyContactManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "7":
-                            TradingOrderManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            CompanyTradingOrderManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "8":
                             CompanyQuotationManagementActivity.startActivity(MainActivity.this, workStationInfo);

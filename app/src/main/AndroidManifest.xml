@@ -90,11 +90,11 @@
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".main.station.activity.TradingOrderManagementActivity"
+            android:name=".main.station.activity.CompanyTradingOrderManagementActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".main.station.activity.TradingOrderDetailActivity"
+            android:name=".main.station.activity.CompanyTradingOrderDetailActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity

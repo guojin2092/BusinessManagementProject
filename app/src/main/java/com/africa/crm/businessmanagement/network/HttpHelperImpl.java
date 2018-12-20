@@ -16,6 +16,8 @@ import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
@@ -292,6 +294,26 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<BaseEntity> saveCompanySalesOrder(String id, String companyId, String userId, String name, String customerName, String contactName, String saleCommission, String state, String sendAddress, String sendAddressZipCode, String destinationAddress, String destinationAddressZipCode, String products, String clause, String remark) {
         return mainApi.saveCompanySalesOrder(id, companyId, userId, name, customerName, contactName, saleCommission, state, sendAddress, sendAddressZipCode, destinationAddress, destinationAddressZipCode, products, clause, remark);
+    }
+
+    @Override
+    public Observable<CompanyTradingOrderInfoBean> getCompanyTradingOrderList(int page, int rows, String companyId, String userId, String name, String createTimes, String createTimee) {
+        return mainApi.getCompanyTradingOrderList(page, rows, companyId, userId, name, createTimes, createTimee).compose(RxUtils.<CompanyTradingOrderInfoBean>handleResult());
+    }
+
+    @Override
+    public Observable<BaseEntity> deleteCompanyTradingOrder(String id) {
+        return mainApi.deleteCompanyTradingOrder(id);
+    }
+
+    @Override
+    public Observable<CompanyTradingOrderInfo> getCompanyTradingOrderDetail(String id) {
+        return mainApi.getCompanyTradingOrderDetail(id).compose(RxUtils.<CompanyTradingOrderInfo>handleResult());
+    }
+
+    @Override
+    public Observable<BaseEntity> saveCompanyTradingOrder(String id, String companyId, String userId, String name, String customerName, String price, String estimateProfit, String contactName, String possibility, String clueSource, String remark) {
+        return mainApi.saveCompanyTradingOrder(id, companyId, userId, name, customerName, price, estimateProfit, contactName, possibility, clueSource, remark);
     }
 
 }
