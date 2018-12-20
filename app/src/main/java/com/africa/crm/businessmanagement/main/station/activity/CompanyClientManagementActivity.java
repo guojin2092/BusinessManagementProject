@@ -7,9 +7,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -19,7 +16,6 @@ import android.widget.TextView;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyClientEvent;
-import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyProductEvent;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyClientInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyClientInfoBean;
@@ -31,7 +27,6 @@ import com.africa.crm.businessmanagement.main.station.contract.CompanyClientCont
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyClientPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
-import com.africa.crm.businessmanagement.widget.KeyboardUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
@@ -119,6 +114,7 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
         tv_delete.setOnClickListener(this);
         tv_search.setOnClickListener(this);
 
+/*
         et_name.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -138,6 +134,7 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
 
             }
         });
+*/
     }
 
     @Override
@@ -235,9 +232,11 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
                 mIndustryType = dicInfo.getCode();
+/*
                 if (!TextUtils.isEmpty(mIndustryType)) {
                     et_name.setText("");
                 }
+*/
             }
         });
     }
@@ -250,8 +249,8 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
                     layout_network_error.setVisibility(View.GONE);
                     mRefreshLayout.getLayout().setVisibility(View.GONE);
                     layout_no_data.setVisibility(View.VISIBLE);
-                    KeyboardUtil.clearInputBox(et_name);
-                    spinner_industry.setText("");
+//                    KeyboardUtil.clearInputBox(et_name);
+//                    spinner_industry.setText("");
                     return;
                 } else {
                     layout_no_data.setVisibility(View.GONE);

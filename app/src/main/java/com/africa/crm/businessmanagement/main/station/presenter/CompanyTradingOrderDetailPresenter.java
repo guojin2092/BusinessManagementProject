@@ -2,10 +2,13 @@ package com.africa.crm.businessmanagement.main.station.presenter;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfo;
+import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyTradingOrderDetailContract;
 import com.africa.crm.businessmanagement.mvp.presenter.RxPresenter;
 import com.africa.crm.businessmanagement.network.error.ComConsumer;
 import com.africa.crm.businessmanagement.network.util.RxUtils;
+
+import java.util.List;
 
 import io.reactivex.functions.Consumer;
 
@@ -19,6 +22,30 @@ import io.reactivex.functions.Consumer;
  * Why & What is modified:
  */
 public class CompanyTradingOrderDetailPresenter extends RxPresenter<CompanyTradingOrderDetailContract.View> implements CompanyTradingOrderDetailContract.Presenter {
+
+    @Override
+    public void getAllContact(String companyId) {
+        addDisposable(mDataManager.getAllContact(companyId)
+                .compose(RxUtils.<List<DicInfo2>>ioToMain())
+                .subscribe(new Consumer<List<DicInfo2>>() {
+                    @Override
+                    public void accept(List<DicInfo2> dicInfo2List) throws Exception {
+                        mView.getAllContact(dicInfo2List);
+                    }
+                }, new ComConsumer(mView)));
+    }
+
+    @Override
+    public void getAllCustomers(String companyId) {
+        addDisposable(mDataManager.getAllCustomers(companyId)
+                .compose(RxUtils.<List<DicInfo2>>ioToMain())
+                .subscribe(new Consumer<List<DicInfo2>>() {
+                    @Override
+                    public void accept(List<DicInfo2> dicInfo2List) throws Exception {
+                        mView.getAllCustomers(dicInfo2List);
+                    }
+                }, new ComConsumer(mView)));
+    }
 
     @Override
     public void getCompanyTradingOrderDetail(String id) {

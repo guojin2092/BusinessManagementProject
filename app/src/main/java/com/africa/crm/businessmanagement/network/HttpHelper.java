@@ -97,6 +97,8 @@ public interface HttpHelper {
 
     Observable<BaseEntity> saveCompanySupplier(String id, String companyId, String head, String name, String type, String address, String phone, String email, String zipCode, String area, String remark);
 
+    Observable<List<DicInfo2>> getAllSuppliers(String companyId);
+
     Observable<CompanyContactInfoBean> getCompanyContactList(int page, int rows, String companyId, String userId, String name, String fromType);
 
     Observable<BaseEntity> deleteCompanyContact(String id);
@@ -104,6 +106,8 @@ public interface HttpHelper {
     Observable<CompanyContactInfo> getContactDetail(String id);
 
     Observable<BaseEntity> saveCompanyContact(String id, String companyId, String userId, String head, String name, String fromType, String address, String mailAddress, String phone, String tel, String email, String job, String remark);
+
+    Observable<List<DicInfo2>> getAllContact(String companyId);
 
     Observable<CompanyClientInfoBean> getCompanyClientList(int page, int rows, String companyId, String userId, String name, String industry);
 
@@ -113,6 +117,8 @@ public interface HttpHelper {
 
     Observable<BaseEntity> saveCompanyClient(String id, String companyId, String userId, String head, String name, String industry, String address, String workerNum, String tel, String yearIncome, String remark);
 
+    Observable<List<DicInfo2>> getAllCustomers(String companyId);
+
     Observable<CompanyProductInfoBean> getCompanyProductList(int page, int rows, String companyId, String name, String type);
 
     Observable<BaseEntity> deleteCompanyProduct(String id);
@@ -120,6 +126,8 @@ public interface HttpHelper {
     Observable<CompanyProductInfo> getCompanyProductDetail(String id);
 
     Observable<BaseEntity> saveCompanyProduct(String id, String companyId, String name, String code, String supplierName, String makerName, String type, String unitPrice, String unit, String stockNum, String warnNum, String remark);
+
+    Observable<List<DicInfo2>> getAllProducts(String companyId);
 
     Observable<CompanyQuotationInfoBean> getCompanyQuotationList(int page, int rows, String companyId, String userId, String name, String createTimes, String createTimee);
 

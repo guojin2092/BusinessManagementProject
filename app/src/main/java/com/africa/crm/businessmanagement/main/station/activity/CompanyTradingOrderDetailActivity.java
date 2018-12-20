@@ -12,23 +12,25 @@ import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyTradingOrderEvent;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfo;
+import com.africa.crm.businessmanagement.main.bean.DicInfo;
+import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyTradingOrderDetailContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyTradingOrderDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.MySpinner;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 
 public class CompanyTradingOrderDetailActivity extends BaseMvpActivity<CompanyTradingOrderDetailPresenter> implements CompanyTradingOrderDetailContract.View {
     @BindView(R.id.et_order_name)
     EditText et_order_name;
-    @BindView(R.id.et_customer_name)
-    EditText et_customer_name;
-    @BindView(R.id.et_contact_name)
-    EditText et_contact_name;
     @BindView(R.id.et_money)
     EditText et_money;
     @BindView(R.id.et_income)
@@ -45,6 +47,12 @@ public class CompanyTradingOrderDetailActivity extends BaseMvpActivity<CompanyTr
     private String mTradingOrderId = "";
     private String mCompanyId = "";
     private String mUserId = "";
+
+    @BindView(R.id.spinner_customer_name)
+    MySpinner spinner_customer_name;
+
+    @BindView(R.id.spinner_contact_name)
+    MySpinner spinner_contact_name;
 
     /**
      * @param activity
@@ -95,6 +103,8 @@ public class CompanyTradingOrderDetailActivity extends BaseMvpActivity<CompanyTr
 
     @Override
     protected void requestData() {
+        mPresenter.getAllContact(mCompanyId);
+        mPresenter.getAllCustomers(mCompanyId);
         if (!TextUtils.isEmpty(mTradingOrderId)) {
             mPresenter.getCompanyTradingOrderDetail(mTradingOrderId);
         }
@@ -125,7 +135,7 @@ public class CompanyTradingOrderDetailActivity extends BaseMvpActivity<CompanyTr
                     toastMsg("尚未填写交易单名称");
                     return;
                 }
-                mPresenter.saveCompanyTradingOrder(mTradingOrderId, mCompanyId, mUserId, et_order_name.getText().toString().trim(), et_customer_name.getText().toString().trim(), et_money.getText().toString().trim(), et_income.getText().toString().trim(), et_contact_name.getText().toString().trim(), et_possibility.getText().toString().trim(), et_thread_from.getText().toString().trim(), et_remark.getText().toString().trim());
+                mPresenter.saveCompanyTradingOrder(mTradingOrderId, mCompanyId, mUserId, et_order_name.getText().toString().trim(), spinner_customer_name.getText(), et_money.getText().toString().trim(), et_income.getText().toString().trim(), spinner_contact_name.getText(), et_possibility.getText().toString().trim(), et_thread_from.getText().toString().trim(), et_remark.getText().toString().trim());
                 break;
         }
     }
@@ -137,8 +147,8 @@ public class CompanyTradingOrderDetailActivity extends BaseMvpActivity<CompanyTr
      */
     private void setEditTextInput(boolean canInput) {
         et_order_name.setEnabled(canInput);
-        et_customer_name.setEnabled(canInput);
-        et_contact_name.setEnabled(canInput);
+        spinner_customer_name.getTextView().setEnabled(canInput);
+        spinner_contact_name.getTextView().setEnabled(canInput);
         et_money.setEnabled(canInput);
         et_income.setEnabled(canInput);
         et_thread_from.setEnabled(canInput);
@@ -147,11 +157,29 @@ public class CompanyTradingOrderDetailActivity extends BaseMvpActivity<CompanyTr
 
     }
 
+    @Override
+    public void getAllContact(List<DicInfo2> dicInfoList) {
+        List<DicInfo> list = new ArrayList<>();
+        for (DicInfo2 dicInfo2 : dicInfoList) {
+            list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getId()));
+        }
+        spinner_contact_name.setListDatas(this, list);
+    }
+
+    @Override
+    public void getAllCustomers(List<DicInfo2> dicInfoList) {
+        List<DicInfo> list = new ArrayList<>();
+        for (DicInfo2 dicInfo2 : dicInfoList) {
+            list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getId()));
+        }
+        spinner_customer_name.setListDatas(this, list);
+    }
 
     @Override
     public void getCompanyTradingOrderDetail(CompanyTradingOrderInfo companyTradingOrderInfo) {
         et_order_name.setText(companyTradingOrderInfo.getName());
-        et_customer_name.setText(companyTradingOrderInfo.getCustomerName());
+        spinner_customer_name.getTextView().setText(companyTradingOrderInfo.getCustomerName());
+        spinner_contact_name.getTextView().setText(companyTradingOrderInfo.getContactName());
         et_money.setText(companyTradingOrderInfo.getPrice());
         et_income.setText(companyTradingOrderInfo.getEstimateProfit());
         et_thread_from.setText(companyTradingOrderInfo.getClueSource());

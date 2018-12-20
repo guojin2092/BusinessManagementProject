@@ -114,7 +114,7 @@
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".main.station.activity.DeliveryOrderManagementActivity"
+            android:name=".main.station.activity.CompanyDeliveryOrderManagementActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity

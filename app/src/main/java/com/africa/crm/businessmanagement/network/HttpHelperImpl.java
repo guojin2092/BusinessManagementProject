@@ -197,6 +197,11 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
+    public Observable<List<DicInfo2>> getAllSuppliers(String companyId) {
+        return mainApi.getAllSuppliers(companyId).compose(RxUtils.<List<DicInfo2>>handleResult());
+    }
+
+    @Override
     public Observable<CompanyContactInfoBean> getCompanyContactList(int page, int rows, String companyId, String userId, String name, String fromType) {
         return mainApi.getCompanyContactList(page, rows, companyId, userId, name, fromType).compose(RxUtils.<CompanyContactInfoBean>handleResult());
     }
@@ -214,6 +219,11 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<BaseEntity> saveCompanyContact(String id, String companyId, String userId, String head, String name, String fromType, String address, String mailAddress, String phone, String tel, String email, String job, String remark) {
         return mainApi.saveCompanyContact(id, companyId, userId, head, name, fromType, address, mailAddress, phone, tel, email, job, remark);
+    }
+
+    @Override
+    public Observable<List<DicInfo2>> getAllContact(String companyId) {
+        return mainApi.getAllContact(companyId).compose(RxUtils.<List<DicInfo2>>handleResult());
     }
 
     @Override
@@ -237,6 +247,11 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
+    public Observable<List<DicInfo2>> getAllCustomers(String companyId) {
+        return mainApi.getAllCustomers(companyId).compose(RxUtils.<List<DicInfo2>>handleResult());
+    }
+
+    @Override
     public Observable<CompanyProductInfoBean> getCompanyProductList(int page, int rows, String companyId, String name, String type) {
         return mainApi.getCompanyProductList(page, rows, companyId, name, type).compose(RxUtils.<CompanyProductInfoBean>handleResult());
     }
@@ -254,6 +269,11 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<BaseEntity> saveCompanyProduct(String id, String companyId, String name, String code, String supplierName, String makerName, String type, String unitPrice, String unit, String stockNum, String warnNum, String remark) {
         return mainApi.saveCompanyProduct(id, companyId, name, code, supplierName, makerName, type, unitPrice, unit, stockNum, warnNum, remark);
+    }
+
+    @Override
+    public Observable<List<DicInfo2>> getAllProducts(String companyId) {
+        return mainApi.getAllProducts(companyId).compose(RxUtils.<List<DicInfo2>>handleResult());
     }
 
     @Override

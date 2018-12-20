@@ -37,7 +37,7 @@ import butterknife.BindView;
  * Modification  History:
  * Why & What is modified:
  */
-public class DeliveryOrderManagementActivity extends BaseActivity {
+public class CompanyDeliveryOrderManagementActivity extends BaseActivity {
     @BindView(R.id.titlebar_back)
     ImageView titlebar_back;
     @BindView(R.id.titlebar_name)
@@ -63,14 +63,14 @@ public class DeliveryOrderManagementActivity extends BaseActivity {
      * @param activity
      */
     public static void startActivity(Activity activity, WorkStationInfo workStationInfo) {
-        Intent intent = new Intent(activity, DeliveryOrderManagementActivity.class);
+        Intent intent = new Intent(activity, CompanyDeliveryOrderManagementActivity.class);
         intent.putExtra("info", workStationInfo);
         activity.startActivity(intent);
     }
 
     @Override
     public void setView(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_delivery_order_management);
+        setContentView(R.layout.activity_company_delivery_order_management);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class DeliveryOrderManagementActivity extends BaseActivity {
                 ToastUtils.show(this, "添加发货单");
                 break;
             case R.id.tv_delete:
-                new AlertDialog.Builder(DeliveryOrderManagementActivity.this)
+                new AlertDialog.Builder(CompanyDeliveryOrderManagementActivity.this)
                         .setTitle("温馨提示")
                         .setMessage("是否确认删除？")
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -193,7 +193,7 @@ public class DeliveryOrderManagementActivity extends BaseActivity {
                     mTradingOrderInfoBeanList.get(position).setChosen(!cb_choose.isChecked());
                     mDeliveryOrderListAdapter.notifyDataSetChanged();
                 } else {
-                    DeliveryOrderDetailActivity.startActivity(DeliveryOrderManagementActivity.this, mTradingOrderInfoBeanList.get(position));
+                    DeliveryOrderDetailActivity.startActivity(CompanyDeliveryOrderManagementActivity.this, mTradingOrderInfoBeanList.get(position));
                 }
             }
         });

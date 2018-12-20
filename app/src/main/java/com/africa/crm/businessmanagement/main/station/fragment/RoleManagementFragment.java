@@ -104,6 +104,7 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
 //        ll_add.setOnClickListener(this);
         ll_add.setVisibility(View.GONE);
 
+/*
         et_search_roleName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -122,7 +123,9 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
 
             }
         });
+*/
 
+/*
         et_search_roleCode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -141,6 +144,7 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
 
             }
         });
+*/
 
     }
 

@@ -217,8 +217,8 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
                     layout_network_error.setVisibility(View.GONE);
                     mRefreshLayout.getLayout().setVisibility(View.GONE);
                     layout_no_data.setVisibility(View.VISIBLE);
-                    KeyboardUtil.clearInputBox(et_supplier_name);
-                    spinner_supplier_type.setText("");
+//                    KeyboardUtil.clearInputBox(et_supplier_name);
+//                    spinner_supplier_type.setText("");
                     return;
                 } else {
                     layout_no_data.setVisibility(View.GONE);

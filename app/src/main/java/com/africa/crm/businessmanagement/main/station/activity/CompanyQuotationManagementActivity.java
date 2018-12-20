@@ -32,7 +32,6 @@ import com.africa.crm.businessmanagement.main.station.contract.CompanyQuotationC
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyQuotationPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
-import com.africa.crm.businessmanagement.widget.KeyboardUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
@@ -145,6 +144,7 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
         tv_start_time.setOnClickListener(this);
         tv_end_time.setOnClickListener(this);
 
+/*
         et_quotation_name_a.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -166,6 +166,8 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
 
             }
         });
+*/
+/*
         et_quotation_name_b.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -185,6 +187,7 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
 
             }
         });
+*/
         initTimePicker();
     }
 
@@ -332,7 +335,7 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
                 mUserId = dicInfo.getCode();
-                et_quotation_name_a.setText("");
+//                et_quotation_name_a.setText("");
             }
         });
     }
@@ -345,12 +348,12 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
                     layout_network_error.setVisibility(View.GONE);
                     mRefreshLayout.getLayout().setVisibility(View.GONE);
                     layout_no_data.setVisibility(View.VISIBLE);
-                    KeyboardUtil.clearInputBox(et_quotation_name_a);
+                  /*  KeyboardUtil.clearInputBox(et_quotation_name_a);
                     KeyboardUtil.clearInputBox(et_quotation_name_b);
                     KeyboardUtil.clearInputBox(tv_start_time);
                     KeyboardUtil.clearInputBox(tv_end_time);
                     spinner_user.setText("");
-                    mUserId = "";
+                    mUserId = "";*/
                     return;
                 } else {
                     layout_no_data.setVisibility(View.GONE);

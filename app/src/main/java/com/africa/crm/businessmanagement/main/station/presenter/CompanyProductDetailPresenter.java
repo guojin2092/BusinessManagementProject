@@ -3,6 +3,7 @@ package com.africa.crm.businessmanagement.main.station.presenter;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
+import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyProductDetailContract;
 import com.africa.crm.businessmanagement.mvp.presenter.RxPresenter;
 import com.africa.crm.businessmanagement.network.error.ComConsumer;
@@ -23,6 +24,18 @@ import io.reactivex.functions.Consumer;
  */
 public class CompanyProductDetailPresenter extends RxPresenter<CompanyProductDetailContract.View> implements CompanyProductDetailContract.Presenter {
     @Override
+    public void getAllSuppliers(String companyId) {
+        addDisposable(mDataManager.getAllSuppliers(companyId)
+                .compose(RxUtils.<List<DicInfo2>>ioToMain())
+                .subscribe(new Consumer<List<DicInfo2>>() {
+                    @Override
+                    public void accept(List<DicInfo2> dicInfoList) throws Exception {
+                        mView.getAllSuppliers(dicInfoList);
+                    }
+                }, new ComConsumer(mView)));
+    }
+
+    @Override
     public void getProductType(String code) {
         addDisposable(mDataManager.getDicByCode(code)
                 .compose(RxUtils.<List<DicInfo>>ioToMain())
@@ -32,7 +45,6 @@ public class CompanyProductDetailPresenter extends RxPresenter<CompanyProductDet
                         mView.getProductType(dicInfoList);
                     }
                 }, new ComConsumer(mView)));
-
     }
 
     @Override

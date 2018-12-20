@@ -129,6 +129,7 @@ public class CompanyProductManagementActivity extends BaseRefreshMvpActivity<Com
         tv_delete.setOnClickListener(this);
         tv_search.setOnClickListener(this);
 
+/*
         et_name.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -148,6 +149,7 @@ public class CompanyProductManagementActivity extends BaseRefreshMvpActivity<Com
 
             }
         });
+*/
     }
 
     @Override
@@ -230,9 +232,11 @@ public class CompanyProductManagementActivity extends BaseRefreshMvpActivity<Com
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
                 mProductType = dicInfo.getCode();
+/*
                 if (!TextUtils.isEmpty(mProductType)) {
                     et_name.setText("");
                 }
+*/
             }
         });
     }
@@ -245,8 +249,8 @@ public class CompanyProductManagementActivity extends BaseRefreshMvpActivity<Com
                     layout_network_error.setVisibility(View.GONE);
                     mRefreshLayout.getLayout().setVisibility(View.GONE);
                     layout_no_data.setVisibility(View.VISIBLE);
-                    KeyboardUtil.clearInputBox(et_name);
-                    spinner_type.setText("");
+//                    KeyboardUtil.clearInputBox(et_name);
+//                    spinner_type.setText("");
                     return;
                 } else {
                     layout_no_data.setVisibility(View.GONE);

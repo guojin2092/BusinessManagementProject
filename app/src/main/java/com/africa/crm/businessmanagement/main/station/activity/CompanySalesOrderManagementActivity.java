@@ -169,6 +169,7 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
         } else {
             ll_add.setVisibility(View.GONE);
         }
+/*
         et_sales_name.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -190,6 +191,7 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
 
             }
         });
+*/
         initTimePicker();
     }
 
@@ -319,11 +321,13 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
                 mUserId = dicInfo.getCode();
+/*
                 if (!TextUtils.isEmpty(mUserId)) {
                     et_sales_name.setText("");
                     spinner_state.setText("");
                     mStateCode = "";
                 }
+*/
             }
         });
     }
@@ -338,11 +342,13 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
                 mStateCode = dicInfo.getCode();
+/*
                 if (!TextUtils.isEmpty(mStateCode)) {
                     et_sales_name.setText("");
                     spinner_user.setText("");
                     mUserId = "";
                 }
+*/
             }
         });
     }
@@ -355,7 +361,7 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
                     layout_network_error.setVisibility(View.GONE);
                     mRefreshLayout.getLayout().setVisibility(View.GONE);
                     layout_no_data.setVisibility(View.VISIBLE);
-                    KeyboardUtil.clearInputBox(et_sales_name);
+                  /*  KeyboardUtil.clearInputBox(et_sales_name);
                     KeyboardUtil.clearInputBox(tv_start_time);
                     KeyboardUtil.clearInputBox(tv_end_time);
                     mStartDate = null;
@@ -363,7 +369,7 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
                     spinner_user.setText("");
                     mUserId = "";
                     spinner_state.setText("");
-                    mStateCode = "";
+                    mStateCode = "";*/
                     return;
                 } else {
                     layout_no_data.setVisibility(View.GONE);

@@ -19,19 +19,19 @@ import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanySalesOrderEven
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
+import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.OrderProductInfo;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.OrderProductListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanySalesOrderDetailContract;
-import com.africa.crm.businessmanagement.main.station.dialog.AddProductDialog;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanySalesOrderDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
+import com.africa.crm.businessmanagement.widget.MySpinner2;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -45,10 +45,6 @@ import butterknife.BindView;
 public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySalesOrderDetailPresenter> implements CompanySalesOrderDetailContract.View {
     @BindView(R.id.et_sale_order_name)
     EditText et_sale_order_name;
-    @BindView(R.id.et_customer_name)
-    EditText et_customer_name;
-    @BindView(R.id.et_contact_name)
-    EditText et_contact_name;
     @BindView(R.id.et_money)
     EditText et_money;
     @BindView(R.id.et_deliver_address)
@@ -80,14 +76,22 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
     TextView tv_delete;
     @BindView(R.id.tv_delete_product)
     TextView tv_delete_product;
-    @BindView(R.id.tv_add_product)
-    TextView tv_add_product;
     @BindView(R.id.rv_product)
     RecyclerView rv_product;
     private OrderProductListAdapter mOrderProductListAdapter;
     private List<OrderProductInfo> mDeleteList = new ArrayList<>();
     private List<OrderProductInfo> mOrderProductInfoList = new ArrayList<>();
     private boolean mShowCheckBox = false;
+
+    @BindView(R.id.spinner_add_product)
+    MySpinner2 spinner_add_product;
+    private List<DicInfo2> mProductTypeList = new ArrayList<>();
+
+    @BindView(R.id.spinner_customer_name)
+    MySpinner spinner_customer_name;
+
+    @BindView(R.id.spinner_contact_name)
+    MySpinner spinner_contact_name;
 
     /**
      * @param activity
@@ -107,6 +111,17 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
     @Override
     protected CompanySalesOrderDetailPresenter injectPresenter() {
         return new CompanySalesOrderDetailPresenter();
+    }
+
+    @Override
+    protected void requestData() {
+        mPresenter.getAllContact(mCompanyId);
+        mPresenter.getAllCustomers(mCompanyId);
+        mPresenter.getAllProduct(mCompanyId);
+        mPresenter.getOrderState(STATE_CODE);
+        if (!TextUtils.isEmpty(mSalesOrderId)) {
+            mPresenter.getCompanySalesOrderDetail(mSalesOrderId);
+        }
     }
 
     @Override
@@ -141,7 +156,6 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
 
     private void initProductList() {
         tv_delete_product.setOnClickListener(this);
-        tv_add_product.setOnClickListener(this);
         mOrderProductListAdapter = new OrderProductListAdapter(mOrderProductInfoList);
         rv_product.setAdapter(mOrderProductListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -220,7 +234,7 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
                         })
                         .show();
                 break;
-            case R.id.tv_add_product:
+          /*  case R.id.tv_add_product:
                 final AddProductDialog addProductDialog = AddProductDialog.getInstance(this);
                 addProductDialog.isCancelableOnTouchOutside(false)
                         .withDuration(300)
@@ -250,7 +264,7 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
                         addProductDialog.dismiss();
                     }
                 });
-                break;
+                break;*/
             case R.id.titlebar_right:
                 if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
                     titlebar_right.setText(R.string.cancel);
@@ -267,7 +281,7 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
                     toastMsg("尚未填写销售单名称");
                     return;
                 }
-                mPresenter.saveCompanySalesOrder(mSalesOrderId, mCompanyId, mUserId, et_sale_order_name.getText().toString().trim(), et_customer_name.getText().toString().trim(), et_contact_name.getText().toString().trim(), et_money.getText().toString().trim(), mStateCode, et_deliver_address.getText().toString().trim(), et_deliver_zip_code.getText().toString().trim(), et_receiver_address.getText().toString().trim(), et_receiver_zip_code.getText().toString().trim(), new Gson().toJson(mOrderProductInfoList), et_clause.getText().toString().trim(), et_remark.getText().toString().trim());
+                mPresenter.saveCompanySalesOrder(mSalesOrderId, mCompanyId, mUserId, et_sale_order_name.getText().toString().trim(), spinner_customer_name.getText(), spinner_contact_name.getText(), et_money.getText().toString().trim(), mStateCode, et_deliver_address.getText().toString().trim(), et_deliver_zip_code.getText().toString().trim(), et_receiver_address.getText().toString().trim(), et_receiver_zip_code.getText().toString().trim(), new Gson().toJson(mOrderProductInfoList), et_clause.getText().toString().trim(), et_remark.getText().toString().trim());
                 break;
         }
     }
@@ -280,8 +294,8 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
     private void setEditTextInput(boolean canInput) {
         et_sale_order_name.setEnabled(canInput);
         spinner_state.getTextView().setEnabled(canInput);
-        et_customer_name.setEnabled(canInput);
-        et_contact_name.setEnabled(canInput);
+        spinner_customer_name.getTextView().setEnabled(canInput);
+        spinner_contact_name.getTextView().setEnabled(canInput);
         et_deliver_address.setEnabled(canInput);
         et_deliver_zip_code.setEnabled(canInput);
         et_receiver_address.setEnabled(canInput);
@@ -289,20 +303,50 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
         et_clause.setEnabled(canInput);
         et_remark.setEnabled(canInput);
         tv_delete_product.setEnabled(canInput);
-        tv_add_product.setEnabled(canInput);
+        spinner_add_product.getTextView().setEnabled(canInput);
     }
 
-    @Override
-    protected void requestData() {
-        mPresenter.getOrderState(STATE_CODE);
-        if (!TextUtils.isEmpty(mSalesOrderId)) {
-            mPresenter.getCompanySalesOrderDetail(mSalesOrderId);
-        }
-    }
 
     @Override
     public void initData() {
 
+    }
+
+    @Override
+    public void getAllContact(List<DicInfo2> dicInfoList) {
+        List<DicInfo> list = new ArrayList<>();
+        for (DicInfo2 dicInfo2 : dicInfoList) {
+            list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getId()));
+        }
+        spinner_contact_name.setListDatas(this, list);
+    }
+
+    @Override
+    public void getAllCustomers(List<DicInfo2> dicInfoList) {
+        List<DicInfo> list = new ArrayList<>();
+        for (DicInfo2 dicInfo2 : dicInfoList) {
+            list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getId()));
+        }
+        spinner_customer_name.setListDatas(this, list);
+    }
+
+    @Override
+    public void getAllProduct(List<DicInfo2> dicInfoList) {
+        mProductTypeList.addAll(dicInfoList);
+        List<DicInfo> list = new ArrayList<>();
+        for (DicInfo2 dicInfo2 : dicInfoList) {
+            list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getId()));
+        }
+        spinner_add_product.setListDatas(this, list);
+        spinner_add_product.addOnItemClickListener(new MySpinner2.OnItemClickListener() {
+            @Override
+            public void onItemClick(DicInfo dicInfo, int position) {
+                mOrderProductInfoList.add(new OrderProductInfo(dicInfo.getText(), dicInfo.getCode()));
+                if (mOrderProductListAdapter != null) {
+                    mOrderProductListAdapter.notifyDataSetChanged();
+                }
+            }
+        });
     }
 
     @Override
@@ -324,8 +368,8 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
         et_sale_order_name.setText(companySalesOrderInfo.getName());
         spinner_state.setText(companySalesOrderInfo.getStateName());
         mStateCode = companySalesOrderInfo.getState();
-        et_customer_name.setText(companySalesOrderInfo.getCustomerName());
-        et_contact_name.setText(companySalesOrderInfo.getContactName());
+        spinner_customer_name.setText(companySalesOrderInfo.getCustomerName());
+        spinner_contact_name.setText(companySalesOrderInfo.getContactName());
         et_money.setText(companySalesOrderInfo.getSaleCommission());
         et_deliver_address.setText(companySalesOrderInfo.getSendAddress());
         et_deliver_zip_code.setText(companySalesOrderInfo.getSendAddressZipCode());
@@ -333,7 +377,8 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
         et_receiver_zip_code.setText(companySalesOrderInfo.getDestinationAddressZipCode());
         et_clause.setText(companySalesOrderInfo.getClause());
         et_remark.setText(companySalesOrderInfo.getRemark());
-        List<OrderProductInfo> list = new Gson().fromJson(companySalesOrderInfo.getProducts(), new TypeToken<List<OrderProductInfo>>() {}.getType());
+        List<OrderProductInfo> list = new Gson().fromJson(companySalesOrderInfo.getProducts(), new TypeToken<List<OrderProductInfo>>() {
+        }.getType());
         mOrderProductInfoList.addAll(list);
         if (mOrderProductListAdapter != null) {
             mOrderProductListAdapter.notifyDataSetChanged();

@@ -144,6 +144,7 @@ public class CompanyTradingOrderManagementActivity extends BaseRefreshMvpActivit
         tv_start_time.setOnClickListener(this);
         tv_end_time.setOnClickListener(this);
 
+/*
         et_quotation_name_a.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -165,6 +166,8 @@ public class CompanyTradingOrderManagementActivity extends BaseRefreshMvpActivit
 
             }
         });
+*/
+/*
         et_quotation_name_b.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -184,6 +187,7 @@ public class CompanyTradingOrderManagementActivity extends BaseRefreshMvpActivit
 
             }
         });
+*/
         initTimePicker();
     }
 
@@ -332,7 +336,7 @@ public class CompanyTradingOrderManagementActivity extends BaseRefreshMvpActivit
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
                 mUserId = dicInfo.getCode();
-                et_quotation_name_a.setText("");
+//                et_quotation_name_a.setText("");
             }
         });
     }
@@ -345,12 +349,12 @@ public class CompanyTradingOrderManagementActivity extends BaseRefreshMvpActivit
                     layout_network_error.setVisibility(View.GONE);
                     mRefreshLayout.getLayout().setVisibility(View.GONE);
                     layout_no_data.setVisibility(View.VISIBLE);
-                    KeyboardUtil.clearInputBox(et_quotation_name_a);
+                  /*  KeyboardUtil.clearInputBox(et_quotation_name_a);
                     KeyboardUtil.clearInputBox(et_quotation_name_b);
                     KeyboardUtil.clearInputBox(tv_start_time);
                     KeyboardUtil.clearInputBox(tv_end_time);
                     spinner_user.setText("");
-                    mUserId = "";
+                    mUserId = "";*/
                     return;
                 } else {
                     layout_no_data.setVisibility(View.GONE);

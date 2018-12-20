@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/F2F2F2"
     android:orientation="vertical">
 
@@ -56,9 +57,15 @@
                             style="@style/product_title_black"
                             android:text="客户名称：" />
 
-                        <EditText
-                            android:id="@+id/et_customer_name"
-                            style="@style/product_et_blue" />
+                        <com.africa.crm.businessmanagement.widget.MySpinner
+                            android:id="@+id/spinner_customer_name"
+                            style="@style/product_et_blue"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"
+                            app:backgroundSelector="@drawable/background_selector2" />
 
                     </LinearLayout>
 
@@ -72,9 +79,15 @@
                             style="@style/product_title_black"
                             android:text="联系人名称：" />
 
-                        <EditText
-                            android:id="@+id/et_contact_name"
-                            style="@style/product_et_blue" />
+                        <com.africa.crm.businessmanagement.widget.MySpinner
+                            android:id="@+id/spinner_contact_name"
+                            style="@style/product_et_blue"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"
+                            app:backgroundSelector="@drawable/background_selector2" />
                     </LinearLayout>
 
 

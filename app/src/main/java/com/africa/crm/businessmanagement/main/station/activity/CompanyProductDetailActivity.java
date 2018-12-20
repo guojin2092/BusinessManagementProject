@@ -13,6 +13,7 @@ import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyProductEvent;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
+import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyProductDetailContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyProductDetailPresenter;
@@ -32,8 +33,6 @@ public class CompanyProductDetailActivity extends BaseMvpActivity<CompanyProduct
     EditText et_product_name;
     @BindView(R.id.et_code)
     EditText et_code;
-    @BindView(R.id.et_supplier_name)
-    EditText et_supplier_name;
     @BindView(R.id.et_maker_name)
     EditText et_maker_name;
     @BindView(R.id.et_price)
@@ -48,6 +47,9 @@ public class CompanyProductDetailActivity extends BaseMvpActivity<CompanyProduct
     EditText et_remark;
     @BindView(R.id.tv_save)
     TextView tv_save;
+
+    @BindView(R.id.spinner_supplier_name)
+    MySpinner spinner_supplier_name;
 
     @BindView(R.id.spinner_product_type)
     MySpinner spinner_product_type;
@@ -105,6 +107,7 @@ public class CompanyProductDetailActivity extends BaseMvpActivity<CompanyProduct
 
     @Override
     protected void requestData() {
+        mPresenter.getAllSuppliers(mCompanyId);
         mPresenter.getProductType(CONTACT_PRODUCT_TYPE);
         if (!TextUtils.isEmpty(mProductId)) {
             mPresenter.getCompanyProductDetail(mProductId);
@@ -132,7 +135,7 @@ public class CompanyProductDetailActivity extends BaseMvpActivity<CompanyProduct
                     toastMsg("尚未填写产品名称");
                     return;
                 }
-                mPresenter.saveCompanyProduct(mProductId, mCompanyId, et_product_name.getText().toString().trim(), et_code.getText().toString().trim(), et_supplier_name.getText().toString().trim(), et_maker_name.getText().toString().trim(), mProductType, et_price.getText().toString().trim(), et_unit.getText().toString().trim(), et_inventory_num.getText().toString().trim(), et_warn_num.getText().toString().trim(), et_remark.getText().toString().trim());
+                mPresenter.saveCompanyProduct(mProductId, mCompanyId, et_product_name.getText().toString().trim(), et_code.getText().toString().trim(), spinner_supplier_name.getText(), et_maker_name.getText().toString().trim(), mProductType, et_price.getText().toString().trim(), et_unit.getText().toString().trim(), et_inventory_num.getText().toString().trim(), et_warn_num.getText().toString().trim(), et_remark.getText().toString().trim());
                 break;
         }
     }
@@ -145,7 +148,7 @@ public class CompanyProductDetailActivity extends BaseMvpActivity<CompanyProduct
     private void setEditTextInput(boolean canInput) {
         et_product_name.setEnabled(canInput);
         et_code.setEnabled(canInput);
-        et_supplier_name.setEnabled(canInput);
+        spinner_supplier_name.getTextView().setEnabled(canInput);
         et_maker_name.setEnabled(canInput);
         spinner_product_type.getTextView().setEnabled(canInput);
         et_price.setEnabled(canInput);
@@ -154,6 +157,15 @@ public class CompanyProductDetailActivity extends BaseMvpActivity<CompanyProduct
         et_remark.setEnabled(canInput);
     }
 
+
+    @Override
+    public void getAllSuppliers(List<DicInfo2> dicInfoList) {
+        List<DicInfo> list = new ArrayList<>();
+        for (DicInfo2 dicInfo2 : dicInfoList) {
+            list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getId()));
+        }
+        spinner_supplier_name.setListDatas(this, list);
+    }
 
     @Override
     public void getProductType(List<DicInfo> dicInfoList) {
@@ -173,7 +185,7 @@ public class CompanyProductDetailActivity extends BaseMvpActivity<CompanyProduct
     public void getCompanyProductDetail(CompanyProductInfo companyProductInfo) {
         et_product_name.setText(companyProductInfo.getName());
         et_code.setText(companyProductInfo.getCode());
-        et_supplier_name.setText(companyProductInfo.getSupplierName());
+        spinner_supplier_name.setText(companyProductInfo.getSupplierName());
         et_maker_name.setText(companyProductInfo.getMakerName());
         spinner_product_type.setText(companyProductInfo.getTypeName());
         mProductType = companyProductInfo.getType();

@@ -84,9 +84,15 @@
                             style="@style/costumer_title_style"
                             android:text="供应商名称：" />
 
-                        <EditText
-                            android:id="@+id/et_supplier_name"
-                            style="@style/product_et_blue" />
+                        <com.africa.crm.businessmanagement.widget.MySpinner
+                            android:id="@+id/spinner_supplier_name"
+                            style="@style/product_et_blue"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"
+                            app:backgroundSelector="@drawable/background_selector2" />
                     </LinearLayout>
 
                     <LinearLayout

@@ -87,9 +87,15 @@
                             style="@style/product_title_black"
                             android:text="客户名称：" />
 
-                        <EditText
-                            android:id="@+id/et_customer_name"
-                            style="@style/product_et_blue" />
+                        <com.africa.crm.businessmanagement.widget.MySpinner
+                            android:id="@+id/spinner_customer_name"
+                            style="@style/product_et_blue"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"
+                            app:backgroundSelector="@drawable/background_selector2" />
 
                     </LinearLayout>
 
@@ -103,9 +109,15 @@
                             style="@style/product_title_black"
                             android:text="联系人名称：" />
 
-                        <EditText
-                            android:id="@+id/et_contact_name"
-                            style="@style/product_et_blue" />
+                        <com.africa.crm.businessmanagement.widget.MySpinner
+                            android:id="@+id/spinner_contact_name"
+                            style="@style/product_et_blue"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"
+                            app:backgroundSelector="@drawable/background_selector2" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -129,7 +141,8 @@
 
                         <EditText
                             android:id="@+id/et_money"
-                            style="@style/product_et_blue" />
+                            style="@style/product_et_blue"
+                            android:inputType="number" />
 
                     </LinearLayout>
 
@@ -391,13 +404,16 @@
                         android:paddingRight="20dp"
                         android:text="删除" />
 
-                    <TextView
-                        android:id="@+id/tv_add_product"
-                        style="@style/product_title_black"
-                        android:drawablePadding="10dp"
-                        android:gravity="center_vertical"
-                        android:paddingRight="20dp"
-                        android:text="添加" />
+                    <com.africa.crm.businessmanagement.widget.MySpinner2
+                        android:id="@+id/spinner_add_product"
+                        style="@style/product_et_blue"
+                        android:layout_width="200dp"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="0dp"
+                        android:paddingTop="0dp"
+                        android:paddingBottom="0dp"
+                        app:backgroundSelector="@drawable/background_selector3"
+                        app:hintText="添加" />
 
                 </LinearLayout>
 

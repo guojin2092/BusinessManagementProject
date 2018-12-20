@@ -7,9 +7,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -29,7 +26,6 @@ import com.africa.crm.businessmanagement.main.station.contract.CompanyAccountCon
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyAccountPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
-import com.africa.crm.businessmanagement.widget.KeyboardUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -107,6 +103,7 @@ public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccoun
         ll_add.setOnClickListener(this);
         tv_delete.setOnClickListener(this);
 
+/*
         et_account.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -125,7 +122,9 @@ public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccoun
 
             }
         });
+*/
 
+/*
         et_nickname.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -144,6 +143,7 @@ public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccoun
 
             }
         });
+*/
 
     }
 
@@ -251,8 +251,8 @@ public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccoun
                     layout_network_error.setVisibility(View.GONE);
                     mRefreshLayout.getLayout().setVisibility(View.GONE);
                     layout_no_data.setVisibility(View.VISIBLE);
-                    KeyboardUtil.clearInputBox(et_account);
-                    KeyboardUtil.clearInputBox(et_nickname);
+//                    KeyboardUtil.clearInputBox(et_account);
+//                    KeyboardUtil.clearInputBox(et_nickname);
                     return;
                 } else {
                     layout_no_data.setVisibility(View.GONE);

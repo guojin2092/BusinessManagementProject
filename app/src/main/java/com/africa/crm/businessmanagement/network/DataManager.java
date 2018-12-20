@@ -189,6 +189,11 @@ public class DataManager implements HttpHelper {
     }
 
     @Override
+    public Observable<List<DicInfo2>> getAllSuppliers(String companyId) {
+        return mHttpHelper.getAllSuppliers(companyId);
+    }
+
+    @Override
     public Observable<CompanyContactInfoBean> getCompanyContactList(int page, int rows, String companyId, String userId, String name, String fromType) {
         return mHttpHelper.getCompanyContactList(page, rows, companyId, userId, name, fromType);
     }
@@ -206,6 +211,11 @@ public class DataManager implements HttpHelper {
     @Override
     public Observable<BaseEntity> saveCompanyContact(String id, String companyId, String userId, String head, String name, String fromType, String address, String mailAddress, String phone, String tel, String email, String job, String remark) {
         return mHttpHelper.saveCompanyContact(id, companyId, userId, head, name, fromType, address, mailAddress, phone, tel, email, job, remark);
+    }
+
+    @Override
+    public Observable<List<DicInfo2>> getAllContact(String companyId) {
+        return mHttpHelper.getAllContact(companyId);
     }
 
     @Override
@@ -229,6 +239,11 @@ public class DataManager implements HttpHelper {
     }
 
     @Override
+    public Observable<List<DicInfo2>> getAllCustomers(String companyId) {
+        return mHttpHelper.getAllCustomers(companyId);
+    }
+
+    @Override
     public Observable<CompanyProductInfoBean> getCompanyProductList(int page, int rows, String companyId, String name, String type) {
         return mHttpHelper.getCompanyProductList(page, rows, companyId, name, type);
     }
@@ -246,6 +261,11 @@ public class DataManager implements HttpHelper {
     @Override
     public Observable<BaseEntity> saveCompanyProduct(String id, String companyId, String name, String code, String supplierName, String makerName, String type, String unitPrice, String unit, String stockNum, String warnNum, String remark) {
         return mHttpHelper.saveCompanyProduct(id, companyId, name, code, supplierName, makerName, type, unitPrice, unit, stockNum, warnNum, remark);
+    }
+
+    @Override
+    public Observable<List<DicInfo2>> getAllProducts(String companyId) {
+        return mHttpHelper.getAllProducts(companyId);
     }
 
     @Override

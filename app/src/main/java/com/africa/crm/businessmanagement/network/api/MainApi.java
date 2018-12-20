@@ -145,6 +145,10 @@ public interface MainApi {
     Observable<BaseEntity> saveCompanySupplier(@Field("id") String id, @Field("companyId") String companyId, @Field("head") String head, @Field("name") String name, @Field("type") String type, @Field("address") String address, @Field("phone") String phone, @Field("email") String email, @Field("zipCode") String zipCode, @Field("area") String area, @Field("remark") String remark);
 
     @FormUrlEncoded
+    @POST("supplier/queryAll")
+    Observable<BaseEntity<List<DicInfo2>>> getAllSuppliers(@Field("companyId") String companyId);
+
+    @FormUrlEncoded
     @POST("contact/grid")
     Observable<BaseEntity<CompanyContactInfoBean>> getCompanyContactList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("fromType") String fromType);
 
@@ -159,6 +163,10 @@ public interface MainApi {
     @FormUrlEncoded
     @POST("contact/save")
     Observable<BaseEntity> saveCompanyContact(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("head") String head, @Field("name") String name, @Field("fromType") String fromType, @Field("address") String address, @Field("mailAddress") String mailAddress, @Field("phone") String phone, @Field("tel") String tel, @Field("email") String email, @Field("job") String job, @Field("remark") String remark);
+
+    @FormUrlEncoded
+    @POST("contact/queryAll")
+    Observable<BaseEntity<List<DicInfo2>>> getAllContact(@Field("companyId") String companyId);
 
     @FormUrlEncoded
     @POST("customer/grid")
@@ -177,6 +185,10 @@ public interface MainApi {
     Observable<BaseEntity> saveCompanyClient(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("head") String head, @Field("name") String name, @Field("industry") String industry, @Field("address") String address, @Field("workerNum") String workerNum, @Field("tel") String tel, @Field("yearIncome") String yearIncome, @Field("remark") String remark);
 
     @FormUrlEncoded
+    @POST("customer/queryAll")
+    Observable<BaseEntity<List<DicInfo2>>> getAllCustomers(@Field("companyId") String companyId);
+
+    @FormUrlEncoded
     @POST("product/grid")
     Observable<BaseEntity<CompanyProductInfoBean>> getCompanyProductList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("name") String name, @Field("type") String type);
 
@@ -191,6 +203,10 @@ public interface MainApi {
     @FormUrlEncoded
     @POST("product/save")
     Observable<BaseEntity> saveCompanyProduct(@Field("id") String id, @Field("companyId") String companyId, @Field("name") String name, @Field("code") String code, @Field("supplierName") String supplierName, @Field("makerName") String makerName, @Field("type") String type, @Field("unitPrice") String unitPrice, @Field("unit") String unit, @Field("stockNum") String stockNum, @Field("warnNum") String warnNum, @Field("remark") String remark);
+
+    @FormUrlEncoded
+    @POST("product/queryAll")
+    Observable<BaseEntity<List<DicInfo2>>> getAllProducts(@Field("companyId") String companyId);
 
     @FormUrlEncoded
     @POST("quotationOrder/grid")

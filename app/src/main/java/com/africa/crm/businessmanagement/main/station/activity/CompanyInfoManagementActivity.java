@@ -201,7 +201,7 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
                     layout_network_error.setVisibility(View.GONE);
                     mRefreshLayout.getLayout().setVisibility(View.GONE);
                     layout_no_data.setVisibility(View.VISIBLE);
-                    KeyboardUtil.clearInputBox(et_search);
+//                    KeyboardUtil.clearInputBox(et_search);
                     return;
                 } else {
                     layout_no_data.setVisibility(View.GONE);

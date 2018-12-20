@@ -140,6 +140,7 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
         tv_search.setOnClickListener(this);
         titlebar_right.setText(R.string.delete);
 
+/*
         et_search_username.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -162,6 +163,8 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
 
             }
         });
+*/
+/*
         et_search_nickname.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -184,6 +187,7 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
 
             }
         });
+*/
 
     }
 
@@ -209,12 +213,14 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
                 mType = dicInfo.getCode();
+/*
                 if (!TextUtils.isEmpty(mType)) {
                     spinner_state.setText("");
                     mState = "";
                     et_search_username.setText("");
                     et_search_nickname.setText("");
                 }
+*/
             }
         });
 
@@ -222,12 +228,14 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
                 mState = dicInfo.getCode();
+/*
                 if (!TextUtils.isEmpty(mType)) {
                     spinner_type.setText("");
                     mType = "";
                     et_search_username.setText("");
                     et_search_nickname.setText("");
                 }
+*/
             }
         });
     }
