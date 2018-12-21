@@ -58,7 +58,7 @@
                         android:id="@+id/et_username"
                         style="@style/MyEditText"
                         android:hint="@string/username_hint"
-                        android:text="ggjj" />
+                        android:text="aaa123123" />
                 </LinearLayout>
 
                 <LinearLayout

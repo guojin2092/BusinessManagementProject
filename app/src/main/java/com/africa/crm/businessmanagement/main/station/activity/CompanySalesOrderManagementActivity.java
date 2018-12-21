@@ -216,9 +216,11 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
             @Override
             public void onTimeSelect(Date date, View v) {
                 mEndDate = date;
-                if (mEndDate.getTime() <= mStartDate.getTime()) {
-                    toastMsg("起止时间不得小于起始时间");
-                    return;
+                if (mStartDate!=null){
+                    if (mEndDate.getTime() <= mStartDate.getTime()) {
+                        toastMsg("起止时间不得小于起始时间");
+                        return;
+                    }
                 }
                 tv_end_time.setText(TimeUtils.getTime(date));
             }

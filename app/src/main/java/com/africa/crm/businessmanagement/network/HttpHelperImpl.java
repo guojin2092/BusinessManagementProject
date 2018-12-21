@@ -6,6 +6,8 @@ import com.africa.crm.businessmanagement.main.bean.CompanyClientInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyClientInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
@@ -317,6 +319,11 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
+    public Observable<List<DicInfo2>> getAllDeliveryOrders(String companyId, String userId) {
+        return mainApi.getAllDeliveryOrders(companyId, userId).compose(RxUtils.<List<DicInfo2>>handleResult());
+    }
+
+    @Override
     public Observable<CompanyTradingOrderInfoBean> getCompanyTradingOrderList(int page, int rows, String companyId, String userId, String name, String createTimes, String createTimee) {
         return mainApi.getCompanyTradingOrderList(page, rows, companyId, userId, name, createTimes, createTimee).compose(RxUtils.<CompanyTradingOrderInfoBean>handleResult());
     }
@@ -334,6 +341,26 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<BaseEntity> saveCompanyTradingOrder(String id, String companyId, String userId, String name, String customerName, String price, String estimateProfit, String contactName, String possibility, String clueSource, String remark) {
         return mainApi.saveCompanyTradingOrder(id, companyId, userId, name, customerName, price, estimateProfit, contactName, possibility, clueSource, remark);
+    }
+
+    @Override
+    public Observable<CompanyDeliveryOrderInfoBean> getCompanyDeliveryOrderList(int page, int rows, String companyId, String userId, String name, String createTimes, String createTimee) {
+        return mainApi.getCompanyDeliveryOrderList(page, rows, companyId, userId, name, createTimes, createTimee).compose(RxUtils.<CompanyDeliveryOrderInfoBean>handleResult());
+    }
+
+    @Override
+    public Observable<BaseEntity> deleteCompanyDeliveryOrder(String id) {
+        return mainApi.deleteCompanyDeliveryOrder(id);
+    }
+
+    @Override
+    public Observable<CompanyDeliveryOrderInfo> getCompanyDeliveryOrderDetail(String id) {
+        return mainApi.getCompanyDeliveryOrderDetail(id).compose(RxUtils.<CompanyDeliveryOrderInfo>handleResult());
+    }
+
+    @Override
+    public Observable<BaseEntity> saveCompanyDeliveryOrder(String id, String companyId, String userId, String name, String salesOrderId, String logisticsCode, String state, String arriveDate, String sendAddress, String sendAddressZipCode, String destinationAddress, String destinationAddressZipCode, String products, String clause, String remark) {
+        return mainApi.saveCompanyDeliveryOrder(id, companyId, userId, name, salesOrderId, logisticsCode, state, arriveDate, sendAddress, sendAddressZipCode, destinationAddress, destinationAddressZipCode, products, clause, remark);
     }
 
 }

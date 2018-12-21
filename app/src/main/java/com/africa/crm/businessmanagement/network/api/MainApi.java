@@ -6,6 +6,8 @@ import com.africa.crm.businessmanagement.main.bean.CompanyClientInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyClientInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
@@ -241,6 +243,10 @@ public interface MainApi {
     Observable<BaseEntity> saveCompanySalesOrder(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("customerName") String customerName, @Field("contactName") String contactName, @Field("saleCommission") String saleCommission, @Field("state") String state, @Field("sendAddress") String sendAddress, @Field("sendAddressZipCode") String sendAddressZipCode, @Field("destinationAddress") String destinationAddress, @Field("destinationAddressZipCode") String destinationAddressZipCode, @Field("products") String products, @Field("clause") String clause, @Field("remark") String remark);
 
     @FormUrlEncoded
+    @POST("salesOrder/queryAll")
+    Observable<BaseEntity<List<DicInfo2>>> getAllDeliveryOrders(@Field("companyId") String companyId, @Field("userId") String userId);
+
+    @FormUrlEncoded
     @POST("tradingOrder/grid")
     Observable<BaseEntity<CompanyTradingOrderInfoBean>> getCompanyTradingOrderList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("createTimes") String createTimes, @Field("createTimee") String createTimee);
 
@@ -255,4 +261,21 @@ public interface MainApi {
     @FormUrlEncoded
     @POST("tradingOrder/save")
     Observable<BaseEntity> saveCompanyTradingOrder(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("customerName") String customerName, @Field("price") String price, @Field("estimateProfit") String estimateProfit, @Field("contactName") String contactName, @Field("possibility") String possibility, @Field("clueSource") String clueSource, @Field("remark") String remark);
+
+    @FormUrlEncoded
+    @POST("invoiceOrder/grid")
+    Observable<BaseEntity<CompanyDeliveryOrderInfoBean>> getCompanyDeliveryOrderList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("createTimes") String createTimes, @Field("createTimee") String createTimee);
+
+    @FormUrlEncoded
+    @POST("invoiceOrder/deleteById")
+    Observable<BaseEntity> deleteCompanyDeliveryOrder(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("invoiceOrder/getInfo")
+    Observable<BaseEntity<CompanyDeliveryOrderInfo>> getCompanyDeliveryOrderDetail(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("invoiceOrder/save")
+    Observable<BaseEntity> saveCompanyDeliveryOrder(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("salesOrderId") String salesOrderId, @Field("logisticsCode") String logisticsCode, @Field("state") String state, @Field("arriveDate") String arriveDate, @Field("sendAddress") String sendAddress, @Field("sendAddressZipCode") String sendAddressZipCode, @Field("destinationAddress") String destinationAddress, @Field("destinationAddressZipCode") String destinationAddressZipCode, @Field("products") String products, @Field("clause") String clause, @Field("remark") String remark);
+
 }

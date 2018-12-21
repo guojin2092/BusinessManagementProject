@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/F2F2F2"
     android:orientation="vertical">
 
@@ -11,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.africa.crm.businessmanagement.widget.OverScrollView
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none">
@@ -23,7 +24,7 @@
 
                 <TextView
                     style="@style/product_title_blue"
-                    android:text="销售订单信息：" />
+                    android:text="发货订单信息：" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -39,132 +40,33 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="发货单所有者：" />
+                            android:text="发货单名称：" />
+
+                        <EditText
+                            android:id="@+id/et_delivery_order_name"
+                            style="@style/product_et_blue" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
 
                         <TextView
-                            style="@style/product_title_blue"
-                            android:drawableRight="@drawable/iv_arrow_down"
-                            android:drawablePadding="@dimen/activity_horizontal_margin"
+                            style="@style/product_title_black"
+                            android:text="销售单：" />
+
+                        <com.africa.crm.businessmanagement.widget.MySpinner
+                            android:id="@+id/spinner_sales_id"
+                            style="@style/product_et_blue"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
                             android:paddingLeft="0dp"
-                            android:text="姚" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/product_title_black"
-                            android:text="销售订单：" />
-
-                        <TextView
-                            style="@style/product_title_blue"
-                            android:paddingLeft="0dp"
-                            android:text="1000" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:background="@color/white"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/product_title_black"
-                            android:text="主题：" />
-
-                        <EditText style="@style/product_et_blue" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/product_title_black"
-                            android:text="采购订单：" />
-
-                        <EditText style="@style/product_et_blue" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:background="@color/white"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/product_title_black"
-                            android:text="发货日期：" />
-
-                        <EditText style="@style/product_et_blue" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/product_title_black"
-                            android:text="消费税（¥）：" />
-
-                        <TextView
-                            style="@style/product_title_blue"
-                            android:drawableRight="@drawable/iv_arrow_down"
-                            android:drawablePadding="@dimen/activity_horizontal_margin"
-                            android:paddingLeft="0dp" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:background="@color/white"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/product_title_black"
-                            android:text="到期日期：" />
-
-                        <EditText style="@style/product_et_blue" />
-
-
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"
+                            app:backgroundSelector="@drawable/background_selector2" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -177,12 +79,15 @@
                             style="@style/product_title_black"
                             android:text="状态：" />
 
-                        <TextView
-                            style="@style/product_title_blue"
-                            android:drawableRight="@drawable/iv_arrow_down"
-                            android:drawablePadding="@dimen/activity_horizontal_margin"
-                            android:paddingLeft="0dp" />
-
+                        <com.africa.crm.businessmanagement.widget.MySpinner
+                            android:id="@+id/spinner_state"
+                            style="@style/product_et_blue"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingLeft="0dp"
+                            android:paddingTop="0dp"
+                            android:paddingBottom="0dp"
+                            app:backgroundSelector="@drawable/background_selector2" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -202,9 +107,11 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="销售佣金（¥）：" />
+                            android:text="物流单编号：" />
 
-                        <EditText style="@style/product_et_blue" />
+                        <EditText
+                            android:id="@+id/et_logistics_code"
+                            style="@style/product_et_blue" />
 
                     </LinearLayout>
 
@@ -216,37 +123,13 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="联系人名称：" />
+                            android:text="到达时间：" />
 
                         <TextView
-                            style="@style/product_title_blue"
-                            android:drawableRight="@drawable/iv_arrow_down"
-                            android:drawablePadding="@dimen/activity_horizontal_margin"
-                            android:paddingLeft="0dp" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:background="@color/white"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/product_title_black"
-                            android:text="客户名称：" />
-
-                        <EditText style="@style/product_et_blue" />
-
+                            android:id="@+id/tv_arrive_date"
+                            style="@style/product_et_blue"
+                            android:drawableRight="@drawable/arrow2"
+                            android:paddingRight="20dp" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -260,7 +143,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
                     android:background="@color/white"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -296,7 +180,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
                     android:background="@color/white"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -342,9 +227,27 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="开单地址-邮编：" />
+                            android:text="发货地址：" />
 
-                        <EditText style="@style/product_et_blue" />
+                        <EditText
+                            android:id="@+id/et_deliver_address"
+                            style="@style/product_et_blue" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/product_title_black"
+                            android:text="发货地址-邮编：" />
+
+                        <EditText
+                            android:id="@+id/et_deliver_zip_code"
+                            style="@style/product_et_blue" />
 
                     </LinearLayout>
 
@@ -355,7 +258,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14dp"
                     android:background="@color/white"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -391,7 +295,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
                     android:background="@color/white"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -437,67 +342,88 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="发货地址-邮编：" />
+                            android:text="收货地址：" />
 
-                        <EditText style="@style/product_et_blue" />
+                        <EditText
+                            android:id="@+id/et_receiver_address"
+                            style="@style/product_et_blue" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/product_title_black"
+                            android:text="收货地址-邮编：" />
+
+                        <EditText
+                            android:id="@+id/et_receiver_zip_code"
+                            style="@style/product_et_blue" />
 
                     </LinearLayout>
 
                 </LinearLayout>
-
-                <TextView
-                    style="@style/product_title_blue"
-                    android:text="产品明细：" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="1dp"
-                    android:background="@color/white"
                     android:orientation="horizontal">
 
-                    <LinearLayout
+                    <TextView
+                        style="@style/product_title_blue"
+                        android:text="产品明细：" />
+
+                    <View
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
+                        android:layout_weight="1" />
 
-                        <TextView
-                            style="@style/product_title_black"
-                            android:text="产品名称：" />
+                    <TextView
+                        android:id="@+id/tv_delete_product"
+                        style="@style/product_title_black"
+                        android:drawablePadding="10dp"
+                        android:gravity="center_vertical"
+                        android:paddingRight="20dp"
+                        android:text="删除" />
 
-                        <EditText style="@style/product_et_blue" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/product_title_black"
-                            android:text="产品数量：" />
-
-                        <EditText
-                            style="@style/product_et_blue"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-
-                        <TextView
-                            android:id="@+id/tv_add_address"
-                            style="@style/product_title_black"
-                            android:drawableLeft="@drawable/add_light"
-                            android:drawablePadding="10dp"
-                            android:gravity="center_vertical"
-                            android:paddingRight="20dp"
-                            android:text="添加地址" />
-
-                    </LinearLayout>
+                    <com.africa.crm.businessmanagement.widget.MySpinner2
+                        android:id="@+id/spinner_add_product"
+                        style="@style/product_et_blue"
+                        android:layout_width="200dp"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="0dp"
+                        android:paddingTop="0dp"
+                        android:paddingBottom="0dp"
+                        app:backgroundSelector="@drawable/background_selector3"
+                        app:hintText="添加" />
 
                 </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_product"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:overScrollMode="never" />
+
+                <TextView
+                    android:id="@+id/tv_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin"
+                    android:background="@drawable/bg_button"
+                    android:paddingLeft="38dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="38dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/delete"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
 
                 <TextView
                     style="@style/product_title_blue"
@@ -511,6 +437,7 @@
                     android:orientation="horizontal">
 
                     <EditText
+                        android:id="@+id/et_clause"
                         style="@style/product_et_blue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -531,6 +458,7 @@
                     android:orientation="horizontal">
 
                     <EditText
+                        android:id="@+id/et_remark"
                         style="@style/product_et_blue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -556,7 +484,7 @@
                     android:visibility="invisible" />
 
             </LinearLayout>
-        </com.africa.crm.businessmanagement.widget.OverScrollView>
+        </ScrollView>
 
         <TextView
             android:id="@+id/tv_save"
@@ -573,6 +501,10 @@
             android:textColor="@color/white"
             android:textSize="18sp"
             android:visibility="gone" />
+
+        <include layout="@layout/layout_request_no_data" />
+
+        <include layout="@layout/layout_request_network_error" />
 
     </FrameLayout>
 
