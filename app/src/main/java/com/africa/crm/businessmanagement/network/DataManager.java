@@ -10,6 +10,8 @@ import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
@@ -311,8 +313,8 @@ public class DataManager implements HttpHelper {
     }
 
     @Override
-    public Observable<List<DicInfo2>> getAllDeliveryOrders(String companyId, String userId) {
-        return mHttpHelper.getAllDeliveryOrders(companyId, userId);
+    public Observable<List<DicInfo2>> getAllSaleOrders(String companyId, String userId) {
+        return mHttpHelper.getAllSaleOrders(companyId, userId);
     }
 
     @Override
@@ -336,8 +338,13 @@ public class DataManager implements HttpHelper {
     }
 
     @Override
-    public Observable<CompanyDeliveryOrderInfoBean> getCompanyDeliveryOrderList(int page, int rows, String companyId, String userId, String name, String createTimes, String createTimee) {
-        return mHttpHelper.getCompanyDeliveryOrderList(page, rows, companyId, userId, name, createTimes, createTimee);
+    public Observable<List<DicInfo2>> getAllTradingOrders(String companyId, String userId) {
+        return mHttpHelper.getAllTradingOrders(companyId, userId);
+    }
+
+    @Override
+    public Observable<CompanyDeliveryOrderInfoBean> getCompanyDeliveryOrderList(int page, int rows, String companyId, String userId, String name, String code, String createTimes, String createTimee) {
+        return mHttpHelper.getCompanyDeliveryOrderList(page, rows, companyId, userId, name, code, createTimes, createTimee);
     }
 
     @Override
@@ -353,6 +360,26 @@ public class DataManager implements HttpHelper {
     @Override
     public Observable<BaseEntity> saveCompanyDeliveryOrder(String id, String companyId, String userId, String name, String salesOrderId, String logisticsCode, String state, String arriveDate, String sendAddress, String sendAddressZipCode, String destinationAddress, String destinationAddressZipCode, String products, String clause, String remark) {
         return mHttpHelper.saveCompanyDeliveryOrder(id, companyId, userId, name, salesOrderId, logisticsCode, state, arriveDate, sendAddress, sendAddressZipCode, destinationAddress, destinationAddressZipCode, products, clause, remark);
+    }
+
+    @Override
+    public Observable<CompanyPayOrderInfoBean> getCompanyPayOrderList(int page, int rows, String companyId, String userId, String name, String code, String createTimes, String createTimee) {
+        return mHttpHelper.getCompanyPayOrderList(page, rows, companyId, userId, name, code, createTimes, createTimee);
+    }
+
+    @Override
+    public Observable<BaseEntity> deleteCompanyPayOrder(String id) {
+        return mHttpHelper.deleteCompanyPayOrder(id);
+    }
+
+    @Override
+    public Observable<CompanyPayOrderInfo> getCompanyPayOrderDetail(String id) {
+        return mHttpHelper.getCompanyPayOrderDetail(id);
+    }
+
+    @Override
+    public Observable<BaseEntity> saveCompanyPayOrder(String id, String companyId, String userId, String name, String salesOrderId, String tradingOrderId, String customerName, String price, String payTime, String hasInvoice, String hasPrint, String invoiceFiles, String remark) {
+        return mHttpHelper.saveCompanyPayOrder(id, companyId, userId, name, salesOrderId, tradingOrderId, customerName, price, payTime, hasInvoice, hasPrint, invoiceFiles, remark);
     }
 
 }

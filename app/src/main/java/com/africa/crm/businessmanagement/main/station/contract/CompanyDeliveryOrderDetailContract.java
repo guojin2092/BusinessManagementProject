@@ -25,7 +25,7 @@ public class CompanyDeliveryOrderDetailContract {
 
         void getAllProduct(List<DicInfo2> dicInfoList);
 
-        void getAllDeliveryOrders(List<DicInfo2> dicInfoList);
+        void getAllSaleOrders(List<DicInfo2> dicInfoList);
 
         void getCompanyDeliveryOrderDetail(CompanyDeliveryOrderInfo companyDeliveryOrderInfo);
 
@@ -38,7 +38,7 @@ public class CompanyDeliveryOrderDetailContract {
 
         void getAllProduct(String companyId);
 
-        void getAllDeliveryOrders(String companyId,String userId);
+        void getAllSaleOrders(String companyId,String userId);
 
         void getCompanyDeliveryOrderDetail(String id);
 

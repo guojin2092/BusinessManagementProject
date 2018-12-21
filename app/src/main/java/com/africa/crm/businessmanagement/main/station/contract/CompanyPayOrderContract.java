@@ -2,6 +2,7 @@ package com.africa.crm.businessmanagement.main.station.contract;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 import com.africa.crm.businessmanagement.mvp.presenter.IBasePresenter;
 import com.africa.crm.businessmanagement.network.base.BaseView;
@@ -15,21 +16,21 @@ import com.africa.crm.businessmanagement.network.base.BaseView;
  * Modification  History:
  * Why & What is modified:
  */
-public class CompanyDeliveryOrderContract {
+public class CompanyPayOrderContract {
 
     public interface View extends BaseView {
         void getCompanyUserList(UserManagementInfoBean userManagementInfoBean);
 
-        void getCompanyDeliveryOrderList(CompanyDeliveryOrderInfoBean companyDeliveryOrderInfoBean);
+        void getCompanyPayOrderList(CompanyPayOrderInfoBean companyPayOrderInfoBean);
 
-        void deleteCompanyDeliveryOrder(BaseEntity baseEntity);
+        void deleteCompanyPayOrder(BaseEntity baseEntity);
     }
 
-    public interface Presenter extends IBasePresenter<CompanyDeliveryOrderContract.View> {
+    public interface Presenter extends IBasePresenter<CompanyPayOrderContract.View> {
         void getCompanyUserList(int page, int rows, String userName, String type, String companyId, String state, String name);
 
-        void getCompanyDeliveryOrderList(int page, int rows, String companyId, String userId, String name,String code, String createTimes, String createTimee);
+        void getCompanyPayOrderList(int page, int rows, String companyId, String userId, String name, String code, String createTimes, String createTimee);
 
-        void deleteCompanyDeliveryOrder(String id);
+        void deleteCompanyPayOrder(String id);
     }
 }

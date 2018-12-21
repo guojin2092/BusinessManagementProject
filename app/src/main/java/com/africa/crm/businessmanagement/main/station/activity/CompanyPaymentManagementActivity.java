@@ -15,18 +15,18 @@ import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
-import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyDeliveryOrderEvent;
+import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyPayOrderEvent;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
-import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfo;
-import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.UserInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
-import com.africa.crm.businessmanagement.main.station.adapter.DeliveryOrderListAdapter;
-import com.africa.crm.businessmanagement.main.station.contract.CompanyDeliveryOrderContract;
-import com.africa.crm.businessmanagement.main.station.presenter.CompanyDeliveryOrderPresenter;
+import com.africa.crm.businessmanagement.main.station.adapter.PaymentListAdapter;
+import com.africa.crm.businessmanagement.main.station.contract.CompanyPayOrderContract;
+import com.africa.crm.businessmanagement.main.station.presenter.CompanyPayOrderPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
@@ -54,9 +54,9 @@ import butterknife.BindView;
  * Modification  History:
  * Why & What is modified:
  */
-public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivity<CompanyDeliveryOrderPresenter> implements CompanyDeliveryOrderContract.View {
-    @BindView(R.id.et_quotation_name)
-    EditText et_quotation_name;
+public class CompanyPaymentManagementActivity extends BaseRefreshMvpActivity<CompanyPayOrderPresenter> implements CompanyPayOrderContract.View {
+    @BindView(R.id.et_pay_order_name)
+    EditText et_pay_order_name;
     @BindView(R.id.et_code)
     EditText et_code;
     @BindView(R.id.tv_start_time)
@@ -78,9 +78,9 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
-    private DeliveryOrderListAdapter mDeliveryOrderListAdapter;
-    private List<CompanyDeliveryOrderInfo> mDeleteList = new ArrayList<>();
-    private List<CompanyDeliveryOrderInfo> mDeliveryOrderInfoList = new ArrayList<>();
+    private PaymentListAdapter mPaymentListAdapter;
+    private List<CompanyPayOrderInfo> mDeleteList = new ArrayList<>();
+    private List<CompanyPayOrderInfo> mPaymentInfoBeanList = new ArrayList<>();
 
     private WorkStationInfo mWorkStationInfo;
     private boolean mShowCheckBox = false;
@@ -95,7 +95,7 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
      * @param activity
      */
     public static void startActivity(Activity activity, WorkStationInfo workStationInfo) {
-        Intent intent = new Intent(activity, CompanyDeliveryOrderManagementActivity.class);
+        Intent intent = new Intent(activity, CompanyPaymentManagementActivity.class);
         intent.putExtra("info", workStationInfo);
         activity.startActivity(intent);
     }
@@ -106,10 +106,9 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
         EventBus.getDefault().register(this);
     }
 
-
     @Override
     public void setView(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_company_delivery_order_management);
+        setContentView(R.layout.activity_company_payment_management);
     }
 
     @Override
@@ -121,7 +120,6 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
         if (mWorkStationInfo != null) {
             titlebar_name.setText(mWorkStationInfo.getWork_name());
         }
-
         if (mRoleCode.equals("companyRoot")) {
             spinner_user.setVisibility(View.VISIBLE);
         } else {
@@ -176,8 +174,8 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
 
 
     @Override
-    protected CompanyDeliveryOrderPresenter injectPresenter() {
-        return new CompanyDeliveryOrderPresenter();
+    protected CompanyPayOrderPresenter injectPresenter() {
+        return new CompanyPayOrderPresenter();
     }
 
     @Override
@@ -189,9 +187,9 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
     @Override
     public void pullDownRefresh(int page) {
         if (mRoleCode.equals("companyRoot")) {
-            mPresenter.getCompanyDeliveryOrderList(page, rows, mCompanyId, mUserId, et_quotation_name.getText().toString().trim(), et_code.getText().toString().trim(), tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
+            mPresenter.getCompanyPayOrderList(page, rows, mCompanyId, mUserId, et_pay_order_name.getText().toString().trim(), et_code.getText().toString().trim(), tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
         } else {
-            mPresenter.getCompanyDeliveryOrderList(page, rows, mCompanyId, String.valueOf(UserInfoManager.getUserLoginInfo(this).getId()), et_quotation_name.getText().toString().trim(), et_code.getText().toString().trim(), tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
+            mPresenter.getCompanyPayOrderList(page, rows, mCompanyId, String.valueOf(UserInfoManager.getUserLoginInfo(this).getId()), et_pay_order_name.getText().toString().trim(), et_code.getText().toString().trim(), tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
         }
     }
 
@@ -221,25 +219,25 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
                     tv_delete.setVisibility(View.GONE);
                     mShowCheckBox = false;
                 }
-                if (mDeliveryOrderListAdapter != null) {
-                    mDeliveryOrderListAdapter.setmIsDeleted(mShowCheckBox);
+                if (mPaymentListAdapter != null) {
+                    mPaymentListAdapter.setmIsDeleted(mShowCheckBox);
                 }
                 break;
             case R.id.ll_add:
-                CompanyDeliveryOrderDetailActivity.startActivity(CompanyDeliveryOrderManagementActivity.this, "");
+                CompanyPaymentDetailActivity.startActivity(CompanyPaymentManagementActivity.this, "");
                 break;
             case R.id.tv_delete:
                 mDeleteList.clear();
-                for (CompanyDeliveryOrderInfo companyDeliveryOrderInfo : mDeliveryOrderInfoList) {
-                    if (companyDeliveryOrderInfo.isChosen()) {
-                        mDeleteList.add(companyDeliveryOrderInfo);
+                for (CompanyPayOrderInfo companyPayOrderInfo : mPaymentInfoBeanList) {
+                    if (companyPayOrderInfo.isChosen()) {
+                        mDeleteList.add(companyPayOrderInfo);
                     }
                 }
                 if (ListUtils.isEmpty(mDeleteList)) {
                     toastMsg("尚未选择删除项");
                     return;
                 }
-                mDeleteDialog = new AlertDialog.Builder(CompanyDeliveryOrderManagementActivity.this)
+                mDeleteDialog = new AlertDialog.Builder(CompanyPaymentManagementActivity.this)
                         .setTitle(R.string.tips)
                         .setMessage(R.string.confirm_delete)
                         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -252,7 +250,7 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
                             @Override
                             public void onClick(DialogInterface dialogInterface, int which) {
                                 for (int i = 0; i < mDeleteList.size(); i++) {
-                                    mPresenter.deleteCompanyDeliveryOrder(mDeleteList.get(i).getId());
+                                    mPresenter.deleteCompanyPayOrder(mDeleteList.get(i).getId());
                                 }
                             }
                         })
@@ -261,10 +259,11 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
         }
     }
 
+
     @Override
     public void initData() {
-        mDeliveryOrderListAdapter = new DeliveryOrderListAdapter(mDeliveryOrderInfoList);
-        recyclerView.setAdapter(mDeliveryOrderListAdapter);
+        mPaymentListAdapter = new PaymentListAdapter(mPaymentInfoBeanList);
+        recyclerView.setAdapter(mPaymentListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new LineItemDecoration(this, LinearLayoutManager.VERTICAL, 2, ContextCompat.getColor(this, R.color.F2F2F2)));
@@ -292,10 +291,10 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
     }
 
     @Override
-    public void getCompanyDeliveryOrderList(CompanyDeliveryOrderInfoBean companyDeliveryOrderInfoBean) {
-        if (companyDeliveryOrderInfoBean != null) {
+    public void getCompanyPayOrderList(CompanyPayOrderInfoBean companyPayOrderInfoBean) {
+        if (companyPayOrderInfoBean != null) {
             if (page == 1) {
-                if (ListUtils.isEmpty(companyDeliveryOrderInfoBean.getRows())) {
+                if (ListUtils.isEmpty(companyPayOrderInfoBean.getRows())) {
                     layout_network_error.setVisibility(View.GONE);
                     mRefreshLayout.getLayout().setVisibility(View.GONE);
                     layout_no_data.setVisibility(View.VISIBLE);
@@ -305,52 +304,53 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
                     layout_network_error.setVisibility(View.GONE);
                     mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
                 }
-                mDeliveryOrderInfoList.clear();
+                mPaymentInfoBeanList.clear();
                 recyclerView.smoothScrollToPosition(0);
             }
             if (mRefreshLayout != null) {
-                if (ListUtils.isEmpty(companyDeliveryOrderInfoBean.getRows()) && page > 1) {
+                if (ListUtils.isEmpty(companyPayOrderInfoBean.getRows()) && page > 1) {
                     mRefreshLayout.finishLoadmoreWithNoMoreData();
                 } else {
                     mRefreshLayout.finishLoadmore();
                 }
             }
-            if (!ListUtils.isEmpty(companyDeliveryOrderInfoBean.getRows())) {
-                mDeliveryOrderInfoList.addAll(companyDeliveryOrderInfoBean.getRows());
-                if (mDeliveryOrderListAdapter != null) {
-                    mDeliveryOrderListAdapter.notifyDataSetChanged();
+            if (!ListUtils.isEmpty(companyPayOrderInfoBean.getRows())) {
+                mPaymentInfoBeanList.addAll(companyPayOrderInfoBean.getRows());
+                if (mPaymentListAdapter != null) {
+                    mPaymentListAdapter.notifyDataSetChanged();
                 }
             }
-            if (!ListUtils.isEmpty(mDeliveryOrderInfoList)) {
-                mDeliveryOrderListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            if (!ListUtils.isEmpty(mPaymentInfoBeanList)) {
+                mPaymentListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                         if (mShowCheckBox) {
                             CheckBox cb_choose = (CheckBox) adapter.getViewByPosition(recyclerView, position, R.id.cb_choose);
-                            mDeliveryOrderInfoList.get(position).setChosen(!cb_choose.isChecked());
-                            mDeliveryOrderListAdapter.notifyDataSetChanged();
+                            mPaymentInfoBeanList.get(position).setChosen(!cb_choose.isChecked());
+                            mPaymentListAdapter.notifyDataSetChanged();
                         } else {
-                            CompanyDeliveryOrderDetailActivity.startActivity(CompanyDeliveryOrderManagementActivity.this, mDeliveryOrderInfoList.get(position).getId());
+                            CompanyPaymentDetailActivity.startActivity(CompanyPaymentManagementActivity.this, mPaymentInfoBeanList.get(position).getId());
                         }
                     }
                 });
             }
         }
+
     }
 
     @Override
-    public void deleteCompanyDeliveryOrder(BaseEntity baseEntity) {
+    public void deleteCompanyPayOrder(BaseEntity baseEntity) {
         if (baseEntity.isSuccess()) {
             for (int i = 0; i < mDeleteList.size(); i++) {
-                if (mDeliveryOrderInfoList.contains(mDeleteList.get(i))) {
-                    int position = mDeliveryOrderInfoList.indexOf(mDeleteList.get(i));
-                    mDeliveryOrderInfoList.remove(mDeleteList.get(i));
-                    if (mDeliveryOrderListAdapter != null) {
-                        mDeliveryOrderListAdapter.notifyItemRemoved(position);
+                if (mPaymentInfoBeanList.contains(mDeleteList.get(i))) {
+                    int position = mPaymentInfoBeanList.indexOf(mDeleteList.get(i));
+                    mPaymentInfoBeanList.remove(mDeleteList.get(i));
+                    if (mPaymentListAdapter != null) {
+                        mPaymentListAdapter.notifyItemRemoved(position);
                     }
                 }
             }
-            if (ListUtils.isEmpty(mDeliveryOrderInfoList)) {
+            if (ListUtils.isEmpty(mPaymentInfoBeanList)) {
                 titlebar_right.setText(R.string.delete);
                 tv_delete.setVisibility(View.GONE);
                 mShowCheckBox = false;
@@ -365,8 +365,8 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
     }
 
     @Subscribe
-    public void Event(AddOrSaveCompanyDeliveryOrderEvent addOrSaveCompanyDeliveryOrderEvent) {
-        toastMsg(addOrSaveCompanyDeliveryOrderEvent.getMsg());
+    public void Event(AddOrSaveCompanyPayOrderEvent addOrSaveCompanyPayOrderEvent) {
+        toastMsg(addOrSaveCompanyPayOrderEvent.getMsg());
         requestData();
     }
 

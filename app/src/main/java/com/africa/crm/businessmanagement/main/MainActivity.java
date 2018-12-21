@@ -24,12 +24,12 @@ import com.africa.crm.businessmanagement.main.station.activity.CompanyAccountAct
 import com.africa.crm.businessmanagement.main.station.activity.CompanyClientManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyContactManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyInfoManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.CompanyPaymentManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanySupplierManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyTradingOrderManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyDeliveryOrderManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.InventoryManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.PackagingDataManagementActivity;
-import com.africa.crm.businessmanagement.main.station.activity.PaymentManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.PdfReportManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyProductManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.PurchasingManagementActivity;
@@ -258,7 +258,7 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
                             CompanyDeliveryOrderManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "11":
-                            PaymentManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            CompanyPaymentManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "12":
                             ServiceRecordManagementActivity.startActivity(MainActivity.this, workStationInfo);

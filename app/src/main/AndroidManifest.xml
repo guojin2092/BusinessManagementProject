@@ -146,11 +146,11 @@
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".main.station.activity.PaymentManagementActivity"
+            android:name=".main.station.activity.CompanyPaymentManagementActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".main.station.activity.PaymentDetailActivity"
+            android:name=".main.station.activity.CompanyPaymentDetailActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity

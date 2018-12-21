@@ -10,6 +10,8 @@ import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
@@ -244,7 +246,7 @@ public interface MainApi {
 
     @FormUrlEncoded
     @POST("salesOrder/queryAll")
-    Observable<BaseEntity<List<DicInfo2>>> getAllDeliveryOrders(@Field("companyId") String companyId, @Field("userId") String userId);
+    Observable<BaseEntity<List<DicInfo2>>> getAllSaleOrders(@Field("companyId") String companyId, @Field("userId") String userId);
 
     @FormUrlEncoded
     @POST("tradingOrder/grid")
@@ -263,8 +265,12 @@ public interface MainApi {
     Observable<BaseEntity> saveCompanyTradingOrder(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("customerName") String customerName, @Field("price") String price, @Field("estimateProfit") String estimateProfit, @Field("contactName") String contactName, @Field("possibility") String possibility, @Field("clueSource") String clueSource, @Field("remark") String remark);
 
     @FormUrlEncoded
+    @POST("tradingOrder/queryAll")
+    Observable<BaseEntity<List<DicInfo2>>> getAllTradingOrders(@Field("companyId") String companyId, @Field("userId") String userId);
+
+    @FormUrlEncoded
     @POST("invoiceOrder/grid")
-    Observable<BaseEntity<CompanyDeliveryOrderInfoBean>> getCompanyDeliveryOrderList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("createTimes") String createTimes, @Field("createTimee") String createTimee);
+    Observable<BaseEntity<CompanyDeliveryOrderInfoBean>> getCompanyDeliveryOrderList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("code") String code, @Field("createTimes") String createTimes, @Field("createTimee") String createTimee);
 
     @FormUrlEncoded
     @POST("invoiceOrder/deleteById")
@@ -278,4 +284,19 @@ public interface MainApi {
     @POST("invoiceOrder/save")
     Observable<BaseEntity> saveCompanyDeliveryOrder(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("salesOrderId") String salesOrderId, @Field("logisticsCode") String logisticsCode, @Field("state") String state, @Field("arriveDate") String arriveDate, @Field("sendAddress") String sendAddress, @Field("sendAddressZipCode") String sendAddressZipCode, @Field("destinationAddress") String destinationAddress, @Field("destinationAddressZipCode") String destinationAddressZipCode, @Field("products") String products, @Field("clause") String clause, @Field("remark") String remark);
 
+    @FormUrlEncoded
+    @POST("paymentOrder/grid")
+    Observable<BaseEntity<CompanyPayOrderInfoBean>> getCompanyPayOrderList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("code") String code, @Field("createTimes") String createTimes, @Field("createTimee") String createTimee);
+
+    @FormUrlEncoded
+    @POST("paymentOrder/deleteById")
+    Observable<BaseEntity> deleteCompanyPayOrder(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("paymentOrder/getInfo")
+    Observable<BaseEntity<CompanyPayOrderInfo>> getCompanyPayOrderDetail(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("paymentOrder/save")
+    Observable<BaseEntity> saveCompanyPayOrder(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("salesOrderId") String salesOrderId, @Field("tradingOrderId") String tradingOrderId, @Field("customerName") String customerName, @Field("price") String price, @Field("payTime") String payTime, @Field("hasInvoice") String hasInvoice, @Field("hasPrint") String hasPrint, @Field("invoiceFiles") String invoiceFiles, @Field("remark") String remark);
 }

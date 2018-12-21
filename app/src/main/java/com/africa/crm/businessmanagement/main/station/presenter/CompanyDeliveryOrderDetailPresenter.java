@@ -50,13 +50,13 @@ public class CompanyDeliveryOrderDetailPresenter extends RxPresenter<CompanyDeli
     }
 
     @Override
-    public void getAllDeliveryOrders(String companyId, String userId) {
-        addDisposable(mDataManager.getAllDeliveryOrders(companyId, userId)
+    public void getAllSaleOrders(String companyId, String userId) {
+        addDisposable(mDataManager.getAllSaleOrders(companyId, userId)
                 .compose(RxUtils.<List<DicInfo2>>ioToMain())
                 .subscribe(new Consumer<List<DicInfo2>>() {
                     @Override
                     public void accept(List<DicInfo2> dicInfo2List) throws Exception {
-                        mView.getAllDeliveryOrders(dicInfo2List);
+                        mView.getAllSaleOrders(dicInfo2List);
                     }
                 }, new ComConsumer(mView)));
 

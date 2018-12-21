@@ -10,6 +10,8 @@ import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
@@ -319,8 +321,8 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
-    public Observable<List<DicInfo2>> getAllDeliveryOrders(String companyId, String userId) {
-        return mainApi.getAllDeliveryOrders(companyId, userId).compose(RxUtils.<List<DicInfo2>>handleResult());
+    public Observable<List<DicInfo2>> getAllSaleOrders(String companyId, String userId) {
+        return mainApi.getAllSaleOrders(companyId, userId).compose(RxUtils.<List<DicInfo2>>handleResult());
     }
 
     @Override
@@ -344,9 +346,15 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
-    public Observable<CompanyDeliveryOrderInfoBean> getCompanyDeliveryOrderList(int page, int rows, String companyId, String userId, String name, String createTimes, String createTimee) {
-        return mainApi.getCompanyDeliveryOrderList(page, rows, companyId, userId, name, createTimes, createTimee).compose(RxUtils.<CompanyDeliveryOrderInfoBean>handleResult());
+    public Observable<List<DicInfo2>> getAllTradingOrders(String companyId, String userId) {
+        return mainApi.getAllTradingOrders(companyId, userId).compose(RxUtils.<List<DicInfo2>>handleResult());
     }
+
+    @Override
+    public Observable<CompanyDeliveryOrderInfoBean> getCompanyDeliveryOrderList(int page, int rows, String companyId, String userId, String name, String code, String createTimes, String createTimee) {
+        return mainApi.getCompanyDeliveryOrderList(page, rows, companyId, userId, name, code, createTimes, createTimee).compose(RxUtils.<CompanyDeliveryOrderInfoBean>handleResult());
+    }
+
 
     @Override
     public Observable<BaseEntity> deleteCompanyDeliveryOrder(String id) {
@@ -361,6 +369,26 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<BaseEntity> saveCompanyDeliveryOrder(String id, String companyId, String userId, String name, String salesOrderId, String logisticsCode, String state, String arriveDate, String sendAddress, String sendAddressZipCode, String destinationAddress, String destinationAddressZipCode, String products, String clause, String remark) {
         return mainApi.saveCompanyDeliveryOrder(id, companyId, userId, name, salesOrderId, logisticsCode, state, arriveDate, sendAddress, sendAddressZipCode, destinationAddress, destinationAddressZipCode, products, clause, remark);
+    }
+
+    @Override
+    public Observable<CompanyPayOrderInfoBean> getCompanyPayOrderList(int page, int rows, String companyId, String userId, String name, String code, String createTimes, String createTimee) {
+        return mainApi.getCompanyPayOrderList(page, rows, companyId, userId, name, code, createTimes, createTimee).compose(RxUtils.<CompanyPayOrderInfoBean>handleResult());
+    }
+
+    @Override
+    public Observable<BaseEntity> deleteCompanyPayOrder(String id) {
+        return mainApi.deleteCompanyPayOrder(id);
+    }
+
+    @Override
+    public Observable<CompanyPayOrderInfo> getCompanyPayOrderDetail(String id) {
+        return mainApi.getCompanyPayOrderDetail(id).compose(RxUtils.<CompanyPayOrderInfo>handleResult());
+    }
+
+    @Override
+    public Observable<BaseEntity> saveCompanyPayOrder(String id, String companyId, String userId, String name, String salesOrderId, String tradingOrderId, String customerName, String price, String payTime, String hasInvoice, String hasPrint, String invoiceFiles, String remark) {
+        return mainApi.saveCompanyPayOrder(id, companyId, userId, name, salesOrderId, tradingOrderId, customerName, price, payTime, hasInvoice, hasPrint, invoiceFiles, remark);
     }
 
 }

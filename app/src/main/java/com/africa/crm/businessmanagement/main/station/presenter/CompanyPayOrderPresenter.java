@@ -1,9 +1,9 @@
 package com.africa.crm.businessmanagement.main.station.presenter;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
-import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
-import com.africa.crm.businessmanagement.main.station.contract.CompanyDeliveryOrderContract;
+import com.africa.crm.businessmanagement.main.station.contract.CompanyPayOrderContract;
 import com.africa.crm.businessmanagement.mvp.presenter.RxPresenter;
 import com.africa.crm.businessmanagement.network.error.ComConsumer;
 import com.africa.crm.businessmanagement.network.util.RxUtils;
@@ -19,7 +19,7 @@ import io.reactivex.functions.Consumer;
  * Modification  History:
  * Why & What is modified:
  */
-public class CompanyDeliveryOrderPresenter extends RxPresenter<CompanyDeliveryOrderContract.View> implements CompanyDeliveryOrderContract.Presenter {
+public class CompanyPayOrderPresenter extends RxPresenter<CompanyPayOrderContract.View> implements CompanyPayOrderContract.Presenter {
     @Override
     public void getCompanyUserList(int page, int rows, String userName, String type, String companyId, String state, String name) {
         addDisposable(mDataManager.getUserList(page, rows, userName, type, companyId, state, name)
@@ -33,28 +33,29 @@ public class CompanyDeliveryOrderPresenter extends RxPresenter<CompanyDeliveryOr
     }
 
     @Override
-    public void getCompanyDeliveryOrderList(int page, int rows, String companyId, String userId, String name, String code, String createTimes, String createTimee) {
-        addDisposable(mDataManager.getCompanyDeliveryOrderList(page, rows, companyId, userId, name, code, createTimes, createTimee)
-                .compose(RxUtils.<CompanyDeliveryOrderInfoBean>ioToMain(mView))
-                .subscribe(new Consumer<CompanyDeliveryOrderInfoBean>() {
+    public void getCompanyPayOrderList(int page, int rows, String companyId, String userId, String name, String code, String createTimes, String createTimee) {
+        addDisposable(mDataManager.getCompanyPayOrderList(page, rows, companyId, userId, name, code, createTimes, createTimee)
+                .compose(RxUtils.<CompanyPayOrderInfoBean>ioToMain(mView))
+                .subscribe(new Consumer<CompanyPayOrderInfoBean>() {
                     @Override
-                    public void accept(CompanyDeliveryOrderInfoBean companyDeliveryOrderInfoBean) throws Exception {
-                        mView.getCompanyDeliveryOrderList(companyDeliveryOrderInfoBean);
+                    public void accept(CompanyPayOrderInfoBean companyPayOrderInfoBean) throws Exception {
+                        mView.getCompanyPayOrderList(companyPayOrderInfoBean);
                     }
                 }, new ComConsumer(mView)));
 
     }
 
     @Override
-    public void deleteCompanyDeliveryOrder(String id) {
-        addDisposable(mDataManager.deleteCompanyDeliveryOrder(id)
+    public void deleteCompanyPayOrder(String id) {
+        addDisposable(mDataManager.deleteCompanyPayOrder(id)
                 .compose(RxUtils.<BaseEntity>ioToMain())
                 .subscribe(new Consumer<BaseEntity>() {
                     @Override
                     public void accept(BaseEntity baseEntity) throws Exception {
-                        mView.deleteCompanyDeliveryOrder(baseEntity);
+                        mView.deleteCompanyPayOrder(baseEntity);
                     }
                 }, new ComConsumer(mView)));
+
     }
 
 }
