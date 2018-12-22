@@ -20,6 +20,8 @@ import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyServiceRecordInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyServiceRecordInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfo;
@@ -186,6 +188,14 @@ public interface HttpHelper {
     Observable<CompanyPurchasingOrderInfo> getCompanyPurchasingDetail(String id);
 
     Observable<BaseEntity> saveCompanyPurchasingOrder(String id, String companyId, String userId, String name, String supplierName, String state, String orderDate, String arriveDate, String sendAddress, String sendAddressZipCode, String destinationAddress, String destinationAddressZipCode, String products, String clause, String remark);
+
+    Observable<CompanyServiceRecordInfoBean> getServiceRecordList(int page, int rows, String companyId, String userId, String name, String state, String type, String createTimes, String createTimee);
+
+    Observable<BaseEntity> deleteServiceRecord(String id);
+
+    Observable<CompanyServiceRecordInfo> getCompanyServiceRecordDetail(String id);
+
+    Observable<BaseEntity> saveCompanyServiceRecord(String id, String companyId, String userId, String name, String state, String type, String productId, String customerName, String level, String phone, String email, String reason, String remark, String solution, String track);
 
 }
 

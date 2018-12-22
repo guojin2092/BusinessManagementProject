@@ -17,15 +17,18 @@ import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.main.bean.OrderProductInfo;
+import com.africa.crm.businessmanagement.widget.TimeUtils;
 import com.gitonway.lee.niftymodaldialogeffects.lib.ColorUtils;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.gitonway.lee.niftymodaldialogeffects.lib.effects.BaseEffects;
 
+import java.util.Date;
+
 
 /**
- * 添加产品
+ * 添加服务追踪
  */
-public class AddProductDialog extends Dialog implements DialogInterface {
+public class AddServiceRecordDialog extends Dialog implements DialogInterface {
 
     private static Context tmpContext;
 
@@ -61,7 +64,7 @@ public class AddProductDialog extends Dialog implements DialogInterface {
 
     private boolean isCancelable = true;
 
-    private static AddProductDialog instance;
+    private static AddServiceRecordDialog instance;
 
     private OnSaveClickListener onSaveClickListener;
 
@@ -73,13 +76,13 @@ public class AddProductDialog extends Dialog implements DialogInterface {
         this.onSaveClickListener = onSaveClickListener;
     }
 
-    public AddProductDialog(Context context) {
+    public AddServiceRecordDialog(Context context) {
         super(context);
         init(context);
 
     }
 
-    public AddProductDialog(Context context, int theme) {
+    public AddServiceRecordDialog(Context context, int theme) {
         super(context, theme);
         init(context);
     }
@@ -94,18 +97,18 @@ public class AddProductDialog extends Dialog implements DialogInterface {
 
     }
 
-    public static AddProductDialog getInstance(Context context) {
+    public static AddServiceRecordDialog getInstance(Context context) {
 
 /*
         if (instance == null || !tmpContext.equals(context)) {
-            synchronized (AddProductDialog.class) {
+            synchronized (AddServiceRecordDialog.class) {
                 if (instance == null || !tmpContext.equals(context)) {
-                    instance = new AddProductDialog(context, R.style.dialog_untran);
+                    instance = new AddServiceRecordDialog(context, R.style.dialog_untran);
                 }
             }
         }
 */
-        instance = new AddProductDialog(context, R.style.dialog_untran);
+        instance = new AddServiceRecordDialog(context, R.style.dialog_untran);
         tmpContext = context;
         return instance;
 
@@ -113,7 +116,7 @@ public class AddProductDialog extends Dialog implements DialogInterface {
 
     private void init(Context context) {
 
-        mDialogView = View.inflate(context, R.layout.dialog_add_product, null);
+        mDialogView = View.inflate(context, R.layout.dialog_add_service_record, null);
 
         mLinearLayoutView = (LinearLayout) mDialogView.findViewById(R.id.parentPanel);
         mRelativeLayoutView = (RelativeLayout) mDialogView.findViewById(R.id.main);
@@ -152,112 +155,110 @@ public class AddProductDialog extends Dialog implements DialogInterface {
             @Override
             public void onClick(View view) {
                 if (onSaveClickListener != null) {
-                    onSaveClickListener.onSaveClick(new OrderProductInfo(et_name.getText().toString().trim(), et_num.getText().toString().trim()));
+                    onSaveClickListener.onSaveClick(new OrderProductInfo(et_name.getText().toString().trim(), TimeUtils.getTimeByMinute2(new Date())));
                 }
-//                et_name.setText("");
-//                et_num.setText("");
             }
         });
 
     }
 
-    public AddProductDialog withDividerColor(String colorString) {
+    public AddServiceRecordDialog withDividerColor(String colorString) {
         mDivider.setBackgroundColor(Color.parseColor(colorString));
         return this;
     }
 
-    public AddProductDialog withDividerColor(int color) {
+    public AddServiceRecordDialog withDividerColor(int color) {
         mDivider.setBackgroundColor(color);
         return this;
     }
 
 
-    public AddProductDialog withTitle(CharSequence title) {
+    public AddServiceRecordDialog withTitle(CharSequence title) {
         toggleView(mLinearLayoutTopView, title);
         mTitle.setText(title);
         return this;
     }
 
-    public AddProductDialog withTitleColor(String colorString) {
+    public AddServiceRecordDialog withTitleColor(String colorString) {
         mTitle.setTextColor(Color.parseColor(colorString));
         return this;
     }
 
-    public AddProductDialog withTitleColor(int color) {
+    public AddServiceRecordDialog withTitleColor(int color) {
         mTitle.setTextColor(color);
         return this;
     }
 
-    public AddProductDialog withMessage(int textResId) {
+    public AddServiceRecordDialog withMessage(int textResId) {
         toggleView(mLinearLayoutMsgView, textResId);
         mMessage.setText(textResId);
         return this;
     }
 
-    public AddProductDialog withMessage(CharSequence msg) {
+    public AddServiceRecordDialog withMessage(CharSequence msg) {
         toggleView(mLinearLayoutMsgView, msg);
         mMessage.setText(msg);
         return this;
     }
 
-    public AddProductDialog withMessageColor(String colorString) {
+    public AddServiceRecordDialog withMessageColor(String colorString) {
         mMessage.setTextColor(Color.parseColor(colorString));
         return this;
     }
 
-    public AddProductDialog withMessageColor(int color) {
+    public AddServiceRecordDialog withMessageColor(int color) {
         mMessage.setTextColor(color);
         return this;
     }
 
-    public AddProductDialog withDialogColor(String colorString) {
+    public AddServiceRecordDialog withDialogColor(String colorString) {
         mLinearLayoutView.getBackground().setColorFilter(ColorUtils.getColorFilter(Color
                 .parseColor(colorString)));
         return this;
     }
 
-    public AddProductDialog withDialogColor(int color) {
+    public AddServiceRecordDialog withDialogColor(int color) {
         mLinearLayoutView.getBackground().setColorFilter(ColorUtils.getColorFilter(color));
         return this;
     }
 
-    public AddProductDialog withIcon(int drawableResId) {
+    public AddServiceRecordDialog withIcon(int drawableResId) {
         mIcon.setImageResource(drawableResId);
         return this;
     }
 
-    public AddProductDialog withIcon(Drawable icon) {
+    public AddServiceRecordDialog withIcon(Drawable icon) {
         mIcon.setImageDrawable(icon);
         return this;
     }
 
-    public AddProductDialog setCancelClick(View.OnClickListener click) {
+    public AddServiceRecordDialog setCancelClick(View.OnClickListener click) {
         mIcon.setOnClickListener(click);
         return this;
     }
 
-    public AddProductDialog withDuration(int duration) {
+    public AddServiceRecordDialog withDuration(int duration) {
         this.mDuration = duration;
         return this;
     }
 
-    public AddProductDialog withEffect(Effectstype type) {
+    public AddServiceRecordDialog withEffect(Effectstype type) {
         this.type = type;
         return this;
     }
 
-    public AddProductDialog setSaveClick(View.OnClickListener click) {
+    public AddServiceRecordDialog setSaveClick(View.OnClickListener click) {
         tv_save.setOnClickListener(click);
         return this;
     }
 
-    public AddProductDialog isCancelableOnTouchOutside(boolean cancelable) {
+    public AddServiceRecordDialog isCancelableOnTouchOutside(boolean cancelable) {
         this.isCancelable = cancelable;
         this.setCanceledOnTouchOutside(cancelable);
         return this;
     }
 
-    public AddProductDialog isCancelable(boolean cancelable) {
+    public AddServiceRecordDialog isCancelable(boolean cancelable) {
         this.isCancelable = cancelable;
         this.setCancelable(cancelable);
         return this;

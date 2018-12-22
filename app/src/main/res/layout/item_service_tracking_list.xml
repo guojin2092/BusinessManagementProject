@@ -96,16 +96,6 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_add_tracking"
-            style="@style/product_title_blue"
-            android:layout_gravity="bottom|right"
-            android:drawableLeft="@drawable/iv_add_logo_gray"
-            android:drawablePadding="5dp"
-            android:text="添加追踪"
-            android:textSize="16sp"
-            android:visibility="gone" />
-
     </FrameLayout>
 
 

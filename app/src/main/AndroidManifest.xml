@@ -122,11 +122,11 @@
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".main.station.activity.ServiceRecordManagementActivity"
+            android:name=".main.station.activity.CompanyServiceRecordManagementActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".main.station.activity.ServiceRecordDetailActivity"
+            android:name=".main.station.activity.CompanyServiceRecordDetailActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity

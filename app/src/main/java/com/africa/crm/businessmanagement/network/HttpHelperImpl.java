@@ -20,6 +20,8 @@ import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyServiceRecordInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyServiceRecordInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfo;
@@ -411,6 +413,26 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<BaseEntity> saveCompanyPurchasingOrder(String id, String companyId, String userId, String name, String supplierName, String state, String orderDate, String arriveDate, String sendAddress, String sendAddressZipCode, String destinationAddress, String destinationAddressZipCode, String products, String clause, String remark) {
         return mainApi.saveCompanyPurchasingOrder(id, companyId, userId, name, supplierName, state, orderDate, arriveDate, sendAddress, sendAddressZipCode, destinationAddress, destinationAddressZipCode, products, clause, remark);
+    }
+
+    @Override
+    public Observable<CompanyServiceRecordInfoBean> getServiceRecordList(int page, int rows, String companyId, String userId, String name, String state, String type, String createTimes, String createTimee) {
+        return mainApi.getServiceRecordList(page, rows, companyId, userId, name, state, type, createTimes, createTimee).compose(RxUtils.<CompanyServiceRecordInfoBean>handleResult());
+    }
+
+    @Override
+    public Observable<BaseEntity> deleteServiceRecord(String id) {
+        return mainApi.deleteServiceRecord(id);
+    }
+
+    @Override
+    public Observable<CompanyServiceRecordInfo> getCompanyServiceRecordDetail(String id) {
+        return mainApi.getCompanyServiceRecordDetail(id).compose(RxUtils.<CompanyServiceRecordInfo>handleResult());
+    }
+
+    @Override
+    public Observable<BaseEntity> saveCompanyServiceRecord(String id, String companyId, String userId, String name, String state, String type, String productId, String customerName, String level, String phone, String email, String reason, String remark, String solution, String track) {
+        return mainApi.saveCompanyServiceRecord(id, companyId, userId, name, state, type, productId, customerName, level, phone, email, reason, remark, solution, track);
     }
 
 }

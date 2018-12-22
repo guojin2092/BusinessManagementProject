@@ -20,6 +20,8 @@ import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyServiceRecordInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyServiceRecordInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfo;
@@ -317,4 +319,20 @@ public interface MainApi {
     @FormUrlEncoded
     @POST("purchaseOrder/save")
     Observable<BaseEntity> saveCompanyPurchasingOrder(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("supplierName") String supplierName, @Field("state") String state, @Field("orderDate") String orderDate, @Field("arriveDate") String arriveDate, @Field("sendAddress") String sendAddress, @Field("sendAddressZipCode") String sendAddressZipCode, @Field("destinationAddress") String destinationAddress, @Field("destinationAddressZipCode") String destinationAddressZipCode, @Field("products") String products, @Field("clause") String clause, @Field("remark") String remark);
+
+    @FormUrlEncoded
+    @POST("serviceRecord/grid")
+    Observable<BaseEntity<CompanyServiceRecordInfoBean>> getServiceRecordList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("state") String state, @Field("type") String type, @Field("createTimes") String createTimes, @Field("createTimee") String createTimee);
+
+    @FormUrlEncoded
+    @POST("serviceRecord/deleteById")
+    Observable<BaseEntity> deleteServiceRecord(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("serviceRecord/getInfo")
+    Observable<BaseEntity<CompanyServiceRecordInfo>> getCompanyServiceRecordDetail(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("serviceRecord/save")
+    Observable<BaseEntity> saveCompanyServiceRecord(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("state") String state, @Field("type") String type, @Field("productId") String productId, @Field("customerName") String customerName, @Field("level") String level, @Field("phone") String phone, @Field("email") String email, @Field("reason") String reason, @Field("remark") String remark, @Field("solution") String solution, @Field("track") String track);
 }

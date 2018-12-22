@@ -12,22 +12,27 @@ import java.io.Serializable;
  * Why & What is modified:
  */
 public class ServiceTrackingInfoBean implements Serializable {
-    private String AcceptStation;
-    private String AcceptTime;
+    private String step;
+    private String time;
 
-    public String getAcceptStation() {
-        return AcceptStation;
+    public ServiceTrackingInfoBean(String step, String time) {
+        this.step = step;
+        this.time = time;
     }
 
-    public void setAcceptStation(String acceptStation) {
-        AcceptStation = acceptStation;
+    public String getStep() {
+        return step;
     }
 
-    public String getAcceptTime() {
-        return AcceptTime;
+    public void setStep(String step) {
+        this.step = step;
     }
 
-    public void setAcceptTime(String acceptTime) {
-        AcceptTime = acceptTime;
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }

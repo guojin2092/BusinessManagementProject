@@ -23,4 +23,9 @@ public class TimeUtils {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return format.format(date);
     }
+
+    public static String getTimeByMinute2(Date date) {//可根据需要自行截取数据显示
+        SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm");
+        return format.format(date);
+    }
 }

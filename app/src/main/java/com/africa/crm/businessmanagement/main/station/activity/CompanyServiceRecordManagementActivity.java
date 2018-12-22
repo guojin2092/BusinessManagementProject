@@ -7,9 +7,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -18,21 +15,20 @@ import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
-import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanySalesOrderEvent;
+import com.africa.crm.businessmanagement.eventbus.AddOrSaveServiceRecordEvent;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
-import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfo;
-import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyServiceRecordInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyServiceRecordInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.UserInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
-import com.africa.crm.businessmanagement.main.station.adapter.SalesListAdapter;
-import com.africa.crm.businessmanagement.main.station.contract.CompanySalesOrderContract;
-import com.africa.crm.businessmanagement.main.station.presenter.CompanySalesOrderPresenter;
+import com.africa.crm.businessmanagement.main.station.adapter.ServiceRecordListAdapter;
+import com.africa.crm.businessmanagement.main.station.contract.CompanyServiceRecordOrderContract;
+import com.africa.crm.businessmanagement.main.station.presenter.CompanyServiceRecordPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
-import com.africa.crm.businessmanagement.widget.KeyboardUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
@@ -58,21 +54,9 @@ import butterknife.BindView;
  * Modification  History:
  * Why & What is modified:
  */
-public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<CompanySalesOrderPresenter> implements CompanySalesOrderContract.View {
-    @BindView(R.id.et_sales_name)
-    EditText et_sales_name;
-    @BindView(R.id.tv_start_time)
-    TextView tv_start_time;
-    @BindView(R.id.tv_end_time)
-    TextView tv_end_time;
-    @BindView(R.id.ll_right)
-    LinearLayout ll_right;
-    @BindView(R.id.ll_add)
-    LinearLayout ll_add;
-    @BindView(R.id.tv_delete)
-    TextView tv_delete;
-    @BindView(R.id.tv_search)
-    TextView tv_search;
+public class CompanyServiceRecordManagementActivity extends BaseRefreshMvpActivity<CompanyServiceRecordPresenter> implements CompanyServiceRecordOrderContract.View {
+    @BindView(R.id.et_service_record_name)
+    EditText et_service_record_name;
 
     @BindView(R.id.spinner_user)
     MySpinner spinner_user;
@@ -82,21 +66,38 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
 
     @BindView(R.id.spinner_state)
     MySpinner spinner_state;
-    private static final String STATE_CODE = "SALEORDERSTATE";
-    private List<DicInfo> mSalesOrderStateList = new ArrayList<>();
+    private static final String STATE_CODE = "SERVICESTATE";
+    private List<DicInfo> mServiceRecordStateList = new ArrayList<>();
     private String mStateCode = "";
+
+    @BindView(R.id.spinner_type)
+    MySpinner spinner_type;
+    private static final String TYPE_CODE = "SERVICETYPE";
+    private List<DicInfo> mServiceRecordTypeList = new ArrayList<>();
+    private String mTypeCode = "";
+
+    @BindView(R.id.tv_start_time)
+    TextView tv_start_time;
+    @BindView(R.id.tv_end_time)
+    TextView tv_end_time;
+    @BindView(R.id.ll_add)
+    LinearLayout ll_add;
+    @BindView(R.id.tv_search)
+    TextView tv_search;
+    @BindView(R.id.tv_delete)
+    TextView tv_delete;
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
-    private SalesListAdapter mSalesListAdapter;
-    private List<CompanySalesOrderInfo> mDeleteList = new ArrayList<>();
-    private List<CompanySalesOrderInfo> mCompanySalesOrderInfoList = new ArrayList<>();
+    private ServiceRecordListAdapter mServiceRecordListAdapter;
+    private List<CompanyServiceRecordInfo> mDeleteList = new ArrayList<>();
+    private List<CompanyServiceRecordInfo> mServiceRecordInfoBeanList = new ArrayList<>();
 
-    private AlertDialog mDeleteDialog;
-    private boolean mShowCheckBox = false;
     private WorkStationInfo mWorkStationInfo;
-    private String mRoleCode = "";
+    private boolean mShowCheckBox = false;
+    private AlertDialog mDeleteDialog;
     private String mCompanyId = "";
+    private String mRoleCode = "";
 
     private TimePickerView pvStartTime, pvEndTime;
     private Date mStartDate, mEndDate;
@@ -105,7 +106,7 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
      * @param activity
      */
     public static void startActivity(Activity activity, WorkStationInfo workStationInfo) {
-        Intent intent = new Intent(activity, CompanySalesOrderManagementActivity.class);
+        Intent intent = new Intent(activity, CompanyServiceRecordManagementActivity.class);
         intent.putExtra("info", workStationInfo);
         activity.startActivity(intent);
     }
@@ -118,28 +119,7 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
 
     @Override
     public void setView(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_company_sales_order_management);
-    }
-
-
-    @Override
-    protected CompanySalesOrderPresenter injectPresenter() {
-        return new CompanySalesOrderPresenter();
-    }
-
-    @Override
-    protected void requestData() {
-        mPresenter.getStateType(STATE_CODE);
-        pullDownRefresh(page);
-    }
-
-    @Override
-    public void pullDownRefresh(int page) {
-        if (mRoleCode.equals("companyRoot")) {
-            mPresenter.getCompanySalesOrderList(page, rows, mCompanyId, mUserId, et_sales_name.getText().toString().trim(), mStateCode, tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
-        } else {
-            mPresenter.getCompanySalesOrderList(page, rows, mCompanyId, String.valueOf(UserInfoManager.getUserLoginInfo(this).getId()), et_sales_name.getText().toString().trim(), mStateCode, tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
-        }
+        setContentView(R.layout.activity_service_record_management);
     }
 
     @Override
@@ -151,47 +131,16 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
         if (mWorkStationInfo != null) {
             titlebar_name.setText(mWorkStationInfo.getWork_name());
         }
-        ll_add.setOnClickListener(this);
-        tv_delete.setOnClickListener(this);
-        tv_search.setOnClickListener(this);
-        tv_start_time.setOnClickListener(this);
-        tv_end_time.setOnClickListener(this);
-
         if (mRoleCode.equals("companyRoot")) {
             spinner_user.setVisibility(View.VISIBLE);
-            ll_right.setVisibility(View.GONE);
         } else {
             spinner_user.setVisibility(View.GONE);
-            ll_right.setVisibility(View.VISIBLE);
         }
-        if (mRoleCode.equals("companySales")) {
-            ll_add.setVisibility(View.VISIBLE);
-        } else {
-            ll_add.setVisibility(View.GONE);
-        }
-/*
-        et_sales_name.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!TextUtils.isEmpty(charSequence.toString())) {
-                    spinner_user.setText("");
-                    mUserId = "";
-                    spinner_state.setText("");
-                    mStateCode = "";
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-*/
+        ll_add.setOnClickListener(this);
+        tv_search.setOnClickListener(this);
+        tv_delete.setOnClickListener(this);
+        tv_start_time.setOnClickListener(this);
+        tv_end_time.setOnClickListener(this);
         initTimePicker();
     }
 
@@ -216,7 +165,7 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
             @Override
             public void onTimeSelect(Date date, View v) {
                 mEndDate = date;
-                if (mStartDate!=null){
+                if (mStartDate != null) {
                     if (mEndDate.getTime() <= mStartDate.getTime()) {
                         toastMsg("起止时间不得小于起始时间");
                         return;
@@ -229,6 +178,27 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
                 .isDialog(true));
     }
 
+    @Override
+    protected CompanyServiceRecordPresenter injectPresenter() {
+        return new CompanyServiceRecordPresenter();
+    }
+
+    @Override
+    protected void requestData() {
+        mPresenter.getState(STATE_CODE);
+        mPresenter.getType(TYPE_CODE);
+        mPresenter.getCompanyUserList(page, rows, "", "2", mCompanyId, "1", "");
+        pullDownRefresh(page);
+    }
+
+    @Override
+    public void pullDownRefresh(int page) {
+        if (mRoleCode.equals("companyRoot")) {
+            mPresenter.getServiceRecordList(page, rows, mCompanyId, mUserId, et_service_record_name.getText().toString().trim(), mStateCode, mTypeCode, tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
+        } else {
+            mPresenter.getServiceRecordList(page, rows, mCompanyId, String.valueOf(UserInfoManager.getUserLoginInfo(this).getId()), et_service_record_name.getText().toString().trim(), mStateCode, mTypeCode, tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
+        }
+    }
 
     @Override
     public void onClick(View v) {
@@ -256,25 +226,25 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
                     tv_delete.setVisibility(View.GONE);
                     mShowCheckBox = false;
                 }
-                if (mSalesListAdapter != null) {
-                    mSalesListAdapter.setmIsDeleted(mShowCheckBox);
+                if (mServiceRecordListAdapter != null) {
+                    mServiceRecordListAdapter.setmIsDeleted(mShowCheckBox);
                 }
                 break;
             case R.id.ll_add:
-                CompanySaleOrdersDetailActivity.startActivity(CompanySalesOrderManagementActivity.this, "");
+                CompanyServiceRecordDetailActivity.startActivity(CompanyServiceRecordManagementActivity.this, "");
                 break;
             case R.id.tv_delete:
                 mDeleteList.clear();
-                for (CompanySalesOrderInfo companySalesOrderInfo : mCompanySalesOrderInfoList) {
-                    if (companySalesOrderInfo.isChosen()) {
-                        mDeleteList.add(companySalesOrderInfo);
+                for (CompanyServiceRecordInfo serviceRecordInfo : mServiceRecordInfoBeanList) {
+                    if (serviceRecordInfo.isChosen()) {
+                        mDeleteList.add(serviceRecordInfo);
                     }
                 }
                 if (ListUtils.isEmpty(mDeleteList)) {
                     toastMsg("尚未选择删除项");
                     return;
                 }
-                mDeleteDialog = new AlertDialog.Builder(CompanySalesOrderManagementActivity.this)
+                mDeleteDialog = new AlertDialog.Builder(CompanyServiceRecordManagementActivity.this)
                         .setTitle(R.string.tips)
                         .setMessage(R.string.confirm_delete)
                         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -287,7 +257,7 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
                             @Override
                             public void onClick(DialogInterface dialogInterface, int which) {
                                 for (int i = 0; i < mDeleteList.size(); i++) {
-                                    mPresenter.deleteCompanySalesOrder(mDeleteList.get(i).getId());
+                                    mPresenter.deleteServiceRecord(mDeleteList.get(i).getId());
                                 }
                             }
                         })
@@ -299,8 +269,8 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
 
     @Override
     public void initData() {
-        mSalesListAdapter = new SalesListAdapter(mCompanySalesOrderInfoList);
-        recyclerView.setAdapter(mSalesListAdapter);
+        mServiceRecordListAdapter = new ServiceRecordListAdapter(mServiceRecordInfoBeanList);
+        recyclerView.setAdapter(mServiceRecordListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new LineItemDecoration(this, LinearLayoutManager.VERTICAL, 2, ContextCompat.getColor(this, R.color.F2F2F2)));
@@ -308,6 +278,32 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
         recyclerView.setNestedScrollingEnabled(false);
     }
 
+
+    @Override
+    public void getState(List<DicInfo> dicInfoList) {
+        mServiceRecordStateList.clear();
+        mServiceRecordStateList.addAll(dicInfoList);
+        spinner_state.setListDatas(this, mServiceRecordStateList);
+        spinner_state.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+            @Override
+            public void onItemClick(DicInfo dicInfo, int position) {
+                mStateCode = dicInfo.getCode();
+            }
+        });
+    }
+
+    @Override
+    public void getType(List<DicInfo> dicInfoList) {
+        mServiceRecordTypeList.clear();
+        mServiceRecordTypeList.addAll(dicInfoList);
+        spinner_type.setListDatas(this, mServiceRecordTypeList);
+        spinner_type.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+            @Override
+            public void onItemClick(DicInfo dicInfo, int position) {
+                mTypeCode = dicInfo.getCode();
+            }
+        });
+    }
 
     @Override
     public void getCompanyUserList(UserManagementInfoBean userManagementInfoBean) {
@@ -323,107 +319,71 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
                 mUserId = dicInfo.getCode();
-/*
-                if (!TextUtils.isEmpty(mUserId)) {
-                    et_sales_name.setText("");
-                    spinner_state.setText("");
-                    mStateCode = "";
-                }
-*/
             }
         });
     }
 
     @Override
-    public void getStateType(List<DicInfo> dicInfoList) {
-        mSalesOrderStateList.clear();
-        mSalesOrderStateList.addAll(dicInfoList);
-        spinner_state.setListDatas(this, mSalesOrderStateList);
-
-        spinner_state.addOnItemClickListener(new MySpinner.OnItemClickListener() {
-            @Override
-            public void onItemClick(DicInfo dicInfo, int position) {
-                mStateCode = dicInfo.getCode();
-/*
-                if (!TextUtils.isEmpty(mStateCode)) {
-                    et_sales_name.setText("");
-                    spinner_user.setText("");
-                    mUserId = "";
-                }
-*/
-            }
-        });
-    }
-
-    @Override
-    public void getCompanySalesOrderList(CompanySalesOrderInfoBean companySalesOrderInfoBean) {
-        if (companySalesOrderInfoBean != null) {
+    public void getServiceRecordList(CompanyServiceRecordInfoBean companyServiceRecordInfoBean) {
+        if (companyServiceRecordInfoBean != null) {
             if (page == 1) {
-                if (ListUtils.isEmpty(companySalesOrderInfoBean.getRows())) {
+                if (ListUtils.isEmpty(companyServiceRecordInfoBean.getRows())) {
                     layout_network_error.setVisibility(View.GONE);
                     mRefreshLayout.getLayout().setVisibility(View.GONE);
                     layout_no_data.setVisibility(View.VISIBLE);
-                  /*  KeyboardUtil.clearInputBox(et_sales_name);
-                    KeyboardUtil.clearInputBox(tv_start_time);
-                    KeyboardUtil.clearInputBox(tv_end_time);
-                    mStartDate = null;
-                    mEndDate = null;
-                    spinner_user.setText("");
-                    mUserId = "";
-                    spinner_state.setText("");
-                    mStateCode = "";*/
                     return;
                 } else {
                     layout_no_data.setVisibility(View.GONE);
                     layout_network_error.setVisibility(View.GONE);
                     mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
                 }
-                mCompanySalesOrderInfoList.clear();
+                mServiceRecordInfoBeanList.clear();
                 recyclerView.smoothScrollToPosition(0);
             }
             if (mRefreshLayout != null) {
-                if (ListUtils.isEmpty(companySalesOrderInfoBean.getRows()) && page > 1) {
+                if (ListUtils.isEmpty(companyServiceRecordInfoBean.getRows()) && page > 1) {
                     mRefreshLayout.finishLoadmoreWithNoMoreData();
                 } else {
                     mRefreshLayout.finishLoadmore();
                 }
             }
-            if (!ListUtils.isEmpty(companySalesOrderInfoBean.getRows())) {
-                mCompanySalesOrderInfoList.addAll(companySalesOrderInfoBean.getRows());
-                if (mSalesListAdapter != null) {
-                    mSalesListAdapter.notifyDataSetChanged();
+            if (!ListUtils.isEmpty(companyServiceRecordInfoBean.getRows())) {
+                mServiceRecordInfoBeanList.addAll(companyServiceRecordInfoBean.getRows());
+                if (mServiceRecordListAdapter != null) {
+                    mServiceRecordListAdapter.notifyDataSetChanged();
                 }
             }
-            if (!ListUtils.isEmpty(mCompanySalesOrderInfoList)) {
-                mSalesListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            if (!ListUtils.isEmpty(mServiceRecordInfoBeanList)) {
+                mServiceRecordListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                         if (mShowCheckBox) {
                             CheckBox cb_choose = (CheckBox) adapter.getViewByPosition(recyclerView, position, R.id.cb_choose);
-                            mCompanySalesOrderInfoList.get(position).setChosen(!cb_choose.isChecked());
-                            mSalesListAdapter.notifyDataSetChanged();
+                            mServiceRecordInfoBeanList.get(position).setChosen(!cb_choose.isChecked());
+                            mServiceRecordListAdapter.notifyDataSetChanged();
                         } else {
-                            CompanySaleOrdersDetailActivity.startActivity(CompanySalesOrderManagementActivity.this, mCompanySalesOrderInfoList.get(position).getId());
+                            CompanyServiceRecordDetailActivity.startActivity(CompanyServiceRecordManagementActivity.this, mServiceRecordInfoBeanList.get(position).getId());
                         }
                     }
                 });
             }
         }
+
     }
 
     @Override
-    public void deleteCompanySalesOrder(BaseEntity baseEntity) {
+    public void deleteServiceRecord(BaseEntity baseEntity) {
         if (baseEntity.isSuccess()) {
             for (int i = 0; i < mDeleteList.size(); i++) {
-                if (mCompanySalesOrderInfoList.contains(mDeleteList.get(i))) {
-                    int position = mCompanySalesOrderInfoList.indexOf(mDeleteList.get(i));
-                    mCompanySalesOrderInfoList.remove(mDeleteList.get(i));
-                    if (mSalesListAdapter != null) {
-                        mSalesListAdapter.notifyItemRemoved(position);
+                if (mServiceRecordInfoBeanList.contains(mDeleteList.get(i))) {
+                    int position = mServiceRecordInfoBeanList.indexOf(mDeleteList.get(i));
+                    mServiceRecordInfoBeanList.remove(mDeleteList.get(i));
+                    if (mServiceRecordListAdapter != null) {
+                        mServiceRecordListAdapter.notifyItemRemoved(position);
                     }
                 }
             }
-            if (ListUtils.isEmpty(mCompanySalesOrderInfoList)) {
+            if (ListUtils.isEmpty(mServiceRecordInfoBeanList)) {
                 titlebar_right.setText(R.string.delete);
                 tv_delete.setVisibility(View.GONE);
                 mShowCheckBox = false;
@@ -437,10 +397,9 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
         }
     }
 
-
     @Subscribe
-    public void Event(AddOrSaveCompanySalesOrderEvent addOrSaveCompanySalesOrderEvent) {
-        toastMsg(addOrSaveCompanySalesOrderEvent.getMsg());
+    public void Event(AddOrSaveServiceRecordEvent addOrSaveServiceRecordEvent) {
+        toastMsg(addOrSaveServiceRecordEvent.getMsg());
         requestData();
     }
 
@@ -449,5 +408,4 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
-
 }

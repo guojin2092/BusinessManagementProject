@@ -250,7 +250,7 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
                         .show();
                 break;
            /* case R.id.tv_add_product:
-                final AddProductDialog addProductDialog = AddProductDialog.getInstance(this);
+                final AddServiceRecordDialog addProductDialog = AddServiceRecordDialog.getInstance(this);
                 addProductDialog.isCancelableOnTouchOutside(false)
                         .withDuration(300)
                         .withEffect(Effectstype.Fadein)
@@ -262,7 +262,7 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
                         })
                         .show();*/
 /*
-                addProductDialog.addOnSaveClickListener(new AddProductDialog.OnSaveClickListener() {
+                addProductDialog.addOnSaveClickListener(new AddServiceRecordDialog.OnSaveClickListener() {
                     @Override
                     public void onSaveClick(OrderProductInfo orderProductInfo) {
                         if (TextUtils.isEmpty(orderProductInfo.getName())) {
