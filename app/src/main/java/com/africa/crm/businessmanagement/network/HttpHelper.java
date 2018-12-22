@@ -14,6 +14,8 @@ import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyPurchasingOrderInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyPurchasingOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfo;
@@ -176,5 +178,14 @@ public interface HttpHelper {
     Observable<CompanyPayOrderInfo> getCompanyPayOrderDetail(String id);
 
     Observable<BaseEntity> saveCompanyPayOrder(String id, String companyId, String userId, String name, String salesOrderId, String tradingOrderId, String customerName, String price, String payTime, String hasInvoice, String hasPrint, String invoiceFiles, String remark);
+
+    Observable<CompanyPurchasingOrderInfoBean> getCompanyPurchasingOrderList(int page, int rows, String companyId, String userId, String name, String code, String createTimes, String createTimee);
+
+    Observable<BaseEntity> deleteCompanyPurchasingOrder(String id);
+
+    Observable<CompanyPurchasingOrderInfo> getCompanyPurchasingDetail(String id);
+
+    Observable<BaseEntity> saveCompanyPurchasingOrder(String id, String companyId, String userId, String name, String supplierName, String state, String orderDate, String arriveDate, String sendAddress, String sendAddressZipCode, String destinationAddress, String destinationAddressZipCode, String products, String clause, String remark);
+
 }
 

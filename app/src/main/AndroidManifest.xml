@@ -130,11 +130,11 @@
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".main.station.activity.PurchasingManagementActivity"
+            android:name=".main.station.activity.CompanyPurchasingManagementActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".main.station.activity.PurchasingDetailActivity"
+            android:name=".main.station.activity.CompanyPurchasingDetailActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity

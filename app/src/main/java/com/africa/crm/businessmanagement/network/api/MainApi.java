@@ -14,6 +14,8 @@ import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyPurchasingOrderInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyPurchasingOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfo;
@@ -299,4 +301,20 @@ public interface MainApi {
     @FormUrlEncoded
     @POST("paymentOrder/save")
     Observable<BaseEntity> saveCompanyPayOrder(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("salesOrderId") String salesOrderId, @Field("tradingOrderId") String tradingOrderId, @Field("customerName") String customerName, @Field("price") String price, @Field("payTime") String payTime, @Field("hasInvoice") String hasInvoice, @Field("hasPrint") String hasPrint, @Field("invoiceFiles") String invoiceFiles, @Field("remark") String remark);
+
+    @FormUrlEncoded
+    @POST("purchaseOrder/grid")
+    Observable<BaseEntity<CompanyPurchasingOrderInfoBean>> getCompanyPurchasingOrderList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("code") String code, @Field("createTimes") String createTimes, @Field("createTimee") String createTimee);
+
+    @FormUrlEncoded
+    @POST("purchaseOrder/deleteById")
+    Observable<BaseEntity> deleteCompanyPurchasingOrder(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("purchaseOrder/getInfo")
+    Observable<BaseEntity<CompanyPurchasingOrderInfo>> getCompanyPurchasingDetail(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("purchaseOrder/save")
+    Observable<BaseEntity> saveCompanyPurchasingOrder(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("supplierName") String supplierName, @Field("state") String state, @Field("orderDate") String orderDate, @Field("arriveDate") String arriveDate, @Field("sendAddress") String sendAddress, @Field("sendAddressZipCode") String sendAddressZipCode, @Field("destinationAddress") String destinationAddress, @Field("destinationAddressZipCode") String destinationAddressZipCode, @Field("products") String products, @Field("clause") String clause, @Field("remark") String remark);
 }
