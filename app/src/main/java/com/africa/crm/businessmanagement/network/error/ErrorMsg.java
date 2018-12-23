@@ -62,6 +62,15 @@ public class ErrorMsg {
             case "103":
                 errorMsg = "对应ID数据不存在";
                 break;
+            case "201":
+                errorMsg = "库存不足";
+                break;
+            case "301":
+                errorMsg = "开始日期不能晚于结束日期";
+                break;
+            case "302":
+                errorMsg = "该时间段已存在包装记录";
+                break;
             default:
                 errorMsg = errorType;
                 break;

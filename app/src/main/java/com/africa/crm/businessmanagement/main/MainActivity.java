@@ -38,7 +38,7 @@ import com.africa.crm.businessmanagement.main.station.activity.CompanySalesOrder
 import com.africa.crm.businessmanagement.main.station.activity.CompanyServiceRecordManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SettingActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SystemManagementActivity;
-import com.africa.crm.businessmanagement.main.station.activity.TaskManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.CompanyTaskManagementActivity;
 import com.africa.crm.businessmanagement.mvp.activity.BaseEasyMvpActivity;
 import com.africa.crm.businessmanagement.widget.GridItemDecoration;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -270,7 +270,7 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
                             CompanyPurchasingManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "15":
-                            TaskManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            CompanyTaskManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "16":
                             PdfReportManagementActivity.startActivity(MainActivity.this, workStationInfo);

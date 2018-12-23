@@ -24,6 +24,8 @@ import com.africa.crm.businessmanagement.main.bean.CompanyServiceRecordInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyServiceRecordInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
@@ -433,6 +435,26 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<BaseEntity> saveCompanyServiceRecord(String id, String companyId, String userId, String name, String state, String type, String productId, String customerName, String level, String phone, String email, String reason, String remark, String solution, String track) {
         return mainApi.saveCompanyServiceRecord(id, companyId, userId, name, state, type, productId, customerName, level, phone, email, reason, remark, solution, track);
+    }
+
+    @Override
+    public Observable<CompanyTaskInfoBean> getCompanyTaskList(int page, int rows, String companyId, String userId, String name, String customerName, String state, String level, String remindTimes, String remindTimee) {
+        return mainApi.getCompanyTaskList(page, rows, companyId, userId, name, customerName, state, level, remindTimes, remindTimee).compose(RxUtils.<CompanyTaskInfoBean>handleResult());
+    }
+
+    @Override
+    public Observable<BaseEntity> deleteCompanyTask(String id) {
+        return mainApi.deleteCompanyTask(id);
+    }
+
+    @Override
+    public Observable<CompanyTaskInfo> getCompanyTaskDetail(String id) {
+        return mainApi.getCompanyTaskDetail(id).compose(RxUtils.<CompanyTaskInfo>handleResult());
+    }
+
+    @Override
+    public Observable<BaseEntity> saveCompanyTask(String id, String companyId, String userId, String name, String remindTime, String customerName, String contactName, String level, String state, String remark) {
+        return mainApi.saveCompanyTask(id, companyId, userId, name, remindTime, customerName, contactName, level, state, remark);
     }
 
 }

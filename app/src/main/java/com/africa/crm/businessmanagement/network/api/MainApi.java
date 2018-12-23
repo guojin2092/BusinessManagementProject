@@ -24,6 +24,8 @@ import com.africa.crm.businessmanagement.main.bean.CompanyServiceRecordInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyServiceRecordInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
@@ -335,4 +337,20 @@ public interface MainApi {
     @FormUrlEncoded
     @POST("serviceRecord/save")
     Observable<BaseEntity> saveCompanyServiceRecord(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("state") String state, @Field("type") String type, @Field("productId") String productId, @Field("customerName") String customerName, @Field("level") String level, @Field("phone") String phone, @Field("email") String email, @Field("reason") String reason, @Field("remark") String remark, @Field("solution") String solution, @Field("track") String track);
+
+    @FormUrlEncoded
+    @POST("taskRecord/grid")
+    Observable<BaseEntity<CompanyTaskInfoBean>> getCompanyTaskList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("customerName") String customerName, @Field("state") String state, @Field("level") String level, @Field("remindTimes") String remindTimes, @Field("remindTimee") String remindTimee);
+
+    @FormUrlEncoded
+    @POST("taskRecord/deleteById")
+    Observable<BaseEntity> deleteCompanyTask(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("taskRecord/getInfo")
+    Observable<BaseEntity<CompanyTaskInfo>> getCompanyTaskDetail(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("taskRecord/save")
+    Observable<BaseEntity> saveCompanyTask(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("remindTime") String remindTime, @Field("customerName") String customerName, @Field("contactName") String contactName, @Field("level") String level, @Field("state") String state, @Field("remark") String remark);
 }

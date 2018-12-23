@@ -6,7 +6,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.main.bean.PurchasingInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfo;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -21,10 +21,10 @@ import java.util.List;
  * Modification  History:
  * Why & What is modified:
  */
-public class TaskListAdapter extends BaseQuickAdapter<PurchasingInfoBean, BaseViewHolder> {
+public class TaskListAdapter extends BaseQuickAdapter<CompanyTaskInfo, BaseViewHolder> {
     private boolean mIsDeleted = false;
 
-    public TaskListAdapter(@Nullable List<PurchasingInfoBean> data) {
+    public TaskListAdapter(@Nullable List<CompanyTaskInfo> data) {
         super(R.layout.item_task_list, data);
     }
 
@@ -38,24 +38,21 @@ public class TaskListAdapter extends BaseQuickAdapter<PurchasingInfoBean, BaseVi
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, PurchasingInfoBean item) {
-        TextView tv_name = helper.getView(R.id.tv_name);
-        TextView tv_type = helper.getView(R.id.tv_type);
-        TextView tv_number = helper.getView(R.id.tv_number);
+    protected void convert(BaseViewHolder helper, CompanyTaskInfo item) {
+        TextView tv_task_name = helper.getView(R.id.tv_task_name);
+        TextView tv_level_name = helper.getView(R.id.tv_level_name);
+        TextView tv_remind_time = helper.getView(R.id.tv_remind_time);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
-        tv_name.setText(item.getName());
-        tv_type.setText(item.getType());
-        tv_number.setText(item.getNumber());
+        tv_task_name.setText(item.getName());
+        tv_level_name.setText(item.getLevelName());
+        tv_remind_time.setText(item.getRemindTime());
+        cb_choose.setChecked(item.isChosen());
+
         if (mIsDeleted) {
             cb_choose.setVisibility(View.VISIBLE);
         } else {
             cb_choose.setVisibility(View.GONE);
-        }
-        if (item.isChosen()) {
-            cb_choose.setChecked(true);
-        } else {
-            cb_choose.setChecked(false);
         }
     }
 
