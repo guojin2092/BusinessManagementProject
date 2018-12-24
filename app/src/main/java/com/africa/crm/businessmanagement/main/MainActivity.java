@@ -28,6 +28,7 @@ import com.africa.crm.businessmanagement.main.station.activity.CompanyClientMana
 import com.africa.crm.businessmanagement.main.station.activity.CompanyContactManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyDeliveryOrderManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyInfoManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.CompanyInventoryManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyPaymentManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyProductManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyPurchasingManagementActivity;
@@ -37,7 +38,6 @@ import com.africa.crm.businessmanagement.main.station.activity.CompanyServiceRec
 import com.africa.crm.businessmanagement.main.station.activity.CompanySupplierManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyTaskManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyTradingOrderManagementActivity;
-import com.africa.crm.businessmanagement.main.station.activity.InventoryManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.PackagingDataManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.PdfReportManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SettingActivity;
@@ -291,7 +291,7 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
                             CompanyServiceRecordManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "13":
-                            InventoryManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            CompanyInventoryManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "14":
                             CompanyPurchasingManagementActivity.startActivity(MainActivity.this, workStationInfo);

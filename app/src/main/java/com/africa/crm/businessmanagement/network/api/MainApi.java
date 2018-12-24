@@ -10,6 +10,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
@@ -359,6 +360,10 @@ public interface MainApi {
     Observable<BaseEntity<List<CompanyTaskInfo>>> getRecentTask(@Field("userId") String userId);
 
     @FormUrlEncoded
-    @POST(" taskRecord/updateHasRemind")
+    @POST("taskRecord/updateHasRemind")
     Observable<BaseEntity> setTaskRead(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("stockRecord/grid")
+    Observable<BaseEntity<CompanyInventoryInfoBean>> getInventoryList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("productId") String productId, @Field("type") String type, @Field("createTimes") String createTimes, @Field("createTimee") String createTimee);
 }

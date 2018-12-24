@@ -9,8 +9,6 @@ import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.library.base.BaseActivity;
-import com.africa.crm.businessmanagement.main.bean.EnterpriseInfoBean;
-import com.africa.crm.businessmanagement.main.bean.ServiceRecordInfoBean;
 
 import butterknife.BindView;
 
@@ -24,15 +22,15 @@ public class InventoryDetailActivity extends BaseActivity {
     @BindView(R.id.tv_save)
     TextView tv_save;
 
-    private EnterpriseInfoBean mEnterpriseInfoBean;
+    private String mInventoryId = "";
 
 
     /**
      * @param activity
      */
-    public static void startActivity(Activity activity, EnterpriseInfoBean enterpriseInfoBean) {
+    public static void startActivity(Activity activity, String id) {
         Intent intent = new Intent(activity, InventoryDetailActivity.class);
-        intent.putExtra("info", enterpriseInfoBean);
+        intent.putExtra("id", id);
         activity.startActivity(intent);
     }
 
@@ -44,10 +42,8 @@ public class InventoryDetailActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        mEnterpriseInfoBean = (EnterpriseInfoBean) getIntent().getSerializableExtra("info");
-        if (mEnterpriseInfoBean != null) {
-            titlebar_name.setText(mEnterpriseInfoBean.getCompany());
-        }
+        mInventoryId = getIntent().getStringExtra("id");
+        titlebar_name.setText("库存详情");
         titlebar_back.setOnClickListener(this);
         titlebar_right.setOnClickListener(this);
         tv_save.setOnClickListener(this);
