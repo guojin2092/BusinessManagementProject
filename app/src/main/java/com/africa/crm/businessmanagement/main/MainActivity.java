@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.main.adapter.WorkStationListAdapter;
+import com.africa.crm.businessmanagement.main.bean.BaseEntity;
+import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfo;
 import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.contract.MainContract;
@@ -23,22 +26,22 @@ import com.africa.crm.businessmanagement.main.presenter.MainPresenter;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyAccountActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyClientManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyContactManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.CompanyDeliveryOrderManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyInfoManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyPaymentManagementActivity;
-import com.africa.crm.businessmanagement.main.station.activity.CompanySupplierManagementActivity;
-import com.africa.crm.businessmanagement.main.station.activity.CompanyTradingOrderManagementActivity;
-import com.africa.crm.businessmanagement.main.station.activity.CompanyDeliveryOrderManagementActivity;
-import com.africa.crm.businessmanagement.main.station.activity.InventoryManagementActivity;
-import com.africa.crm.businessmanagement.main.station.activity.PackagingDataManagementActivity;
-import com.africa.crm.businessmanagement.main.station.activity.PdfReportManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyProductManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyPurchasingManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyQuotationManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanySalesOrderManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyServiceRecordManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.CompanySupplierManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.CompanyTaskManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.CompanyTradingOrderManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.InventoryManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.PackagingDataManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.PdfReportManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SettingActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SystemManagementActivity;
-import com.africa.crm.businessmanagement.main.station.activity.CompanyTaskManagementActivity;
 import com.africa.crm.businessmanagement.mvp.activity.BaseEasyMvpActivity;
 import com.africa.crm.businessmanagement.widget.GridItemDecoration;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -60,9 +63,12 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
     LinearLayout ll_message;
     @BindView(R.id.iv_cancel)
     ImageView iv_cancel;
+    private String mTaskId = "";
 
     private List<WorkStationInfo> mWorkStationInfoList = new ArrayList<>();
     private WorkStationListAdapter mWorkStationListAdapter;
+
+    private String mUserId = "";
 
     /**
      * @param activity
@@ -84,29 +90,28 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
 
     @Override
     protected void requestData() {
-        long userId = UserInfoManager.getUserLoginInfo(this).getId();
-        if (userId != 0) {
-            mPresenter.getMainStationInfo(String.valueOf(userId));
+        if (!TextUtils.isEmpty(mUserId)) {
+            mPresenter.getMainStationInfo(mUserId);
+            mPresenter.getRecentTask(mUserId);
         }
     }
 
     @Override
     public void initView() {
+        mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
         titlebar_back.setVisibility(View.GONE);
         titlebar_name.setText(getString(R.string.work_station));
+        iv_cancel.setOnClickListener(this);
+    }
 
-        iv_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TranslateAnimation hideAnim = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                        Animation.RELATIVE_TO_SELF, 1.0f,
-                        Animation.RELATIVE_TO_SELF, 0.0f,
-                        Animation.RELATIVE_TO_SELF, 0.0f);
-                hideAnim.setDuration(300);
-                ll_message.startAnimation(hideAnim);
-                ll_message.setVisibility(View.GONE);
-            }
-        });
+    @Override
+    public void onClick(View v) {
+        super.onClick(v);
+        switch (v.getId()) {
+            case R.id.iv_cancel:
+                mPresenter.setTaskRead(mTaskId);
+                break;
+        }
     }
 
     @Override
@@ -198,6 +203,28 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
         setWorkStationDatas(mWorkStationInfoList);
     }
 
+    @Override
+    public void getRecentTask(List<CompanyTaskInfo> companyTaskInfoList) {
+        if (ListUtils.isEmpty(companyTaskInfoList)) {
+            mTaskId = companyTaskInfoList.get(0).getId();
+            TranslateAnimation startAnim = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+            startAnim.setDuration(300);
+            ll_message.startAnimation(startAnim);
+            ll_message.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void setTaskRead(BaseEntity baseEntity) {
+        if (baseEntity.isSuccess()) {
+            TranslateAnimation hideAnim = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+            hideAnim.setDuration(300);
+            ll_message.startAnimation(hideAnim);
+            ll_message.setVisibility(View.GONE);
+        } else {
+            toastMsg(baseEntity.getReturnMsg());
+        }
+    }
 
     @Override
     public void getMainStationInfo(List<MainStationInfoBean> mainStationInfoBeanList) {

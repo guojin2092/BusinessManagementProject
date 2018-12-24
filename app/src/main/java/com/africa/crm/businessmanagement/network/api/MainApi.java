@@ -353,4 +353,12 @@ public interface MainApi {
     @FormUrlEncoded
     @POST("taskRecord/save")
     Observable<BaseEntity> saveCompanyTask(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("remindTime") String remindTime, @Field("customerName") String customerName, @Field("contactName") String contactName, @Field("level") String level, @Field("state") String state, @Field("remark") String remark);
+
+    @FormUrlEncoded
+    @POST("taskRecord/selectFirstNoRemind")
+    Observable<BaseEntity<List<CompanyTaskInfo>>> getRecentTask(@Field("userId") String userId);
+
+    @FormUrlEncoded
+    @POST(" taskRecord/updateHasRemind")
+    Observable<BaseEntity> setTaskRead(@Field("id") String id);
 }

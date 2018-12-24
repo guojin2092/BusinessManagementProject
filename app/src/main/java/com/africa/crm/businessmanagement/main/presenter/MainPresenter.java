@@ -1,5 +1,7 @@
 package com.africa.crm.businessmanagement.main.presenter;
 
+import com.africa.crm.businessmanagement.main.bean.BaseEntity;
+import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfo;
 import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
 import com.africa.crm.businessmanagement.main.contract.MainContract;
 import com.africa.crm.businessmanagement.mvp.presenter.RxPresenter;
@@ -32,5 +34,29 @@ public class MainPresenter extends RxPresenter<MainContract.View> implements Mai
                     }
                 }, new ComConsumer(mView)));
 
+    }
+
+    @Override
+    public void getRecentTask(String userId) {
+        addDisposable(mDataManager.getRecentTask(userId)
+                .compose(RxUtils.<List<CompanyTaskInfo>>ioToMain())
+                .subscribe(new Consumer<List<CompanyTaskInfo>>() {
+                    @Override
+                    public void accept(List<CompanyTaskInfo> companyTaskInfoList) throws Exception {
+                        mView.getRecentTask(companyTaskInfoList);
+                    }
+                }, new ComConsumer(mView)));
+    }
+
+    @Override
+    public void setTaskRead(String id) {
+        addDisposable(mDataManager.setTaskRead(id)
+                .compose(RxUtils.<BaseEntity>ioToMain(mView))
+                .subscribe(new Consumer<BaseEntity>() {
+                    @Override
+                    public void accept(BaseEntity baseEntity) throws Exception {
+                        mView.setTaskRead(baseEntity);
+                    }
+                }, new ComConsumer(mView)));
     }
 }

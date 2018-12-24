@@ -457,4 +457,14 @@ public class HttpHelperImpl implements HttpHelper {
         return mainApi.saveCompanyTask(id, companyId, userId, name, remindTime, customerName, contactName, level, state, remark);
     }
 
+    @Override
+    public Observable<List<CompanyTaskInfo>> getRecentTask(String userId) {
+        return mainApi.getRecentTask(userId).compose(RxUtils.<List<CompanyTaskInfo>>handleResult());
+    }
+
+    @Override
+    public Observable<BaseEntity> setTaskRead(String id) {
+        return mainApi.setTaskRead(id);
+    }
+
 }

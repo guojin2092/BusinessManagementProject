@@ -206,5 +206,10 @@ public interface HttpHelper {
     Observable<CompanyTaskInfo> getCompanyTaskDetail(String id);
 
     Observable<BaseEntity> saveCompanyTask(String id, String companyId, String userId, String name, String remindTime, String customerName, String contactName, String level, String state, String remark);
+
+    Observable<List<CompanyTaskInfo>> getRecentTask(String userId);
+
+    Observable<BaseEntity> setTaskRead(String id);
+
 }
 

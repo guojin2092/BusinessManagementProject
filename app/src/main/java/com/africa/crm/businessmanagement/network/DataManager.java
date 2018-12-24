@@ -448,4 +448,14 @@ public class DataManager implements HttpHelper {
         return mHttpHelper.saveCompanyTask(id, companyId, userId, name, remindTime, customerName, contactName, level, state, remark);
     }
 
+    @Override
+    public Observable<List<CompanyTaskInfo>> getRecentTask(String userId) {
+        return mHttpHelper.getRecentTask(userId);
+    }
+
+    @Override
+    public Observable<BaseEntity> setTaskRead(String id) {
+        return mHttpHelper.setTaskRead(id);
+    }
+
 }
