@@ -1,6 +1,9 @@
 package com.africa.crm.businessmanagement.main.station.presenter;
 
+import com.africa.crm.businessmanagement.main.bean.BaseEntity;
+import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
+import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyInventoryDetailContract;
 import com.africa.crm.businessmanagement.mvp.presenter.RxPresenter;
 import com.africa.crm.businessmanagement.network.error.ComConsumer;
@@ -20,7 +23,7 @@ import io.reactivex.functions.Consumer;
  * Why & What is modified:
  */
 public class CompanyInventoryDetailPresenter extends RxPresenter<CompanyInventoryDetailContract.View> implements CompanyInventoryDetailContract.Presenter {
-/*
+
     @Override
     public void getAllProduct(String companyId) {
         addDisposable(mDataManager.getAllProducts(companyId)
@@ -31,7 +34,7 @@ public class CompanyInventoryDetailPresenter extends RxPresenter<CompanyInventor
                         mView.getAllProduct(dicInfo2List);
                     }
                 }, new ComConsumer(mView)));
-    }*/
+    }
 
     @Override
     public void getOperationType(String code) {
@@ -48,8 +51,7 @@ public class CompanyInventoryDetailPresenter extends RxPresenter<CompanyInventor
 
     @Override
     public void getInventoryDetail(String id) {
-/*
-        addDisposable(mDataManager.getCompanyPurchasingDetail(id)
+        addDisposable(mDataManager.getInventoryDetail(id)
                 .compose(RxUtils.<CompanyInventoryInfo>ioToMain(mView))
                 .subscribe(new Consumer<CompanyInventoryInfo>() {
                     @Override
@@ -57,22 +59,17 @@ public class CompanyInventoryDetailPresenter extends RxPresenter<CompanyInventor
                         mView.getInventoryDetail(companyInventoryInfo);
                     }
                 }, new ComConsumer(mView)));
-*/
-
     }
 
     @Override
     public void saveInventory(String id, String companyId, String productId, String type, String num, String remark) {
-/*
-        addDisposable(mDataManager.saveCompanyPurchasingOrder(id, companyId, userId, name, supplierName, state, orderDate, arriveDate, sendAddress, sendAddressZipCode, destinationAddress, destinationAddressZipCode, products, clause, remark)
+        addDisposable(mDataManager.saveInventory(id, companyId, productId, type, num, remark)
                 .compose(RxUtils.<BaseEntity>ioToMain(mView))
                 .subscribe(new Consumer<BaseEntity>() {
                     @Override
                     public void accept(BaseEntity baseEntity) throws Exception {
-                        mView.saveCompanyPurchasing(baseEntity);
+                        mView.saveInventory(baseEntity);
                     }
                 }, new ComConsumer(mView)));
-*/
-
     }
 }

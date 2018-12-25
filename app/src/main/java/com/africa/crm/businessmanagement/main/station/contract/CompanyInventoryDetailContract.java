@@ -1,9 +1,9 @@
 package com.africa.crm.businessmanagement.main.station.contract;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
-import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
+import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.mvp.presenter.IBasePresenter;
 import com.africa.crm.businessmanagement.network.base.BaseView;
 
@@ -21,6 +21,7 @@ import java.util.List;
 public class CompanyInventoryDetailContract {
 
     public interface View extends BaseView {
+        void getAllProduct(List<DicInfo2> dicInfoList);
 
         void getOperationType(List<DicInfo> dicInfoList);
 
@@ -31,6 +32,8 @@ public class CompanyInventoryDetailContract {
     }
 
     public interface Presenter extends IBasePresenter<CompanyInventoryDetailContract.View> {
+
+        void getAllProduct(String companyId);
 
         void getOperationType(String code);
 

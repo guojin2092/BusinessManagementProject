@@ -171,7 +171,7 @@ public class CompanyInventoryManagementActivity extends BaseRefreshMvpActivity<C
                 pullDownRefresh(page);
                 break;
             case R.id.ll_add:
-                InventoryDetailActivity.startActivity(CompanyInventoryManagementActivity.this, "");
+                CompanyInventoryDetailActivity.startActivity(CompanyInventoryManagementActivity.this, "");
                 break;
         }
     }
@@ -249,7 +249,7 @@ public class CompanyInventoryManagementActivity extends BaseRefreshMvpActivity<C
                 mInventoryListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                        InventoryDetailActivity.startActivity(CompanyInventoryManagementActivity.this, mInventoryInfoList.get(position).getId());
+                        CompanyInventoryDetailActivity.startActivity(CompanyInventoryManagementActivity.this, mInventoryInfoList.get(position).getId());
                     }
                 });
                 mInventoryListAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {

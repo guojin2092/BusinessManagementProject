@@ -158,7 +158,7 @@
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".main.station.activity.InventoryDetailActivity"
+            android:name=".main.station.activity.CompanyInventoryDetailActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity

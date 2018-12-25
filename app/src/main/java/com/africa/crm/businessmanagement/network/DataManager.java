@@ -10,6 +10,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfoBean;
@@ -462,6 +463,16 @@ public class DataManager implements HttpHelper {
     @Override
     public Observable<CompanyInventoryInfoBean> getInventoryList(int page, int rows, String companyId, String productId, String type, String createTimes, String createTimee) {
         return mHttpHelper.getInventoryList(page, rows, companyId, productId, type, createTimes, createTimee);
+    }
+
+    @Override
+    public Observable<CompanyInventoryInfo> getInventoryDetail(String id) {
+        return mHttpHelper.getInventoryDetail(id);
+    }
+
+    @Override
+    public Observable<BaseEntity> saveInventory(String id, String companyId, String productId, String type, String num, String remark) {
+        return mHttpHelper.saveInventory(id, companyId, productId, type, num, remark);
     }
 
 }

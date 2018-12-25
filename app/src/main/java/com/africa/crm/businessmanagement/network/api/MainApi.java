@@ -10,6 +10,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfoBean;
@@ -366,4 +367,12 @@ public interface MainApi {
     @FormUrlEncoded
     @POST("stockRecord/grid")
     Observable<BaseEntity<CompanyInventoryInfoBean>> getInventoryList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("productId") String productId, @Field("type") String type, @Field("createTimes") String createTimes, @Field("createTimee") String createTimee);
+
+    @FormUrlEncoded
+    @POST("stockRecord/getInfo")
+    Observable<BaseEntity<CompanyInventoryInfo>> getInventoryDetail(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("serviceRecord/save")
+    Observable<BaseEntity> saveInventory(@Field("id") String id, @Field("companyId") String companyId, @Field("productId") String productId, @Field("type") String type, @Field("num") String num, @Field("remark") String remark);
 }

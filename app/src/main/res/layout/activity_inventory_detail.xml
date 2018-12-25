@@ -43,7 +43,7 @@
                             android:text="产品：" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
-                            android:id="@+id/spinner_state"
+                            android:id="@+id/spinner_product"
                             style="@style/product_et_blue"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -111,6 +111,7 @@
                             android:layout_height="wrap_content"
                             android:background="@color/white"
                             android:hint="添加数量"
+                            android:inputType="number"
                             android:textColorHint="@color/D5D5D5" />
                     </LinearLayout>
 
@@ -118,14 +119,15 @@
 
                 <TextView
                     style="@style/product_title_blue"
-                    android:text="描述：" />
+                    android:text="备注：" />
 
                 <EditText
+                    android:id="@+id/et_remark"
                     style="@style/product_et_blue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:hint="添加描述"
+                    android:hint="添加备注"
                     android:textColorHint="@color/D5D5D5" />
 
                 <TextView
