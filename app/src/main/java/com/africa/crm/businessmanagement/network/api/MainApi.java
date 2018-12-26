@@ -374,5 +374,5 @@ public interface MainApi {
 
     @FormUrlEncoded
     @POST("serviceRecord/save")
-    Observable<BaseEntity> saveInventory(@Field("id") String id, @Field("companyId") String companyId, @Field("productId") String productId, @Field("type") String type, @Field("num") String num, @Field("remark") String remark);
+    Observable<BaseEntity> saveInventory(@Field("companyId") String companyId, @Field("productId") String productId, @Field("type") String type, @Field("num") String num, @Field("remark") String remark);
 }

@@ -1,13 +1,10 @@
 package com.africa.crm.businessmanagement.main.station.adapter;
 
 import android.support.annotation.Nullable;
-import android.view.View;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfo;
-import com.africa.crm.businessmanagement.main.bean.EnterpriseInfoBean;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -31,11 +28,13 @@ public class InventoryListAdapter extends BaseQuickAdapter<CompanyInventoryInfo,
     @Override
     protected void convert(BaseViewHolder helper, CompanyInventoryInfo item) {
         TextView tv_product_name = helper.getView(R.id.tv_product_name);
+        TextView tv_type = helper.getView(R.id.tv_type);
         TextView tv_num = helper.getView(R.id.tv_num);
-        helper.addOnClickListener(R.id.tv_stock_in);
-        helper.addOnClickListener(R.id.tv_stock_out);
+        TextView tv_time = helper.getView(R.id.tv_time);
         tv_product_name.setText(item.getProductName());
+        tv_type.setText(item.getTypeName());
         tv_num.setText(item.getNum());
+        tv_time.setText(item.getCreateTime());
     }
 
 }

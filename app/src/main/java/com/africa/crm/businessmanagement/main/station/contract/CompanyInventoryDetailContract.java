@@ -39,6 +39,6 @@ public class CompanyInventoryDetailContract {
 
         void getInventoryDetail(String id);
 
-        void saveInventory(String id, String companyId, String productId, String type, String num, String remark);
+        void saveInventory(String companyId, String productId, String type, String num, String remark);
     }
 }

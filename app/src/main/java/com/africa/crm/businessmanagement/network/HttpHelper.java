@@ -217,7 +217,7 @@ public interface HttpHelper {
 
     Observable<CompanyInventoryInfo> getInventoryDetail(String id);
 
-    Observable<BaseEntity> saveInventory(String id, String companyId, String productId, String type, String num, String remark);
+    Observable<BaseEntity> saveInventory(String companyId, String productId, String type, String num, String remark);
 
 }
 

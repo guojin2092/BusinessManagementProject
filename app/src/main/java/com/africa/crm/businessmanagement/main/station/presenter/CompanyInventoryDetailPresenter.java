@@ -62,8 +62,8 @@ public class CompanyInventoryDetailPresenter extends RxPresenter<CompanyInventor
     }
 
     @Override
-    public void saveInventory(String id, String companyId, String productId, String type, String num, String remark) {
-        addDisposable(mDataManager.saveInventory(id, companyId, productId, type, num, remark)
+    public void saveInventory(String companyId, String productId, String type, String num, String remark) {
+        addDisposable(mDataManager.saveInventory(companyId, productId, type, num, remark)
                 .compose(RxUtils.<BaseEntity>ioToMain(mView))
                 .subscribe(new Consumer<BaseEntity>() {
                     @Override

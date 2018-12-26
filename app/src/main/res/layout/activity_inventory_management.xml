@@ -21,7 +21,6 @@
             style="@style/product_et_blue"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="20dp"
             android:layout_weight="1"
             android:paddingLeft="0dp"
             android:paddingTop="0dp"

@@ -6,10 +6,10 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyDeliveryOrderEvent;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyInventoryEvent;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfo;
@@ -30,7 +30,18 @@ import java.util.List;
 import butterknife.BindView;
 
 public class CompanyInventoryDetailActivity extends BaseMvpActivity<CompanyInventoryDetailPresenter> implements CompanyInventoryDetailContract.View {
-
+    @BindView(R.id.tv_operation_time)
+    TextView tv_operation_time;
+    @BindView(R.id.ll_operation_time)
+    LinearLayout ll_operation_time;
+    @BindView(R.id.ll_num_before)
+    LinearLayout ll_num_before;
+    @BindView(R.id.et_num_before)
+    EditText et_num_before;
+    @BindView(R.id.ll_num_after)
+    LinearLayout ll_num_after;
+    @BindView(R.id.et_num_after)
+    EditText et_num_after;
     @BindView(R.id.spinner_product)
     MySpinner spinner_product;
     private String mProductId = "";
@@ -71,8 +82,16 @@ public class CompanyInventoryDetailActivity extends BaseMvpActivity<CompanyInven
         super.initView();
         mInventoryId = getIntent().getStringExtra("id");
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
+        titlebar_right.setVisibility(View.GONE);
         titlebar_name.setText("库存详情");
+        tv_save.setText(R.string.add);
         tv_save.setOnClickListener(this);
+        if (!TextUtils.isEmpty(mInventoryId)) {
+            tv_save.setVisibility(View.GONE);
+            setEditTextInput(false);
+        } else {
+            tv_save.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -85,13 +104,35 @@ public class CompanyInventoryDetailActivity extends BaseMvpActivity<CompanyInven
         mPresenter.getAllProduct(mCompanyId);
         mPresenter.getOperationType(TYPE_CODE);
         if (!TextUtils.isEmpty(mInventoryId)) {
+            ll_operation_time.setVisibility(View.VISIBLE);
+            ll_num_before.setVisibility(View.VISIBLE);
+            ll_num_after.setVisibility(View.VISIBLE);
             mPresenter.getInventoryDetail(mInventoryId);
+        } else {
+            ll_operation_time.setVisibility(View.GONE);
+            ll_num_before.setVisibility(View.GONE);
+            ll_num_after.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void initData() {
 
+    }
+
+    /**
+     * 控制输入框是否可输入
+     *
+     * @param canInput
+     */
+    private void setEditTextInput(boolean canInput) {
+        spinner_product.getTextView().setEnabled(canInput);
+        tv_operation_time.setEnabled(canInput);
+        spinner_type.getTextView().setEnabled(canInput);
+        et_num.setEnabled(canInput);
+        et_num_before.setEnabled(canInput);
+        et_num_after.setEnabled(canInput);
+        et_remark.setEnabled(canInput);
     }
 
     @Override
@@ -108,15 +149,19 @@ public class CompanyInventoryDetailActivity extends BaseMvpActivity<CompanyInven
                 }
                 break;
             case R.id.tv_save:
-                if (TextUtils.isEmpty(mProductId)){
+                if (TextUtils.isEmpty(mProductId)) {
                     showShortToast("尚未选择产品");
                     return;
                 }
-                if (TextUtils.isEmpty(mTypeCode)){
+                if (TextUtils.isEmpty(mTypeCode)) {
                     toastMsg("尚未选择操作类型");
                     return;
                 }
-                showShortToast("保存数据");
+                if (TextUtils.isEmpty(et_num.getText().toString().trim())) {
+                    toastMsg("尚未填写数量");
+                    return;
+                }
+                mPresenter.saveInventory(mCompanyId, mProductId, mTypeCode, et_num.getText().toString().trim(), et_remark.getText().toString().trim());
                 break;
         }
     }
@@ -151,7 +196,15 @@ public class CompanyInventoryDetailActivity extends BaseMvpActivity<CompanyInven
 
     @Override
     public void getInventoryDetail(CompanyInventoryInfo companyInventoryInfo) {
-
+        et_num_before.setText(companyInventoryInfo.getNumBefore());
+        et_num_after.setText(companyInventoryInfo.getNumAfter());
+        tv_operation_time.setText(companyInventoryInfo.getCreateTime());
+        spinner_product.setText(companyInventoryInfo.getProductName());
+        mProductId = companyInventoryInfo.getProductId();
+        spinner_type.setText(companyInventoryInfo.getTypeName());
+        mTypeCode = companyInventoryInfo.getType();
+        et_num.setText(companyInventoryInfo.getNum());
+        et_remark.setText(companyInventoryInfo.getRemark());
     }
 
     @Override

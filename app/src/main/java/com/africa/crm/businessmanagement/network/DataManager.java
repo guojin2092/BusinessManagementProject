@@ -471,8 +471,8 @@ public class DataManager implements HttpHelper {
     }
 
     @Override
-    public Observable<BaseEntity> saveInventory(String id, String companyId, String productId, String type, String num, String remark) {
-        return mHttpHelper.saveInventory(id, companyId, productId, type, num, remark);
+    public Observable<BaseEntity> saveInventory(String companyId, String productId, String type, String num, String remark) {
+        return mHttpHelper.saveInventory(companyId, productId, type, num, remark);
     }
 
 }

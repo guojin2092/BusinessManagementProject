@@ -96,6 +96,7 @@ public class CompanyInventoryManagementActivity extends BaseRefreshMvpActivity<C
         if (mWorkStationInfo != null) {
             titlebar_name.setText(mWorkStationInfo.getWork_name());
         }
+        titlebar_right.setVisibility(View.GONE);
         ll_add.setOnClickListener(this);
         tv_start_time.setOnClickListener(this);
         tv_end_time.setOnClickListener(this);
