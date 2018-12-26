@@ -358,7 +358,7 @@ public interface MainApi {
 
     @FormUrlEncoded
     @POST("taskRecord/selectFirstNoRemind")
-    Observable<BaseEntity<List<CompanyTaskInfo>>> getRecentTask(@Field("userId") String userId);
+    Observable<BaseEntity<CompanyTaskInfo>> getRecentTask(@Field("userId") String userId);
 
     @FormUrlEncoded
     @POST("taskRecord/updateHasRemind")
@@ -373,6 +373,6 @@ public interface MainApi {
     Observable<BaseEntity<CompanyInventoryInfo>> getInventoryDetail(@Field("id") String id);
 
     @FormUrlEncoded
-    @POST("serviceRecord/save")
+    @POST("stockRecord/save")
     Observable<BaseEntity> saveInventory(@Field("companyId") String companyId, @Field("productId") String productId, @Field("type") String type, @Field("num") String num, @Field("remark") String remark);
 }

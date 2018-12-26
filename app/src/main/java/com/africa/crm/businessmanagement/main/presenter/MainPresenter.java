@@ -39,11 +39,11 @@ public class MainPresenter extends RxPresenter<MainContract.View> implements Mai
     @Override
     public void getRecentTask(String userId) {
         addDisposable(mDataManager.getRecentTask(userId)
-                .compose(RxUtils.<List<CompanyTaskInfo>>ioToMain())
-                .subscribe(new Consumer<List<CompanyTaskInfo>>() {
+                .compose(RxUtils.<CompanyTaskInfo>ioToMain())
+                .subscribe(new Consumer<CompanyTaskInfo>() {
                     @Override
-                    public void accept(List<CompanyTaskInfo> companyTaskInfoList) throws Exception {
-                        mView.getRecentTask(companyTaskInfoList);
+                    public void accept(CompanyTaskInfo companyTaskInfo) throws Exception {
+                        mView.getRecentTask(companyTaskInfo);
                     }
                 }, new ComConsumer(mView)));
     }

@@ -204,9 +204,9 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
     }
 
     @Override
-    public void getRecentTask(List<CompanyTaskInfo> companyTaskInfoList) {
-        if (ListUtils.isEmpty(companyTaskInfoList)) {
-            mTaskId = companyTaskInfoList.get(0).getId();
+    public void getRecentTask(CompanyTaskInfo companyTaskInfo) {
+        if (!TextUtils.isEmpty(companyTaskInfo.getId())) {
+            mTaskId = companyTaskInfo.getId();
             TranslateAnimation startAnim = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f);
             startAnim.setDuration(300);
             ll_message.startAnimation(startAnim);

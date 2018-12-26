@@ -23,7 +23,7 @@ public class MainContract {
 
         void getMainStationInfo(List<MainStationInfoBean> mainStationInfoBeanList);
 
-        void getRecentTask(List<CompanyTaskInfo> companyTaskInfoList);
+        void getRecentTask(CompanyTaskInfo companyTaskInfo);
 
         void setTaskRead(BaseEntity baseEntity);
     }

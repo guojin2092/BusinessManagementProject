@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
+import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyInventoryEvent;
 import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
@@ -29,6 +30,9 @@ import com.africa.crm.businessmanagement.widget.TimeUtils;
 import com.bigkoo.pickerview.TimePickerView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -81,6 +85,12 @@ public class CompanyInventoryManagementActivity extends BaseRefreshMvpActivity<C
         Intent intent = new Intent(activity, CompanyInventoryManagementActivity.class);
         intent.putExtra("info", workStationInfo);
         activity.startActivity(intent);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -277,5 +287,17 @@ public class CompanyInventoryManagementActivity extends BaseRefreshMvpActivity<C
                 });
             }
         }
+    }
+
+    @Subscribe
+    public void Event(AddOrSaveCompanyInventoryEvent addOrSaveCompanyInventoryEvent) {
+        toastMsg(addOrSaveCompanyInventoryEvent.getMsg());
+        requestData();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }

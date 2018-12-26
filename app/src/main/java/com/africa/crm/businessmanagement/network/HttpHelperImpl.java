@@ -460,8 +460,8 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
-    public Observable<List<CompanyTaskInfo>> getRecentTask(String userId) {
-        return mainApi.getRecentTask(userId).compose(RxUtils.<List<CompanyTaskInfo>>handleResult());
+    public Observable<CompanyTaskInfo> getRecentTask(String userId) {
+        return mainApi.getRecentTask(userId).compose(RxUtils.<CompanyTaskInfo>handleResult());
     }
 
     @Override

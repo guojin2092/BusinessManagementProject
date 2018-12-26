@@ -451,7 +451,7 @@ public class DataManager implements HttpHelper {
     }
 
     @Override
-    public Observable<List<CompanyTaskInfo>> getRecentTask(String userId) {
+    public Observable<CompanyTaskInfo> getRecentTask(String userId) {
         return mHttpHelper.getRecentTask(userId);
     }
 
