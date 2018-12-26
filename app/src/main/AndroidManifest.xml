@@ -162,7 +162,7 @@
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:name=".main.station.activity.PdfReportManagementActivity"
+            android:name=".main.station.activity.CompanyPdfReportManagementActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity

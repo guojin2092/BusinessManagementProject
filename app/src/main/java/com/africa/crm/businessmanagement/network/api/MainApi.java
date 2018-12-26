@@ -14,6 +14,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyPurchasingOrderInfo;
@@ -375,4 +376,8 @@ public interface MainApi {
     @FormUrlEncoded
     @POST("stockRecord/save")
     Observable<BaseEntity> saveInventory(@Field("companyId") String companyId, @Field("productId") String productId, @Field("type") String type, @Field("num") String num, @Field("remark") String remark);
+
+    @FormUrlEncoded
+    @POST("pdfFiles/grid")
+    Observable<BaseEntity<CompanyPdfInfoBean>> getCompanyPdfList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("userName") String userName, @Field("name") String name);
 }

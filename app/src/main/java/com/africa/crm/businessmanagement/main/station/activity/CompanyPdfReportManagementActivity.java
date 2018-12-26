@@ -38,7 +38,7 @@ import butterknife.BindView;
  * Modification  History:
  * Why & What is modified:
  */
-public class PdfReportManagementActivity extends BaseActivity {
+public class CompanyPdfReportManagementActivity extends BaseActivity {
     @BindView(R.id.titlebar_back)
     ImageView titlebar_back;
     @BindView(R.id.titlebar_name)
@@ -52,8 +52,8 @@ public class PdfReportManagementActivity extends BaseActivity {
 
     private WorkStationInfo mWorkStationInfo;
 
-    @BindView(R.id.rv_pdf_report)
-    RecyclerView rv_pdf_report;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
     private PdfReportListAdapter mPdfReportListAdapter;
     private List<PdfInfoBean> mDeleteList = new ArrayList<>();
     private List<PdfInfoBean> mPdfInfoBeanList = new ArrayList<>();
@@ -66,7 +66,7 @@ public class PdfReportManagementActivity extends BaseActivity {
      * @param activity
      */
     public static void startActivity(Activity activity, WorkStationInfo workStationInfo) {
-        Intent intent = new Intent(activity, PdfReportManagementActivity.class);
+        Intent intent = new Intent(activity, CompanyPdfReportManagementActivity.class);
         intent.putExtra("info", workStationInfo);
         activity.startActivity(intent);
     }
@@ -131,7 +131,7 @@ public class PdfReportManagementActivity extends BaseActivity {
 
                 break;
             case R.id.tv_delete:
-                new AlertDialog.Builder(PdfReportManagementActivity.this)
+                new AlertDialog.Builder(CompanyPdfReportManagementActivity.this)
                         .setTitle("温馨提示")
                         .setMessage("是否确认删除？")
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -198,18 +198,18 @@ public class PdfReportManagementActivity extends BaseActivity {
      */
     private void setPdfReportDatas(final List<PdfInfoBean> pdfInfoBeans) {
         mPdfReportListAdapter = new PdfReportListAdapter(pdfInfoBeans);
-        rv_pdf_report.setAdapter(mPdfReportListAdapter);
+        recyclerView.setAdapter(mPdfReportListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        rv_pdf_report.setLayoutManager(layoutManager);
-        rv_pdf_report.addItemDecoration(new LineItemDecoration(this, LinearLayoutManager.VERTICAL, 2, ContextCompat.getColor(this, R.color.F2F2F2)));
-        rv_pdf_report.setHasFixedSize(true);
-        rv_pdf_report.setNestedScrollingEnabled(false);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new LineItemDecoration(this, LinearLayoutManager.VERTICAL, 2, ContextCompat.getColor(this, R.color.F2F2F2)));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setNestedScrollingEnabled(false);
 
         mPdfReportListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 if (mShowCheckBox) {
-                    CheckBox cb_choose = (CheckBox) adapter.getViewByPosition(rv_pdf_report, position, R.id.cb_choose);
+                    CheckBox cb_choose = (CheckBox) adapter.getViewByPosition(recyclerView, position, R.id.cb_choose);
                     mPdfInfoBeanList.get(position).setChosen(!cb_choose.isChecked());
                     mPdfReportListAdapter.notifyDataSetChanged();
                 } else {

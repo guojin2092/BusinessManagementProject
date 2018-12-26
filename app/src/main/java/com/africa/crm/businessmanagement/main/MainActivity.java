@@ -39,7 +39,7 @@ import com.africa.crm.businessmanagement.main.station.activity.CompanySupplierMa
 import com.africa.crm.businessmanagement.main.station.activity.CompanyTaskManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyTradingOrderManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.PackagingDataManagementActivity;
-import com.africa.crm.businessmanagement.main.station.activity.PdfReportManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.CompanyPdfReportManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SettingActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SystemManagementActivity;
 import com.africa.crm.businessmanagement.mvp.activity.BaseEasyMvpActivity;
@@ -300,7 +300,7 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
                             CompanyTaskManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "16":
-                            PdfReportManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            CompanyPdfReportManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "17":
                             PackagingDataManagementActivity.startActivity(MainActivity.this, workStationInfo);
