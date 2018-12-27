@@ -379,5 +379,9 @@ public interface MainApi {
 
     @FormUrlEncoded
     @POST("pdfFiles/grid")
-    Observable<BaseEntity<CompanyPdfInfoBean>> getCompanyPdfList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("userName") String userName, @Field("name") String name);
+    Observable<BaseEntity<CompanyPdfInfoBean>> getCompanyPdfList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name);
+
+    @FormUrlEncoded
+    @POST("pdfFiles/deleteById")
+    Observable<BaseEntity> deleteCompanyPdf(@Field("id") String id);
 }

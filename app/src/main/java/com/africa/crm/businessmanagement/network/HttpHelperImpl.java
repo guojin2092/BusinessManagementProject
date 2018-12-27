@@ -14,6 +14,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyPurchasingOrderInfo;
@@ -39,6 +40,7 @@ import com.africa.crm.businessmanagement.main.bean.RoleLimitInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleManagementInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
+import com.africa.crm.businessmanagement.network.api.FileApi;
 import com.africa.crm.businessmanagement.network.api.LoginApi;
 import com.africa.crm.businessmanagement.network.api.MainApi;
 import com.africa.crm.businessmanagement.network.retrofit.RetrofitHelper;
@@ -60,6 +62,7 @@ import io.reactivex.Observable;
 public class HttpHelperImpl implements HttpHelper {
     private LoginApi loginApi;
     private MainApi mainApi;
+    private FileApi fileApi;
 
     private static final HttpHelperImpl getInstance = new HttpHelperImpl();
 
@@ -70,6 +73,7 @@ public class HttpHelperImpl implements HttpHelper {
     private HttpHelperImpl() {
         loginApi = RetrofitHelper.provideApi(LoginApi.class);
         mainApi = RetrofitHelper.provideApi(MainApi.class);
+        fileApi = RetrofitHelper.provideApi(FileApi.class);
     }
 
 
@@ -482,6 +486,16 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<BaseEntity> saveInventory(String companyId, String productId, String type, String num, String remark) {
         return mainApi.saveInventory(companyId, productId, type, num, remark);
+    }
+
+    @Override
+    public Observable<CompanyPdfInfoBean> getCompanyPdfList(int page, int rows, String companyId, String userId, String name) {
+        return mainApi.getCompanyPdfList(page, rows, companyId, userId, name).compose(RxUtils.<CompanyPdfInfoBean>handleResult());
+    }
+
+    @Override
+    public Observable<BaseEntity> deleteCompanyPdf(String id) {
+        return mainApi.deleteCompanyPdf(id);
     }
 
 }

@@ -14,6 +14,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyPurchasingOrderInfo;
@@ -473,6 +474,16 @@ public class DataManager implements HttpHelper {
     @Override
     public Observable<BaseEntity> saveInventory(String companyId, String productId, String type, String num, String remark) {
         return mHttpHelper.saveInventory(companyId, productId, type, num, remark);
+    }
+
+    @Override
+    public Observable<CompanyPdfInfoBean> getCompanyPdfList(int page, int rows, String companyId, String userId, String name) {
+        return mHttpHelper.getCompanyPdfList(page, rows, companyId, userId, name);
+    }
+
+    @Override
+    public Observable<BaseEntity> deleteCompanyPdf(String id) {
+        return mHttpHelper.deleteCompanyPdf(id);
     }
 
 }

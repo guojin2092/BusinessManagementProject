@@ -14,6 +14,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyPurchasingOrderInfo;
@@ -218,6 +219,10 @@ public interface HttpHelper {
     Observable<CompanyInventoryInfo> getInventoryDetail(String id);
 
     Observable<BaseEntity> saveInventory(String companyId, String productId, String type, String num, String remark);
+
+    Observable<CompanyPdfInfoBean> getCompanyPdfList(int page, int rows, String companyId, String userId, String name);
+
+    Observable<BaseEntity> deleteCompanyPdf(String id);
 
 }
 

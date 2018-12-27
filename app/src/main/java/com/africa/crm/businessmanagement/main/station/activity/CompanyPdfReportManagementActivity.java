@@ -9,20 +9,38 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.ImageView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.baseutil.library.base.BaseActivity;
+import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
+import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyDeliveryOrderEvent;
+import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyPdfEvent;
+import com.africa.crm.businessmanagement.main.bean.BaseEntity;
+import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfoBean;
+import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.PdfInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UserInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
+import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.PdfReportListAdapter;
+import com.africa.crm.businessmanagement.main.station.contract.CompanyPdfReportManagementContract;
 import com.africa.crm.businessmanagement.main.station.dialog.AddPdfDialog;
+import com.africa.crm.businessmanagement.main.station.presenter.CompanyPdfManagementPresenter;
+import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
+import com.africa.crm.businessmanagement.network.error.ErrorMsg;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
+import com.africa.crm.businessmanagement.widget.MySpinner;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,29 +56,34 @@ import butterknife.BindView;
  * Modification  History:
  * Why & What is modified:
  */
-public class CompanyPdfReportManagementActivity extends BaseActivity {
-    @BindView(R.id.titlebar_back)
-    ImageView titlebar_back;
-    @BindView(R.id.titlebar_name)
-    TextView titlebar_name;
-    @BindView(R.id.titlebar_right)
-    TextView titlebar_right;
+public class CompanyPdfReportManagementActivity extends BaseRefreshMvpActivity<CompanyPdfManagementPresenter> implements CompanyPdfReportManagementContract.View {
+    @BindView(R.id.et_file_name)
+    EditText et_file_name;
     @BindView(R.id.ll_add)
     LinearLayout ll_add;
+    @BindView(R.id.tv_search)
+    TextView tv_search;
     @BindView(R.id.tv_delete)
     TextView tv_delete;
-
-    private WorkStationInfo mWorkStationInfo;
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     private PdfReportListAdapter mPdfReportListAdapter;
-    private List<PdfInfoBean> mDeleteList = new ArrayList<>();
-    private List<PdfInfoBean> mPdfInfoBeanList = new ArrayList<>();
+    private List<CompanyPdfInfo> mDeleteList = new ArrayList<>();
+    private List<CompanyPdfInfo> mPdfInfoBeanList = new ArrayList<>();
 
-    private boolean mShowCheckBox = false;
+    @BindView(R.id.spinner_user)
+    MySpinner spinner_user;
+    private List<UserInfoBean> mUserInfoBeanList = new ArrayList<>();
+    private List<DicInfo> mUserInfoList = new ArrayList<>();
+    private String mUserId = "";
 
+    private WorkStationInfo mWorkStationInfo;
+    private AlertDialog mDeleteDialog;
     private AddPdfDialog mAddPdfDialog;
+    private boolean mShowCheckBox = false;
+    private String mCompanyId = "";
+    private String mRoleCode = "";
 
     /**
      * @param activity
@@ -72,30 +95,65 @@ public class CompanyPdfReportManagementActivity extends BaseActivity {
     }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+
+    @Override
     public void setView(Bundle savedInstanceState) {
         setContentView(R.layout.activity_pdf_report_management);
     }
 
     @Override
     public void initView() {
+        super.initView();
+        mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
+        mRoleCode = UserInfoManager.getUserLoginInfo(this).getRoleCode();
         mWorkStationInfo = (WorkStationInfo) getIntent().getSerializableExtra("info");
         if (mWorkStationInfo != null) {
             titlebar_name.setText(mWorkStationInfo.getWork_name());
         }
-        titlebar_back.setOnClickListener(this);
-        titlebar_right.setOnClickListener(this);
         ll_add.setOnClickListener(this);
+        tv_search.setOnClickListener(this);
         tv_delete.setOnClickListener(this);
-        titlebar_right.setText(R.string.delete);
         mAddPdfDialog = AddPdfDialog.getInstance(this);
+
+        if (mRoleCode.equals("companyRoot")) {
+            spinner_user.setVisibility(View.VISIBLE);
+        } else {
+            spinner_user.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    protected CompanyPdfManagementPresenter injectPresenter() {
+        return new CompanyPdfManagementPresenter();
+    }
+
+    @Override
+    protected void requestData() {
+        mPresenter.getCompanyUserList(page, rows, "", "2", mCompanyId, "1", "");
+        pullDownRefresh(page);
+    }
+
+    @Override
+    public void pullDownRefresh(int page) {
+        if (mRoleCode.equals("companyRoot")) {
+            mPresenter.getCompanyPdfList(page, rows, mCompanyId, mUserId, et_file_name.getText().toString().trim());
+        } else {
+            mPresenter.getCompanyPdfList(page, rows, mCompanyId, String.valueOf(UserInfoManager.getUserLoginInfo(this).getId()), et_file_name.getText().toString().trim());
+        }
     }
 
     @Override
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()) {
-            case R.id.titlebar_back:
-                onBackPressed();
+            case R.id.tv_search:
+                page = 1;
+                pullDownRefresh(page);
                 break;
             case R.id.titlebar_right:
                 if (titlebar_right.getText().toString().equals(getString(R.string.delete))) {
@@ -131,33 +189,31 @@ public class CompanyPdfReportManagementActivity extends BaseActivity {
 
                 break;
             case R.id.tv_delete:
-                new AlertDialog.Builder(CompanyPdfReportManagementActivity.this)
-                        .setTitle("温馨提示")
-                        .setMessage("是否确认删除？")
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                mDeleteList.clear();
+                for (CompanyPdfInfo companyPdfInfo : mPdfInfoBeanList) {
+                    if (companyPdfInfo.isChosen()) {
+                        mDeleteList.add(companyPdfInfo);
+                    }
+                }
+                if (ListUtils.isEmpty(mDeleteList)) {
+                    toastMsg("尚未选择删除项");
+                    return;
+                }
+                mDeleteDialog = new AlertDialog.Builder(CompanyPdfReportManagementActivity.this)
+                        .setTitle(R.string.tips)
+                        .setMessage(R.string.confirm_delete)
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int which) {
                                 dialogInterface.dismiss();
                             }
                         })
-                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int which) {
-                                for (PdfInfoBean pdfInfoBean : mPdfInfoBeanList) {
-                                    if (pdfInfoBean.isChosen()) {
-                                        mDeleteList.add(pdfInfoBean);
-                                    }
-                                }
                                 for (int i = 0; i < mDeleteList.size(); i++) {
-                                    if (mPdfInfoBeanList.contains(mDeleteList.get(i))) {
-                                        int position = mPdfInfoBeanList.indexOf(mDeleteList.get(i));
-                                        mPdfInfoBeanList.remove(mDeleteList.get(i));
-                                        if (mPdfReportListAdapter != null) {
-                                            mPdfReportListAdapter.notifyItemRemoved(position);
-                                        }
-                                    }
+                                    mPresenter.deleteCompanyPdf(mDeleteList.get(i).getId());
                                 }
-                                dialogInterface.dismiss();
                             }
                         })
                         .show();
@@ -165,57 +221,119 @@ public class CompanyPdfReportManagementActivity extends BaseActivity {
         }
     }
 
+
     @Override
     public void initData() {
-        PdfInfoBean pdfInfoBean = new PdfInfoBean();
-        pdfInfoBean.setName("云茂地产文件");
-        pdfInfoBean.setTime("2018-10-18");
-        pdfInfoBean.setRemark("第二次修订...");
-        pdfInfoBean.setChosen(false);
-        mPdfInfoBeanList.add(pdfInfoBean);
-
-        PdfInfoBean pdfInfoBean2 = new PdfInfoBean();
-        pdfInfoBean2.setName("西行设计文件");
-        pdfInfoBean2.setTime("2018-09-12");
-        pdfInfoBean2.setRemark("备注");
-        pdfInfoBean2.setChosen(false);
-        mPdfInfoBeanList.add(pdfInfoBean2);
-
-        PdfInfoBean pdfInfoBean3 = new PdfInfoBean();
-        pdfInfoBean3.setName("兴时科技文件");
-        pdfInfoBean3.setTime("2018-08-04");
-        pdfInfoBean3.setRemark("第三次修订");
-        pdfInfoBean3.setChosen(false);
-        mPdfInfoBeanList.add(pdfInfoBean3);
-
-        setPdfReportDatas(mPdfInfoBeanList);
-    }
-
-    /**
-     * 设置pdf报告数据
-     *
-     * @param pdfInfoBeans
-     */
-    private void setPdfReportDatas(final List<PdfInfoBean> pdfInfoBeans) {
-        mPdfReportListAdapter = new PdfReportListAdapter(pdfInfoBeans);
+        mPdfReportListAdapter = new PdfReportListAdapter(mPdfInfoBeanList);
         recyclerView.setAdapter(mPdfReportListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new LineItemDecoration(this, LinearLayoutManager.VERTICAL, 2, ContextCompat.getColor(this, R.color.F2F2F2)));
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
+    }
 
-        mPdfReportListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+    @Override
+    public void getCompanyUserList(UserManagementInfoBean userManagementInfoBean) {
+        mUserInfoBeanList.clear();
+        mUserInfoBeanList.addAll(userManagementInfoBean.getRows());
+        if (!ListUtils.isEmpty(mUserInfoBeanList)) {
+            for (int i = 0; i < mUserInfoBeanList.size(); i++) {
+                mUserInfoList.add(new DicInfo(mUserInfoBeanList.get(i).getUserName(), mUserInfoBeanList.get(i).getId()));
+            }
+        }
+        spinner_user.setListDatas(this, mUserInfoList);
+        spinner_user.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if (mShowCheckBox) {
-                    CheckBox cb_choose = (CheckBox) adapter.getViewByPosition(recyclerView, position, R.id.cb_choose);
-                    mPdfInfoBeanList.get(position).setChosen(!cb_choose.isChecked());
-                    mPdfReportListAdapter.notifyDataSetChanged();
-                } else {
-                    showShortToast("查看PDF文件");
-                }
+            public void onItemClick(DicInfo dicInfo, int position) {
+                mUserId = dicInfo.getCode();
             }
         });
+    }
+
+    @Override
+    public void getCompanyPdfList(CompanyPdfInfoBean companyPdfInfoBean) {
+        if (companyPdfInfoBean != null) {
+            if (page == 1) {
+                if (ListUtils.isEmpty(companyPdfInfoBean.getRows())) {
+                    layout_network_error.setVisibility(View.GONE);
+                    mRefreshLayout.getLayout().setVisibility(View.GONE);
+                    layout_no_data.setVisibility(View.VISIBLE);
+                    return;
+                } else {
+                    layout_no_data.setVisibility(View.GONE);
+                    layout_network_error.setVisibility(View.GONE);
+                    mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
+                }
+                mPdfInfoBeanList.clear();
+                recyclerView.smoothScrollToPosition(0);
+            }
+            if (mRefreshLayout != null) {
+                if (ListUtils.isEmpty(companyPdfInfoBean.getRows()) && page > 1) {
+                    mRefreshLayout.finishLoadmoreWithNoMoreData();
+                } else {
+                    mRefreshLayout.finishLoadmore();
+                }
+            }
+            if (!ListUtils.isEmpty(companyPdfInfoBean.getRows())) {
+                mPdfInfoBeanList.addAll(companyPdfInfoBean.getRows());
+                if (mPdfReportListAdapter != null) {
+                    mPdfReportListAdapter.notifyDataSetChanged();
+                }
+            }
+            if (!ListUtils.isEmpty(mPdfInfoBeanList)) {
+                mPdfReportListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                        if (mShowCheckBox) {
+                            CheckBox cb_choose = (CheckBox) adapter.getViewByPosition(recyclerView, position, R.id.cb_choose);
+                            mPdfInfoBeanList.get(position).setChosen(!cb_choose.isChecked());
+                            mPdfReportListAdapter.notifyDataSetChanged();
+                        } else {
+                            showShortToast("查看PDF文件");
+                        }
+                    }
+                });
+            }
+        }
+
+    }
+
+    @Override
+    public void deleteCompanyPdf(BaseEntity baseEntity) {
+        if (baseEntity.isSuccess()) {
+            for (int i = 0; i < mDeleteList.size(); i++) {
+                if (mPdfInfoBeanList.contains(mDeleteList.get(i))) {
+                    int position = mPdfInfoBeanList.indexOf(mDeleteList.get(i));
+                    mPdfInfoBeanList.remove(mDeleteList.get(i));
+                    if (mPdfReportListAdapter != null) {
+                        mPdfReportListAdapter.notifyItemRemoved(position);
+                    }
+                }
+            }
+            if (ListUtils.isEmpty(mPdfInfoBeanList)) {
+                titlebar_right.setText(R.string.delete);
+                tv_delete.setVisibility(View.GONE);
+                mShowCheckBox = false;
+                layout_network_error.setVisibility(View.GONE);
+                mRefreshLayout.getLayout().setVisibility(View.GONE);
+                layout_no_data.setVisibility(View.VISIBLE);
+            }
+            mDeleteDialog.dismiss();
+        } else {
+            ErrorMsg.showErrorMsg(baseEntity.getReturnMsg());
+        }
+    }
+
+    @Subscribe
+    public void Event(AddOrSaveCompanyPdfEvent addOrSaveCompanyPdfEvent) {
+        toastMsg(addOrSaveCompanyPdfEvent.getMsg());
+        requestData();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }
