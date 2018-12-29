@@ -224,5 +224,9 @@ public interface HttpHelper {
 
     Observable<BaseEntity> deleteCompanyPdf(String id);
 
+    Observable<BaseEntity> uploadFiles(String filePath);
+
+    Observable<BaseEntity> downloadFiles(String code);
+
 }
 

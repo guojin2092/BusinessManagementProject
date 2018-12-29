@@ -40,11 +40,13 @@ public class DeliveryOrderListAdapter extends BaseQuickAdapter<CompanyDeliveryOr
     @Override
     protected void convert(BaseViewHolder helper, CompanyDeliveryOrderInfo item) {
         TextView tv_delivery_order_name = helper.getView(R.id.tv_delivery_order_name);
+        TextView tv_sale_code = helper.getView(R.id.tv_sale_code);
         TextView tv_logistics_code = helper.getView(R.id.tv_logistics_code);
         TextView tv_arrive_date = helper.getView(R.id.tv_arrive_date);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
         tv_delivery_order_name.setText(item.getName());
+        tv_sale_code.setText("发货单编号："+item.getCode());
         tv_logistics_code.setText("物流单号：" + item.getLogisticsCode());
         tv_arrive_date.setText("到达日期：" + item.getArriveDate());
         cb_choose.setChecked(item.isChosen());

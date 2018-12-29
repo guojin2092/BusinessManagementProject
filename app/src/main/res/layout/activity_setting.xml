@@ -152,12 +152,14 @@
                     android:drawablePadding="12dp"
                     android:gravity="center"
                     android:text="更新数据"
-                    android:textColor="@color/A606060" />
+                    android:textColor="@color/A606060"
+                    android:visibility="gone" />
 
                 <View
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tv_unload_data"

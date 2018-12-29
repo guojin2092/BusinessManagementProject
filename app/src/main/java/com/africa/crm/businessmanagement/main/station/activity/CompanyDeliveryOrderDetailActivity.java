@@ -24,16 +24,17 @@ import com.africa.crm.businessmanagement.main.bean.OrderProductInfo;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.OrderProductListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyDeliveryOrderDetailContract;
+import com.africa.crm.businessmanagement.main.station.dialog.AddProductDialog;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyDeliveryOrderDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
-import com.africa.crm.businessmanagement.widget.MySpinner2;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.bigkoo.pickerview.TimePickerView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -75,14 +76,16 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
     TextView tv_delete;
     @BindView(R.id.tv_delete_product)
     TextView tv_delete_product;
+    @BindView(R.id.tv_add_product)
+    TextView tv_add_product;
     @BindView(R.id.rv_product)
     RecyclerView rv_product;
+    private AddProductDialog mAddProductDialog;
     private OrderProductListAdapter mOrderProductListAdapter;
     private List<OrderProductInfo> mDeleteList = new ArrayList<>();
     private List<OrderProductInfo> mOrderProductInfoList = new ArrayList<>();
     private boolean mShowCheckBox = false;
-    @BindView(R.id.spinner_add_product)
-    MySpinner2 spinner_add_product;
+
 
     private TimePickerView pvTime;
 
@@ -126,6 +129,7 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
 
         tv_delete.setOnClickListener(this);
         tv_delete_product.setOnClickListener(this);
+        tv_add_product.setOnClickListener(this);
         tv_arrive_date.setOnClickListener(this);
         tv_save.setOnClickListener(this);
         String roleCode = UserInfoManager.getUserLoginInfo(this).getRoleCode();
@@ -144,6 +148,30 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
             tv_save.setVisibility(View.GONE);
             setEditTextInput(false);
         }
+        mAddProductDialog = AddProductDialog.getInstance(this);
+        mAddProductDialog.isCancelableOnTouchOutside(false)
+                .withDuration(300)
+                .withEffect(Effectstype.Fadein)
+                .setCancelClick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mAddProductDialog.dismiss();
+                    }
+                });
+        mAddProductDialog.addOnSaveClickListener(new AddProductDialog.OnSaveClickListener() {
+            @Override
+            public void onSaveClick(OrderProductInfo orderProductInfo) {
+                if (TextUtils.isEmpty(orderProductInfo.getName())) {
+                    toastMsg("尚未选择产品");
+                    return;
+                }
+                mOrderProductInfoList.add(new OrderProductInfo(orderProductInfo.getName(), orderProductInfo.getNum()));
+                if (mOrderProductListAdapter != null) {
+                    mOrderProductListAdapter.notifyDataSetChanged();
+                }
+                mAddProductDialog.dismiss();
+            }
+        });
         initTimePicker();
         initProductList();
     }
@@ -186,7 +214,6 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
     protected void requestData() {
         mPresenter.getState(STATE_TYPE);
         mPresenter.getAllSaleOrders(mCompanyId, mUserId);
-        mPresenter.getAllProduct(mCompanyId);
         if (!TextUtils.isEmpty(mDeliveryOrderId)) {
             mPresenter.getCompanyDeliveryOrderDetail(mDeliveryOrderId);
         }
@@ -217,6 +244,9 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
                 if (mOrderProductListAdapter != null) {
                     mOrderProductListAdapter.setmIsDeleted(mShowCheckBox);
                 }
+                break;
+            case R.id.tv_add_product:
+                mPresenter.getAllProduct(mCompanyId);
                 break;
             case R.id.tv_delete:
                 mDeleteList.clear();
@@ -319,7 +349,7 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
         et_clause.setEnabled(canInput);
         et_remark.setEnabled(canInput);
         tv_delete_product.setEnabled(canInput);
-        spinner_add_product.getTextView().setEnabled(canInput);
+        tv_add_product.setEnabled(canInput);
     }
 
 
@@ -343,16 +373,8 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
         for (DicInfo2 dicInfo2 : dicInfoList) {
             list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getId()));
         }
-        spinner_add_product.setListDatas(this, list);
-        spinner_add_product.addOnItemClickListener(new MySpinner2.OnItemClickListener() {
-            @Override
-            public void onItemClick(DicInfo dicInfo, int position) {
-                mOrderProductInfoList.add(new OrderProductInfo(dicInfo.getText(), dicInfo.getCode()));
-                if (mOrderProductListAdapter != null) {
-                    mOrderProductListAdapter.notifyDataSetChanged();
-                }
-            }
-        });
+        mAddProductDialog.show();
+        mAddProductDialog.setListDatas(this, list);
     }
 
     @Override

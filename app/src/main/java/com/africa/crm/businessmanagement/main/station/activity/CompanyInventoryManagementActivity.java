@@ -50,6 +50,8 @@ import butterknife.BindView;
  * Why & What is modified:
  */
 public class CompanyInventoryManagementActivity extends BaseRefreshMvpActivity<CompanyInventoryPresenter> implements CompanyInventoryContract.View {
+    @BindView(R.id.tv_search)
+    TextView tv_search;
     @BindView(R.id.spinner_product)
     MySpinner spinner_product;
     private String mProductId = "";
@@ -107,6 +109,7 @@ public class CompanyInventoryManagementActivity extends BaseRefreshMvpActivity<C
             titlebar_name.setText(mWorkStationInfo.getWork_name());
         }
         titlebar_right.setVisibility(View.GONE);
+        tv_search.setOnClickListener(this);
         ll_add.setOnClickListener(this);
         tv_start_time.setOnClickListener(this);
         tv_end_time.setOnClickListener(this);
@@ -120,7 +123,7 @@ public class CompanyInventoryManagementActivity extends BaseRefreshMvpActivity<C
             public void onTimeSelect(Date date, View v) {
                 mStartDate = date;
                 if (mEndDate != null) {
-                    if (mEndDate.getTime() <= mStartDate.getTime()) {
+                    if (mEndDate.getTime() < mStartDate.getTime()) {
                         toastMsg("起止时间不得小于起始时间");
                         return;
                     }
@@ -136,7 +139,7 @@ public class CompanyInventoryManagementActivity extends BaseRefreshMvpActivity<C
             public void onTimeSelect(Date date, View v) {
                 mEndDate = date;
                 if (mStartDate != null) {
-                    if (mEndDate.getTime() <= mStartDate.getTime()) {
+                    if (mEndDate.getTime() < mStartDate.getTime()) {
                         toastMsg("起止时间不得小于起始时间");
                         return;
                     }

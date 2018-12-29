@@ -40,11 +40,14 @@ public class PaymentListAdapter extends BaseQuickAdapter<CompanyPayOrderInfo, Ba
     @Override
     protected void convert(BaseViewHolder helper, CompanyPayOrderInfo item) {
         TextView tv_pay_order_name = helper.getView(R.id.tv_pay_order_name);
+        TextView tv_pay_code = helper.getView(R.id.tv_pay_code);
         TextView tv_pay_money = helper.getView(R.id.tv_pay_money);
+
         TextView tv_pay_time = helper.getView(R.id.tv_pay_time);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
         tv_pay_order_name.setText(item.getName());
+        tv_pay_code.setText("付款单编号："+item.getCode());
         tv_pay_money.setText(item.getPrice());
         tv_pay_time.setText("付款时间：" + item.getPayTime());
         cb_choose.setChecked(item.isChosen());

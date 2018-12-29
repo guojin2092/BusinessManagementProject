@@ -102,11 +102,11 @@ public class MySpinner2 extends FrameLayout {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                /*if (mList.get(position).getCode().equals("")) {
+                if (mList.get(position).getCode().equals("")) {
                     tv_choose_type.setText("");
                 } else {
                     tv_choose_type.setText(mList.get(position).getText());
-                }*/
+                }
                 dismissDropDown();
                 if (onItemClickListener != null) {
                     onItemClickListener.onItemClick(mList.get(position), position);
@@ -143,6 +143,10 @@ public class MySpinner2 extends FrameLayout {
     @Override
     protected void onVisibilityChanged(View changedView, int visibility) {
         super.onVisibilityChanged(changedView, visibility);
+        init();
+    }
+
+    public void init() {
         arrowDrawable = initArrowDrawable(arrowDrawableTint);
         arrow.setCompoundDrawablesWithIntrinsicBounds(null, null, arrowDrawable, null);
     }

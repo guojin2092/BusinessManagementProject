@@ -7,11 +7,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
-
-import com.africa.crm.businessmanagement.baseutil.common.util.ToastUtils;
 import com.africa.crm.businessmanagement.baseutil.library.base.BaseActivity;
+import com.africa.crm.businessmanagement.main.LoginActivity;
+import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
+import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
+import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
+import com.gitonway.lee.niftymodaldialogeffects.lib.LoginOutDialog;
+
 import butterknife.BindView;
 
 /**
@@ -36,6 +40,8 @@ public class SettingActivity extends BaseActivity {
     TextView tv_login_out;
 
     private WorkStationInfo mWorkStationInfo;
+
+    private LoginOutDialog mLoginOutDialog;
 
 
     /**
@@ -62,6 +68,7 @@ public class SettingActivity extends BaseActivity {
         tv_update_data.setOnClickListener(this);
         tv_unload_data.setOnClickListener(this);
         tv_login_out.setOnClickListener(this);
+        mLoginOutDialog = LoginOutDialog.getInstance(this);
     }
 
     @Override
@@ -72,13 +79,32 @@ public class SettingActivity extends BaseActivity {
                 onBackPressed();
                 break;
             case R.id.tv_update_data:
-                ToastUtils.show(getBVActivity(), "更新数据");
+                toastMsg("更新数据");
                 break;
             case R.id.tv_unload_data:
-                ToastUtils.show(getBVActivity(), "上传数据");
+                toastMsg("上传数据");
                 break;
             case R.id.tv_login_out:
-                ToastUtils.show(getBVActivity(), "退出登录");
+                mLoginOutDialog.isCancelableOnTouchOutside(false)
+                        .withDuration(300)
+                        .withEffect(Effectstype.Fadein)
+                        .setButton1Click(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                UserInfoManager.deleteUserInfo(SettingActivity.this);
+                                MyApplication.getInstance().finishAllActivities();
+                                LoginActivity.startActivityForResult(SettingActivity.this, 0);
+                                mLoginOutDialog.dismiss();
+                            }
+                        })
+                        .setButton2Click(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                mLoginOutDialog.dismiss();
+                            }
+                        })
+                        .show();
+
                 break;
         }
     }

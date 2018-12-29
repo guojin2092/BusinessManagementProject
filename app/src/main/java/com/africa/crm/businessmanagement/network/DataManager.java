@@ -486,4 +486,14 @@ public class DataManager implements HttpHelper {
         return mHttpHelper.deleteCompanyPdf(id);
     }
 
+    @Override
+    public Observable<BaseEntity> uploadFiles(String filePath) {
+        return mHttpHelper.uploadFiles(filePath);
+    }
+
+    @Override
+    public Observable<BaseEntity> downloadFiles(String code) {
+        return mHttpHelper.downloadFiles(code);
+    }
+
 }

@@ -150,7 +150,7 @@ public class CompanyServiceRecordManagementActivity extends BaseRefreshMvpActivi
             public void onTimeSelect(Date date, View v) {
                 mStartDate = date;
                 if (mEndDate != null) {
-                    if (mEndDate.getTime() <= mStartDate.getTime()) {
+                    if (mEndDate.getTime() < mStartDate.getTime()) {
                         toastMsg("起止时间不得小于起始时间");
                         return;
                     }
@@ -166,7 +166,7 @@ public class CompanyServiceRecordManagementActivity extends BaseRefreshMvpActivi
             public void onTimeSelect(Date date, View v) {
                 mEndDate = date;
                 if (mStartDate != null) {
-                    if (mEndDate.getTime() <= mStartDate.getTime()) {
+                    if (mEndDate.getTime() < mStartDate.getTime()) {
                         toastMsg("起止时间不得小于起始时间");
                         return;
                     }

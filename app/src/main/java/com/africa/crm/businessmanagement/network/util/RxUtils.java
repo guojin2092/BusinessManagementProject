@@ -4,6 +4,8 @@ package com.africa.crm.businessmanagement.network.util;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.network.base.BaseView;
 import com.africa.crm.businessmanagement.network.error.ComException;
+import com.africa.crm.businessmanagement.network.error.PermissionsException;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +67,21 @@ public class RxUtils {
             }
         };
     }
+
+    public static Observable<String> doHandlePermissions(final RxPermissions rxPermissions, final String... permissions) {
+        return rxPermissions.request(permissions)
+                .flatMap(new Function<Boolean, ObservableSource<String>>() {
+                    @Override
+                    public ObservableSource<String> apply(@NonNull Boolean aBoolean) throws Exception {
+                        if (aBoolean) {
+                            return Observable.just("");
+                        } else {
+                            return Observable.error(new PermissionsException(permissions));
+                        }
+                    }
+                });
+    }
+
 
 
     /**

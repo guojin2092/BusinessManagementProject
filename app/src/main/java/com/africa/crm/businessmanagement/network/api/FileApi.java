@@ -1,13 +1,12 @@
 package com.africa.crm.businessmanagement.network.api;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
-import com.africa.crm.businessmanagement.main.bean.DicInfo;
-import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
 
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 
@@ -22,12 +21,12 @@ import retrofit2.http.Part;
  */
 public interface FileApi {
 
-    @FormUrlEncoded
     @POST("defile/fileupload")
-    Observable<BaseEntity<LoginInfoBean>> uploadFiles(@Part MultipartBody.Part part);
+    @Multipart
+    Observable<BaseEntity> uploadFiles(@Part MultipartBody.Part part);
 
     @FormUrlEncoded
     @POST("defile/file")
-    Observable<BaseEntity<DicInfo>> downloadFiles(@Field("code") String code);
+    Observable<BaseEntity> downloadFiles(@Field("code") String code);
 
 }

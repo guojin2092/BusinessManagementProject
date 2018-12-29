@@ -46,9 +46,13 @@ import com.africa.crm.businessmanagement.network.api.MainApi;
 import com.africa.crm.businessmanagement.network.retrofit.RetrofitHelper;
 import com.africa.crm.businessmanagement.network.util.RxUtils;
 
+import java.io.File;
 import java.util.List;
 
 import io.reactivex.Observable;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 /**
  * Project：BusinessManagementProject
@@ -496,6 +500,19 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<BaseEntity> deleteCompanyPdf(String id) {
         return mainApi.deleteCompanyPdf(id);
+    }
+
+    @Override
+    public Observable<BaseEntity> uploadFiles(String filePath) {
+        File file = new File(filePath);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        MultipartBody.Part part = MultipartBody.Part.createFormData(file.getName(), file.getName(), requestBody);
+        return fileApi.uploadFiles(part);
+    }
+
+    @Override
+    public Observable<BaseEntity> downloadFiles(String code) {
+        return fileApi.downloadFiles(code);
     }
 
 }

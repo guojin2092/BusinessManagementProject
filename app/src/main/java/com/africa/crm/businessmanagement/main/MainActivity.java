@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
@@ -69,6 +71,7 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
     private WorkStationListAdapter mWorkStationListAdapter;
 
     private String mUserId = "";
+    private long firstTime = 0;
 
     /**
      * @param activity
@@ -323,4 +326,18 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
         }
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            long secondTime = System.currentTimeMillis();
+            if (secondTime - firstTime > 2000) {
+                Toast.makeText(this, R.string.exit_app, Toast.LENGTH_SHORT).show();
+                firstTime = secondTime;//更新firstTime  
+                return true;
+            } else {
+                finish();
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }

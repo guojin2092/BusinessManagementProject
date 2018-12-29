@@ -40,11 +40,15 @@ public class TaskListAdapter extends BaseQuickAdapter<CompanyTaskInfo, BaseViewH
     @Override
     protected void convert(BaseViewHolder helper, CompanyTaskInfo item) {
         TextView tv_task_name = helper.getView(R.id.tv_task_name);
+        TextView tv_customer_name = helper.getView(R.id.tv_customer_name);
+        TextView tv_state_name = helper.getView(R.id.tv_state_name);
         TextView tv_level_name = helper.getView(R.id.tv_level_name);
         TextView tv_remind_time = helper.getView(R.id.tv_remind_time);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
         tv_task_name.setText(item.getName());
+        tv_customer_name.setText(item.getCustomerName());
+        tv_state_name.setText(item.getStateName());
         tv_level_name.setText(item.getLevelName());
         tv_remind_time.setText(item.getRemindTime());
         cb_choose.setChecked(item.isChosen());

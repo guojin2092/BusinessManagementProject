@@ -51,7 +51,6 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
     public static void startActivityForResult(Activity activity, int requestCode) {
         Intent intent = new Intent(activity, LoginActivity.class);
         activity.startActivityForResult(intent, requestCode);
-        activity.overridePendingTransition(R.anim.right_push_in, R.anim.hold);
     }
 
     /**
@@ -127,6 +126,7 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
         if (loginInfoBean != null) {
             UserInfoManager.saveUserLoginInfo(this, loginInfoBean);
             MainActivity.startActivity(this);
+            finish();
         }
     }
 

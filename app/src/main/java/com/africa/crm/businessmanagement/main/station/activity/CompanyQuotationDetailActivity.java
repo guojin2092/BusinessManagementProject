@@ -20,20 +20,21 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
-import com.africa.crm.businessmanagement.main.bean.OrderProductInfo;
+import com.africa.crm.businessmanagement.main.bean.ProductInfo;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
-import com.africa.crm.businessmanagement.main.station.adapter.OrderProductListAdapter;
+import com.africa.crm.businessmanagement.main.station.adapter.QuotationProductListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyQuotationDetailContract;
+import com.africa.crm.businessmanagement.main.station.dialog.AddQuotationProductDialog;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyQuotationDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
-import com.africa.crm.businessmanagement.widget.MySpinner2;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.bigkoo.pickerview.TimePickerView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -74,21 +75,22 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
     TextView tv_delete;
     @BindView(R.id.tv_delete_product)
     TextView tv_delete_product;
+    @BindView(R.id.tv_add_product)
+    TextView tv_add_product;
     @BindView(R.id.rv_product)
     RecyclerView rv_product;
-    private OrderProductListAdapter mOrderProductListAdapter;
-    private List<OrderProductInfo> mDeleteList = new ArrayList<>();
-    private List<OrderProductInfo> mOrderProductInfoList = new ArrayList<>();
+    private QuotationProductListAdapter mOrderProductListAdapter;
+    private AddQuotationProductDialog mAddProductDialog;
+    private List<ProductInfo> mDeleteList = new ArrayList<>();
+    private List<ProductInfo> mOrderProductInfoList = new ArrayList<>();
     private boolean mShowCheckBox = false;
-
-    @BindView(R.id.spinner_add_product)
-    MySpinner2 spinner_add_product;
 
     @BindView(R.id.spinner_customer_name)
     MySpinner spinner_customer_name;
 
     @BindView(R.id.spinner_contact_name)
     MySpinner spinner_contact_name;
+
 
     /**
      * @param activity
@@ -119,6 +121,7 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
         titlebar_name.setText("报价单详情");
         tv_delete.setOnClickListener(this);
         tv_delete_product.setOnClickListener(this);
+        tv_add_product.setOnClickListener(this);
         tv_save.setOnClickListener(this);
         tv_validity_date.setOnClickListener(this);
         String roleCode = UserInfoManager.getUserLoginInfo(this).getRoleCode();
@@ -137,6 +140,30 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
             tv_save.setVisibility(View.GONE);
             setEditTextInput(false);
         }
+        mAddProductDialog = AddQuotationProductDialog.getInstance(this);
+        mAddProductDialog.isCancelableOnTouchOutside(false)
+                .withDuration(300)
+                .withEffect(Effectstype.Fadein)
+                .setCancelClick(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mAddProductDialog.dismiss();
+                    }
+                });
+        mAddProductDialog.addOnSaveClickListener(new AddQuotationProductDialog.OnSaveClickListener() {
+            @Override
+            public void onSaveClick(ProductInfo orderProductInfo) {
+                if (TextUtils.isEmpty(orderProductInfo.getName())) {
+                    toastMsg("尚未选择产品");
+                    return;
+                }
+                mOrderProductInfoList.add(new ProductInfo(orderProductInfo.getName(), orderProductInfo.getPrice(), orderProductInfo.getNum()));
+                if (mOrderProductListAdapter != null) {
+                    mOrderProductListAdapter.notifyDataSetChanged();
+                }
+                mAddProductDialog.dismiss();
+            }
+        });
         initTimePicker();
         initProductList();
     }
@@ -154,7 +181,7 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
 
     private void initProductList() {
         tv_delete_product.setOnClickListener(this);
-        mOrderProductListAdapter = new OrderProductListAdapter(mOrderProductInfoList);
+        mOrderProductListAdapter = new QuotationProductListAdapter(mOrderProductInfoList);
         rv_product.setAdapter(mOrderProductListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         rv_product.setLayoutManager(layoutManager);
@@ -184,7 +211,6 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
     protected void requestData() {
         mPresenter.getAllContact(mCompanyId);
         mPresenter.getAllCustomers(mCompanyId);
-        mPresenter.getAllProduct(mCompanyId);
         if (!TextUtils.isEmpty(mQuotationId)) {
             mPresenter.getCompanyQuotationDetail(mQuotationId);
         }
@@ -211,11 +237,14 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
                     mOrderProductListAdapter.setmIsDeleted(mShowCheckBox);
                 }
                 break;
+            case R.id.tv_add_product:
+                mPresenter.getAllProduct(mCompanyId);
+                break;
             case R.id.tv_delete:
                 mDeleteList.clear();
-                for (OrderProductInfo orderProductInfo : mOrderProductInfoList) {
-                    if (orderProductInfo.isChosen()) {
-                        mDeleteList.add(orderProductInfo);
+                for (ProductInfo productInfo : mOrderProductInfoList) {
+                    if (productInfo.isChosen()) {
+                        mDeleteList.add(productInfo);
                     }
                 }
                 if (ListUtils.isEmpty(mDeleteList)) {
@@ -336,7 +365,7 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
         et_clause.setEnabled(canInput);
         et_remark.setEnabled(canInput);
         tv_delete_product.setEnabled(canInput);
-        spinner_add_product.getTextView().setEnabled(canInput);
+        tv_add_product.setEnabled(canInput);
     }
 
 
@@ -364,16 +393,8 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
         for (DicInfo2 dicInfo2 : dicInfoList) {
             list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getId()));
         }
-        spinner_add_product.setListDatas(this, list);
-        spinner_add_product.addOnItemClickListener(new MySpinner2.OnItemClickListener() {
-            @Override
-            public void onItemClick(DicInfo dicInfo, int position) {
-                mOrderProductInfoList.add(new OrderProductInfo(dicInfo.getText(), dicInfo.getCode()));
-                if (mOrderProductListAdapter != null) {
-                    mOrderProductListAdapter.notifyDataSetChanged();
-                }
-            }
-        });
+        mAddProductDialog.show();
+        mAddProductDialog.setListDatas(this, list);
     }
 
     @Override
@@ -388,7 +409,7 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
         et_receiver_zip_code.setText(companyQuotationInfo.getDestinationAddressZipCode());
         et_clause.setText(companyQuotationInfo.getClause());
         et_remark.setText(companyQuotationInfo.getRemark());
-        List<OrderProductInfo> list = new Gson().fromJson(companyQuotationInfo.getProducts(), new TypeToken<List<OrderProductInfo>>() {
+        List<ProductInfo> list = new Gson().fromJson(companyQuotationInfo.getProducts(), new TypeToken<List<ProductInfo>>() {
         }.getType());
         mOrderProductInfoList.addAll(list);
         if (mOrderProductListAdapter != null) {

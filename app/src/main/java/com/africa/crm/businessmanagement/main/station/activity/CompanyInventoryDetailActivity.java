@@ -150,7 +150,7 @@ public class CompanyInventoryDetailActivity extends BaseMvpActivity<CompanyInven
                 break;
             case R.id.tv_save:
                 if (TextUtils.isEmpty(mProductId)) {
-                    showShortToast("尚未选择产品");
+                    toastMsg("尚未选择产品");
                     return;
                 }
                 if (TextUtils.isEmpty(mTypeCode)) {

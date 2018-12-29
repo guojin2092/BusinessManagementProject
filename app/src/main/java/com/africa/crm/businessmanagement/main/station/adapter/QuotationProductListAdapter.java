@@ -6,7 +6,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfo;
+import com.africa.crm.businessmanagement.main.bean.ProductInfo;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -21,11 +21,11 @@ import java.util.List;
  * Modification  History:
  * Why & What is modified:
  */
-public class PdfReportListAdapter extends BaseQuickAdapter<CompanyPdfInfo, BaseViewHolder> {
+public class QuotationProductListAdapter extends BaseQuickAdapter<ProductInfo, BaseViewHolder> {
     private boolean mIsDeleted = false;
 
-    public PdfReportListAdapter(@Nullable List<CompanyPdfInfo> data) {
-        super(R.layout.item_pdf_report_list, data);
+    public QuotationProductListAdapter(@Nullable List<ProductInfo> data) {
+        super(R.layout.item_quotation_product_list, data);
     }
 
     public boolean ismIsDeleted() {
@@ -38,17 +38,16 @@ public class PdfReportListAdapter extends BaseQuickAdapter<CompanyPdfInfo, BaseV
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, CompanyPdfInfo item) {
-        TextView tv_company_name = helper.getView(R.id.tv_company_name);
-        TextView tv_file_name = helper.getView(R.id.tv_file_name);
-        TextView tv_time = helper.getView(R.id.tv_time);
+    protected void convert(BaseViewHolder helper, ProductInfo item) {
+        TextView tv_product_name = helper.getView(R.id.tv_product_name);
+        TextView tv_product_price = helper.getView(R.id.tv_product_price);
+        TextView tv_product_num = helper.getView(R.id.tv_product_num);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
-        tv_company_name.setText(item.getCompanyName());
-        tv_file_name.setText(item.getName());
-        tv_time.setText(item.getCreateTime());
+        tv_product_name.setText(item.getName());
+        tv_product_price.setText(item.getPrice());
+        tv_product_num.setText(item.getNum());
         cb_choose.setChecked(item.isChosen());
-
         if (mIsDeleted) {
             cb_choose.setVisibility(View.VISIBLE);
         } else {

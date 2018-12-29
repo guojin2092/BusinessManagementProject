@@ -42,10 +42,11 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/tv_username_name"
+            android:id="@+id/tv_file_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="所属用户名称"
+            android:layout_gravity="right"
+            android:text="文件名"
             android:textColor="@color/A586683"
             android:textSize="20sp" />
 
@@ -58,12 +59,13 @@
         android:layout_weight="1">
 
         <TextView
-            android:id="@+id/tv_file_name"
+            android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="文件名"
-            android:layout_gravity="right"
-            android:textColor="@color/A586683"
+            android:layout_gravity="right|center_vertical"
+            android:drawablePadding="10dp"
+            android:text="2018-12-20 22:57:13"
+            android:textColor="@color/B2B2B2"
             android:textSize="20sp" />
 
     </FrameLayout>
