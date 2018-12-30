@@ -20,6 +20,7 @@ public class CompanyQuotationInfo implements Serializable {
     private String companyName;//所属企业名称
     private String userNickName;//所属用户名称
     private String id;
+    private String price;
     private String editAble;//是否可编辑 1：可编辑 2：不可编辑
     private String destinationAddress;//收货地址
     private String contactName;//联系人名称
@@ -175,6 +176,14 @@ public class CompanyQuotationInfo implements Serializable {
 
     public void setDestinationAddressZipCode(String destinationAddressZipCode) {
         this.destinationAddressZipCode = destinationAddressZipCode;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
     }
 
     public boolean isChosen() {

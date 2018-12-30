@@ -49,6 +49,8 @@ import butterknife.BindView;
 public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuotationDetailPresenter> implements CompanyQuotationDetailContract.View {
     @BindView(R.id.et_quotation_name)
     EditText et_quotation_name;
+    @BindView(R.id.et_price)
+    EditText et_price;
     @BindView(R.id.tv_validity_date)
     TextView tv_validity_date;
     @BindView(R.id.et_deliver_address)
@@ -342,7 +344,7 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
                     toastMsg("尚未填写收货地址邮编");
                     return;
                 }
-                mPresenter.saveCompanyQuotation(mQuotationId, mCompanyId, mUserId, et_quotation_name.getText().toString().trim(), spinner_customer_name.getText(), spinner_contact_name.getText(), tv_validity_date.getText().toString().trim(), et_deliver_address.getText().toString().trim(), et_deliver_zip_code.getText().toString().trim(), et_receiver_address.getText().toString().trim(), et_receiver_zip_code.getText().toString().trim(), new Gson().toJson(mOrderProductInfoList), et_clause.getText().toString().trim(), et_remark.getText().toString().trim());
+                mPresenter.saveCompanyQuotation(mQuotationId, mCompanyId, mUserId, et_quotation_name.getText().toString().trim(), spinner_customer_name.getText(), spinner_contact_name.getText(), tv_validity_date.getText().toString().trim(), et_price.getText().toString().trim(), et_deliver_address.getText().toString().trim(), et_deliver_zip_code.getText().toString().trim(), et_receiver_address.getText().toString().trim(), et_receiver_zip_code.getText().toString().trim(), new Gson().toJson(mOrderProductInfoList), et_clause.getText().toString().trim(), et_remark.getText().toString().trim());
                 break;
         }
     }
@@ -355,6 +357,7 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
      */
     private void setEditTextInput(boolean canInput) {
         et_quotation_name.setEnabled(canInput);
+        et_price.setEnabled(canInput);
         tv_validity_date.setEnabled(canInput);
         spinner_customer_name.getTextView().setEnabled(canInput);
         spinner_contact_name.getTextView().setEnabled(canInput);
@@ -400,6 +403,7 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
     @Override
     public void getCompanyQuotationDetail(CompanyQuotationInfo companyQuotationInfo) {
         et_quotation_name.setText(companyQuotationInfo.getName());
+        et_price.setText(companyQuotationInfo.getPrice());
         tv_validity_date.setText(companyQuotationInfo.getTermOfValidity());
         spinner_customer_name.setText(companyQuotationInfo.getCustomerName());
         spinner_contact_name.setText(companyQuotationInfo.getContactName());

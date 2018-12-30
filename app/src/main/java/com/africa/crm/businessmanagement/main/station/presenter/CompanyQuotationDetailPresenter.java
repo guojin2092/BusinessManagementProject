@@ -73,8 +73,8 @@ public class CompanyQuotationDetailPresenter extends RxPresenter<CompanyQuotatio
     }
 
     @Override
-    public void saveCompanyQuotation(String id, String companyId, String userId, String name, String customerName, String contactName, String termOfValidity, String sendAddress, String sendAddressZipCode, String destinationAddress, String destinationAddressZipCode, String products, String clause, String remark) {
-        addDisposable(mDataManager.saveCompanyQuotation(id, companyId, userId, name, customerName, contactName, termOfValidity, sendAddress, sendAddressZipCode, destinationAddress, destinationAddressZipCode, products, clause, remark)
+    public void saveCompanyQuotation(String id, String companyId, String userId, String name, String customerName, String contactName, String termOfValidity,String price, String sendAddress, String sendAddressZipCode, String destinationAddress, String destinationAddressZipCode, String products, String clause, String remark) {
+        addDisposable(mDataManager.saveCompanyQuotation(id, companyId, userId, name, customerName, contactName, termOfValidity,price, sendAddress, sendAddressZipCode, destinationAddress, destinationAddressZipCode, products, clause, remark)
                 .compose(RxUtils.<BaseEntity>ioToMain())
                 .subscribe(new Consumer<BaseEntity>() {
                     @Override

@@ -276,6 +276,7 @@ public class CompanyPaymentManagementActivity extends BaseRefreshMvpActivity<Com
     public void getCompanyUserList(UserManagementInfoBean userManagementInfoBean) {
         mUserInfoBeanList.clear();
         mUserInfoBeanList.addAll(userManagementInfoBean.getRows());
+        mUserInfoList.clear();
         if (!ListUtils.isEmpty(mUserInfoBeanList)) {
             for (int i = 0; i < mUserInfoBeanList.size(); i++) {
                 mUserInfoList.add(new DicInfo(mUserInfoBeanList.get(i).getUserName(), mUserInfoBeanList.get(i).getId()));

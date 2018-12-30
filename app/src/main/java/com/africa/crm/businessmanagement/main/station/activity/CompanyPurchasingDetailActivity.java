@@ -400,7 +400,9 @@ public class CompanyPurchasingDetailActivity extends BaseMvpActivity<CompanyPurc
         spinner_state.setText(companyPurchasingOrderInfo.getStateName());
         mStateCode = companyPurchasingOrderInfo.getState();
         tv_order_date.setText(companyPurchasingOrderInfo.getOrderDate());
+        mOrderDate = TimeUtils.getDataByString(companyPurchasingOrderInfo.getOrderDate());
         tv_arrive_date.setText(companyPurchasingOrderInfo.getArriveDate());
+        mArriveDate = TimeUtils.getDataByString(companyPurchasingOrderInfo.getArriveDate());
         et_deliver_address.setText(companyPurchasingOrderInfo.getSendAddress());
         et_deliver_zip_code.setText(companyPurchasingOrderInfo.getSendAddressZipCode());
         et_receiver_address.setText(companyPurchasingOrderInfo.getDestinationAddress());

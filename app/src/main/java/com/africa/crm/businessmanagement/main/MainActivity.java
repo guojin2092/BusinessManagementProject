@@ -31,7 +31,9 @@ import com.africa.crm.businessmanagement.main.station.activity.CompanyContactMan
 import com.africa.crm.businessmanagement.main.station.activity.CompanyDeliveryOrderManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyInfoManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyInventoryManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.CompanyPackagingDataManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyPaymentManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.CompanyPdfReportManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyProductManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyPurchasingManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyQuotationManagementActivity;
@@ -40,8 +42,6 @@ import com.africa.crm.businessmanagement.main.station.activity.CompanyServiceRec
 import com.africa.crm.businessmanagement.main.station.activity.CompanySupplierManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyTaskManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyTradingOrderManagementActivity;
-import com.africa.crm.businessmanagement.main.station.activity.CompanyPackagingDataManagementActivity;
-import com.africa.crm.businessmanagement.main.station.activity.CompanyPdfReportManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SettingActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SystemManagementActivity;
 import com.africa.crm.businessmanagement.mvp.activity.BaseEasyMvpActivity;
@@ -69,6 +69,7 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
 
     private List<WorkStationInfo> mWorkStationInfoList = new ArrayList<>();
     private WorkStationListAdapter mWorkStationListAdapter;
+    private List<String> mCodeList = new ArrayList<>();
 
     private String mUserId = "";
     private long firstTime = 0;
@@ -119,7 +120,7 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
 
     @Override
     public void initData() {
-        WorkStationInfo workStationInfo = new WorkStationInfo();
+       /* WorkStationInfo workStationInfo = new WorkStationInfo();
         workStationInfo.setWork_type("1");
         workStationInfo.setWork_name(getString(R.string.enterprise_information_management));
         mWorkStationInfoList.add(workStationInfo);
@@ -203,7 +204,7 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
         workStationInfo21.setWork_type("21");
         workStationInfo21.setWork_name(getString(R.string.setting));
         mWorkStationInfoList.add(workStationInfo21);
-        setWorkStationDatas(mWorkStationInfoList);
+        setWorkStationDatas(mWorkStationInfoList);*/
     }
 
     @Override
@@ -231,7 +232,151 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
 
     @Override
     public void getMainStationInfo(List<MainStationInfoBean> mainStationInfoBeanList) {
+        if (!ListUtils.isEmpty(mainStationInfoBeanList)) {
+            for (MainStationInfoBean mainStationInfoBean : mainStationInfoBeanList) {
+                mCodeList.add(mainStationInfoBean.getResCode());
+            }
+            for (String code : mCodeList) {
+                mWorkStationInfoList.add(setWorkInfo(code));
+            }
+            WorkStationInfo workStationInfo21 = new WorkStationInfo();
+            workStationInfo21.setWork_type("21");
+            workStationInfo21.setWork_name(getString(R.string.setting));
+            mWorkStationInfoList.add(workStationInfo21);
+            setWorkStationDatas(mWorkStationInfoList);
+        }
+    }
 
+    /**
+     * 匹配工作台图标
+     * @param code
+     * @return
+     */
+    private WorkStationInfo setWorkInfo(String code) {
+        WorkStationInfo workInfo = null;
+        switch (code) {
+            case "COMPANYMANAGE":
+                WorkStationInfo workStationInfo = new WorkStationInfo();
+                workStationInfo.setWork_type("1");
+                workStationInfo.setWork_name(getString(R.string.enterprise_information_management));
+                workInfo = workStationInfo;
+                break;
+            case "COMPANYUSERMANAGE":
+                WorkStationInfo workStationInfo2 = new WorkStationInfo();
+                workStationInfo2.setWork_type("2");
+                workStationInfo2.setWork_name(getString(R.string.enterprise_account_management));
+                workInfo = workStationInfo2;
+                break;
+            case "SUPPLIERMANAGE":
+                WorkStationInfo workStationInfo3 = new WorkStationInfo();
+                workStationInfo3.setWork_type("3");
+                workStationInfo3.setWork_name(getString(R.string.supplier_management));
+                workInfo = workStationInfo3;
+                break;
+            case "PRODUCTMANAGE":
+                WorkStationInfo workStationInfo4 = new WorkStationInfo();
+                workStationInfo4.setWork_type("4");
+                workStationInfo4.setWork_name(getString(R.string.product_management));
+                workInfo = workStationInfo4;
+                break;
+            case "CUSTOMERMANAGE":
+                WorkStationInfo workStationInfo5 = new WorkStationInfo();
+                workStationInfo5.setWork_type("5");
+                workStationInfo5.setWork_name(getString(R.string.customer_management));
+                workInfo = workStationInfo5;
+                break;
+            case "CONTACTMANAGE":
+                WorkStationInfo workStationInfo6 = new WorkStationInfo();
+                workStationInfo6.setWork_type("6");
+                workStationInfo6.setWork_name(getString(R.string.contact_management));
+                workInfo = workStationInfo6;
+                break;
+            case "TRADINGORDER":
+                WorkStationInfo workStationInfo7 = new WorkStationInfo();
+                workStationInfo7.setWork_type("7");
+                workStationInfo7.setWork_name(getString(R.string.trading_order_management));
+                workInfo = workStationInfo7;
+                break;
+            case "QUOTATIONORDER":
+                WorkStationInfo workStationInfo8 = new WorkStationInfo();
+                workStationInfo8.setWork_type("8");
+                workStationInfo8.setWork_name(getString(R.string.quotation_management));
+                workInfo = workStationInfo8;
+                break;
+            case "SALESORDER":
+                WorkStationInfo workStationInfo9 = new WorkStationInfo();
+                workStationInfo9.setWork_type("9");
+                workStationInfo9.setWork_name(getString(R.string.sales_order_management));
+                workInfo = workStationInfo9;
+                break;
+            case "INVOICEORDER":
+                WorkStationInfo workStationInfo10 = new WorkStationInfo();
+                workStationInfo10.setWork_type("10");
+                workStationInfo10.setWork_name(getString(R.string.delivery_order_management));
+                workInfo = workStationInfo10;
+                break;
+            case "PAYMENTORDER":
+                WorkStationInfo workStationInfo11 = new WorkStationInfo();
+                workStationInfo11.setWork_type("11");
+                workStationInfo11.setWork_name(getString(R.string.payment_management));
+                workInfo = workStationInfo11;
+                break;
+            case "SERVICERECORD":
+                WorkStationInfo workStationInfo12 = new WorkStationInfo();
+                workStationInfo12.setWork_type("12");
+                workStationInfo12.setWork_name(getString(R.string.service_record_management));
+                workInfo = workStationInfo12;
+                break;
+            case "STOCKRECORD":
+                WorkStationInfo workStationInfo13 = new WorkStationInfo();
+                workStationInfo13.setWork_type("13");
+                workStationInfo13.setWork_name(getString(R.string.inventory_management));
+                workInfo = workStationInfo13;
+                break;
+            case "PURCHASEORDER":
+                WorkStationInfo workStationInfo14 = new WorkStationInfo();
+                workStationInfo14.setWork_type("14");
+                workStationInfo14.setWork_name(getString(R.string.purchasing_management));
+                workInfo = workStationInfo14;
+                break;
+            case "TASKRECORD":
+                WorkStationInfo workStationInfo15 = new WorkStationInfo();
+                workStationInfo15.setWork_type("15");
+                workStationInfo15.setWork_name(getString(R.string.task_management));
+                workInfo = workStationInfo15;
+                break;
+            case "PDFFILES":
+                WorkStationInfo workStationInfo16 = new WorkStationInfo();
+                workStationInfo16.setWork_type("16");
+                workStationInfo16.setWork_name(getString(R.string.pdf_report_management));
+                workInfo = workStationInfo16;
+                break;
+            case "PACKAGERECORD":
+                WorkStationInfo workStationInfo17 = new WorkStationInfo();
+                workStationInfo17.setWork_type("17");
+                workStationInfo17.setWork_name(getString(R.string.packaging_data_management));
+                workInfo = workStationInfo17;
+                break;
+            case "REPORTS":
+                WorkStationInfo workStationInfo18 = new WorkStationInfo();
+                workStationInfo18.setWork_type("18");
+                workStationInfo18.setWork_name(getString(R.string.statistical_report_forms));
+                workInfo = workStationInfo18;
+                break;
+            case "PAYESTIMATE":
+                WorkStationInfo workStationInfo19 = new WorkStationInfo();
+                workStationInfo19.setWork_type("19");
+                workStationInfo19.setWork_name(getString(R.string.enterprise_expenditure_management));
+                workInfo = workStationInfo19;
+                break;
+            case "SYSTEMMANAGE":
+                WorkStationInfo workStationInfo20 = new WorkStationInfo();
+                workStationInfo20.setWork_type("20");
+                workStationInfo20.setWork_name(getString(R.string.system_management));
+                workInfo = workStationInfo20;
+                break;
+        }
+        return workInfo;
     }
 
     /**

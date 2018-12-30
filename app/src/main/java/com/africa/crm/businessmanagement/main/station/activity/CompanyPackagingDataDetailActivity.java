@@ -225,7 +225,9 @@ public class CompanyPackagingDataDetailActivity extends BaseMvpActivity<CompanyP
     @Override
     public void getPackagingDataDetail(CompanyPackagingDataInfo companyPackagingDataInfo) {
         tv_start_date.setText(companyPackagingDataInfo.getStartDate());
+        mStartDate = TimeUtils.getDataByString(companyPackagingDataInfo.getStartDate());
         tv_end_date.setText(companyPackagingDataInfo.getEndDate());
+        mEndDate = TimeUtils.getDataByString(companyPackagingDataInfo.getEndDate());
         et_remark.setText(companyPackagingDataInfo.getRemark());
         mPresenter.getPreviewInfo(mCompanyId, tv_start_date.getText().toString().trim(), tv_end_date.getText().toString().trim());
     }
