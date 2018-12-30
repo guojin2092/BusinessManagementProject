@@ -73,12 +73,12 @@
         android:layout_weight="1">
 
         <TextView
-            android:id="@+id/tv_remark"
+            android:id="@+id/tv_operation_person"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
             android:drawablePadding="10dp"
-            android:text="请求服务"
+            android:text="操作人"
             android:textColor="@color/A586683"
             android:textSize="20sp" />
 

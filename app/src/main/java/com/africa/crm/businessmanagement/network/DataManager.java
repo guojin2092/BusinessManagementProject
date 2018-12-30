@@ -1,5 +1,7 @@
 package com.africa.crm.businessmanagement.network;
 
+import android.content.pm.PackageInfo;
+
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyClientInfo;
@@ -12,6 +14,8 @@ import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyPackagingDataInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyPackagingDataInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfoBean;
@@ -35,6 +39,7 @@ import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
 import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
+import com.africa.crm.businessmanagement.main.bean.PreviewInfo;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleLimitInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleManagementInfoBean;
@@ -494,6 +499,31 @@ public class DataManager implements HttpHelper {
     @Override
     public Observable<BaseEntity> downloadFiles(String code) {
         return mHttpHelper.downloadFiles(code);
+    }
+
+    @Override
+    public Observable<CompanyPackagingDataInfoBean> getCompanyPackagingDataList(int page, int rows, String companyId, String userId, String createTimes, String createTimee) {
+        return mHttpHelper.getCompanyPackagingDataList(page, rows, companyId, userId, createTimes, createTimee);
+    }
+
+    @Override
+    public Observable<BaseEntity> checkDate(String companyId, String startDate, String endDate) {
+        return mHttpHelper.checkDate(companyId, startDate, endDate);
+    }
+
+    @Override
+    public Observable<CompanyPackagingDataInfo> getPackagingDataDetail(String id) {
+        return mHttpHelper.getPackagingDataDetail(id);
+    }
+
+    @Override
+    public Observable<BaseEntity> savePackagingData(String companyId, String userId, String startDate, String endDate, String num, String previewInfo, String remark) {
+        return mHttpHelper.savePackagingData(companyId, userId, startDate, endDate, num, previewInfo, remark);
+    }
+
+    @Override
+    public Observable<String> getPreviewInfo(String companyId, String startDate, String endDate) {
+        return mHttpHelper.getPreviewInfo(companyId, startDate, endDate);
     }
 
 }

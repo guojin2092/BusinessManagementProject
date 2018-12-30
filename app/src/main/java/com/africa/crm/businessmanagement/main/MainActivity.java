@@ -40,7 +40,7 @@ import com.africa.crm.businessmanagement.main.station.activity.CompanyServiceRec
 import com.africa.crm.businessmanagement.main.station.activity.CompanySupplierManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyTaskManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyTradingOrderManagementActivity;
-import com.africa.crm.businessmanagement.main.station.activity.PackagingDataManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.CompanyPackagingDataManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyPdfReportManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SettingActivity;
 import com.africa.crm.businessmanagement.main.station.activity.SystemManagementActivity;
@@ -306,7 +306,7 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
                             CompanyPdfReportManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "17":
-                            PackagingDataManagementActivity.startActivity(MainActivity.this, workStationInfo);
+                            CompanyPackagingDataManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "18":
                             showShortToast(getString(R.string.statistical_report_forms));

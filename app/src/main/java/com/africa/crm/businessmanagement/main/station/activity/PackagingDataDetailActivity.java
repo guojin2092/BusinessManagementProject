@@ -1,7 +1,6 @@
 package com.africa.crm.businessmanagement.main.station.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.library.base.BaseActivity;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
-import com.africa.crm.businessmanagement.main.bean.PackingDataInfoBean;
 import com.africa.crm.businessmanagement.main.station.dialog.AddPackagingDataDialog;
 import com.africa.crm.businessmanagement.main.station.dialog.PackagingDataListDialog;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
@@ -34,20 +32,17 @@ public class PackagingDataDetailActivity extends BaseActivity {
     TextView tv_save;
     @BindView(R.id.ll_add)
     LinearLayout ll_add;
-    @BindView(R.id.tv_preview)
-    TextView tv_preview;
-    private PackingDataInfoBean mPackingDataInfoBean;
+    private String mPackagingDataId = "";
 
     private AddPackagingDataDialog mAddPackagingDataDialog;
-    private PackagingDataListDialog mPackagingDataListDialog;
     private List<DicInfo> mPartList = new ArrayList<>();
 
     /**
      * @param activity
      */
-    public static void startActivity(Activity activity, PackingDataInfoBean packingDataInfoBean) {
+    public static void startActivity(Activity activity, String id) {
         Intent intent = new Intent(activity, PackagingDataDetailActivity.class);
-        intent.putExtra("info", packingDataInfoBean);
+        intent.putExtra("id", id);
         activity.startActivity(intent);
     }
 
@@ -59,13 +54,12 @@ public class PackagingDataDetailActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        mPackingDataInfoBean = (PackingDataInfoBean) getIntent().getSerializableExtra("info");
+        mPackagingDataId = getIntent().getStringExtra("id");
         titlebar_name.setText("包装数据详情");
         titlebar_back.setOnClickListener(this);
         titlebar_right.setOnClickListener(this);
         tv_save.setOnClickListener(this);
         ll_add.setOnClickListener(this);
-        tv_preview.setOnClickListener(this);
         titlebar_right.setText(R.string.edit);
         mAddPackagingDataDialog = AddPackagingDataDialog.getInstance(this);
     }
@@ -85,24 +79,6 @@ public class PackagingDataDetailActivity extends BaseActivity {
                     titlebar_right.setText(R.string.edit);
                     tv_save.setVisibility(View.GONE);
                 }
-                break;
-            case R.id.tv_preview:
-                mPackagingDataListDialog.isCancelableOnTouchOutside(false)
-                        .withDuration(300)
-                        .withEffect(Effectstype.Fadein)
-                        .setCancelClick(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                mPackagingDataListDialog.dismiss();
-                            }
-                        })
-                        .setSaveClick(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                mPackagingDataListDialog.dismiss();
-                            }
-                        })
-                        .show();
                 break;
             case R.id.ll_add:
                 mAddPackagingDataDialog.isCancelableOnTouchOutside(false)
@@ -145,7 +121,6 @@ public class PackagingDataDetailActivity extends BaseActivity {
         mPartList.add(new DicInfo("A模块", "10"));
         mPartList.add(new DicInfo("B模块", "20"));
         mPartList.add(new DicInfo("C模块", "30"));
-        mPackagingDataListDialog = PackagingDataListDialog.getInstance(this, mPartList);
     }
 
 }

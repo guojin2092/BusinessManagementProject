@@ -12,6 +12,8 @@ import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyPackagingDataInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyPackagingDataInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfoBean;
@@ -35,6 +37,7 @@ import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
 import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
+import com.africa.crm.businessmanagement.main.bean.PreviewInfo;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleLimitInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleManagementInfoBean;
@@ -228,5 +231,14 @@ public interface HttpHelper {
 
     Observable<BaseEntity> downloadFiles(String code);
 
+    Observable<CompanyPackagingDataInfoBean> getCompanyPackagingDataList(int page, int rows, String companyId, String userId, String createTimes, String createTimee);
+
+    Observable<BaseEntity> checkDate(String companyId, String startDate, String endDate);
+
+    Observable<CompanyPackagingDataInfo> getPackagingDataDetail(String id);
+
+    Observable<BaseEntity> savePackagingData(String companyId, String userId, String startDate, String endDate, String num, String previewInfo, String remark);
+
+    Observable<String> getPreviewInfo(String companyId, String startDate, String endDate);
 }
 

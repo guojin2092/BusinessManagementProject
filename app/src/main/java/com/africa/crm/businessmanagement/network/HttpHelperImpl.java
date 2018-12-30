@@ -12,6 +12,8 @@ import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyPackagingDataInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyPackagingDataInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfoBean;
@@ -513,6 +515,31 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<BaseEntity> downloadFiles(String code) {
         return fileApi.downloadFiles(code);
+    }
+
+    @Override
+    public Observable<CompanyPackagingDataInfoBean> getCompanyPackagingDataList(int page, int rows, String companyId, String userId, String createTimes, String createTimee) {
+        return mainApi.getCompanyPackagingDataList(page, rows, companyId, userId, createTimes, createTimee).compose(RxUtils.<CompanyPackagingDataInfoBean>handleResult());
+    }
+
+    @Override
+    public Observable<BaseEntity> checkDate(String companyId, String startDate, String endDate) {
+        return mainApi.checkDate(companyId, startDate, endDate);
+    }
+
+    @Override
+    public Observable<CompanyPackagingDataInfo> getPackagingDataDetail(String id) {
+        return mainApi.getPackagingDataDetail(id).compose(RxUtils.<CompanyPackagingDataInfo>handleResult());
+    }
+
+    @Override
+    public Observable<BaseEntity> savePackagingData(String companyId, String userId, String startDate, String endDate, String num, String previewInfo, String remark) {
+        return mainApi.savePackagingData(companyId, userId, startDate, endDate, num, previewInfo, remark);
+    }
+
+    @Override
+    public Observable<String> getPreviewInfo(String companyId, String startDate, String endDate) {
+        return mainApi.getPreviewInfo(companyId, startDate, endDate).compose(RxUtils.<String>handleResult());
     }
 
 }
