@@ -1,7 +1,5 @@
 package com.africa.crm.businessmanagement.network.api;
 
-import android.content.pm.PackageInfo;
-
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyClientInfo;
@@ -10,6 +8,8 @@ import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyExpenditureInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyExpenditureInfoB;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfo;
@@ -35,9 +35,11 @@ import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyeExpenditureInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyeExpenditureInfoBeanB;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
-import com.africa.crm.businessmanagement.main.bean.PreviewInfo;
+import com.africa.crm.businessmanagement.main.bean.PayRecordInfo;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleLimitInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleManagementInfoBean;
@@ -409,4 +411,36 @@ public interface MainApi {
     @FormUrlEncoded
     @POST("packageRecord/getPreviewInfo")
     Observable<BaseEntity<String>> getPreviewInfo(@Field("companyId") String companyId, @Field("startDate") String startDate, @Field("endDate") String endDate);
+
+    @FormUrlEncoded
+    @POST("payEstimate/grid")
+    Observable<BaseEntity<CompanyeExpenditureInfoBean>> getExpenditureList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("title") String title, @Field("createTimes") String createTimes, @Field("createTimee") String createTimee);
+
+    @FormUrlEncoded
+    @POST("payEstimate/getInfo")
+    Observable<BaseEntity<CompanyExpenditureInfo>> getExpenditureDetail(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("payRecord/queryByEstimateId")
+    Observable<BaseEntity<List<PayRecordInfo>>> getPayRecord(@Field("estimateId") String estimateId);
+
+    @FormUrlEncoded
+    @POST("payEstimate/checkDate")
+    Observable<BaseEntity> checkYsDate(@Field("companyId") String companyId, @Field("startDate") String startDate, @Field("endDate") String endDate);
+
+    @FormUrlEncoded
+    @POST("payEstimate/save")
+    Observable<BaseEntity> saveExpenditureA(@Field("companyId") String companyId, @Field("userId") String userId, @Field("title") String title, @Field("startDate") String startDate, @Field("endDate") String endDate, @Field("estimatePrice") String estimatePrice, @Field("remark") String remark);
+
+    @FormUrlEncoded
+    @POST("payRecord/grid")
+    Observable<BaseEntity<CompanyeExpenditureInfoBeanB>> getExpenditureListB(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("userId") String userId, @Field("payDates") String payDates, @Field("payDatee") String payDatee);
+
+    @FormUrlEncoded
+    @POST("payRecord/getInfo")
+    Observable<BaseEntity<CompanyExpenditureInfoB>> getExpenditureDetailB(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("payRecord/save")
+    Observable<BaseEntity> saveExpenditureB(@Field("companyId") String companyId, @Field("userId") String userId, @Field("payDate") String payDate, @Field("price") String price, @Field("remark") String remark);
 }

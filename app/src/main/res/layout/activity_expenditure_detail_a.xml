@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/F2F2F2"
+    android:orientation="vertical">
+
+    <include layout="@layout/titlebar" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/product_title_blue"
+                    android:text="预算信息：" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/product_title_black"
+                            android:text="预算标题：" />
+
+                        <EditText
+                            android:id="@+id/et_title"
+                            style="@style/product_et_blue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            android:textColorHint="@color/D5D5D5" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/product_title_black"
+                            android:text="预算金额：" />
+
+                        <EditText
+                            android:id="@+id/et_price"
+                            style="@style/product_et_blue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            android:inputType="numberDecimal"
+                            android:textColorHint="@color/D5D5D5" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/product_title_black"
+                            android:text="开始日期：" />
+
+                        <TextView
+                            android:id="@+id/tv_start_date"
+                            style="@style/product_et_blue"
+                            android:drawableRight="@drawable/arrow2"
+                            android:paddingRight="20dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/product_title_black"
+                            android:text="结束日期：" />
+
+                        <TextView
+                            android:id="@+id/tv_end_date"
+                            style="@style/product_et_blue"
+                            android:drawableRight="@drawable/arrow2"
+                            android:paddingRight="20dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    style="@style/product_title_blue"
+                    android:text="备注：" />
+
+                <EditText
+                    android:id="@+id/et_remark"
+                    style="@style/product_et_blue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:hint="添加备注"
+                    android:textColorHint="@color/D5D5D5" />
+
+                <LinearLayout
+                    android:id="@+id/ll_zc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        style="@style/product_title_blue"
+                        android:text="支出记录：" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_zc_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:overScrollMode="never" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="30dp"
+                    android:background="@drawable/bg_button"
+                    android:paddingLeft="38dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="38dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/save"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:visibility="invisible" />
+
+            </LinearLayout>
+        </ScrollView>
+
+        <TextView
+            android:id="@+id/tv_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/bg_button"
+            android:paddingLeft="38dp"
+            android:paddingTop="8dp"
+            android:paddingRight="38dp"
+            android:paddingBottom="8dp"
+            android:text="@string/save"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:visibility="gone" />
+
+        <include layout="@layout/layout_request_no_data" />
+
+        <include layout="@layout/layout_request_network_error" />
+
+    </FrameLayout>
+
+</LinearLayout>

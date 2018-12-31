@@ -8,6 +8,8 @@ import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyExpenditureInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyExpenditureInfoB;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfo;
@@ -33,10 +35,13 @@ import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyeExpenditureInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyeExpenditureInfoBeanB;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
 import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
+import com.africa.crm.businessmanagement.main.bean.PayRecordInfo;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleLimitInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleManagementInfoBean;
@@ -239,5 +244,22 @@ public interface HttpHelper {
     Observable<BaseEntity> savePackagingData(String companyId, String userId, String startDate, String endDate, String num, String previewInfo, String remark);
 
     Observable<String> getPreviewInfo(String companyId, String startDate, String endDate);
+
+    Observable<CompanyeExpenditureInfoBean> getExpenditureList(int page, int rows, String companyId, String title, String createTimes, String createTimee);
+
+    Observable<CompanyExpenditureInfo> getExpenditureDetail(String id);
+
+    Observable<List<PayRecordInfo>> getPayRecord(String estimateId);
+
+    Observable<BaseEntity> checkYsDate(String companyId, String startDate, String endDate);
+
+    Observable<BaseEntity> saveExpenditureA(String companyId, String userId, String title, String startDate, String endDate, String estimatePrice, String remark);
+
+    Observable<CompanyeExpenditureInfoBeanB> getExpenditureListB(int page, int rows, String companyId, String userId, String payDates, String payDatee);
+
+    Observable<CompanyExpenditureInfoB> getExpenditureDetailB(String id);
+
+    Observable<BaseEntity> saveExpenditureB(String companyId, String userId, String payDate, String price, String remark);
+
 }
 

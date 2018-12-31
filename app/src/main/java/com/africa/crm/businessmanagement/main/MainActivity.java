@@ -29,6 +29,8 @@ import com.africa.crm.businessmanagement.main.station.activity.CompanyAccountAct
 import com.africa.crm.businessmanagement.main.station.activity.CompanyClientManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyContactManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyDeliveryOrderManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.CompanyExpenditureManagementActivityA;
+import com.africa.crm.businessmanagement.main.station.activity.CompanyExpenditureManagementActivityB;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyInfoManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyInventoryManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyPackagingDataManagementActivity;
@@ -120,7 +122,7 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
 
     @Override
     public void initData() {
-       /* WorkStationInfo workStationInfo = new WorkStationInfo();
+        WorkStationInfo workStationInfo = new WorkStationInfo();
         workStationInfo.setWork_type("1");
         workStationInfo.setWork_name(getString(R.string.enterprise_information_management));
         mWorkStationInfoList.add(workStationInfo);
@@ -204,7 +206,7 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
         workStationInfo21.setWork_type("21");
         workStationInfo21.setWork_name(getString(R.string.setting));
         mWorkStationInfoList.add(workStationInfo21);
-        setWorkStationDatas(mWorkStationInfoList);*/
+        setWorkStationDatas(mWorkStationInfoList);
     }
 
     @Override
@@ -232,6 +234,7 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
 
     @Override
     public void getMainStationInfo(List<MainStationInfoBean> mainStationInfoBeanList) {
+/*
         if (!ListUtils.isEmpty(mainStationInfoBeanList)) {
             for (MainStationInfoBean mainStationInfoBean : mainStationInfoBeanList) {
                 mCodeList.add(mainStationInfoBean.getResCode());
@@ -245,10 +248,12 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
             mWorkStationInfoList.add(workStationInfo21);
             setWorkStationDatas(mWorkStationInfoList);
         }
+*/
     }
 
     /**
      * 匹配工作台图标
+     *
      * @param code
      * @return
      */
@@ -457,7 +462,12 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
                             showShortToast(getString(R.string.statistical_report_forms));
                             break;
                         case "19":
-                            showShortToast(getString(R.string.enterprise_expenditure_management));
+                            String roleCode = UserInfoManager.getUserLoginInfo(MainActivity.this).getRoleCode();
+                            if (roleCode.equals("companyRoot")) {
+                                CompanyExpenditureManagementActivityA.startActivity(MainActivity.this, workStationInfo);
+                            } else if (roleCode.equals("companySales")) {
+                                CompanyExpenditureManagementActivityB.startActivity(MainActivity.this, workStationInfo);
+                            }
                             break;
                         case "20":
                             SystemManagementActivity.startActivity(MainActivity.this, workStationInfo);

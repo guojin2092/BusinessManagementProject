@@ -1,7 +1,5 @@
 package com.africa.crm.businessmanagement.network;
 
-import android.content.pm.PackageInfo;
-
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyClientInfo;
@@ -10,6 +8,8 @@ import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyExpenditureInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyExpenditureInfoB;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfo;
@@ -35,11 +35,13 @@ import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyeExpenditureInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyeExpenditureInfoBeanB;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
 import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
-import com.africa.crm.businessmanagement.main.bean.PreviewInfo;
+import com.africa.crm.businessmanagement.main.bean.PayRecordInfo;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleLimitInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleManagementInfoBean;
@@ -302,8 +304,8 @@ public class DataManager implements HttpHelper {
     }
 
     @Override
-    public Observable<BaseEntity> saveCompanyQuotation(String id, String companyId, String userId, String name, String customerName, String contactName, String termOfValidity,String price, String sendAddress, String sendAddressZipCode, String destinationAddress, String destinationAddressZipCode, String products, String clause, String remark) {
-        return mHttpHelper.saveCompanyQuotation(id, companyId, userId, name, customerName, contactName, termOfValidity,price, sendAddress, sendAddressZipCode, destinationAddress, destinationAddressZipCode, products, clause, remark);
+    public Observable<BaseEntity> saveCompanyQuotation(String id, String companyId, String userId, String name, String customerName, String contactName, String termOfValidity, String price, String sendAddress, String sendAddressZipCode, String destinationAddress, String destinationAddressZipCode, String products, String clause, String remark) {
+        return mHttpHelper.saveCompanyQuotation(id, companyId, userId, name, customerName, contactName, termOfValidity, price, sendAddress, sendAddressZipCode, destinationAddress, destinationAddressZipCode, products, clause, remark);
     }
 
     @Override
@@ -524,6 +526,46 @@ public class DataManager implements HttpHelper {
     @Override
     public Observable<String> getPreviewInfo(String companyId, String startDate, String endDate) {
         return mHttpHelper.getPreviewInfo(companyId, startDate, endDate);
+    }
+
+    @Override
+    public Observable<CompanyeExpenditureInfoBean> getExpenditureList(int page, int rows, String companyId, String title, String createTimes, String createTimee) {
+        return mHttpHelper.getExpenditureList(page, rows, companyId, title, createTimes, createTimee);
+    }
+
+    @Override
+    public Observable<CompanyExpenditureInfo> getExpenditureDetail(String id) {
+        return mHttpHelper.getExpenditureDetail(id);
+    }
+
+    @Override
+    public Observable<List<PayRecordInfo>> getPayRecord(String estimateId) {
+        return mHttpHelper.getPayRecord(estimateId);
+    }
+
+    @Override
+    public Observable<BaseEntity> checkYsDate(String companyId, String startDate, String endDate) {
+        return mHttpHelper.checkYsDate(companyId, startDate, endDate);
+    }
+
+    @Override
+    public Observable<BaseEntity> saveExpenditureA(String companyId, String userId, String title, String startDate, String endDate, String estimatePrice, String remark) {
+        return mHttpHelper.saveExpenditureA(companyId, userId, title, startDate, endDate, estimatePrice, remark);
+    }
+
+    @Override
+    public Observable<CompanyeExpenditureInfoBeanB> getExpenditureListB(int page, int rows, String companyId, String userId, String payDates, String payDatee) {
+        return mHttpHelper.getExpenditureListB(page, rows, companyId, userId, payDates, payDatee);
+    }
+
+    @Override
+    public Observable<CompanyExpenditureInfoB> getExpenditureDetailB(String id) {
+        return mHttpHelper.getExpenditureDetailB(id);
+    }
+
+    @Override
+    public Observable<BaseEntity> saveExpenditureB(String companyId, String userId, String payDate, String price, String remark) {
+        return mHttpHelper.saveExpenditureB(companyId, userId, payDate, price, remark);
     }
 
 }
