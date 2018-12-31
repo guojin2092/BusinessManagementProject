@@ -94,6 +94,11 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
+    public Observable<BaseEntity> changePassword(String id, String oldPassWord, String newPassWord) {
+        return loginApi.changePassword(id, oldPassWord, newPassWord);
+    }
+
+    @Override
     public Observable<List<DicInfo>> getDicByCode(String code) {
         return loginApi.getDicByCode(code).compose(RxUtils.<List<DicInfo>>handleResult());
     }

@@ -79,6 +79,11 @@ public class DataManager implements HttpHelper {
     }
 
     @Override
+    public Observable<BaseEntity> changePassword(String id, String oldPassWord, String newPassWord) {
+        return mHttpHelper.changePassword(id, oldPassWord, newPassWord);
+    }
+
+    @Override
     public Observable<List<DicInfo>> getDicByCode(String code) {
         return mHttpHelper.getDicByCode(code);
     }

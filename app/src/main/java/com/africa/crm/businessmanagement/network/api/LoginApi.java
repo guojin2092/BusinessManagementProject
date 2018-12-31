@@ -27,6 +27,10 @@ public interface LoginApi {
     Observable<BaseEntity<LoginInfoBean>> getLoginInfo(@Field("userName") String userName, @Field("passWord") String passWord);
 
     @FormUrlEncoded
+    @POST("login/doLogin")
+    Observable<BaseEntity> changePassword(@Field("id") String id, @Field("oldPassWord") String oldPassWord, @Field("newPassWord") String newPassWord);
+
+    @FormUrlEncoded
     @POST("dic/getDicByCode")
     Observable<BaseEntity<List<DicInfo>>> getDicByCode(@Field("code") String code);
 

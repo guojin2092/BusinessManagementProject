@@ -36,6 +36,8 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
     EditText et_username;
     @BindView(R.id.et_password)
     EditText et_password;
+    @BindView(R.id.tv_forget_password)
+    TextView tv_forget_password;
 
     private long firstTime = 0;
 
@@ -72,6 +74,7 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
     @Override
     public void initView() {
         tv_login.setOnClickListener(this);
+        tv_forget_password.setOnClickListener(this);
     }
 
     @Override
@@ -93,6 +96,9 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
                     return;
                 }
                 mPresenter.getLoginInfo(et_username.getText().toString().trim(), et_password.getText().toString().trim());
+                break;
+            case R.id.tv_forget_password:
+                ChangePasswordActivity.startActivity(this);
                 break;
         }
     }

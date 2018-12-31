@@ -65,6 +65,8 @@ public interface HttpHelper {
 
     Observable<LoginInfoBean> getLoginInfo(String userName, String passWord);
 
+    Observable<BaseEntity> changePassword(String id, String oldPassWord,String newPassWord);
+
     Observable<List<DicInfo>> getDicByCode(String code);
 
     Observable<List<MainStationInfoBean>> getMainStationInfo(String id);
