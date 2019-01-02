@@ -27,11 +27,8 @@ import com.africa.crm.businessmanagement.main.station.contract.CompanyPdfReportD
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyPdfReportDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
-import com.africa.crm.businessmanagement.widget.LogUtil;
 import com.leon.lfilepickerlibrary.LFilePicker;
 import com.leon.lfilepickerlibrary.utils.Constant;
-import com.tencent.smtt.sdk.QbSdk;
-import com.tencent.smtt.sdk.ValueCallback;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -150,12 +147,7 @@ public class CompanyPdfReportDetailActivity extends BaseMvpActivity<CompanyPdfRe
                 break;
             case R.id.tv_file_name:
                 if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
-                    QbSdk.canOpenFile(this, mRocalFilePath, new ValueCallback<Boolean>() {
-                        @Override
-                        public void onReceiveValue(Boolean aBoolean) {
-                            LogUtil.e("guoj", "能否打开文件==" + aBoolean);
-                        }
-                    });
+                    toastMsg("查看PDF文件");
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
