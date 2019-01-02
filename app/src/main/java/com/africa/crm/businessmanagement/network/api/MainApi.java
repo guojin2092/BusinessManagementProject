@@ -18,6 +18,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyPackagingDataInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPackagingDataInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfoBean;
@@ -49,6 +50,8 @@ import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 import java.util.List;
 
 import io.reactivex.Observable;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
@@ -393,6 +396,14 @@ public interface MainApi {
     Observable<BaseEntity> deleteCompanyPdf(@Field("id") String id);
 
     @FormUrlEncoded
+    @POST("pdfFiles/save")
+    Observable<BaseEntity> saveCompanyPdfDetail(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("code") String code, @Field("remark") String remark);
+
+    @FormUrlEncoded
+    @POST("pdfFiles/getInfo")
+    Observable<BaseEntity<CompanyPdfInfo>> getCompanyPdfDetail(@Field("id") String id);
+
+    @FormUrlEncoded
     @POST("packageRecord/grid")
     Observable<BaseEntity<CompanyPackagingDataInfoBean>> getCompanyPackagingDataList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("userId") String userId, @Field("createTimes") String createTimes, @Field("createTimee") String createTimee);
 
@@ -443,4 +454,8 @@ public interface MainApi {
     @FormUrlEncoded
     @POST("payRecord/save")
     Observable<BaseEntity> saveExpenditureB(@Field("companyId") String companyId, @Field("userId") String userId, @Field("payDate") String payDate, @Field("price") String price, @Field("remark") String remark);
+
+    @FormUrlEncoded
+    @POST("defile/file/code")
+    Observable<ResponseBody> downloadFiles(@Field("code") String code);
 }

@@ -18,12 +18,14 @@ import android.support.multidex.MultiDexApplication;
 import android.support.v7.app.AppCompatDelegate;
 
 import com.africa.crm.businessmanagement.network.DataManager;
+import com.africa.crm.businessmanagement.widget.LogUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreater;
 import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.simplesoft.baselibrary.utils.DynamicTimeFormat;
+import com.tencent.smtt.sdk.QbSdk;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -62,8 +64,26 @@ public class MyApplication extends MultiDexApplication {
         mDataManager = DataManager.newInstance();
         mActivitys = new LinkedList<>();
         registerActivityListener();
+        QbSdk.initX5Environment(this,cb);
 //        setDatabase();
     }
+
+    /**
+     * 搜集本地tbs内核信息并上报服务器，服务器返回结果决定使用哪个内核。
+     */
+    QbSdk.PreInitCallback cb = new QbSdk.PreInitCallback() {
+
+        @Override
+        public void onViewInitFinished(boolean arg0) {
+            //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
+            LogUtil.e("MyApplication", " onViewInitFinished is " + arg0);
+        }
+
+        @Override
+        public void onCoreInitFinished() {
+            LogUtil.e("MyApplication", " onCoreInitFinished");
+        }
+    };
 
     public static MyApplication getInstance() {
         if (null == instance) {

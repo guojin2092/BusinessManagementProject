@@ -85,7 +85,7 @@ public class CompanyPackagingDataDetailActivity extends BaseMvpActivity<CompanyP
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
         mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
         titlebar_right.setVisibility(View.GONE);
-        titlebar_name.setText("库存详情");
+        titlebar_name.setText("包装数据详情");
         tv_save.setText(R.string.add);
         tv_save.setOnClickListener(this);
         tv_start_date.setOnClickListener(this);

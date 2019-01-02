@@ -2,6 +2,7 @@ package com.africa.crm.businessmanagement.main.station.presenter;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfoBean;
+import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyPdfReportManagementContract;
 import com.africa.crm.businessmanagement.mvp.presenter.RxPresenter;

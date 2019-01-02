@@ -18,6 +18,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyPackagingDataInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPackagingDataInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfoBean;
@@ -39,6 +40,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyeExpenditureInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyeExpenditureInfoBeanB;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
+import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
 import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
 import com.africa.crm.businessmanagement.main.bean.PayRecordInfo;
@@ -50,6 +52,7 @@ import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 import com.africa.crm.businessmanagement.network.api.FileApi;
 import com.africa.crm.businessmanagement.network.api.LoginApi;
 import com.africa.crm.businessmanagement.network.api.MainApi;
+import com.africa.crm.businessmanagement.network.retrofit.FileRetrofitHelper;
 import com.africa.crm.businessmanagement.network.retrofit.RetrofitHelper;
 import com.africa.crm.businessmanagement.network.util.RxUtils;
 
@@ -59,7 +62,9 @@ import java.util.List;
 import io.reactivex.Observable;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
+import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 
 /**
  * Project：BusinessManagementProject
@@ -84,7 +89,7 @@ public class HttpHelperImpl implements HttpHelper {
     private HttpHelperImpl() {
         loginApi = RetrofitHelper.provideApi(LoginApi.class);
         mainApi = RetrofitHelper.provideApi(MainApi.class);
-        fileApi = RetrofitHelper.provideApi(FileApi.class);
+        fileApi = FileRetrofitHelper.provideApi(FileApi.class);
     }
 
 
@@ -515,16 +520,26 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
-    public Observable<BaseEntity> uploadFiles(String filePath) {
-        File file = new File(filePath);
-        RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-        MultipartBody.Part part = MultipartBody.Part.createFormData(file.getName(), file.getName(), requestBody);
-        return fileApi.uploadFiles(part);
+    public Observable<BaseEntity> saveCompanyPdfDetail(String id, String companyId, String userId, String name, String code, String remark) {
+        return mainApi.saveCompanyPdfDetail(id, companyId, userId, name, code, remark);
     }
 
     @Override
-    public Observable<BaseEntity> downloadFiles(String code) {
-        return fileApi.downloadFiles(code);
+    public Observable<CompanyPdfInfo> getCompanyPdfDetail(String id) {
+        return mainApi.getCompanyPdfDetail(id).compose(RxUtils.<CompanyPdfInfo>handleResult());
+    }
+
+    @Override
+    public Observable<FileInfoBean> uploadFiles(String filePath) {
+        File file = new File(filePath);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+        return fileApi.uploadFiles(part).compose(RxUtils.<FileInfoBean>handleResult());
+    }
+
+    @Override
+    public Observable<ResponseBody> downloadFiles(String code) {
+        return mainApi.downloadFiles(code);
     }
 
     @Override

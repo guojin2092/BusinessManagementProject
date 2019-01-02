@@ -18,6 +18,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyPackagingDataInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPackagingDataInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfoBean;
@@ -39,6 +40,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyeExpenditureInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyeExpenditureInfoBeanB;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
+import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
 import com.africa.crm.businessmanagement.main.bean.MainStationInfoBean;
 import com.africa.crm.businessmanagement.main.bean.PayRecordInfo;
@@ -51,6 +53,8 @@ import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 import java.util.List;
 
 import io.reactivex.Observable;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 
 /**
  * Project：BusinessManagementProject
@@ -499,12 +503,22 @@ public class DataManager implements HttpHelper {
     }
 
     @Override
-    public Observable<BaseEntity> uploadFiles(String filePath) {
+    public Observable<BaseEntity> saveCompanyPdfDetail(String id, String companyId, String userId, String name, String code, String remark) {
+        return mHttpHelper.saveCompanyPdfDetail(id, companyId, userId, name, code, remark);
+    }
+
+    @Override
+    public Observable<CompanyPdfInfo> getCompanyPdfDetail(String id) {
+        return mHttpHelper.getCompanyPdfDetail(id);
+    }
+
+    @Override
+    public Observable<FileInfoBean> uploadFiles(String filePath) {
         return mHttpHelper.uploadFiles(filePath);
     }
 
     @Override
-    public Observable<BaseEntity> downloadFiles(String code) {
+    public Observable<ResponseBody> downloadFiles(String code) {
         return mHttpHelper.downloadFiles(code);
     }
 

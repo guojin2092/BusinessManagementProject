@@ -1,8 +1,8 @@
 package com.africa.crm.businessmanagement.main.station.contract;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
-import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfoBean;
+import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 import com.africa.crm.businessmanagement.mvp.presenter.IBasePresenter;
 import com.africa.crm.businessmanagement.network.base.BaseView;
@@ -19,6 +19,7 @@ import com.africa.crm.businessmanagement.network.base.BaseView;
 public class CompanyPdfReportManagementContract {
 
     public interface View extends BaseView {
+
         void getCompanyUserList(UserManagementInfoBean userManagementInfoBean);
 
         void getCompanyPdfList(CompanyPdfInfoBean companyPdfInfoBean);
@@ -27,6 +28,7 @@ public class CompanyPdfReportManagementContract {
     }
 
     public interface Presenter extends IBasePresenter<CompanyPdfReportManagementContract.View> {
+
         void getCompanyUserList(int page, int rows, String userName, String type, String companyId, String state, String name);
 
         void getCompanyPdfList(int page, int rows, String companyId, String userId, String name);

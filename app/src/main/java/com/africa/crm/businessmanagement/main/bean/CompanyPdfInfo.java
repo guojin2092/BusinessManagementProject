@@ -23,7 +23,7 @@ public class CompanyPdfInfo implements Serializable {
     private String companyName;//所属企业名称
     private String userNickName;//所属用户名称
 
-    private boolean chosen;
+    private boolean chosen = false;
 
     public String getId() {
         return id;

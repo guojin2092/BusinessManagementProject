@@ -26,7 +26,6 @@ import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.PdfReportListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyPdfReportManagementContract;
-import com.africa.crm.businessmanagement.main.station.dialog.AddPdfDialog;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyPdfManagementPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
@@ -34,7 +33,6 @@ import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -77,7 +75,6 @@ public class CompanyPdfReportManagementActivity extends BaseRefreshMvpActivity<C
 
     private WorkStationInfo mWorkStationInfo;
     private AlertDialog mDeleteDialog;
-    private AddPdfDialog mAddPdfDialog;
     private boolean mShowCheckBox = false;
     private String mCompanyId = "";
     private String mRoleCode = "";
@@ -115,7 +112,6 @@ public class CompanyPdfReportManagementActivity extends BaseRefreshMvpActivity<C
         ll_add.setOnClickListener(this);
         tv_search.setOnClickListener(this);
         tv_delete.setOnClickListener(this);
-        mAddPdfDialog = AddPdfDialog.getInstance(this);
 
         if (mRoleCode.equals("companyRoot")) {
             spinner_user.setVisibility(View.VISIBLE);
@@ -167,23 +163,7 @@ public class CompanyPdfReportManagementActivity extends BaseRefreshMvpActivity<C
                 }
                 break;
             case R.id.ll_add:
-                mAddPdfDialog.isCancelableOnTouchOutside(false)
-                        .withDuration(300)
-                        .withEffect(Effectstype.Fadein)
-                        .setCancelClick(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                mAddPdfDialog.dismiss();
-                            }
-                        })
-                        .setSaveClick(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                mAddPdfDialog.dismiss();
-                            }
-                        })
-                        .show();
-
+                CompanyPdfReportDetailActivity.startActivity(CompanyPdfReportManagementActivity.this, "");
                 break;
             case R.id.tv_delete:
                 mDeleteList.clear();
@@ -288,7 +268,7 @@ public class CompanyPdfReportManagementActivity extends BaseRefreshMvpActivity<C
                             mPdfInfoBeanList.get(position).setChosen(!cb_choose.isChecked());
                             mPdfReportListAdapter.notifyDataSetChanged();
                         } else {
-                            showShortToast("查看PDF文件");
+                            CompanyPdfReportDetailActivity.startActivity(CompanyPdfReportManagementActivity.this, mPdfInfoBeanList.get(position).getId());
                         }
                     }
                 });
