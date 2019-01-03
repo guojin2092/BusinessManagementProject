@@ -24,8 +24,6 @@ public class UploadPictureContract {
 
         void uploadImages(FileInfoBean fileInfoBean);
 
-        void downLoadFile(ResponseBody responseBody);
-
         void saveUserInfo(BaseEntity baseEntity);
 
     }
@@ -35,8 +33,6 @@ public class UploadPictureContract {
         void getUserInfo(String userId);
 
         void uploadImages(String filePath);
-
-        void downLoadFile(String code);
 
         void saveUserInfo(String id, String userName, String type, String roleIds, String passWord, String name, String phone, String address, String email, String state, String companyId, String head);
     }

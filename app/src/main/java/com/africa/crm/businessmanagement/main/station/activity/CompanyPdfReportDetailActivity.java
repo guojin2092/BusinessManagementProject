@@ -62,8 +62,6 @@ public class CompanyPdfReportDetailActivity extends BaseMvpActivity<CompanyPdfRe
     private String mFileName = "";
     private String mFileCode = "";
 
-    private String mRocalFilePath = "";
-
     /**
      * @param activity
      */
@@ -259,7 +257,6 @@ public class CompanyPdfReportDetailActivity extends BaseMvpActivity<CompanyPdfRe
                 dir.mkdirs();
             }
             File file = new File(dir, fileName + ".pdf");
-            mRocalFilePath = file.getAbsolutePath();
             fos = new FileOutputStream(file);
             while ((len = is.read(buf)) != -1) {
                 fos.write(buf, 0, len);

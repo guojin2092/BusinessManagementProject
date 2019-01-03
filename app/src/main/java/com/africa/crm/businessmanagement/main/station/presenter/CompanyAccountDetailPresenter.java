@@ -3,6 +3,7 @@ package com.africa.crm.businessmanagement.main.station.presenter;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
+import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyAccountDetailContract;
 import com.africa.crm.businessmanagement.mvp.presenter.RxPresenter;
@@ -23,6 +24,18 @@ import io.reactivex.functions.Consumer;
  * Why & What is modified:
  */
 public class CompanyAccountDetailPresenter extends RxPresenter<CompanyAccountDetailContract.View> implements CompanyAccountDetailContract.Presenter {
+
+    @Override
+    public void uploadImages(String filePath) {
+        addDisposable(mDataManager.uploadFiles(filePath)
+                .compose(RxUtils.<FileInfoBean>ioToMain(mView))
+                .subscribe(new Consumer<FileInfoBean>() {
+                    @Override
+                    public void accept(FileInfoBean fileInfoBean) throws Exception {
+                        mView.uploadImages(fileInfoBean);
+                    }
+                }, new ComConsumer(mView)));
+    }
 
     @Override
     public void getUserType(String code) {

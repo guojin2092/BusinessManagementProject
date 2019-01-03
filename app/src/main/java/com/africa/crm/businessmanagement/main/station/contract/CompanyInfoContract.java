@@ -3,10 +3,13 @@ package com.africa.crm.businessmanagement.main.station.contract;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
+import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
 import com.africa.crm.businessmanagement.mvp.presenter.IBasePresenter;
 import com.africa.crm.businessmanagement.network.base.BaseView;
 
 import java.util.List;
+
+import okhttp3.ResponseBody;
 
 /**
  * Project：BusinessManagementProject
@@ -27,6 +30,8 @@ public class CompanyInfoContract {
 
         void getState(List<DicInfo> dicInfoList);
 
+        void uploadImages(FileInfoBean fileInfoBean);
+
         void saveCompanyInfo(BaseEntity baseEntity);
 
     }
@@ -38,6 +43,8 @@ public class CompanyInfoContract {
         void getCompanyType(String code);
 
         void getState(String code);
+
+        void uploadImages(String filePath);
 
         void saveCompanyInfo(String id, String head, String name, String code, String type, String address, String phone, String email, String mid, String area, String profession, String numA, String state);
     }

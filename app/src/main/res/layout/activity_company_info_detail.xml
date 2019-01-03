@@ -53,7 +53,7 @@
                             android:layout_height="match_parent"
                             android:layout_gravity="center_vertical"
                             android:gravity="center_vertical"
-                            android:text="点击添加头像"
+                            android:text="上传头像"
                             android:textColor="@color/A768DBD"
                             android:textSize="14sp" />
                     </LinearLayout>

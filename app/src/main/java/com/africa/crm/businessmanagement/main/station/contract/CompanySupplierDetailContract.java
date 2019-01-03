@@ -3,6 +3,7 @@ package com.africa.crm.businessmanagement.main.station.contract;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
+import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
 import com.africa.crm.businessmanagement.mvp.presenter.IBasePresenter;
 import com.africa.crm.businessmanagement.network.base.BaseView;
 
@@ -19,6 +20,7 @@ import java.util.List;
  */
 public class CompanySupplierDetailContract {
     public interface View extends BaseView {
+        void uploadImages(FileInfoBean fileInfoBean);
 
         void getSupplierType(List<DicInfo> dicInfoList);
 
@@ -29,6 +31,7 @@ public class CompanySupplierDetailContract {
     }
 
     public interface Presenter extends IBasePresenter<CompanySupplierDetailContract.View> {
+        void uploadImages(String filePath);
 
         void getSupplierType(String code);
 

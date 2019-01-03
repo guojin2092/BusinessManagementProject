@@ -3,7 +3,9 @@ package com.africa.crm.businessmanagement.main.station.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -16,8 +18,12 @@ import com.africa.crm.businessmanagement.eventbus.AddOrSaveUserEvent;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
+import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserInfo;
+import com.africa.crm.businessmanagement.main.glide.GlideUtil;
+import com.africa.crm.businessmanagement.main.photo.SinglePopup;
+import com.africa.crm.businessmanagement.main.photo.camera.CameraCore;
 import com.africa.crm.businessmanagement.main.station.contract.UserDetailContract;
 import com.africa.crm.businessmanagement.main.station.presenter.UserDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
@@ -40,10 +46,9 @@ import butterknife.BindView;
  * Modification  History:
  * Why & What is modified:
  */
-public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> implements UserDetailContract.View {
+public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> implements UserDetailContract.View, SinglePopup.OnPopItemClickListener, CameraCore.CameraResult {
     @BindView(R.id.tv_save)
     TextView tv_save;
-
     @BindView(R.id.iv_icon)
     ImageView iv_icon;
     @BindView(R.id.tv_add_icon)
@@ -84,9 +89,11 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
     private static final String CONTACT_STATE_TYPE = "STATE";
     private List<DicInfo> mSpinnerStateList = new ArrayList<>();
     private String mStateType = "";
-
-    private String mHeadUrl = "";
     private String mUserId = "";
+
+    private CameraCore cameraCore;
+    private SinglePopup singlePopup;
+    private String mHeadCode = "";//头像ID
 
     /**
      * @param activity
@@ -108,6 +115,7 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
         super.initView();
         mUserId = getIntent().getStringExtra("userId");
         titlebar_name.setText("用户详情");
+        tv_add_icon.setOnClickListener(this);
         tv_save.setOnClickListener(this);
         spinner_type.getTextView().setEnabled(false);
         if (!TextUtils.isEmpty(mUserId)) {
@@ -121,6 +129,10 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
             tv_save.setText(R.string.add);
             tv_save.setVisibility(View.VISIBLE);
         }
+        cameraCore = new CameraCore.Builder(this)
+                .setNeedCrop(true)
+                .setZipInfo(new CameraCore.ZipInfo(true, 200, 200, 100 * 1024))
+                .build();
 
     }
 
@@ -148,8 +160,15 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()) {
-            case R.id.titlebar_back:
-                onBackPressed();
+            case R.id.tv_add_icon:
+                if (singlePopup == null) {
+                    List<String> list = new ArrayList<>();
+                    list.add("拍照");
+                    list.add("从相册选择");
+                    singlePopup = new SinglePopup(this, list, this);
+                    singlePopup.setTitle(View.GONE, "选择来源");
+                }
+                singlePopup.showAtLocation(tv_add_icon, Gravity.BOTTOM, 0, 0);
                 break;
             case R.id.titlebar_right:
                 if (!TextUtils.isEmpty(mUserId)) {
@@ -193,7 +212,7 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
                         return;
                     }
                 }
-                mPresenter.saveOrcreateUser(mUserId, et_account.getText().toString().trim(), mUserType, mRoleId, et_password.getText().toString().trim(), et_nickname.getText().toString().trim(), et_phone.getText().toString().trim(), et_address.getText().toString().trim(), et_email.getText().toString().trim(), mStateType, mCompanyId, mHeadUrl);
+                mPresenter.saveOrcreateUser(mUserId, et_account.getText().toString().trim(), mUserType, mRoleId, et_password.getText().toString().trim(), et_nickname.getText().toString().trim(), et_phone.getText().toString().trim(), et_address.getText().toString().trim(), et_email.getText().toString().trim(), mStateType, mCompanyId, mHeadCode);
                 break;
         }
     }
@@ -213,6 +232,7 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
         et_email.setEnabled(canInput);
         spinner_state.getTextView().setEnabled(canInput);
         spinner_role.getTextView().setEnabled(canInput);
+        spinner_company.getTextView().setEnabled(canInput);
     }
 
     @Override
@@ -258,6 +278,10 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
         spinner_company.setText(userInfo.getCompanyName());
         spinner_state.setText(userInfo.getStateName());
         spinner_role.setText(userInfo.getRoleName());
+        mHeadCode = userInfo.getHead();
+        if (!TextUtils.isEmpty(mHeadCode)) {
+            GlideUtil.showImg(iv_icon, mHeadCode);
+        }
     }
 
     @Override
@@ -321,5 +345,51 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
                 }
             });
         }
+    }
+
+    @Override
+    public void itemClick(int position, String s) {
+        switch (position) {
+            case 0:
+                cameraCore.openCamera();
+                break;
+            case 1:
+                cameraCore.openAlbum();
+                break;
+        }
+    }
+
+    @Override
+    public void success(String path) {
+        if (!TextUtils.isEmpty(path)) {
+            mPresenter.uploadImages(path);
+        }
+    }
+
+    @Override
+    public void uploadImages(FileInfoBean fileInfoBean) {
+        if (!TextUtils.isEmpty(fileInfoBean.getCode())) {
+            mHeadCode = fileInfoBean.getCode();
+            if (!TextUtils.isEmpty(mHeadCode)) {
+                GlideUtil.showImg(iv_icon, mHeadCode);
+            }
+        }
+    }
+
+    @Override
+    public void fail(int code, String message) {
+        toastMsg(message);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        cameraCore.onResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        cameraCore.onPermission(requestCode, permissions, grantResults);
     }
 }

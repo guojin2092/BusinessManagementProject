@@ -3,6 +3,7 @@ package com.africa.crm.businessmanagement.main.station.presenter;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
+import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyInfoContract;
 import com.africa.crm.businessmanagement.mvp.presenter.RxPresenter;
 import com.africa.crm.businessmanagement.network.error.ComConsumer;
@@ -11,6 +12,7 @@ import com.africa.crm.businessmanagement.network.util.RxUtils;
 import java.util.List;
 
 import io.reactivex.functions.Consumer;
+import okhttp3.ResponseBody;
 
 /**
  * Project：BusinessManagementProject
@@ -43,6 +45,18 @@ public class CompanyInfoPresenter extends RxPresenter<CompanyInfoContract.View> 
                     @Override
                     public void accept(List<DicInfo> dicInfoList) throws Exception {
                         mView.getState(dicInfoList);
+                    }
+                }, new ComConsumer(mView)));
+    }
+
+    @Override
+    public void uploadImages(String filePath) {
+        addDisposable(mDataManager.uploadFiles(filePath)
+                .compose(RxUtils.<FileInfoBean>ioToMain(mView))
+                .subscribe(new Consumer<FileInfoBean>() {
+                    @Override
+                    public void accept(FileInfoBean fileInfoBean) throws Exception {
+                        mView.uploadImages(fileInfoBean);
                     }
                 }, new ComConsumer(mView)));
     }

@@ -47,18 +47,6 @@ public class UploadPicturePresenter extends RxPresenter<UploadPictureContract.Vi
     }
 
     @Override
-    public void downLoadFile(String code) {
-        addDisposable(mDataManager.downloadFiles(code)
-                .compose(RxUtils.<ResponseBody>ioToMain(mView))
-                .subscribe(new Consumer<ResponseBody>() {
-                    @Override
-                    public void accept(ResponseBody responseBody) throws Exception {
-                        mView.downLoadFile(responseBody);
-                    }
-                }, new ComConsumer(mView)));
-    }
-
-    @Override
     public void saveUserInfo(String id, String userName, String type, String roleIds, String passWord, String name, String phone, String address, String email, String state, String companyId, String head) {
         addDisposable(mDataManager.saveOrcreateUser(id, userName, type, roleIds, passWord, name, phone, address, email, state, companyId, head)
                 .compose(RxUtils.<BaseEntity>ioToMain(mView))

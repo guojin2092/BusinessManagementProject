@@ -3,7 +3,9 @@ package com.africa.crm.businessmanagement.main.station.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -14,6 +16,10 @@ import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyEvent;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
+import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
+import com.africa.crm.businessmanagement.main.glide.GlideUtil;
+import com.africa.crm.businessmanagement.main.photo.SinglePopup;
+import com.africa.crm.businessmanagement.main.photo.camera.CameraCore;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyInfoContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyInfoPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
@@ -27,7 +33,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresenter> implements CompanyInfoContract.View {
+public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresenter> implements CompanyInfoContract.View, SinglePopup.OnPopItemClickListener, CameraCore.CameraResult {
     @BindView(R.id.iv_icon)
     ImageView iv_icon;
     @BindView(R.id.tv_add_icon)
@@ -66,7 +72,10 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     private String mState = "";
 
     private String mCompanyId = "";//企业ID
-    private String mHeadUrl = "";//头像地址
+
+    private CameraCore cameraCore;
+    private SinglePopup singlePopup;
+    private String mHeadCode = "";//头像ID
 
     /**
      * @param activity
@@ -88,7 +97,7 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
         mCompanyId = getIntent().getStringExtra("companyId");
         tv_save.setOnClickListener(this);
         titlebar_name.setText("企业详情");
-
+        tv_add_icon.setOnClickListener(this);
         if (!TextUtils.isEmpty(mCompanyId)) {
             titlebar_right.setText(R.string.edit);
             tv_save.setText(R.string.save);
@@ -98,6 +107,10 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
             tv_save.setText(R.string.add);
             tv_save.setVisibility(View.VISIBLE);
         }
+        cameraCore = new CameraCore.Builder(this)
+                .setNeedCrop(true)
+                .setZipInfo(new CameraCore.ZipInfo(true, 200, 200, 100 * 1024))
+                .build();
     }
 
     @Override
@@ -124,8 +137,15 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()) {
-            case R.id.titlebar_back:
-                onBackPressed();
+            case R.id.tv_add_icon:
+                if (singlePopup == null) {
+                    List<String> list = new ArrayList<>();
+                    list.add("拍照");
+                    list.add("从相册选择");
+                    singlePopup = new SinglePopup(this, list, this);
+                    singlePopup.setTitle(View.GONE, "选择来源");
+                }
+                singlePopup.showAtLocation(tv_add_icon, Gravity.BOTTOM, 0, 0);
                 break;
             case R.id.titlebar_right:
                 if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
@@ -157,7 +177,7 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
                         return;
                     }
                 }
-                mPresenter.saveCompanyInfo(mCompanyId, "", et_company_name.getText().toString(), et_company_code.getText().toString().trim(), mCompanyType, et_address.getText().toString().trim(), et_phone_number.getText().toString().trim(), et_email.getText().toString().trim(), et_company_code.getText().toString().trim(), et_area.getText().toString().trim(), et_profession.getText().toString().trim(), et_numA.getText().toString().trim(), mState);
+                mPresenter.saveCompanyInfo(mCompanyId, mHeadCode, et_company_name.getText().toString(), et_company_code.getText().toString().trim(), mCompanyType, et_address.getText().toString().trim(), et_phone_number.getText().toString().trim(), et_email.getText().toString().trim(), et_company_code.getText().toString().trim(), et_area.getText().toString().trim(), et_profession.getText().toString().trim(), et_numA.getText().toString().trim(), mState);
                 break;
 
         }
@@ -210,6 +230,11 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
             //状态
             spinner_state.setText(companyInfo.getStateName());
             mState = companyInfo.getState();
+            //头像
+            mHeadCode = companyInfo.getHead();
+            if (!TextUtils.isEmpty(mHeadCode)) {
+                GlideUtil.showImg(iv_icon, mHeadCode);
+            }
         }
     }
 
@@ -241,6 +266,7 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
         });
     }
 
+
     @Override
     public void saveCompanyInfo(BaseEntity baseEntity) {
         if (baseEntity.isSuccess()) {
@@ -255,5 +281,51 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
         } else {
             toastMsg(ErrorMsg.showErrorMsg(baseEntity.getReturnMsg()));
         }
+    }
+
+    @Override
+    public void itemClick(int position, String s) {
+        switch (position) {
+            case 0:
+                cameraCore.openCamera();
+                break;
+            case 1:
+                cameraCore.openAlbum();
+                break;
+        }
+    }
+
+    @Override
+    public void success(String path) {
+        if (!TextUtils.isEmpty(path)) {
+            mPresenter.uploadImages(path);
+        }
+    }
+
+    @Override
+    public void uploadImages(FileInfoBean fileInfoBean) {
+        if (!TextUtils.isEmpty(fileInfoBean.getCode())) {
+            mHeadCode = fileInfoBean.getCode();
+            if (!TextUtils.isEmpty(mHeadCode)) {
+                GlideUtil.showImg(iv_icon, mHeadCode);
+            }
+        }
+    }
+
+    @Override
+    public void fail(int code, String message) {
+        toastMsg(message);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        cameraCore.onResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        cameraCore.onPermission(requestCode, permissions, grantResults);
     }
 }

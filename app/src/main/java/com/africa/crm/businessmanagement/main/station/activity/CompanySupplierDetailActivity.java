@@ -3,7 +3,9 @@ package com.africa.crm.businessmanagement.main.station.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -14,7 +16,11 @@ import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanySupplierEvent;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
+import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
+import com.africa.crm.businessmanagement.main.glide.GlideUtil;
+import com.africa.crm.businessmanagement.main.photo.SinglePopup;
+import com.africa.crm.businessmanagement.main.photo.camera.CameraCore;
 import com.africa.crm.businessmanagement.main.station.contract.CompanySupplierDetailContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanySupplierDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
@@ -37,7 +43,7 @@ import butterknife.BindView;
  * Modification  History:
  * Why & What is modified:
  */
-public class CompanySupplierDetailActivity extends BaseMvpActivity<CompanySupplierDetailPresenter> implements CompanySupplierDetailContract.View {
+public class CompanySupplierDetailActivity extends BaseMvpActivity<CompanySupplierDetailPresenter> implements CompanySupplierDetailContract.View, SinglePopup.OnPopItemClickListener, CameraCore.CameraResult {
     public final static String SUPPLIER_ID = "supplier_id";
     private String mSupplierId = "";
     @BindView(R.id.et_supplier_name)
@@ -67,7 +73,10 @@ public class CompanySupplierDetailActivity extends BaseMvpActivity<CompanySuppli
     private List<DicInfo> mSpinnerCompanyTypeList = new ArrayList<>();
     private String mCompanyType = "";
     private String mCompanyId = "";
-    private String mHeadUrl = "";//头像地址
+
+    private CameraCore cameraCore;
+    private SinglePopup singlePopup;
+    private String mHeadCode = "";//头像ID
 
     /**
      * @param activity
@@ -97,7 +106,7 @@ public class CompanySupplierDetailActivity extends BaseMvpActivity<CompanySuppli
         tv_save.setOnClickListener(this);
         titlebar_right.setText(R.string.edit);
         titlebar_name.setText("供应商详情");
-
+        iv_icon.setOnClickListener(this);
         if (!TextUtils.isEmpty(mSupplierId)) {
             titlebar_right.setText(R.string.edit);
             tv_save.setText(R.string.save);
@@ -107,14 +116,26 @@ public class CompanySupplierDetailActivity extends BaseMvpActivity<CompanySuppli
             tv_save.setText(R.string.add);
             tv_save.setVisibility(View.VISIBLE);
         }
+        cameraCore = new CameraCore.Builder(this)
+                .setNeedCrop(true)
+                .setZipInfo(new CameraCore.ZipInfo(true, 200, 200, 100 * 1024))
+                .build();
+
     }
 
     @Override
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()) {
-            case R.id.titlebar_back:
-                onBackPressed();
+            case R.id.iv_icon:
+                if (singlePopup == null) {
+                    List<String> list = new ArrayList<>();
+                    list.add("拍照");
+                    list.add("从相册选择");
+                    singlePopup = new SinglePopup(this, list, this);
+                    singlePopup.setTitle(View.GONE, "选择来源");
+                }
+                singlePopup.showAtLocation(iv_icon, Gravity.BOTTOM, 0, 0);
                 break;
             case R.id.titlebar_right:
                 if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
@@ -132,7 +153,7 @@ public class CompanySupplierDetailActivity extends BaseMvpActivity<CompanySuppli
                     toastMsg("尚未填写供应商名称");
                     return;
                 }
-                mPresenter.saveCompanySupplier(mSupplierId, mCompanyId, mHeadUrl, et_supplier_name.getText().toString().trim(), mCompanyType, et_address.getText().toString().trim(), et_phone.getText().toString().trim(), et_email.getText().toString().trim(), et_zip_code.getText().toString().trim(), et_area.getText().toString().trim(), et_remark.getText().toString().trim());
+                mPresenter.saveCompanySupplier(mSupplierId, mCompanyId, mHeadCode, et_supplier_name.getText().toString().trim(), mCompanyType, et_address.getText().toString().trim(), et_phone.getText().toString().trim(), et_email.getText().toString().trim(), et_zip_code.getText().toString().trim(), et_area.getText().toString().trim(), et_remark.getText().toString().trim());
                 break;
         }
     }
@@ -165,6 +186,7 @@ public class CompanySupplierDetailActivity extends BaseMvpActivity<CompanySuppli
         et_address.setEnabled(canInput);
         et_zip_code.setEnabled(canInput);
         et_remark.setEnabled(canInput);
+        iv_icon.setEnabled(canInput);
     }
 
     @Override
@@ -193,6 +215,11 @@ public class CompanySupplierDetailActivity extends BaseMvpActivity<CompanySuppli
         et_address.setText(companySupplierInfo.getAddress());
         et_zip_code.setText(companySupplierInfo.getZipCode());
         et_remark.setText(companySupplierInfo.getRemark());
+        //头像
+        mHeadCode = companySupplierInfo.getHead();
+        if (!TextUtils.isEmpty(mHeadCode)) {
+            GlideUtil.showImg(iv_icon, mHeadCode);
+        }
     }
 
     @Override
@@ -209,5 +236,50 @@ public class CompanySupplierDetailActivity extends BaseMvpActivity<CompanySuppli
         } else {
             toastMsg(ErrorMsg.showErrorMsg(baseEntity.getReturnMsg()));
         }
+    }
+    @Override
+    public void itemClick(int position, String s) {
+        switch (position) {
+            case 0:
+                cameraCore.openCamera();
+                break;
+            case 1:
+                cameraCore.openAlbum();
+                break;
+        }
+    }
+
+    @Override
+    public void success(String path) {
+        if (!TextUtils.isEmpty(path)) {
+            mPresenter.uploadImages(path);
+        }
+    }
+
+    @Override
+    public void uploadImages(FileInfoBean fileInfoBean) {
+        if (!TextUtils.isEmpty(fileInfoBean.getCode())) {
+            mHeadCode = fileInfoBean.getCode();
+            if (!TextUtils.isEmpty(mHeadCode)) {
+                GlideUtil.showImg(iv_icon, mHeadCode);
+            }
+        }
+    }
+
+    @Override
+    public void fail(int code, String message) {
+        toastMsg(message);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        cameraCore.onResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        cameraCore.onPermission(requestCode, permissions, grantResults);
     }
 }

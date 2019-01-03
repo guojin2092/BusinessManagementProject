@@ -3,11 +3,14 @@ package com.africa.crm.businessmanagement.main.station.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
@@ -16,7 +19,11 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
+import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
+import com.africa.crm.businessmanagement.main.glide.GlideUtil;
+import com.africa.crm.businessmanagement.main.photo.SinglePopup;
+import com.africa.crm.businessmanagement.main.photo.camera.CameraCore;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyPayOrderDetailContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyPayOrderDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
@@ -33,7 +40,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class CompanyPaymentDetailActivity extends BaseMvpActivity<CompanyPayOrderDetailPresenter> implements CompanyPayOrderDetailContract.View {
+public class CompanyPaymentDetailActivity extends BaseMvpActivity<CompanyPayOrderDetailPresenter> implements CompanyPayOrderDetailContract.View, SinglePopup.OnPopItemClickListener, CameraCore.CameraResult {
     @BindView(R.id.et_pay_name)
     EditText et_pay_name;
     @BindView(R.id.spinner_customer_name)
@@ -69,6 +76,15 @@ public class CompanyPaymentDetailActivity extends BaseMvpActivity<CompanyPayOrde
 
     private TimePickerView pvTime;
 
+    @BindView(R.id.iv_fp_1)
+    ImageView iv_fp_1;
+    @BindView(R.id.iv_fp_2)
+    ImageView iv_fp_2;
+    private CameraCore cameraCore;
+    private SinglePopup singlePopup1, singlePopup2;
+    private int type = 0;
+    private String mHeadCodeTotal = "";//头像ID
+    private String mHeadCode1, mHeadCode2;
 
     /**
      * @param activity
@@ -101,6 +117,8 @@ public class CompanyPaymentDetailActivity extends BaseMvpActivity<CompanyPayOrde
         tv_pay_time.setOnClickListener(this);
         fl_sf_invoice.setOnClickListener(this);
         fl_sf_print.setOnClickListener(this);
+        iv_fp_1.setOnClickListener(this);
+        iv_fp_2.setOnClickListener(this);
 
         String roleCode = UserInfoManager.getUserLoginInfo(this).getRoleCode();
         if (roleCode.equals("companySales")) {
@@ -119,6 +137,10 @@ public class CompanyPaymentDetailActivity extends BaseMvpActivity<CompanyPayOrde
             setEditTextInput(false);
         }
         initTimePicker();
+        cameraCore = new CameraCore.Builder(this)
+                .setNeedCrop(true)
+                .setZipInfo(new CameraCore.ZipInfo(true, 200, 200, 100 * 1024))
+                .build();
     }
 
     private void initTimePicker() {
@@ -137,6 +159,28 @@ public class CompanyPaymentDetailActivity extends BaseMvpActivity<CompanyPayOrde
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()) {
+            case R.id.iv_fp_1:
+                type = 1;
+                if (singlePopup1 == null) {
+                    List<String> list = new ArrayList<>();
+                    list.add("拍照");
+                    list.add("从相册选择");
+                    singlePopup1 = new SinglePopup(this, list, this);
+                    singlePopup1.setTitle(View.GONE, "选择来源");
+                }
+                singlePopup1.showAtLocation(iv_fp_1, Gravity.BOTTOM, 0, 0);
+                break;
+            case R.id.iv_fp_2:
+                type = 2;
+                if (singlePopup2 == null) {
+                    List<String> list = new ArrayList<>();
+                    list.add("拍照");
+                    list.add("从相册选择");
+                    singlePopup2 = new SinglePopup(this, list, this);
+                    singlePopup2.setTitle(View.GONE, "选择来源");
+                }
+                singlePopup2.showAtLocation(iv_fp_2, Gravity.BOTTOM, 0, 0);
+                break;
             case R.id.tv_pay_time:
                 pvTime.show();
                 break;
@@ -182,7 +226,16 @@ public class CompanyPaymentDetailActivity extends BaseMvpActivity<CompanyPayOrde
                     toastMsg("尚未输入付款金额");
                     return;
                 }
-                mPresenter.saveCompanyPayOrder(mPayOrderId, mCompanyId, mUserId, et_pay_name.getText().toString().trim(), mSalesId, mTragdingOrderId, spinner_customer_name.getText(), et_pay_price.getText().toString().trim(), tv_pay_time.getText().toString().trim(), "1", "1", "", et_remark.getText().toString().trim());
+                if (TextUtils.isEmpty(mHeadCode1)) {
+                    toastMsg("尚未上传第一张发票照片");
+                    return;
+                }
+                if (TextUtils.isEmpty(mHeadCode2)) {
+                    toastMsg("尚未上传第二张发票照片");
+                    return;
+                }
+                mHeadCodeTotal = mHeadCode1 + "," + mHeadCode2;
+                mPresenter.saveCompanyPayOrder(mPayOrderId, mCompanyId, mUserId, et_pay_name.getText().toString().trim(), mSalesId, mTragdingOrderId, spinner_customer_name.getText(), et_pay_price.getText().toString().trim(), tv_pay_time.getText().toString().trim(), "1", "1", mHeadCodeTotal, et_remark.getText().toString().trim());
                 break;
         }
     }
@@ -219,6 +272,8 @@ public class CompanyPaymentDetailActivity extends BaseMvpActivity<CompanyPayOrde
         fl_sf_print.setEnabled(canInput);
         cb_sf_print.setEnabled(canInput);
         et_remark.setEnabled(canInput);
+        iv_fp_1.setEnabled(canInput);
+        iv_fp_2.setEnabled(canInput);
     }
 
     @Override
@@ -283,6 +338,19 @@ public class CompanyPaymentDetailActivity extends BaseMvpActivity<CompanyPayOrde
             cb_sf_print.setChecked(false);
         }
         et_remark.setText(companyPayOrderInfo.getRemark());
+        String fpCodes = companyPayOrderInfo.getInvoiceFiles();
+        if (!TextUtils.isEmpty(fpCodes)) {
+            String[] codeList = fpCodes.split(",");
+            if (codeList.length == 1) {
+                mHeadCode1 = codeList[0];
+                GlideUtil.showNormalImg(iv_fp_1, mHeadCode1);
+            } else if (codeList.length == 2) {
+                mHeadCode1 = codeList[0];
+                mHeadCode2 = codeList[1];
+                GlideUtil.showNormalImg(iv_fp_1, mHeadCode1);
+                GlideUtil.showNormalImg(iv_fp_2, mHeadCode2);
+            }
+        }
     }
 
     @Override
@@ -299,5 +367,54 @@ public class CompanyPaymentDetailActivity extends BaseMvpActivity<CompanyPayOrde
         } else {
             toastMsg(ErrorMsg.showErrorMsg(baseEntity.getReturnMsg()));
         }
+    }
+
+    @Override
+    public void itemClick(int position, String s) {
+        switch (position) {
+            case 0:
+                cameraCore.openCamera();
+                break;
+            case 1:
+                cameraCore.openAlbum();
+                break;
+        }
+    }
+
+    @Override
+    public void success(String path) {
+        if (!TextUtils.isEmpty(path)) {
+            mPresenter.uploadImages(path);
+        }
+    }
+
+    @Override
+    public void uploadImages(FileInfoBean fileInfoBean) {
+        if (!TextUtils.isEmpty(fileInfoBean.getCode())) {
+            if (type == 1) {
+                mHeadCode1 = fileInfoBean.getCode();
+                GlideUtil.showNormalImg(iv_fp_1, mHeadCode1);
+            } else if (type == 2) {
+                mHeadCode2 = fileInfoBean.getCode();
+                GlideUtil.showNormalImg(iv_fp_2, mHeadCode2);
+            }
+        }
+    }
+
+    @Override
+    public void fail(int code, String message) {
+        toastMsg(message);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        cameraCore.onResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        cameraCore.onPermission(requestCode, permissions, grantResults);
     }
 }

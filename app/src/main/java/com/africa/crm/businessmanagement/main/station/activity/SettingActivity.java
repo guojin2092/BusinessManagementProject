@@ -3,7 +3,6 @@ package com.africa.crm.businessmanagement.main.station.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -20,23 +19,19 @@ import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
-import com.africa.crm.businessmanagement.main.glide.GlideApp;
-import com.africa.crm.businessmanagement.main.photo.FileUtils;
+import com.africa.crm.businessmanagement.main.glide.GlideUtil;
 import com.africa.crm.businessmanagement.main.photo.SinglePopup;
 import com.africa.crm.businessmanagement.main.photo.camera.CameraCore;
 import com.africa.crm.businessmanagement.main.station.contract.UploadPictureContract;
 import com.africa.crm.businessmanagement.main.station.presenter.UploadPicturePresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.gitonway.lee.niftymodaldialogeffects.lib.LoginOutDialog;
-import com.scwang.smartrefresh.layout.util.DensityUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import okhttp3.ResponseBody;
 
 /**
  * Project：BusinessManagementProject
@@ -80,7 +75,6 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
     private String mState = "";//状态
     private String mCompanyId = "";//企业ID
     private String mHead = "";//头像ID
-    private String mLocalPath = "";//头像本地路径
 
     /**
      * @param activity
@@ -186,11 +180,13 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
         mEmail = userInfo.getEmail();
         mState = userInfo.getState();
         mCompanyId = userInfo.getCompanyId();
-        mHead = userInfo.getHead();
         tv_username.setText(userInfo.getName());
         tv_company_name.setText(userInfo.getCompanyName());
         tv_user_type.setText(userInfo.getTypeName());
-        mPresenter.downLoadFile(userInfo.getHead());
+        mHead = userInfo.getHead();
+        if (!TextUtils.isEmpty(mHead)) {
+            GlideUtil.showImg(iv_head_icon, mHead);
+        }
     }
 
     @Override
@@ -221,27 +217,14 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
     public void uploadImages(FileInfoBean fileInfoBean) {
         if (!TextUtils.isEmpty(fileInfoBean.getCode())) {
             mHead = fileInfoBean.getCode();
-            mPresenter.downLoadFile(fileInfoBean.getCode());
+            mPresenter.saveUserInfo(mUserId, mUserName, mType, mRoleIds, "", mName, mPhone, mAddress, mEmail, mState, mCompanyId, mHead);
         }
-    }
-
-
-    @Override
-    public void downLoadFile(ResponseBody responseBody) {
-        String fileDir = Environment.getExternalStorageDirectory().getAbsolutePath() + "/CRM";
-        mLocalPath = FileUtils.saveFile(responseBody, fileDir, String.valueOf(System.currentTimeMillis()));
-        mPresenter.saveUserInfo(mUserId, mUserName, mType, mRoleIds, "", mName, mPhone, mAddress, mEmail, mState, mCompanyId, mHead);
     }
 
     @Override
     public void saveUserInfo(BaseEntity baseEntity) {
         if (baseEntity.isSuccess()) {
-            GlideApp.with(this)
-                    .load(mLocalPath)
-                    .centerCrop()
-                    .placeholder(R.drawable.iv_no_icon)
-                    .transform(new RoundedCorners(DensityUtil.dp2px(1000)))
-                    .into(iv_head_icon);
+            GlideUtil.showImg(iv_head_icon, mHead);
         }
     }
 

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.main.bean.UserInfoBean;
+import com.africa.crm.businessmanagement.main.glide.GlideUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -41,13 +42,12 @@ public class UserListAdapter extends BaseQuickAdapter<UserInfoBean, BaseViewHold
 
     @Override
     protected void convert(BaseViewHolder helper, UserInfoBean item) {
-        ImageView iv_head = helper.getView(R.id.iv_head);
+        ImageView iv_icon = helper.getView(R.id.iv_icon);
         TextView tv_company = helper.getView(R.id.tv_company);
         TextView tv_role_name = helper.getView(R.id.tv_role_name);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
-
-        iv_head.setImageResource(R.drawable.iv_head_icon1);
+        GlideUtil.showImg(iv_icon, item.getHead());
         if (!TextUtils.isEmpty(item.getCompanyName())) {
             tv_company.setText(item.getCompanyName());
         } else {

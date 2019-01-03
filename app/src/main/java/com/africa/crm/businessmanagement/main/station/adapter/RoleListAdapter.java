@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
+import com.africa.crm.businessmanagement.main.glide.GlideUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -27,11 +28,9 @@ public class RoleListAdapter extends BaseQuickAdapter<RoleInfoBean, BaseViewHold
 
     @Override
     protected void convert(BaseViewHolder helper, RoleInfoBean item) {
-        ImageView iv_icon = helper.getView(R.id.iv_icon);
         TextView tv_company = helper.getView(R.id.tv_company);
         helper.addOnClickListener(R.id.tv_see_detail);
         helper.addOnClickListener(R.id.tv_auth_allocation);
-        iv_icon.setImageResource(R.drawable.iv_head_icon1);
         tv_company.setText(item.getRoleName());
     }
 }

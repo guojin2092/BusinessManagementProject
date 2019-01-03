@@ -3,6 +3,7 @@ package com.africa.crm.businessmanagement.main.station.contract;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
+import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.mvp.presenter.IBasePresenter;
@@ -21,6 +22,8 @@ import java.util.List;
  */
 public class UserDetailContract {
     public interface View extends BaseView {
+        void uploadImages(FileInfoBean fileInfoBean);
+
         void getUserType(List<DicInfo> dicInfoList);
 
         void getStateType(List<DicInfo> dicInfoList);
@@ -35,6 +38,8 @@ public class UserDetailContract {
     }
 
     public interface Presenter extends IBasePresenter<UserDetailContract.View> {
+        void uploadImages(String filePath);
+
         void getUserType(String code);
 
         void getStateType(String code);

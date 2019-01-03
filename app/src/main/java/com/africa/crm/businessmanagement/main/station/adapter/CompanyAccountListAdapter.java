@@ -1,6 +1,7 @@
 package com.africa.crm.businessmanagement.main.station.adapter;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
+import com.africa.crm.businessmanagement.main.glide.GlideUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -46,7 +48,7 @@ public class CompanyAccountListAdapter extends BaseQuickAdapter<CompanyInfo, Bas
         TextView tv_company_account = helper.getView(R.id.tv_company_account);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
-        iv_icon.setImageResource(R.drawable.iv_head_icon1);
+        GlideUtil.showImg(iv_icon, item.getHead());
         tv_company.setText(item.getName());
         tv_location.setText(item.getArea());
         tv_company_account.setText("企业账号：" + item.getUserName());

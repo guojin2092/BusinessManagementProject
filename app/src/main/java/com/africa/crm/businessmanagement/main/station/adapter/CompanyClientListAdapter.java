@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.main.bean.CompanyClientInfo;
+import com.africa.crm.businessmanagement.main.glide.GlideUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -45,7 +46,7 @@ public class CompanyClientListAdapter extends BaseQuickAdapter<CompanyClientInfo
         TextView tv_industry_name = helper.getView(R.id.tv_industry_name);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
-        iv_icon.setImageResource(R.drawable.iv_head_icon1);
+        GlideUtil.showImg(iv_icon, item.getHead());
         tv_company_name.setText(item.getCompanyName());
         tv_industry_name.setText(item.getIndustryName());
 
