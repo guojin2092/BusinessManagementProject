@@ -7,9 +7,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -32,7 +29,6 @@ import com.africa.crm.businessmanagement.main.station.contract.CompanyTradingOrd
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyTradingOrderPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
-import com.africa.crm.businessmanagement.widget.KeyboardUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
@@ -129,9 +125,11 @@ public class CompanyTradingOrderManagementActivity extends BaseRefreshMvpActivit
         if (mRoleCode.equals("companyRoot")) {
             ll_manager.setVisibility(View.VISIBLE);
             et_quotation_name_b.setVisibility(View.GONE);
+            titlebar_right.setVisibility(View.GONE);
         } else {
             ll_manager.setVisibility(View.GONE);
             et_quotation_name_b.setVisibility(View.VISIBLE);
+            titlebar_right.setVisibility(View.VISIBLE);
         }
         if (mRoleCode.equals("companySales")) {
             ll_add.setVisibility(View.VISIBLE);
@@ -195,13 +193,13 @@ public class CompanyTradingOrderManagementActivity extends BaseRefreshMvpActivit
         pvStartTime = new TimePickerView(new TimePickerView.Builder(this, new TimePickerView.OnTimeSelectListener() {
             @Override
             public void onTimeSelect(Date date, View v) {
-                mStartDate = date;
                 if (mEndDate != null) {
-                    if (mEndDate.getTime() < mStartDate.getTime()) {
+                    if (mEndDate.getTime() < date.getTime()) {
                         toastMsg("起止时间不得小于起始时间");
                         return;
                     }
                 }
+                mStartDate = date;
                 tv_start_time.setText(TimeUtils.getTime(date));
             }
         })
@@ -211,13 +209,13 @@ public class CompanyTradingOrderManagementActivity extends BaseRefreshMvpActivit
         pvEndTime = new TimePickerView(new TimePickerView.Builder(this, new TimePickerView.OnTimeSelectListener() {
             @Override
             public void onTimeSelect(Date date, View v) {
-                mEndDate = date;
-                if (mStartDate!=null){
-                    if (mEndDate.getTime() < mStartDate.getTime()) {
+                if (mStartDate != null) {
+                    if (date.getTime() < mStartDate.getTime()) {
                         toastMsg("起止时间不得小于起始时间");
                         return;
                     }
                 }
+                mEndDate = date;
                 tv_end_time.setText(TimeUtils.getTime(date));
             }
         })

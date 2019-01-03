@@ -123,8 +123,10 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
         }
 
         if (mRoleCode.equals("companyRoot")) {
+            titlebar_right.setVisibility(View.GONE);
             spinner_user.setVisibility(View.VISIBLE);
         } else {
+            titlebar_right.setVisibility(View.VISIBLE);
             spinner_user.setVisibility(View.INVISIBLE);
         }
         if (mRoleCode.equals("companySales")) {

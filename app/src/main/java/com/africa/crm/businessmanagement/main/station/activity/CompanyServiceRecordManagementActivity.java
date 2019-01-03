@@ -148,13 +148,13 @@ public class CompanyServiceRecordManagementActivity extends BaseRefreshMvpActivi
         pvStartTime = new TimePickerView(new TimePickerView.Builder(this, new TimePickerView.OnTimeSelectListener() {
             @Override
             public void onTimeSelect(Date date, View v) {
-                mStartDate = date;
                 if (mEndDate != null) {
                     if (mEndDate.getTime() < mStartDate.getTime()) {
                         toastMsg("起止时间不得小于起始时间");
                         return;
                     }
                 }
+                mStartDate = date;
                 tv_start_time.setText(TimeUtils.getTime(date));
             }
         })
@@ -164,13 +164,13 @@ public class CompanyServiceRecordManagementActivity extends BaseRefreshMvpActivi
         pvEndTime = new TimePickerView(new TimePickerView.Builder(this, new TimePickerView.OnTimeSelectListener() {
             @Override
             public void onTimeSelect(Date date, View v) {
-                mEndDate = date;
                 if (mStartDate != null) {
-                    if (mEndDate.getTime() < mStartDate.getTime()) {
+                    if (date.getTime() < mStartDate.getTime()) {
                         toastMsg("起止时间不得小于起始时间");
                         return;
                     }
                 }
+                mEndDate = date;
                 tv_end_time.setText(TimeUtils.getTime(date));
             }
         })

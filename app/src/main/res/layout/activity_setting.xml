@@ -113,12 +113,12 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:drawablePadding="10dp"
-                            android:text="用户类别："
+                            android:text="用户角色："
                             android:textColor="@color/A606060"
                             android:textSize="18sp" />
 
                         <TextView
-                            android:id="@+id/tv_user_type"
+                            android:id="@+id/tv_user_role"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"

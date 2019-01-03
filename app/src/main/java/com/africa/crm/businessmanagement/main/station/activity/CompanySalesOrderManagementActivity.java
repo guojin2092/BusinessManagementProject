@@ -121,28 +121,6 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
         setContentView(R.layout.activity_company_sales_order_management);
     }
 
-
-    @Override
-    protected CompanySalesOrderPresenter injectPresenter() {
-        return new CompanySalesOrderPresenter();
-    }
-
-    @Override
-    protected void requestData() {
-        mPresenter.getCompanyUserList(page, rows, "", "2", mCompanyId, "1", "");
-        mPresenter.getStateType(STATE_CODE);
-        pullDownRefresh(page);
-    }
-
-    @Override
-    public void pullDownRefresh(int page) {
-        if (mRoleCode.equals("companyRoot")) {
-            mPresenter.getCompanySalesOrderList(page, rows, mCompanyId, mUserId, et_sales_name.getText().toString().trim(), mStateCode, tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
-        } else {
-            mPresenter.getCompanySalesOrderList(page, rows, mCompanyId, String.valueOf(UserInfoManager.getUserLoginInfo(this).getId()), et_sales_name.getText().toString().trim(), mStateCode, tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
-        }
-    }
-
     @Override
     public void initView() {
         super.initView();
@@ -160,9 +138,11 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
 
         if (mRoleCode.equals("companyRoot")) {
             spinner_user.setVisibility(View.VISIBLE);
+            titlebar_right.setVisibility(View.GONE);
             ll_right.setVisibility(View.GONE);
         } else {
             spinner_user.setVisibility(View.GONE);
+            titlebar_right.setVisibility(View.VISIBLE);
             ll_right.setVisibility(View.VISIBLE);
         }
         if (mRoleCode.equals("companySales")) {
@@ -200,13 +180,13 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
         pvStartTime = new TimePickerView(new TimePickerView.Builder(this, new TimePickerView.OnTimeSelectListener() {
             @Override
             public void onTimeSelect(Date date, View v) {
-                mStartDate = date;
                 if (mEndDate != null) {
-                    if (mEndDate.getTime() < mStartDate.getTime()) {
+                    if (mEndDate.getTime() < date.getTime()) {
                         toastMsg("起止时间不得小于起始时间");
                         return;
                     }
                 }
+                mStartDate = date;
                 tv_start_time.setText(TimeUtils.getTime(date));
             }
         })
@@ -216,13 +196,13 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
         pvEndTime = new TimePickerView(new TimePickerView.Builder(this, new TimePickerView.OnTimeSelectListener() {
             @Override
             public void onTimeSelect(Date date, View v) {
-                mEndDate = date;
-                if (mStartDate!=null){
-                    if (mEndDate.getTime() < mStartDate.getTime()) {
+                if (mStartDate != null) {
+                    if (date.getTime() < mStartDate.getTime()) {
                         toastMsg("起止时间不得小于起始时间");
                         return;
                     }
                 }
+                mEndDate = date;
                 tv_end_time.setText(TimeUtils.getTime(date));
             }
         })
@@ -230,6 +210,26 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
                 .isDialog(true));
     }
 
+    @Override
+    protected CompanySalesOrderPresenter injectPresenter() {
+        return new CompanySalesOrderPresenter();
+    }
+
+    @Override
+    protected void requestData() {
+        mPresenter.getCompanyUserList(page, rows, "", "2", mCompanyId, "1", "");
+        mPresenter.getStateType(STATE_CODE);
+        pullDownRefresh(page);
+    }
+
+    @Override
+    public void pullDownRefresh(int page) {
+        if (mRoleCode.equals("companyRoot")) {
+            mPresenter.getCompanySalesOrderList(page, rows, mCompanyId, mUserId, et_sales_name.getText().toString().trim(), mStateCode, tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
+        } else {
+            mPresenter.getCompanySalesOrderList(page, rows, mCompanyId, String.valueOf(UserInfoManager.getUserLoginInfo(this).getId()), et_sales_name.getText().toString().trim(), mStateCode, tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
+        }
+    }
 
     @Override
     public void onClick(View v) {

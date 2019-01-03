@@ -51,8 +51,8 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
     TextView tv_username;
     @BindView(R.id.tv_company_name)
     TextView tv_company_name;
-    @BindView(R.id.tv_user_type)
-    TextView tv_user_type;
+    @BindView(R.id.tv_user_role)
+    TextView tv_user_role;
     @BindView(R.id.tv_unload_data)
     TextView tv_unload_data;
     @BindView(R.id.tv_login_out)
@@ -182,7 +182,7 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
         mCompanyId = userInfo.getCompanyId();
         tv_username.setText(userInfo.getName());
         tv_company_name.setText(userInfo.getCompanyName());
-        tv_user_type.setText(userInfo.getTypeName());
+        tv_user_role.setText(userInfo.getRoleName());
         mHead = userInfo.getHead();
         if (!TextUtils.isEmpty(mHead)) {
             GlideUtil.showImg(iv_head_icon, mHead);

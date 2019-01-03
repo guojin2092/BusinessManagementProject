@@ -7,9 +7,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -129,9 +126,11 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
         if (mRoleCode.equals("companyRoot")) {
             ll_manager.setVisibility(View.VISIBLE);
             et_quotation_name_b.setVisibility(View.GONE);
+            titlebar_right.setVisibility(View.GONE);
         } else {
             ll_manager.setVisibility(View.GONE);
             et_quotation_name_b.setVisibility(View.VISIBLE);
+            titlebar_right.setVisibility(View.VISIBLE);
         }
         if (mRoleCode.equals("companySales")) {
             ll_add.setVisibility(View.VISIBLE);
@@ -212,7 +211,7 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
             @Override
             public void onTimeSelect(Date date, View v) {
                 mEndDate = date;
-                if (mStartDate!=null){
+                if (mStartDate != null) {
                     if (mEndDate.getTime() < mStartDate.getTime()) {
                         toastMsg("起止时间不得小于起始时间");
                         return;

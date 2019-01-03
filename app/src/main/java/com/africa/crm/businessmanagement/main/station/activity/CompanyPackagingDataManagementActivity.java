@@ -68,10 +68,10 @@ public class CompanyPackagingDataManagementActivity extends BaseRefreshMvpActivi
     private TimePickerView pvStartTime, pvEndTime;
     private Date mStartDate, mEndDate;
 
-    @BindView(R.id.spinner_user)
-    MySpinner spinner_user;
-    private List<UserInfoBean> mUserInfoBeanList = new ArrayList<>();
-    private List<DicInfo> mUserInfoList = new ArrayList<>();
+    /*    @BindView(R.id.spinner_user)
+        MySpinner spinner_user;
+        private List<UserInfoBean> mUserInfoBeanList = new ArrayList<>();
+        private List<DicInfo> mUserInfoList = new ArrayList<>();*/
     private String mUserId = "";
     private String mCompanyId = "";
     private String mRoleCode = "";
@@ -100,16 +100,17 @@ public class CompanyPackagingDataManagementActivity extends BaseRefreshMvpActivi
     public void initView() {
         super.initView();
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
+        mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
         mWorkStationInfo = (WorkStationInfo) getIntent().getSerializableExtra("info");
         mRoleCode = UserInfoManager.getUserLoginInfo(this).getRoleCode();
         if (mWorkStationInfo != null) {
             titlebar_name.setText(mWorkStationInfo.getWork_name());
         }
-        if (mRoleCode.equals("companyRoot")) {
+        /*if (mRoleCode.equals("companyRoot")) {
             spinner_user.setVisibility(View.VISIBLE);
         } else {
             spinner_user.setVisibility(View.GONE);
-        }
+        }*/
         titlebar_right.setVisibility(View.GONE);
         tv_search.setOnClickListener(this);
         ll_add.setOnClickListener(this);
@@ -122,13 +123,13 @@ public class CompanyPackagingDataManagementActivity extends BaseRefreshMvpActivi
         pvStartTime = new TimePickerView(new TimePickerView.Builder(this, new TimePickerView.OnTimeSelectListener() {
             @Override
             public void onTimeSelect(Date date, View v) {
-                mStartDate = date;
                 if (mEndDate != null) {
-                    if (mEndDate.getTime() < mStartDate.getTime()) {
+                    if (mEndDate.getTime() < date.getTime()) {
                         toastMsg("起止时间不得小于起始时间");
                         return;
                     }
                 }
+                mStartDate = date;
                 tv_start_time.setText(TimeUtils.getTime(date));
             }
         })
@@ -138,13 +139,13 @@ public class CompanyPackagingDataManagementActivity extends BaseRefreshMvpActivi
         pvEndTime = new TimePickerView(new TimePickerView.Builder(this, new TimePickerView.OnTimeSelectListener() {
             @Override
             public void onTimeSelect(Date date, View v) {
-                mEndDate = date;
                 if (mStartDate != null) {
-                    if (mEndDate.getTime() < mStartDate.getTime()) {
+                    if (date.getTime() < mStartDate.getTime()) {
                         toastMsg("起止时间不得小于起始时间");
                         return;
                     }
                 }
+                mEndDate = date;
                 tv_end_time.setText(TimeUtils.getTime(date));
             }
         })
@@ -165,11 +166,12 @@ public class CompanyPackagingDataManagementActivity extends BaseRefreshMvpActivi
 
     @Override
     public void pullDownRefresh(int page) {
-        if (mRoleCode.equals("companyRoot")) {
+        mPresenter.getCompanyPackagingDataList(page, rows, mCompanyId, mUserId, tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
+       /* if (mRoleCode.equals("companyRoot")) {
             mPresenter.getCompanyPackagingDataList(page, rows, mCompanyId, mUserId, tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
         } else {
             mPresenter.getCompanyPackagingDataList(page, rows, mCompanyId, String.valueOf(UserInfoManager.getUserLoginInfo(this).getId()), tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
-        }
+        }*/
     }
 
     @Override
@@ -208,7 +210,7 @@ public class CompanyPackagingDataManagementActivity extends BaseRefreshMvpActivi
 
     @Override
     public void getCompanyUserList(UserManagementInfoBean userManagementInfoBean) {
-        mUserInfoBeanList.clear();
+       /* mUserInfoBeanList.clear();
         mUserInfoBeanList.addAll(userManagementInfoBean.getRows());
         mUserInfoList.clear();
         if (!ListUtils.isEmpty(mUserInfoBeanList)) {
@@ -222,7 +224,7 @@ public class CompanyPackagingDataManagementActivity extends BaseRefreshMvpActivi
             public void onItemClick(DicInfo dicInfo, int position) {
                 mUserId = dicInfo.getCode();
             }
-        });
+        });*/
     }
 
     @Override
