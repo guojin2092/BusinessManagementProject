@@ -208,6 +208,11 @@
             android:name=".main.station.activity.CompanyExpenditureDetailActivityB"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".main.photo.crop.CropActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+
     </application>
 
 </manifest>

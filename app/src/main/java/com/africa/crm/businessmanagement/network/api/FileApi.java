@@ -5,7 +5,6 @@ import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
 
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -25,4 +24,7 @@ public interface FileApi {
     @Multipart
     Observable<BaseEntity<FileInfoBean>> uploadFiles(@Part MultipartBody.Part part);
 
+    @POST("defile/fileupload")
+    @Multipart
+    Observable<BaseEntity<FileInfoBean>> uploadImages(@Part MultipartBody.Part part);
 }

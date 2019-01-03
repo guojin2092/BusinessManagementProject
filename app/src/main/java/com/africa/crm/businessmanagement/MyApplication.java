@@ -18,14 +18,12 @@ import android.support.multidex.MultiDexApplication;
 import android.support.v7.app.AppCompatDelegate;
 
 import com.africa.crm.businessmanagement.network.DataManager;
-import com.africa.crm.businessmanagement.widget.LogUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreater;
 import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.simplesoft.baselibrary.utils.DynamicTimeFormat;
-import com.tencent.smtt.sdk.QbSdk;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -538,6 +538,14 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
+    public Observable<FileInfoBean> uploadImages(String filePath) {
+        File file = new File(filePath);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpg"), file);
+        MultipartBody.Part part = MultipartBody.Part.createFormData("file", file.getName(), requestBody);
+        return fileApi.uploadImages(part).compose(RxUtils.<FileInfoBean>handleResult());
+    }
+
+    @Override
     public Observable<ResponseBody> downloadFiles(String code) {
         return mainApi.downloadFiles(code);
     }

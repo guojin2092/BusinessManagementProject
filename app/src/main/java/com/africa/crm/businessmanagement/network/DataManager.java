@@ -53,7 +53,6 @@ import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 import java.util.List;
 
 import io.reactivex.Observable;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 
 /**
@@ -515,6 +514,11 @@ public class DataManager implements HttpHelper {
     @Override
     public Observable<FileInfoBean> uploadFiles(String filePath) {
         return mHttpHelper.uploadFiles(filePath);
+    }
+
+    @Override
+    public Observable<FileInfoBean> uploadImages(String filePath) {
+        return mHttpHelper.uploadImages(filePath);
     }
 
     @Override

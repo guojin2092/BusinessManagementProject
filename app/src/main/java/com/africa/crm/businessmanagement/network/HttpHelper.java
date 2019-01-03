@@ -243,6 +243,8 @@ public interface HttpHelper {
 
     Observable<FileInfoBean> uploadFiles(String filePath);
 
+    Observable<FileInfoBean> uploadImages(String filePath);
+
     Observable<ResponseBody> downloadFiles(String code);
 
     Observable<CompanyPackagingDataInfoBean> getCompanyPackagingDataList(int page, int rows, String companyId, String userId, String createTimes, String createTimee);

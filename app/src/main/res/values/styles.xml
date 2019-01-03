@@ -147,4 +147,12 @@
         <item name="android:textColor">@color/A586683</item>
         <item name="android:background">@drawable/null_drawable</item>
     </style>
+
+    <style name="popwin_anim_style">
+        <!--window进入-->
+        <item name="android:windowEnterAnimation">@anim/popup_in</item>
+        <!--window退出-->
+        <item name="android:windowExitAnimation">@anim/popup_out</item>
+    </style>
+
 </resources>
