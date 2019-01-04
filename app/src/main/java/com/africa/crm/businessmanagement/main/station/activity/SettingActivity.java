@@ -184,9 +184,7 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
         tv_company_name.setText(userInfo.getCompanyName());
         tv_user_role.setText(userInfo.getRoleName());
         mHead = userInfo.getHead();
-        if (!TextUtils.isEmpty(mHead)) {
-            GlideUtil.showImg(iv_head_icon, mHead);
-        }
+        GlideUtil.showImg(iv_head_icon, mHead);
     }
 
     @Override

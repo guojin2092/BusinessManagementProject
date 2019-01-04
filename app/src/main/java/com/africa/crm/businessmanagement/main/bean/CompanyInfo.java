@@ -1,6 +1,8 @@
 package com.africa.crm.businessmanagement.main.bean;
 
-import java.io.Serializable;
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * Project：BusinessManagementProject
@@ -11,7 +13,10 @@ import java.io.Serializable;
  * Modification  History:
  * Why & What is modified:
  */
-public class CompanyInfo implements Serializable {
+@Entity
+public class CompanyInfo {
+    @Id(autoincrement = true)
+    private Long localId;
     private String area;//地区
     private String profession;//行业
     private String code;//编号
@@ -28,10 +33,37 @@ public class CompanyInfo implements Serializable {
     private String state;//状态 1：正常 2：禁用
     private String stateName;
     private String email;//邮箱
-    private String userName;//企业账号
-    private String companyId;//企业id
 
     private boolean chosen;
+
+    @Generated(hash = 670270883)
+    public CompanyInfo(Long localId, String area, String profession, String code,
+            String address, String numA, String mid, String type, String typeName,
+            String head, String createTime, String phone, String name, String id,
+            String state, String stateName, String email, boolean chosen) {
+        this.localId = localId;
+        this.area = area;
+        this.profession = profession;
+        this.code = code;
+        this.address = address;
+        this.numA = numA;
+        this.mid = mid;
+        this.type = type;
+        this.typeName = typeName;
+        this.head = head;
+        this.createTime = createTime;
+        this.phone = phone;
+        this.name = name;
+        this.id = id;
+        this.state = state;
+        this.stateName = stateName;
+        this.email = email;
+        this.chosen = chosen;
+    }
+
+    @Generated(hash = 1062273323)
+    public CompanyInfo() {
+    }
 
     public String getArea() {
         return area;
@@ -169,19 +201,15 @@ public class CompanyInfo implements Serializable {
         this.stateName = stateName;
     }
 
-    public String getUserName() {
-        return userName;
+    public Long getLocalId() {
+        return localId;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setLocalId(Long localId) {
+        this.localId = localId;
     }
 
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
+    public boolean getChosen() {
+        return this.chosen;
     }
 }

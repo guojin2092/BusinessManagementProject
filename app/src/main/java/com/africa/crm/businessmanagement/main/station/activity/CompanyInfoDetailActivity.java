@@ -11,12 +11,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyEvent;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
+import com.africa.crm.businessmanagement.main.dao.CompanyInfoDao;
+import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.glide.GlideUtil;
 import com.africa.crm.businessmanagement.main.photo.SinglePopup;
 import com.africa.crm.businessmanagement.main.photo.camera.CameraCore;
@@ -25,13 +29,22 @@ import com.africa.crm.businessmanagement.main.station.presenter.CompanyInfoPrese
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
 import com.africa.crm.businessmanagement.widget.MySpinner;
+import com.africa.crm.businessmanagement.widget.StringUtil;
+import com.africa.crm.businessmanagement.widget.TimeUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_INFO_DETAIL;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_STATE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_TYPE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SAVE_COMPANY_INFO;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_UPLOAD_IMAGE;
 
 public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresenter> implements CompanyInfoContract.View, SinglePopup.OnPopItemClickListener, CameraCore.CameraResult {
     @BindView(R.id.iv_icon)
@@ -77,6 +90,11 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     private SinglePopup singlePopup;
     private String mHeadCode = "";//头像ID
 
+    private GreendaoManager<CompanyInfo, CompanyInfoDao> mCompanyInfoDaoGreendaoManager;
+    private CompanyInfoDao mCompanyInfoDao;
+    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoGreendaoManager;
+    private DicInfoDao mDicInfoDao;
+
     /**
      * @param activity
      */
@@ -111,6 +129,14 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
                 .setNeedCrop(true)
                 .setZipInfo(new CameraCore.ZipInfo(true, 200, 200, 100 * 1024))
                 .build();
+        //得到Dao对象
+        mCompanyInfoDao = MyApplication.getInstance().getDaoSession().getCompanyInfoDao();
+        //得到Dao对象管理器
+        mCompanyInfoDaoGreendaoManager = new GreendaoManager<>(mCompanyInfoDao);
+        //得到Dao对象
+        mDicInfoDao = MyApplication.getInstance().getDaoSession().getDicInfoDao();
+        //得到Dao对象管理器
+        mDicInfoDaoGreendaoManager = new GreendaoManager<>(mDicInfoDao);
     }
 
     @Override
@@ -177,7 +203,9 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
                         return;
                     }
                 }
-                mPresenter.saveCompanyInfo(mCompanyId, mHeadCode, et_company_name.getText().toString(), et_company_code.getText().toString().trim(), mCompanyType, et_address.getText().toString().trim(), et_phone_number.getText().toString().trim(), et_email.getText().toString().trim(), et_company_code.getText().toString().trim(), et_area.getText().toString().trim(), et_profession.getText().toString().trim(), et_numA.getText().toString().trim(), mState);
+                CompanyInfo companyInfo = new CompanyInfo(0l, StringUtil.getText(et_area), StringUtil.getText(et_profession), StringUtil.getText(et_code), StringUtil.getText(et_address), StringUtil.getText(et_numA), StringUtil.getText(et_company_code), mCompanyType, spinner_type.getText(), mHeadCode, TimeUtils.getCurrentTime(new Date()), StringUtil.getText(et_phone_number), StringUtil.getText(et_company_name), "", mState, spinner_state.getText(), StringUtil.getText(et_email), false);
+                mCompanyInfoDaoGreendaoManager.insertOrReplace(companyInfo);
+                mPresenter.saveCompanyInfo(mCompanyId, mHeadCode, et_company_name.getText().toString(), et_code.getText().toString().trim(), mCompanyType, et_address.getText().toString().trim(), et_phone_number.getText().toString().trim(), et_email.getText().toString().trim(), et_company_code.getText().toString().trim(), et_area.getText().toString().trim(), et_profession.getText().toString().trim(), et_numA.getText().toString().trim(), mState);
                 break;
 
         }
@@ -232,9 +260,7 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
             mState = companyInfo.getState();
             //头像
             mHeadCode = companyInfo.getHead();
-            if (!TextUtils.isEmpty(mHeadCode)) {
-                GlideUtil.showImg(iv_icon, mHeadCode);
-            }
+            GlideUtil.showImg(iv_icon, mHeadCode);
         }
     }
 
@@ -242,6 +268,11 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     public void getCompanyType(List<DicInfo> dicInfoList) {
         mSpinnerCompanyTypeList.clear();
         mSpinnerCompanyTypeList.addAll(dicInfoList);
+        mDicInfoDaoGreendaoManager.deleteAll();
+        for (DicInfo dicInfo : mSpinnerStateList) {
+            dicInfo.setType(COMPANY_TYPE_CODE);
+            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
+        }
         spinner_type.setListDatas(this, mSpinnerCompanyTypeList);
 
         spinner_type.addOnItemClickListener(new MySpinner.OnItemClickListener() {
@@ -306,9 +337,7 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     public void uploadImages(FileInfoBean fileInfoBean) {
         if (!TextUtils.isEmpty(fileInfoBean.getCode())) {
             mHeadCode = fileInfoBean.getCode();
-            if (!TextUtils.isEmpty(mHeadCode)) {
-                GlideUtil.showImg(iv_icon, mHeadCode);
-            }
+            GlideUtil.showImg(iv_icon, mHeadCode);
         }
     }
 
@@ -327,5 +356,27 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         cameraCore.onPermission(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        switch (port) {
+            case REQUEST_COMPANY_TYPE:
+                getCompanyType(mDicInfoDaoGreendaoManager.queryAll());
+                break;
+            case REQUEST_COMPANY_STATE:
+
+                break;
+            case REQUEST_UPLOAD_IMAGE:
+
+                break;
+            case REQUEST_COMPANY_INFO_DETAIL:
+
+                break;
+            case REQUEST_SAVE_COMPANY_INFO:
+
+                break;
+        }
     }
 }

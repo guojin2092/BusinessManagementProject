@@ -1,6 +1,8 @@
 package com.africa.crm.businessmanagement.main.bean;
 
-import java.io.Serializable;
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * Project：BusinessManagementProject
@@ -11,13 +13,51 @@ import java.io.Serializable;
  * Modification  History:
  * Why & What is modified:
  */
-public class DicInfo implements Serializable {
+@Entity
+public class DicInfo {
+    @Id(autoincrement = true)
+    private Long localId;
+    private String type;
     private String text;
     private String code;
 
     public DicInfo(String text, String code) {
         this.text = text;
         this.code = code;
+    }
+
+    public DicInfo(String type, String text, String code) {
+        this.type = type;
+        this.text = text;
+        this.code = code;
+    }
+
+    @Generated(hash = 1430969353)
+    public DicInfo(Long localId, String type, String text, String code) {
+        this.localId = localId;
+        this.type = type;
+        this.text = text;
+        this.code = code;
+    }
+
+    @Generated(hash = 863027882)
+    public DicInfo() {
+    }
+
+    public Long getLocalId() {
+        return localId;
+    }
+
+    public void setLocalId(Long localId) {
+        this.localId = localId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getText() {

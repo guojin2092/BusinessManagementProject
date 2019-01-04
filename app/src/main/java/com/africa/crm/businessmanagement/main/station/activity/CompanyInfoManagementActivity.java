@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyEvent;
@@ -22,6 +23,8 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
+import com.africa.crm.businessmanagement.main.dao.CompanyInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.CompanyInfoListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyInfoManagementContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyInfoManagementPresenter;
@@ -39,6 +42,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_INFO_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DELETE_COMPANY_INFO;
 
 /**
  * Project：BusinessManagementProject
@@ -60,12 +66,17 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
     RecyclerView recyclerView;
 
     private CompanyInfoListAdapter mCompanyInfoListAdapter;
-    private List<CompanyInfo> mCompanyInfoList = new ArrayList<>();
+    private List<CompanyInfo> mCompanyInfoList = new ArrayList<>();//网络数据
+    private List<CompanyInfo> mCompanyInfoLocalList = new ArrayList<>();//本地数据
+    private List<CompanyInfo> mCompanyInfoAddList = new ArrayList<>();//差异数据
     private List<CompanyInfo> mDeleteList = new ArrayList<>();
     private boolean mShowCheckBox = false;
 
     private WorkStationInfo mWorkStationInfo;
     private AlertDialog mDeleteDialog;
+
+    private GreendaoManager<CompanyInfo, CompanyInfoDao> mGreendaoManager;
+    private CompanyInfoDao mCompanyInfoDao;
 
     /**
      * @param activity
@@ -98,6 +109,11 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
         ll_add.setOnClickListener(this);
         tv_delete.setOnClickListener(this);
         titlebar_right.setText(R.string.delete);
+        //得到Dao对象
+        mCompanyInfoDao = MyApplication.getInstance().getDaoSession().getCompanyInfoDao();
+        //得到Dao对象管理器
+        mGreendaoManager = new GreendaoManager<>(mCompanyInfoDao);
+        mCompanyInfoLocalList = mGreendaoManager.queryAll();
     }
 
     @Override
@@ -209,6 +225,7 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
                     mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
                 }
                 mCompanyInfoList.clear();
+                mCompanyInfoAddList.clear();
                 recyclerView.smoothScrollToPosition(0);
             }
             if (mRefreshLayout != null) {
@@ -220,6 +237,20 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
             }
             if (!ListUtils.isEmpty(companyInfoBean.getRows())) {
                 mCompanyInfoList.addAll(companyInfoBean.getRows());
+                if (!ListUtils.isEmpty(mCompanyInfoLocalList)) {
+                    for (CompanyInfo companyInfo : mCompanyInfoList) {
+                        for (CompanyInfo companyInfo2 : mCompanyInfoLocalList) {
+                            if (!companyInfo.getId().contains(companyInfo2.getId())) {
+                                mCompanyInfoAddList.add(companyInfo);
+                            }
+                        }
+                    }
+                } else {
+                    mCompanyInfoAddList.addAll(mCompanyInfoList);
+                }
+                for (CompanyInfo companyInfo : mCompanyInfoAddList) {
+                    mGreendaoManager.insertOrReplace(companyInfo);
+                }
                 if (mCompanyInfoListAdapter != null) {
                     mCompanyInfoListAdapter.notifyDataSetChanged();
                 }
@@ -248,6 +279,7 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
                 if (mCompanyInfoList.contains(mDeleteList.get(i))) {
                     int position = mCompanyInfoList.indexOf(mDeleteList.get(i));
                     mCompanyInfoList.remove(mDeleteList.get(i));
+                    mGreendaoManager.delete(mDeleteList.get(i).getLocalId());
                     if (mCompanyInfoListAdapter != null) {
                         mCompanyInfoListAdapter.notifyItemRemoved(position);
                     }
@@ -277,5 +309,20 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        mRefreshLayout.setEnableLoadmore(false);
+        if (port.equals(REQUEST_COMPANY_INFO_LIST)) {
+            CompanyInfoBean companyInfoBean = new CompanyInfoBean();
+            companyInfoBean.setRows(mCompanyInfoLocalList);
+            getCompanyInfoList(companyInfoBean);
+        } else if (port.equals(REQUEST_DELETE_COMPANY_INFO)) {
+            BaseEntity baseEntity = new BaseEntity();
+            baseEntity.setSuccess(true);
+            deleteCompanyInfo(baseEntity);
+        }
     }
 }

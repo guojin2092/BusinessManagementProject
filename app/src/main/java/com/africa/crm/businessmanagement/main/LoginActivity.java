@@ -3,10 +3,10 @@ package com.africa.crm.businessmanagement.main;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +18,7 @@ import com.africa.crm.businessmanagement.main.contract.LoginContract;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.presenter.LoginPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseEasyMvpActivity;
+import com.africa.crm.businessmanagement.network.error.ComException;
 
 import butterknife.BindView;
 
@@ -137,4 +138,16 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
         }
     }
 
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        toastMsg(new ComException(ComException.HTTP_ERROR, "网络连接异常，查看网络情况", "去设置", new ComException.OnErrorListener() {
+            @Override
+            public void errorAction() {
+                //如果检测到断网情况,可在此处处理,加载本地数据库数据
+                Intent intent = new Intent(Settings.ACTION_SETTINGS);
+                startActivity(intent);
+            }
+        }));
+    }
 }

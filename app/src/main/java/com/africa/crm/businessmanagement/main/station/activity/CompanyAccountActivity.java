@@ -17,8 +17,8 @@ import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyAccountEvent;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
-import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
-import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfoBean;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.CompanyAccountListAdapter;
@@ -62,8 +62,8 @@ public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccoun
     RecyclerView recyclerView;
 
     private CompanyAccountListAdapter mCompanyAccountListAdapter;
-    private List<CompanyInfo> mCompanyInfoList = new ArrayList<>();
-    private List<CompanyInfo> mDeleteList = new ArrayList<>();
+    private List<CompanyAccountInfo> mCompanyInfoList = new ArrayList<>();
+    private List<CompanyAccountInfo> mDeleteList = new ArrayList<>();
     private boolean mShowCheckBox = false;
 
     private WorkStationInfo mWorkStationInfo;
@@ -200,9 +200,9 @@ public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccoun
                 break;
             case R.id.tv_delete:
                 mDeleteList.clear();
-                for (CompanyInfo companyInfo : mCompanyInfoList) {
-                    if (companyInfo.isChosen()) {
-                        mDeleteList.add(companyInfo);
+                for (CompanyAccountInfo companyAccountInfo : mCompanyInfoList) {
+                    if (companyAccountInfo.isChosen()) {
+                        mDeleteList.add(companyAccountInfo);
                     }
                 }
                 if (ListUtils.isEmpty(mDeleteList)) {
@@ -244,10 +244,10 @@ public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccoun
     }
 
     @Override
-    public void getCompanyAccounList(CompanyInfoBean companyInfoBean) {
-        if (companyInfoBean != null) {
+    public void getCompanyAccounList(CompanyAccountInfoBean companyAccountInfoBean) {
+        if (companyAccountInfoBean != null) {
             if (page == 1) {
-                if (ListUtils.isEmpty(companyInfoBean.getRows())) {
+                if (ListUtils.isEmpty(companyAccountInfoBean.getRows())) {
                     layout_network_error.setVisibility(View.GONE);
                     mRefreshLayout.getLayout().setVisibility(View.GONE);
                     layout_no_data.setVisibility(View.VISIBLE);
@@ -263,14 +263,14 @@ public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccoun
                 recyclerView.smoothScrollToPosition(0);
             }
             if (mRefreshLayout != null) {
-                if (ListUtils.isEmpty(companyInfoBean.getRows()) && page > 1) {
+                if (ListUtils.isEmpty(companyAccountInfoBean.getRows()) && page > 1) {
                     mRefreshLayout.finishLoadmoreWithNoMoreData();
                 } else {
                     mRefreshLayout.finishLoadmore();
                 }
             }
-            if (!ListUtils.isEmpty(companyInfoBean.getRows())) {
-                mCompanyInfoList.addAll(companyInfoBean.getRows());
+            if (!ListUtils.isEmpty(companyAccountInfoBean.getRows())) {
+                mCompanyInfoList.addAll(companyAccountInfoBean.getRows());
                 if (mCompanyAccountListAdapter != null) {
                     mCompanyAccountListAdapter.notifyDataSetChanged();
                 }

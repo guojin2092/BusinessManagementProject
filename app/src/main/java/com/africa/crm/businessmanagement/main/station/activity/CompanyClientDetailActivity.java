@@ -259,9 +259,7 @@ public class CompanyClientDetailActivity extends BaseMvpActivity<CompanyClientDe
         et_address.setText(companyClientInfo.getAddress());
         et_remark.setText(companyClientInfo.getRemark());
         mHeadCode = companyClientInfo.getHead();
-        if (!TextUtils.isEmpty(mHeadCode)) {
-            GlideUtil.showImg(iv_icon, mHeadCode);
-        }
+        GlideUtil.showImg(iv_icon, mHeadCode);
     }
 
     @Override
@@ -303,9 +301,7 @@ public class CompanyClientDetailActivity extends BaseMvpActivity<CompanyClientDe
     public void uploadImages(FileInfoBean fileInfoBean) {
         if (!TextUtils.isEmpty(fileInfoBean.getCode())) {
             mHeadCode = fileInfoBean.getCode();
-            if (!TextUtils.isEmpty(mHeadCode)) {
-                GlideUtil.showImg(iv_icon, mHeadCode);
-            }
+            GlideUtil.showImg(iv_icon, mHeadCode);
         }
     }
 

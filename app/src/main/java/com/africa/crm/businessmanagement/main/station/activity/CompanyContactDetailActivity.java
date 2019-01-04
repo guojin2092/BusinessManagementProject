@@ -269,9 +269,7 @@ public class CompanyContactDetailActivity extends BaseMvpActivity<CompanyContact
             et_zip_address.setText(companyContactInfo.getMailAddress());
             et_remark.setText(companyContactInfo.getRemark());
             mHeadCode = companyContactInfo.getHead();
-            if (!TextUtils.isEmpty(mHeadCode)) {
-                GlideUtil.showImg(iv_icon, mHeadCode);
-            }
+            GlideUtil.showImg(iv_icon, mHeadCode);
         }
     }
 
@@ -314,9 +312,7 @@ public class CompanyContactDetailActivity extends BaseMvpActivity<CompanyContact
     public void uploadImages(FileInfoBean fileInfoBean) {
         if (!TextUtils.isEmpty(fileInfoBean.getCode())) {
             mHeadCode = fileInfoBean.getCode();
-            if (!TextUtils.isEmpty(mHeadCode)) {
-                GlideUtil.showImg(iv_icon, mHeadCode);
-            }
+            GlideUtil.showImg(iv_icon, mHeadCode);
         }
     }
 

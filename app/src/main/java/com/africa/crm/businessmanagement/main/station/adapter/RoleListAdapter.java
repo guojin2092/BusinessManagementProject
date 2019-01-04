@@ -1,12 +1,10 @@
 package com.africa.crm.businessmanagement.main.station.adapter;
 
 import android.support.annotation.Nullable;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
-import com.africa.crm.businessmanagement.main.glide.GlideUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 

@@ -76,6 +76,11 @@ public class BaseRxFragment extends Fragment implements BaseView {
         toastMsg(error);
     }
 
+    @Override
+    public void loadLocalData(String port) {
+        onDialogHide();
+    }
+
     public final void toastMsg(final ComException error) {
         Snackbar.make(getView() == null ? getActivity().getWindow().getDecorView() : getView(), ErrorMsg.showErrorMsg(error.getMessage()), Snackbar.LENGTH_LONG)
                 .setAction(error.getActionName() == null ? getString(R.string.i_know) : error.getActionName()

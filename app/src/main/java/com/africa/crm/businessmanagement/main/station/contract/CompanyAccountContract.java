@@ -1,7 +1,7 @@
 package com.africa.crm.businessmanagement.main.station.contract;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
-import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfoBean;
 import com.africa.crm.businessmanagement.mvp.presenter.IBasePresenter;
 import com.africa.crm.businessmanagement.network.base.BaseView;
 
@@ -18,7 +18,7 @@ public class CompanyAccountContract {
 
     public interface View extends BaseView {
 
-        void getCompanyAccounList(CompanyInfoBean companyInfoBean);
+        void getCompanyAccounList(CompanyAccountInfoBean companyAccountInfoBean);
 
         void deleteCompanyAccount(BaseEntity baseEntity);
     }

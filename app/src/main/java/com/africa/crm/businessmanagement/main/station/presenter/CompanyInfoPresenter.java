@@ -12,7 +12,12 @@ import com.africa.crm.businessmanagement.network.util.RxUtils;
 import java.util.List;
 
 import io.reactivex.functions.Consumer;
-import okhttp3.ResponseBody;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_INFO_DETAIL;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_STATE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_TYPE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SAVE_COMPANY_INFO;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_UPLOAD_IMAGE;
 
 /**
  * Project：BusinessManagementProject
@@ -34,7 +39,7 @@ public class CompanyInfoPresenter extends RxPresenter<CompanyInfoContract.View> 
                     public void accept(List<DicInfo> dicInfoList) throws Exception {
                         mView.getCompanyType(dicInfoList);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_COMPANY_TYPE)));
     }
 
     @Override
@@ -46,7 +51,7 @@ public class CompanyInfoPresenter extends RxPresenter<CompanyInfoContract.View> 
                     public void accept(List<DicInfo> dicInfoList) throws Exception {
                         mView.getState(dicInfoList);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_COMPANY_STATE)));
     }
 
     @Override
@@ -58,7 +63,7 @@ public class CompanyInfoPresenter extends RxPresenter<CompanyInfoContract.View> 
                     public void accept(FileInfoBean fileInfoBean) throws Exception {
                         mView.uploadImages(fileInfoBean);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_UPLOAD_IMAGE)));
     }
 
     @Override
@@ -70,7 +75,7 @@ public class CompanyInfoPresenter extends RxPresenter<CompanyInfoContract.View> 
                     public void accept(CompanyInfo companyInfo) throws Exception {
                         mView.getCompanyInfoDetail(companyInfo);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_COMPANY_INFO_DETAIL)));
     }
 
     @Override
@@ -82,6 +87,6 @@ public class CompanyInfoPresenter extends RxPresenter<CompanyInfoContract.View> 
                     public void accept(BaseEntity baseEntity) throws Exception {
                         mView.saveCompanyInfo(baseEntity);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_SAVE_COMPANY_INFO)));
     }
 }

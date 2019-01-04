@@ -1,8 +1,5 @@
 package com.africa.crm.businessmanagement.network.error;
 
-import android.content.Intent;
-import android.provider.Settings;
-
 import com.africa.crm.businessmanagement.network.base.BaseView;
 import com.africa.crm.businessmanagement.widget.JumpPermissionManagement;
 import com.africa.crm.businessmanagement.widget.LogUtil;
@@ -23,10 +20,16 @@ import retrofit2.HttpException;
 public class ComConsumer implements Consumer<Throwable> {
 
     private BaseView mView;
+    private String port;
 
 
     public ComConsumer(BaseView view) {
         mView = view;
+    }
+
+    public ComConsumer(BaseView view, String port) {
+        mView = view;
+        this.port = port;
     }
 
     public BaseView getView() {
@@ -40,6 +43,8 @@ public class ComConsumer implements Consumer<Throwable> {
             if (throwable instanceof ComException) {
                 handle((ComException) throwable);
             } else if (throwable instanceof UnknownHostException) {
+                mView.loadLocalData(port);
+/*
                 handle(new ComException(ComException.HTTP_ERROR, "网络连接异常，查看网络情况", "去设置", new ComException.OnErrorListener() {
                     @Override
                     public void errorAction() {
@@ -48,6 +53,7 @@ public class ComConsumer implements Consumer<Throwable> {
                         mView.getBVActivity().startActivity(intent);
                     }
                 }));
+*/
             } else if (throwable instanceof PermissionsException) {
                 handle(new ComException(ComException.NO_PERMISSIONS, throwable.getMessage(), "去设置", new ComException.OnErrorListener() {
                     @Override

@@ -2,6 +2,7 @@ package com.africa.crm.businessmanagement.network.api;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyClientInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyClientInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
@@ -133,7 +134,7 @@ public interface MainApi {
 
     @FormUrlEncoded
     @POST("companyUser/grid")
-    Observable<BaseEntity<CompanyInfoBean>> getCompanyAccounList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("userName") String userName, @Field("name") String name);
+    Observable<BaseEntity<CompanyAccountInfoBean>> getCompanyAccounList(@Field("page") int page, @Field("rows") int rows, @Field("companyId") String companyId, @Field("userName") String userName, @Field("name") String name);
 
     @FormUrlEncoded
     @POST("companyUser/deleteById")

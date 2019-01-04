@@ -2,6 +2,7 @@ package com.africa.crm.businessmanagement.network;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyClientInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyClientInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
@@ -194,8 +195,8 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
-    public Observable<CompanyInfoBean> getCompanyAccounList(int page, int rows, String companyId, String userName, String name) {
-        return mainApi.getCompanyAccounList(page, rows, companyId, userName, name).compose(RxUtils.<CompanyInfoBean>handleResult());
+    public Observable<CompanyAccountInfoBean> getCompanyAccounList(int page, int rows, String companyId, String userName, String name) {
+        return mainApi.getCompanyAccounList(page, rows, companyId, userName, name).compose(RxUtils.<CompanyAccountInfoBean>handleResult());
     }
 
     @Override

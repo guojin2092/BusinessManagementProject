@@ -1,14 +1,13 @@
 package com.africa.crm.businessmanagement.main.station.adapter;
 
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
 import com.africa.crm.businessmanagement.main.glide.GlideUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -24,10 +23,10 @@ import java.util.List;
  * Modification  History:
  * Why & What is modified:
  */
-public class CompanyAccountListAdapter extends BaseQuickAdapter<CompanyInfo, BaseViewHolder> {
+public class CompanyAccountListAdapter extends BaseQuickAdapter<CompanyAccountInfo, BaseViewHolder> {
     private boolean mIsDeleted = false;
 
-    public CompanyAccountListAdapter(@Nullable List<CompanyInfo> data) {
+    public CompanyAccountListAdapter(@Nullable List<CompanyAccountInfo> data) {
         super(R.layout.item_company_account_list, data);
     }
 
@@ -41,7 +40,7 @@ public class CompanyAccountListAdapter extends BaseQuickAdapter<CompanyInfo, Bas
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, CompanyInfo item) {
+    protected void convert(BaseViewHolder helper, CompanyAccountInfo item) {
         ImageView iv_icon = helper.getView(R.id.iv_icon);
         TextView tv_company = helper.getView(R.id.tv_company);
         TextView tv_location = helper.getView(R.id.tv_location);

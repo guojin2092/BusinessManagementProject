@@ -20,6 +20,8 @@ public interface BaseView {
 
     void onTakeException(@NonNull ComException error);
 
+    void loadLocalData(String port);
+
     void reLogin();
 
     Context getBVContext();

@@ -279,9 +279,7 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
         spinner_state.setText(userInfo.getStateName());
         spinner_role.setText(userInfo.getRoleName());
         mHeadCode = userInfo.getHead();
-        if (!TextUtils.isEmpty(mHeadCode)) {
-            GlideUtil.showImg(iv_icon, mHeadCode);
-        }
+        GlideUtil.showImg(iv_icon, mHeadCode);
     }
 
     @Override
@@ -370,9 +368,7 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
     public void uploadImages(FileInfoBean fileInfoBean) {
         if (!TextUtils.isEmpty(fileInfoBean.getCode())) {
             mHeadCode = fileInfoBean.getCode();
-            if (!TextUtils.isEmpty(mHeadCode)) {
-                GlideUtil.showImg(iv_icon, mHeadCode);
-            }
+            GlideUtil.showImg(iv_icon, mHeadCode);
         }
     }
 

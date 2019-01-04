@@ -1,6 +1,7 @@
 package com.africa.crm.businessmanagement.main.station.presenter;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
+import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyAccountContract;
 import com.africa.crm.businessmanagement.mvp.presenter.RxPresenter;
@@ -22,10 +23,10 @@ public class CompanyAccountPresenter extends RxPresenter<CompanyAccountContract.
     @Override
     public void getCompanyAccounList(int page, int rows, String companyId, String userName, String name) {
         addDisposable(mDataManager.getCompanyAccounList(page, rows, companyId, userName, name)
-                .compose(RxUtils.<CompanyInfoBean>ioToMain(mView))
-                .subscribe(new Consumer<CompanyInfoBean>() {
+                .compose(RxUtils.<CompanyAccountInfoBean>ioToMain(mView))
+                .subscribe(new Consumer<CompanyAccountInfoBean>() {
                     @Override
-                    public void accept(CompanyInfoBean companyInfoBean) throws Exception {
+                    public void accept(CompanyAccountInfoBean companyInfoBean) throws Exception {
                         mView.getCompanyAccounList(companyInfoBean);
                     }
                 }, new ComConsumer(mView)));

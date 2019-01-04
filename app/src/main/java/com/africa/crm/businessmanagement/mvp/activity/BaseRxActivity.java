@@ -30,7 +30,7 @@ import io.reactivex.disposables.Disposable;
  * Modification  History:
  * Why & What is modified:
  */
-public abstract class BaseRxActivity extends AppCompatActivity implements BaseView {
+public class BaseRxActivity extends AppCompatActivity implements BaseView {
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -89,6 +89,11 @@ public abstract class BaseRxActivity extends AppCompatActivity implements BaseVi
     @Override
     public void onTakeException(@NonNull ComException error) {
         toastMsg(error);
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        onDialogHide();
     }
 
     public final void toastMsg(final ComException error) {

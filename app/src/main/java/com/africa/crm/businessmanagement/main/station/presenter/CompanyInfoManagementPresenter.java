@@ -9,6 +9,9 @@ import com.africa.crm.businessmanagement.network.util.RxUtils;
 
 import io.reactivex.functions.Consumer;
 
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_INFO_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DELETE_COMPANY_INFO;
+
 /**
  * Project：BusinessManagementProject
  * Author:  guojin
@@ -28,7 +31,7 @@ public class CompanyInfoManagementPresenter extends RxPresenter<CompanyInfoManag
                     public void accept(CompanyInfoBean companyInfoBean) throws Exception {
                         mView.getCompanyInfoList(companyInfoBean);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_COMPANY_INFO_LIST)));
 
     }
 
@@ -41,6 +44,6 @@ public class CompanyInfoManagementPresenter extends RxPresenter<CompanyInfoManag
                     public void accept(BaseEntity baseEntity) throws Exception {
                         mView.deleteCompanyInfo(baseEntity);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_DELETE_COMPANY_INFO)));
     }
 }

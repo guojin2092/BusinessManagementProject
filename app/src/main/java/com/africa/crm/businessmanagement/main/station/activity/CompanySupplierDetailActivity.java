@@ -217,9 +217,7 @@ public class CompanySupplierDetailActivity extends BaseMvpActivity<CompanySuppli
         et_remark.setText(companySupplierInfo.getRemark());
         //头像
         mHeadCode = companySupplierInfo.getHead();
-        if (!TextUtils.isEmpty(mHeadCode)) {
-            GlideUtil.showImg(iv_icon, mHeadCode);
-        }
+        GlideUtil.showImg(iv_icon, mHeadCode);
     }
 
     @Override
@@ -260,9 +258,7 @@ public class CompanySupplierDetailActivity extends BaseMvpActivity<CompanySuppli
     public void uploadImages(FileInfoBean fileInfoBean) {
         if (!TextUtils.isEmpty(fileInfoBean.getCode())) {
             mHeadCode = fileInfoBean.getCode();
-            if (!TextUtils.isEmpty(mHeadCode)) {
-                GlideUtil.showImg(iv_icon, mHeadCode);
-            }
+            GlideUtil.showImg(iv_icon, mHeadCode);
         }
     }
 

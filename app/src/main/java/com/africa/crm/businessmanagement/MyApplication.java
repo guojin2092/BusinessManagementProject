@@ -12,11 +12,14 @@ package com.africa.crm.businessmanagement;
 
 import android.app.Activity;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
 import android.support.v7.app.AppCompatDelegate;
 
+import com.africa.crm.businessmanagement.main.dao.DaoMaster;
+import com.africa.crm.businessmanagement.main.dao.DaoSession;
 import com.africa.crm.businessmanagement.network.DataManager;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreater;
@@ -37,10 +40,10 @@ public class MyApplication extends MultiDexApplication {
      */
     private List<Activity> mActivitys;
 
-/*    private DaoMaster.DevOpenHelper mHelper;
+    private DaoMaster.DevOpenHelper mHelper;
     private SQLiteDatabase db;
     private DaoMaster mDaoMaster;
-    private DaoSession mDaoSession;*/
+    private DaoSession mDaoSession;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -62,7 +65,7 @@ public class MyApplication extends MultiDexApplication {
         mDataManager = DataManager.newInstance();
         mActivitys = new LinkedList<>();
         registerActivityListener();
-//        setDatabase();
+        setDatabase();
     }
 
     public static MyApplication getInstance() {
@@ -76,27 +79,27 @@ public class MyApplication extends MultiDexApplication {
         return mDataManager;
     }
 
-//    /**
-//     *      * 设置greenDao
-//     */
-//    private void setDatabase() {
-//        //创建数据库crm-db"
-//        mHelper = new DaoMaster.DevOpenHelper(this, "crm-db", null);
-//        //获取可写数据库
-//        db = mHelper.getWritableDatabase();
-//        //获取数据库对象
-//        mDaoMaster = new DaoMaster(db);
-//        //获取Dao对象管理者
-//        mDaoSession = mDaoMaster.newSession();
-//    }
-//
-//    public DaoSession getDaoSession() {
-//        return mDaoSession;
-//    }
-//
-//    public SQLiteDatabase getDb() {
-//        return db;
-//    }
+    /**
+     *      * 设置greenDao
+     */
+    private void setDatabase() {
+        //创建数据库crm-db"
+        mHelper = new DaoMaster.DevOpenHelper(this, "crm-db", null);
+        //获取可写数据库
+        db = mHelper.getWritableDatabase();
+        //获取数据库对象
+        mDaoMaster = new DaoMaster(db);
+        //获取Dao对象管理者
+        mDaoSession = mDaoMaster.newSession();
+    }
+
+    public DaoSession getDaoSession() {
+        return mDaoSession;
+    }
+
+    public SQLiteDatabase getDb() {
+        return db;
+    }
 
 
     public List<Activity> getAllActivitys() {

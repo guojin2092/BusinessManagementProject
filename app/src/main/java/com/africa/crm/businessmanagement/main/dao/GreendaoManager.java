@@ -76,4 +76,5 @@ public class GreendaoManager<T, D extends AbstractDao<T, Long>> {
         return DBbeans;
     }
 
+
 }

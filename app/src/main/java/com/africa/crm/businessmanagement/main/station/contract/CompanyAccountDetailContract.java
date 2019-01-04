@@ -2,7 +2,6 @@ package com.africa.crm.businessmanagement.main.station.contract;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
-import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
