@@ -113,7 +113,6 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
         mCompanyInfoDao = MyApplication.getInstance().getDaoSession().getCompanyInfoDao();
         //得到Dao对象管理器
         mGreendaoManager = new GreendaoManager<>(mCompanyInfoDao);
-        mCompanyInfoLocalList = mGreendaoManager.queryAll();
     }
 
     @Override
@@ -226,6 +225,8 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
                 }
                 mCompanyInfoList.clear();
                 mCompanyInfoAddList.clear();
+                mCompanyInfoLocalList.clear();
+                mCompanyInfoLocalList = mGreendaoManager.queryAll();
                 recyclerView.smoothScrollToPosition(0);
             }
             if (mRefreshLayout != null) {
@@ -317,7 +318,7 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
         mRefreshLayout.setEnableLoadmore(false);
         if (port.equals(REQUEST_COMPANY_INFO_LIST)) {
             CompanyInfoBean companyInfoBean = new CompanyInfoBean();
-            companyInfoBean.setRows(mCompanyInfoLocalList);
+            companyInfoBean.setRows(mGreendaoManager.queryAll());
             getCompanyInfoList(companyInfoBean);
         } else if (port.equals(REQUEST_DELETE_COMPANY_INFO)) {
             BaseEntity baseEntity = new BaseEntity();
