@@ -30,6 +30,7 @@ import com.africa.crm.businessmanagement.main.station.contract.CompanyInfoManage
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyInfoManagementPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.KeyboardUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
@@ -68,7 +69,6 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
     private CompanyInfoListAdapter mCompanyInfoListAdapter;
     private List<CompanyInfo> mCompanyInfoList = new ArrayList<>();//网络数据
     private List<CompanyInfo> mCompanyInfoLocalList = new ArrayList<>();//本地数据
-    private List<CompanyInfo> mCompanyInfoAddList = new ArrayList<>();//差异数据
     private List<CompanyInfo> mDeleteList = new ArrayList<>();
     private boolean mShowCheckBox = false;
 
@@ -77,6 +77,8 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
 
     private GreendaoManager<CompanyInfo, CompanyInfoDao> mGreendaoManager;
     private CompanyInfoDao mCompanyInfoDao;
+
+    private boolean mIsLocal = false;
 
     /**
      * @param activity
@@ -224,8 +226,6 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
                     mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
                 }
                 mCompanyInfoList.clear();
-                mCompanyInfoAddList.clear();
-                mCompanyInfoLocalList.clear();
                 mCompanyInfoLocalList = mGreendaoManager.queryAll();
                 recyclerView.smoothScrollToPosition(0);
             }
@@ -238,18 +238,8 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
             }
             if (!ListUtils.isEmpty(companyInfoBean.getRows())) {
                 mCompanyInfoList.addAll(companyInfoBean.getRows());
-                if (!ListUtils.isEmpty(mCompanyInfoLocalList)) {
-                    for (CompanyInfo companyInfo : mCompanyInfoList) {
-                        for (CompanyInfo companyInfo2 : mCompanyInfoLocalList) {
-                            if (!companyInfo.getId().contains(companyInfo2.getId())) {
-                                mCompanyInfoAddList.add(companyInfo);
-                            }
-                        }
-                    }
-                } else {
-                    mCompanyInfoAddList.addAll(mCompanyInfoList);
-                }
-                for (CompanyInfo companyInfo : mCompanyInfoAddList) {
+                List<CompanyInfo> addList = DifferentDataUtil.addInfoDataToLocal(mCompanyInfoList, mCompanyInfoLocalList);
+                for (CompanyInfo companyInfo : addList) {
                     mGreendaoManager.insertOrReplace(companyInfo);
                 }
                 if (mCompanyInfoListAdapter != null) {
@@ -271,16 +261,23 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
                 });
             }
         }
+
     }
 
     @Override
-    public void deleteCompanyInfo(BaseEntity baseEntity) {
+    public void deleteCompanyInfo(BaseEntity baseEntity, boolean isdeleted, boolean isLocal) {
         if (baseEntity.isSuccess()) {
             for (int i = 0; i < mDeleteList.size(); i++) {
                 if (mCompanyInfoList.contains(mDeleteList.get(i))) {
                     int position = mCompanyInfoList.indexOf(mDeleteList.get(i));
                     mCompanyInfoList.remove(mDeleteList.get(i));
-                    mGreendaoManager.delete(mDeleteList.get(i).getLocalId());
+                    for (CompanyInfo companyInfo : mCompanyInfoLocalList) {
+                        if (mDeleteList.get(i).getId().equals(companyInfo.getId())) {
+                            companyInfo.setIsDeleted(isdeleted);
+                            companyInfo.setIsLocal(isLocal);
+                            mGreendaoManager.correct(companyInfo);
+                        }
+                    }
                     if (mCompanyInfoListAdapter != null) {
                         mCompanyInfoListAdapter.notifyItemRemoved(position);
                     }
@@ -317,13 +314,19 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
         super.loadLocalData(port);
         mRefreshLayout.setEnableLoadmore(false);
         if (port.equals(REQUEST_COMPANY_INFO_LIST)) {
+            List<CompanyInfo> companyInfoList = new ArrayList<>();
+            for (CompanyInfo companyInfo : mGreendaoManager.queryAll()) {
+                if (!companyInfo.getIsDeleted()) {
+                    companyInfoList.add(companyInfo);
+                }
+            }
             CompanyInfoBean companyInfoBean = new CompanyInfoBean();
-            companyInfoBean.setRows(mGreendaoManager.queryAll());
+            companyInfoBean.setRows(companyInfoList);
             getCompanyInfoList(companyInfoBean);
         } else if (port.equals(REQUEST_DELETE_COMPANY_INFO)) {
             BaseEntity baseEntity = new BaseEntity();
             baseEntity.setSuccess(true);
-            deleteCompanyInfo(baseEntity);
+            deleteCompanyInfo(baseEntity, true, true);
         }
     }
 }

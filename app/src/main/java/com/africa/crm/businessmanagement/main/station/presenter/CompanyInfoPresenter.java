@@ -4,6 +4,7 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyInfoContract;
 import com.africa.crm.businessmanagement.mvp.presenter.RxPresenter;
 import com.africa.crm.businessmanagement.network.error.ComConsumer;
@@ -61,7 +62,7 @@ public class CompanyInfoPresenter extends RxPresenter<CompanyInfoContract.View> 
                 .subscribe(new Consumer<FileInfoBean>() {
                     @Override
                     public void accept(FileInfoBean fileInfoBean) throws Exception {
-                        mView.uploadImages(fileInfoBean);
+                        mView.uploadImages(fileInfoBean, false);
                     }
                 }, new ComConsumer(mView, REQUEST_UPLOAD_IMAGE)));
     }
@@ -73,7 +74,7 @@ public class CompanyInfoPresenter extends RxPresenter<CompanyInfoContract.View> 
                 .subscribe(new Consumer<CompanyInfo>() {
                     @Override
                     public void accept(CompanyInfo companyInfo) throws Exception {
-                        mView.getCompanyInfoDetail(companyInfo);
+                        mView.getCompanyInfoDetail(companyInfo, false);
                     }
                 }, new ComConsumer(mView, REQUEST_COMPANY_INFO_DETAIL)));
     }
@@ -81,11 +82,11 @@ public class CompanyInfoPresenter extends RxPresenter<CompanyInfoContract.View> 
     @Override
     public void saveCompanyInfo(String id, String head, String name, String code, String type, String address, String phone, String email, String mid, String area, String profession, String numA, String state) {
         addDisposable(mDataManager.saveCompanyInfo(id, head, name, code, type, address, phone, email, mid, area, profession, numA, state)
-                .compose(RxUtils.<BaseEntity>ioToMain(mView))
-                .subscribe(new Consumer<BaseEntity>() {
+                .compose(RxUtils.<UploadInfoBean>ioToMain(mView))
+                .subscribe(new Consumer<UploadInfoBean>() {
                     @Override
-                    public void accept(BaseEntity baseEntity) throws Exception {
-                        mView.saveCompanyInfo(baseEntity);
+                    public void accept(UploadInfoBean uploadInfoBean) throws Exception {
+                        mView.saveCompanyInfo(uploadInfoBean, false);
                     }
                 }, new ComConsumer(mView, REQUEST_SAVE_COMPANY_INFO)));
     }

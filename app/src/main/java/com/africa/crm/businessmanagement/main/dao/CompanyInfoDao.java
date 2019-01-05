@@ -42,6 +42,8 @@ public class CompanyInfoDao extends AbstractDao<CompanyInfo, Long> {
         public final static Property StateName = new Property(15, String.class, "stateName", false, "STATE_NAME");
         public final static Property Email = new Property(16, String.class, "email", false, "EMAIL");
         public final static Property Chosen = new Property(17, boolean.class, "chosen", false, "CHOSEN");
+        public final static Property IsDeleted = new Property(18, boolean.class, "isDeleted", false, "IS_DELETED");
+        public final static Property IsLocal = new Property(19, boolean.class, "isLocal", false, "IS_LOCAL");
     }
 
 
@@ -74,7 +76,9 @@ public class CompanyInfoDao extends AbstractDao<CompanyInfo, Long> {
                 "\"STATE\" TEXT," + // 14: state
                 "\"STATE_NAME\" TEXT," + // 15: stateName
                 "\"EMAIL\" TEXT," + // 16: email
-                "\"CHOSEN\" INTEGER NOT NULL );"); // 17: chosen
+                "\"CHOSEN\" INTEGER NOT NULL ," + // 17: chosen
+                "\"IS_DELETED\" INTEGER NOT NULL ," + // 18: isDeleted
+                "\"IS_LOCAL\" INTEGER NOT NULL );"); // 19: isLocal
     }
 
     /** Drops the underlying database table. */
@@ -172,6 +176,8 @@ public class CompanyInfoDao extends AbstractDao<CompanyInfo, Long> {
             stmt.bindString(17, email);
         }
         stmt.bindLong(18, entity.getChosen() ? 1L: 0L);
+        stmt.bindLong(19, entity.getIsDeleted() ? 1L: 0L);
+        stmt.bindLong(20, entity.getIsLocal() ? 1L: 0L);
     }
 
     @Override
@@ -263,6 +269,8 @@ public class CompanyInfoDao extends AbstractDao<CompanyInfo, Long> {
             stmt.bindString(17, email);
         }
         stmt.bindLong(18, entity.getChosen() ? 1L: 0L);
+        stmt.bindLong(19, entity.getIsDeleted() ? 1L: 0L);
+        stmt.bindLong(20, entity.getIsLocal() ? 1L: 0L);
     }
 
     @Override
@@ -290,7 +298,9 @@ public class CompanyInfoDao extends AbstractDao<CompanyInfo, Long> {
             cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // state
             cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15), // stateName
             cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16), // email
-            cursor.getShort(offset + 17) != 0 // chosen
+            cursor.getShort(offset + 17) != 0, // chosen
+            cursor.getShort(offset + 18) != 0, // isDeleted
+            cursor.getShort(offset + 19) != 0 // isLocal
         );
         return entity;
     }
@@ -315,6 +325,8 @@ public class CompanyInfoDao extends AbstractDao<CompanyInfo, Long> {
         entity.setStateName(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
         entity.setEmail(cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16));
         entity.setChosen(cursor.getShort(offset + 17) != 0);
+        entity.setIsDeleted(cursor.getShort(offset + 18) != 0);
+        entity.setIsLocal(cursor.getShort(offset + 19) != 0);
      }
     
     @Override

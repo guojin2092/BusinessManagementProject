@@ -4,12 +4,11 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.mvp.presenter.IBasePresenter;
 import com.africa.crm.businessmanagement.network.base.BaseView;
 
 import java.util.List;
-
-import okhttp3.ResponseBody;
 
 /**
  * Project：BusinessManagementProject
@@ -24,15 +23,15 @@ public class CompanyInfoContract {
 
     public interface View extends BaseView {
 
-        void getCompanyInfoDetail(CompanyInfo companyInfo);
+        void getCompanyInfoDetail(CompanyInfo companyInfo,boolean isLocal);
 
         void getCompanyType(List<DicInfo> dicInfoList);
 
         void getState(List<DicInfo> dicInfoList);
 
-        void uploadImages(FileInfoBean fileInfoBean);
+        void uploadImages(FileInfoBean fileInfoBean,boolean isLocal);
 
-        void saveCompanyInfo(BaseEntity baseEntity);
+        void saveCompanyInfo(UploadInfoBean uploadInfoBean, boolean isLocal);
 
     }
 

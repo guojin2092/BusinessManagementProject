@@ -112,7 +112,8 @@
 
                         <EditText
                             android:id="@+id/et_phone_number"
-                            style="@style/product_et_blue" />
+                            style="@style/product_et_blue"
+                            android:inputType="phone" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -226,7 +227,8 @@
 
                         <EditText
                             android:id="@+id/et_numA"
-                            style="@style/product_et_blue" />
+                            style="@style/product_et_blue"
+                            android:inputType="number" />
                     </LinearLayout>
 
                 </LinearLayout>

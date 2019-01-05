@@ -25,9 +25,10 @@ public class DicInfoDao extends AbstractDao<DicInfo, Long> {
      */
     public static class Properties {
         public final static Property LocalId = new Property(0, Long.class, "localId", true, "_id");
-        public final static Property Type = new Property(1, String.class, "type", false, "TYPE");
-        public final static Property Text = new Property(2, String.class, "text", false, "TEXT");
-        public final static Property Code = new Property(3, String.class, "code", false, "CODE");
+        public final static Property Id = new Property(1, String.class, "id", false, "ID");
+        public final static Property Type = new Property(2, String.class, "type", false, "TYPE");
+        public final static Property Text = new Property(3, String.class, "text", false, "TEXT");
+        public final static Property Code = new Property(4, String.class, "code", false, "CODE");
     }
 
 
@@ -44,9 +45,10 @@ public class DicInfoDao extends AbstractDao<DicInfo, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"DIC_INFO\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: localId
-                "\"TYPE\" TEXT," + // 1: type
-                "\"TEXT\" TEXT," + // 2: text
-                "\"CODE\" TEXT);"); // 3: code
+                "\"ID\" TEXT," + // 1: id
+                "\"TYPE\" TEXT," + // 2: type
+                "\"TEXT\" TEXT," + // 3: text
+                "\"CODE\" TEXT);"); // 4: code
     }
 
     /** Drops the underlying database table. */
@@ -64,19 +66,24 @@ public class DicInfoDao extends AbstractDao<DicInfo, Long> {
             stmt.bindLong(1, localId);
         }
  
+        String id = entity.getId();
+        if (id != null) {
+            stmt.bindString(2, id);
+        }
+ 
         String type = entity.getType();
         if (type != null) {
-            stmt.bindString(2, type);
+            stmt.bindString(3, type);
         }
  
         String text = entity.getText();
         if (text != null) {
-            stmt.bindString(3, text);
+            stmt.bindString(4, text);
         }
  
         String code = entity.getCode();
         if (code != null) {
-            stmt.bindString(4, code);
+            stmt.bindString(5, code);
         }
     }
 
@@ -89,19 +96,24 @@ public class DicInfoDao extends AbstractDao<DicInfo, Long> {
             stmt.bindLong(1, localId);
         }
  
+        String id = entity.getId();
+        if (id != null) {
+            stmt.bindString(2, id);
+        }
+ 
         String type = entity.getType();
         if (type != null) {
-            stmt.bindString(2, type);
+            stmt.bindString(3, type);
         }
  
         String text = entity.getText();
         if (text != null) {
-            stmt.bindString(3, text);
+            stmt.bindString(4, text);
         }
  
         String code = entity.getCode();
         if (code != null) {
-            stmt.bindString(4, code);
+            stmt.bindString(5, code);
         }
     }
 
@@ -114,9 +126,10 @@ public class DicInfoDao extends AbstractDao<DicInfo, Long> {
     public DicInfo readEntity(Cursor cursor, int offset) {
         DicInfo entity = new DicInfo( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // localId
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // type
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // text
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3) // code
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // id
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // type
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // text
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // code
         );
         return entity;
     }
@@ -124,9 +137,10 @@ public class DicInfoDao extends AbstractDao<DicInfo, Long> {
     @Override
     public void readEntity(Cursor cursor, DicInfo entity, int offset) {
         entity.setLocalId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setType(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setText(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setCode(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setId(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setType(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setText(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setCode(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
      }
     
     @Override

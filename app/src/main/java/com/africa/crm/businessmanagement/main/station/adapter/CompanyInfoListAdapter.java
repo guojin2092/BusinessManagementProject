@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.glide.GlideUtil;
+import com.africa.crm.businessmanagement.network.api.ApiConfig;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -39,6 +40,7 @@ public class CompanyInfoListAdapter extends BaseQuickAdapter<CompanyInfo, BaseVi
         this.mIsDeleted = mIsDeleted;
         notifyDataSetChanged();
     }
+
 
     @Override
     protected void convert(BaseViewHolder helper, CompanyInfo item) {

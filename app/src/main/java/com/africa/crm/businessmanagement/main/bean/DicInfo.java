@@ -17,6 +17,7 @@ import org.greenrobot.greendao.annotation.Generated;
 public class DicInfo {
     @Id(autoincrement = true)
     private Long localId;
+    private String id;
     private String type;
     private String text;
     private String code;
@@ -32,9 +33,17 @@ public class DicInfo {
         this.code = code;
     }
 
-    @Generated(hash = 1430969353)
-    public DicInfo(Long localId, String type, String text, String code) {
+    public DicInfo(String id, String type, String text, String code) {
+        this.id = id;
+        this.type = type;
+        this.text = text;
+        this.code = code;
+    }
+
+    @Generated(hash = 449232408)
+    public DicInfo(Long localId, String id, String type, String text, String code) {
         this.localId = localId;
+        this.id = id;
         this.type = type;
         this.text = text;
         this.code = code;
@@ -50,6 +59,14 @@ public class DicInfo {
 
     public void setLocalId(Long localId) {
         this.localId = localId;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getType() {
@@ -75,5 +92,6 @@ public class DicInfo {
     public void setCode(String code) {
         this.code = code;
     }
+
 
 }

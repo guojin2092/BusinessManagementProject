@@ -6,10 +6,15 @@ import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.main.station.contract.UploadPictureContract;
 import com.africa.crm.businessmanagement.mvp.presenter.RxPresenter;
 import com.africa.crm.businessmanagement.network.error.ComConsumer;
+import com.africa.crm.businessmanagement.network.error.ComException;
 import com.africa.crm.businessmanagement.network.util.RxUtils;
 
+import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.functions.Consumer;
-import okhttp3.ResponseBody;
+import io.reactivex.functions.Function;
 
 /**
  * Project：BusinessManagementProject

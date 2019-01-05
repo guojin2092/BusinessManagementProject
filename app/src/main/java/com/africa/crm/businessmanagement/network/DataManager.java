@@ -48,6 +48,7 @@ import com.africa.crm.businessmanagement.main.bean.PayRecordInfo;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleLimitInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleManagementInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 
@@ -173,7 +174,7 @@ public class DataManager implements HttpHelper {
     }
 
     @Override
-    public Observable<BaseEntity> saveCompanyInfo(String id, String head, String name, String code, String type, String address, String phone, String email, String mid, String area, String profession, String numA, String state) {
+    public Observable<UploadInfoBean> saveCompanyInfo(String id, String head, String name, String code, String type, String address, String phone, String email, String mid, String area, String profession, String numA, String state) {
         return mHttpHelper.saveCompanyInfo(id, head, name, code, type, address, phone, email, mid, area, profession, numA, state);
     }
 

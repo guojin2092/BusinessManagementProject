@@ -34,13 +34,18 @@ public class CompanyInfo {
     private String stateName;
     private String email;//邮箱
 
-    private boolean chosen;
+    private boolean chosen = false;
+    private boolean isDeleted = false;
+    private boolean isLocal = false;
 
-    @Generated(hash = 670270883)
+
+
+    @Generated(hash = 539495311)
     public CompanyInfo(Long localId, String area, String profession, String code,
             String address, String numA, String mid, String type, String typeName,
             String head, String createTime, String phone, String name, String id,
-            String state, String stateName, String email, boolean chosen) {
+            String state, String stateName, String email, boolean chosen,
+            boolean isDeleted, boolean isLocal) {
         this.localId = localId;
         this.area = area;
         this.profession = profession;
@@ -59,11 +64,15 @@ public class CompanyInfo {
         this.stateName = stateName;
         this.email = email;
         this.chosen = chosen;
+        this.isDeleted = isDeleted;
+        this.isLocal = isLocal;
     }
 
     @Generated(hash = 1062273323)
     public CompanyInfo() {
     }
+
+    
 
     public String getArea() {
         return area;
@@ -211,5 +220,29 @@ public class CompanyInfo {
 
     public boolean getChosen() {
         return this.chosen;
+    }
+
+    public boolean isLocal() {
+        return isLocal;
+    }
+
+    public void setLocal(boolean local) {
+        isLocal = local;
+    }
+
+    public boolean getIsLocal() {
+        return this.isLocal;
+    }
+
+    public void setIsLocal(boolean isLocal) {
+        this.isLocal = isLocal;
+    }
+
+    public boolean getIsDeleted() {
+        return this.isDeleted;
+    }
+
+    public void setIsDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }

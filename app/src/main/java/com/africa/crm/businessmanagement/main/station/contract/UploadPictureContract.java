@@ -2,6 +2,7 @@ package com.africa.crm.businessmanagement.main.station.contract;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.mvp.presenter.IBasePresenter;
 import com.africa.crm.businessmanagement.network.base.BaseView;
@@ -35,5 +36,6 @@ public class UploadPictureContract {
         void uploadImages(String filePath);
 
         void saveUserInfo(String id, String userName, String type, String roleIds, String passWord, String name, String phone, String address, String email, String state, String companyId, String head);
+
     }
 }

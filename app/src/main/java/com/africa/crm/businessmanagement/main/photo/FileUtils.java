@@ -75,13 +75,12 @@ public class FileUtils {
     public static String getExternalCacheDir(Context context) {
         StringBuilder sb = new StringBuilder();
         if (checkSdcard()) {
-            sb.append(Environment.getExternalStorageDirectory().getPath()).append("/CRM");
-           /* File file = context.getExternalCacheDir();
+            File file = context.getExternalCacheDir();
             if (file != null) {
                 sb.append(file.getAbsolutePath());
             } else {
                 sb.append(Environment.getExternalStorageDirectory().getPath()).append("/CRM");
-            }*/
+            }
         } else {
             sb.append(context.getCacheDir().getAbsolutePath());
         }

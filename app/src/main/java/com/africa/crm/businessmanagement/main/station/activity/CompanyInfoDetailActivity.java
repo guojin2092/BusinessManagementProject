@@ -14,12 +14,13 @@ import android.widget.TextView;
 import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyEvent;
-import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.main.dao.CompanyInfoDao;
 import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
+import com.africa.crm.businessmanagement.main.dao.FileInfoBeanDao;
 import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.glide.GlideUtil;
 import com.africa.crm.businessmanagement.main.photo.SinglePopup;
@@ -27,7 +28,7 @@ import com.africa.crm.businessmanagement.main.photo.camera.CameraCore;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyInfoContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyInfoPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
-import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.MySpinner;
 import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
@@ -85,6 +86,7 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     private String mState = "";
 
     private String mCompanyId = "";//企业ID
+//    private String mLocalId = "";//本地数据库ID
 
     private CameraCore cameraCore;
     private SinglePopup singlePopup;
@@ -92,15 +94,23 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
 
     private GreendaoManager<CompanyInfo, CompanyInfoDao> mCompanyInfoDaoGreendaoManager;
     private CompanyInfoDao mCompanyInfoDao;
+    private List<CompanyInfo> mCompanyInfoLocalList = new ArrayList<>();//本地数据
     private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoGreendaoManager;
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
     private DicInfoDao mDicInfoDao;
+    private GreendaoManager<FileInfoBean, FileInfoBeanDao> mFileInfoBeanDaoGreendaoManager;
+    private FileInfoBeanDao mFileInfoBeanDao;
+    private List<FileInfoBean> mFileInfoLocalList = new ArrayList<>();//本地数据
+
+    private String mLocalPath = "";
 
     /**
      * @param activity
      */
-    public static void startActivity(Activity activity, String companyId) {
+    public static void startActivity(Activity activity, String companyId/*, String localId*/) {
         Intent intent = new Intent(activity, CompanyInfoDetailActivity.class);
         intent.putExtra("companyId", companyId);
+//        intent.putExtra("localId", localId);
         activity.startActivity(intent);
     }
 
@@ -113,6 +123,7 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     public void initView() {
         super.initView();
         mCompanyId = getIntent().getStringExtra("companyId");
+//        mLocalId = getIntent().getStringExtra("localId");
         tv_save.setOnClickListener(this);
         titlebar_name.setText("企业详情");
         tv_add_icon.setOnClickListener(this);
@@ -133,10 +144,22 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
         mCompanyInfoDao = MyApplication.getInstance().getDaoSession().getCompanyInfoDao();
         //得到Dao对象管理器
         mCompanyInfoDaoGreendaoManager = new GreendaoManager<>(mCompanyInfoDao);
+        //得到本地数据
+        mCompanyInfoLocalList = mCompanyInfoDaoGreendaoManager.queryAll();
+
         //得到Dao对象
         mDicInfoDao = MyApplication.getInstance().getDaoSession().getDicInfoDao();
         //得到Dao对象管理器
         mDicInfoDaoGreendaoManager = new GreendaoManager<>(mDicInfoDao);
+        //得到本地数据
+        mDicInfoLocalList = mDicInfoDaoGreendaoManager.queryAll();
+
+        //得到Dao对象
+        mFileInfoBeanDao = MyApplication.getInstance().getDaoSession().getFileInfoBeanDao();
+        //得到Dao对象管理器
+        mFileInfoBeanDaoGreendaoManager = new GreendaoManager<>(mFileInfoBeanDao);
+        //得到本地数据
+        mFileInfoLocalList = mFileInfoBeanDaoGreendaoManager.queryAll();
     }
 
     @Override
@@ -203,8 +226,6 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
                         return;
                     }
                 }
-                CompanyInfo companyInfo = new CompanyInfo(0l, StringUtil.getText(et_area), StringUtil.getText(et_profession), StringUtil.getText(et_code), StringUtil.getText(et_address), StringUtil.getText(et_numA), StringUtil.getText(et_company_code), mCompanyType, spinner_type.getText(), mHeadCode, TimeUtils.getCurrentTime(new Date()), StringUtil.getText(et_phone_number), StringUtil.getText(et_company_name), "", mState, spinner_state.getText(), StringUtil.getText(et_email), false);
-                mCompanyInfoDaoGreendaoManager.insertOrReplace(companyInfo);
                 mPresenter.saveCompanyInfo(mCompanyId, mHeadCode, et_company_name.getText().toString(), et_code.getText().toString().trim(), mCompanyType, et_address.getText().toString().trim(), et_phone_number.getText().toString().trim(), et_email.getText().toString().trim(), et_company_code.getText().toString().trim(), et_area.getText().toString().trim(), et_profession.getText().toString().trim(), et_numA.getText().toString().trim(), mState);
                 break;
 
@@ -232,7 +253,7 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     }
 
     @Override
-    public void getCompanyInfoDetail(CompanyInfo companyInfo) {
+    public void getCompanyInfoDetail(CompanyInfo companyInfo, boolean isLocal) {
         if (companyInfo != null) {
             //企业名称
             et_company_name.setText(companyInfo.getName());
@@ -261,6 +282,34 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
             //头像
             mHeadCode = companyInfo.getHead();
             GlideUtil.showImg(iv_icon, mHeadCode);
+            addImgToLocal(isLocal);
+            for (CompanyInfo localInfo : mCompanyInfoLocalList) {
+                if (localInfo.getId().equals(companyInfo.getId())) {
+                    companyInfo.setLocalId(localInfo.getLocalId());
+                    mCompanyInfoDaoGreendaoManager.correct(companyInfo);
+                }
+            }
+        }
+
+    }
+
+    /**
+     * 图片存储本地数据库
+     *
+     * @param isLocal
+     */
+    private void addImgToLocal(boolean isLocal) {
+        Long mLocalId = 0l;
+        for (FileInfoBean info : mFileInfoLocalList) {
+            if (mHeadCode.equals(info.getCode())) {
+                mLocalId = info.getLocalId();
+            }
+        }
+        FileInfoBean localInfoBean = new FileInfoBean(mLocalId, mCompanyId, mHeadCode, isLocal);
+        if (mLocalId == 0l) {
+            mFileInfoBeanDaoGreendaoManager.insertOrReplace(localInfoBean);
+        } else {
+            mFileInfoBeanDaoGreendaoManager.correct(localInfoBean);
         }
     }
 
@@ -268,13 +317,12 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     public void getCompanyType(List<DicInfo> dicInfoList) {
         mSpinnerCompanyTypeList.clear();
         mSpinnerCompanyTypeList.addAll(dicInfoList);
-        mDicInfoDaoGreendaoManager.deleteAll();
-        for (DicInfo dicInfo : mSpinnerStateList) {
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerCompanyTypeList, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
             dicInfo.setType(COMPANY_TYPE_CODE);
             mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
         }
         spinner_type.setListDatas(this, mSpinnerCompanyTypeList);
-
         spinner_type.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
@@ -287,8 +335,12 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     public void getState(List<DicInfo> dicInfoList) {
         mSpinnerStateList.clear();
         mSpinnerStateList.addAll(dicInfoList);
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerStateList, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            dicInfo.setType(STATE_CODE);
+            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
+        }
         spinner_state.setListDatas(this, mSpinnerStateList);
-
         spinner_state.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
@@ -297,21 +349,40 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
         });
     }
 
+    @Override
+    public void uploadImages(FileInfoBean fileInfoBean, boolean isLocal) {
+        if (isLocal) {
+            mHeadCode = mLocalPath;
+        } else {
+            mHeadCode = fileInfoBean.getCode();
+        }
+        GlideUtil.showImg(iv_icon, mHeadCode);
+        addImgToLocal(isLocal);
+    }
+
 
     @Override
-    public void saveCompanyInfo(BaseEntity baseEntity) {
-        if (baseEntity.isSuccess()) {
-            String toastString = "";
-            if (TextUtils.isEmpty(mCompanyId)) {
-                toastString = "企业信息创建成功";
-            } else {
-                toastString = "企业信息修改成功";
-            }
-            EventBus.getDefault().post(new AddOrSaveCompanyEvent(toastString));
-            finish();
+    public void saveCompanyInfo(UploadInfoBean uploadInfoBean, boolean isLocal) {
+        String toastString = "";
+        if (TextUtils.isEmpty(mCompanyId)) {
+            toastString = "企业信息创建成功";
         } else {
-            toastMsg(ErrorMsg.showErrorMsg(baseEntity.getReturnMsg()));
+            toastString = "企业信息修改成功";
         }
+        Long mLocalId = 0l;
+        for (CompanyInfo companyInfo : mCompanyInfoLocalList) {
+            if (mCompanyId.equals(companyInfo.getId())) {
+                mLocalId = companyInfo.getLocalId();
+            }
+        }
+        CompanyInfo companyInfo = new CompanyInfo(mLocalId, StringUtil.getText(et_area), StringUtil.getText(et_profession), StringUtil.getText(et_code), StringUtil.getText(et_address), StringUtil.getText(et_numA), StringUtil.getText(et_company_code), mCompanyType, spinner_type.getText(), mHeadCode, TimeUtils.getCurrentTime(new Date()), StringUtil.getText(et_phone_number), StringUtil.getText(et_company_name), mCompanyId, mState, spinner_state.getText(), StringUtil.getText(et_email), false, false, isLocal);
+        if (mLocalId == 0l) {
+            mCompanyInfoDaoGreendaoManager.insertOrReplace(companyInfo);
+        } else {
+            mCompanyInfoDaoGreendaoManager.correct(companyInfo);
+        }
+        EventBus.getDefault().post(new AddOrSaveCompanyEvent(toastString));
+        finish();
     }
 
     @Override
@@ -329,15 +400,8 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     @Override
     public void success(String path) {
         if (!TextUtils.isEmpty(path)) {
-            mPresenter.uploadImages(path);
-        }
-    }
-
-    @Override
-    public void uploadImages(FileInfoBean fileInfoBean) {
-        if (!TextUtils.isEmpty(fileInfoBean.getCode())) {
-            mHeadCode = fileInfoBean.getCode();
-            GlideUtil.showImg(iv_icon, mHeadCode);
+            mLocalPath = path;
+            mPresenter.uploadImages(mLocalPath);
         }
     }
 
@@ -363,19 +427,48 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
         super.loadLocalData(port);
         switch (port) {
             case REQUEST_COMPANY_TYPE:
-                getCompanyType(mDicInfoDaoGreendaoManager.queryAll());
+                List<DicInfo> typeList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoGreendaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(COMPANY_TYPE_CODE)) {
+                        typeList.add(dicInfo);
+                    }
+                }
+                getCompanyType(typeList);
                 break;
             case REQUEST_COMPANY_STATE:
-
+                List<DicInfo> stateList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoGreendaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(STATE_CODE)) {
+                        stateList.add(dicInfo);
+                    }
+                }
+                getState(stateList);
                 break;
             case REQUEST_UPLOAD_IMAGE:
-
+                Long mLocalId = 0l;
+                for (FileInfoBean info : mFileInfoLocalList) {
+                    if (mHeadCode.equals(info.getCode())) {
+                        mLocalId = info.getLocalId();
+                    }
+                }
+                FileInfoBean localInfoBean = new FileInfoBean(mLocalId, mCompanyId, mHeadCode, true);
+                uploadImages(localInfoBean, true);
                 break;
             case REQUEST_COMPANY_INFO_DETAIL:
-
+                CompanyInfo companyInfo = null;
+                for (CompanyInfo info : mCompanyInfoLocalList) {
+                    if (info.getId().equals(mCompanyId)) {
+                        companyInfo = info;
+                    }
+                }
+                getCompanyInfoDetail(companyInfo, true);
                 break;
             case REQUEST_SAVE_COMPANY_INFO:
-
+                UploadInfoBean uploadInfoBean = new UploadInfoBean();
+                uploadInfoBean.setId(mCompanyId);
+                uploadInfoBean.setCreateTime(TimeUtils.getCurrentTime(new Date()));
+                uploadInfoBean.setUpdateTime(TimeUtils.getCurrentTime(new Date()));
+                saveCompanyInfo(uploadInfoBean, true);
                 break;
         }
     }

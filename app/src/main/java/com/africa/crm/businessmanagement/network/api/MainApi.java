@@ -45,6 +45,7 @@ import com.africa.crm.businessmanagement.main.bean.PayRecordInfo;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleLimitInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleManagementInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 
@@ -130,7 +131,7 @@ public interface MainApi {
 
     @FormUrlEncoded
     @POST("company/save")
-    Observable<BaseEntity> saveCompanyInfo(@Field("id") String id, @Field("head") String head, @Field("name") String name, @Field("code") String code, @Field("type") String type, @Field("address") String address, @Field("phone") String phone, @Field("email") String email, @Field("mid") String mid, @Field("area") String area, @Field("profession") String profession, @Field("numA") String numA, @Field("state") String state);
+    Observable<BaseEntity<UploadInfoBean>> saveCompanyInfo(@Field("id") String id, @Field("head") String head, @Field("name") String name, @Field("code") String code, @Field("type") String type, @Field("address") String address, @Field("phone") String phone, @Field("email") String email, @Field("mid") String mid, @Field("area") String area, @Field("profession") String profession, @Field("numA") String numA, @Field("state") String state);
 
     @FormUrlEncoded
     @POST("companyUser/grid")
