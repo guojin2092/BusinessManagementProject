@@ -424,6 +424,7 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
     @Subscribe
     public void Event(AddOrSaveCompanyQuotationEvent addOrSaveCompanyQuotationEvent) {
         toastMsg(addOrSaveCompanyQuotationEvent.getMsg());
+        page = 1;
         requestData();
     }
 

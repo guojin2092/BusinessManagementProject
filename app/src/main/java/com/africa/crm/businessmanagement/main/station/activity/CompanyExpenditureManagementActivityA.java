@@ -232,6 +232,7 @@ public class CompanyExpenditureManagementActivityA extends BaseRefreshMvpActivit
     @Subscribe
     public void Event(AddOrSaveCompanyExpanditureEventA addOrSaveCompanyExpanditureEventA) {
         toastMsg(addOrSaveCompanyExpanditureEventA.getMsg());
+        page = 1;
         requestData();
     }
 

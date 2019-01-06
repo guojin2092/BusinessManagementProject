@@ -15,8 +15,6 @@ import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyPackagingDataEvent;
 import com.africa.crm.businessmanagement.main.bean.CompanyPackagingDataInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPackagingDataInfoBean;
-import com.africa.crm.businessmanagement.main.bean.DicInfo;
-import com.africa.crm.businessmanagement.main.bean.UserInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
@@ -25,7 +23,6 @@ import com.africa.crm.businessmanagement.main.station.contract.CompanyPackagingD
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyPackagingDataPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
-import com.africa.crm.businessmanagement.widget.MySpinner;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
 import com.bigkoo.pickerview.TimePickerView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -271,6 +268,7 @@ public class CompanyPackagingDataManagementActivity extends BaseRefreshMvpActivi
     @Subscribe
     public void Event(AddOrSaveCompanyPackagingDataEvent addOrSaveCompanyPackagingDataEvent) {
         toastMsg(addOrSaveCompanyPackagingDataEvent.getMsg());
+        page = 1;
         requestData();
     }
 

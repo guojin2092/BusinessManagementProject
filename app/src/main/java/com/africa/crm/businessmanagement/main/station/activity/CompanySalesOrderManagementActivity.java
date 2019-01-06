@@ -7,9 +7,6 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -32,7 +29,6 @@ import com.africa.crm.businessmanagement.main.station.contract.CompanySalesOrder
 import com.africa.crm.businessmanagement.main.station.presenter.CompanySalesOrderPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
-import com.africa.crm.businessmanagement.widget.KeyboardUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
@@ -443,6 +439,7 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
     @Subscribe
     public void Event(AddOrSaveCompanySalesOrderEvent addOrSaveCompanySalesOrderEvent) {
         toastMsg(addOrSaveCompanySalesOrderEvent.getMsg());
+        page = 1;
         requestData();
     }
 

@@ -42,7 +42,7 @@ public class CompanyInfoManagementPresenter extends RxPresenter<CompanyInfoManag
                 .subscribe(new Consumer<BaseEntity>() {
                     @Override
                     public void accept(BaseEntity baseEntity) throws Exception {
-                        mView.deleteCompanyInfo(baseEntity, false, false);
+                        mView.deleteCompanyInfo(baseEntity, false);
                     }
                 }, new ComConsumer(mView, REQUEST_DELETE_COMPANY_INFO)));
     }

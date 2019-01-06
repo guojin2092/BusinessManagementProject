@@ -370,6 +370,7 @@ public class CompanyPaymentManagementActivity extends BaseRefreshMvpActivity<Com
     @Subscribe
     public void Event(AddOrSaveCompanyPayOrderEvent addOrSaveCompanyPayOrderEvent) {
         toastMsg(addOrSaveCompanyPayOrderEvent.getMsg());
+        page = 1;
         requestData();
     }
 

@@ -14,7 +14,7 @@ import org.greenrobot.greendao.annotation.Id;
  * Why & What is modified:
  */
 @Entity
-public class CompanyInfo {
+public class CompanyDeleteInfo {
     @Id(autoincrement = true)
     private Long localId;
     private String area;//地区
@@ -37,13 +37,12 @@ public class CompanyInfo {
     private boolean chosen = false;
     private boolean isLocal = false;
 
-
-    @Generated(hash = 721548438)
-    public CompanyInfo(Long localId, String area, String profession, String code,
-                       String address, String numA, String mid, String type, String typeName,
-                       String head, String createTime, String phone, String name, String id,
-                       String state, String stateName, String email, boolean chosen,
-                       boolean isLocal) {
+    @Generated(hash = 962172099)
+    public CompanyDeleteInfo(Long localId, String area, String profession,
+                             String code, String address, String numA, String mid, String type,
+                             String typeName, String head, String createTime, String phone,
+                             String name, String id, String state, String stateName, String email,
+                             boolean chosen, boolean isLocal) {
         this.localId = localId;
         this.area = area;
         this.profession = profession;
@@ -65,11 +64,11 @@ public class CompanyInfo {
         this.isLocal = isLocal;
     }
 
-    public CompanyInfo(String area, String profession, String code,
-                       String address, String numA, String mid, String type, String typeName,
-                       String head, String createTime, String phone, String name, String id,
-                       String state, String stateName, String email, boolean chosen,
-                       boolean isLocal) {
+    public CompanyDeleteInfo(String area, String profession,
+                             String code, String address, String numA, String mid, String type,
+                             String typeName, String head, String createTime, String phone,
+                             String name, String id, String state, String stateName, String email,
+                             boolean chosen, boolean isLocal) {
         this.area = area;
         this.profession = profession;
         this.code = code;
@@ -90,10 +89,9 @@ public class CompanyInfo {
         this.isLocal = isLocal;
     }
 
-    @Generated(hash = 1062273323)
-    public CompanyInfo() {
+    @Generated(hash = 1785722190)
+    public CompanyDeleteInfo() {
     }
-
 
     public String getArea() {
         return area;

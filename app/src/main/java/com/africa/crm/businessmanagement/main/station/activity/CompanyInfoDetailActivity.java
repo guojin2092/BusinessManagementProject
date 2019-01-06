@@ -20,7 +20,6 @@ import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.main.dao.CompanyInfoDao;
 import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
-import com.africa.crm.businessmanagement.main.dao.FileInfoBeanDao;
 import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.glide.GlideUtil;
 import com.africa.crm.businessmanagement.main.photo.SinglePopup;
@@ -86,7 +85,7 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     private String mState = "";
 
     private String mCompanyId = "";//企业ID
-//    private String mLocalId = "";//本地数据库ID
+    private Long mLocalId = 0l;//本地数据库ID
 
     private CameraCore cameraCore;
     private SinglePopup singlePopup;
@@ -98,19 +97,16 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoGreendaoManager;
     private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
     private DicInfoDao mDicInfoDao;
-    private GreendaoManager<FileInfoBean, FileInfoBeanDao> mFileInfoBeanDaoGreendaoManager;
-    private FileInfoBeanDao mFileInfoBeanDao;
-    private List<FileInfoBean> mFileInfoLocalList = new ArrayList<>();//本地数据
 
     private String mLocalPath = "";
 
     /**
      * @param activity
      */
-    public static void startActivity(Activity activity, String companyId/*, String localId*/) {
+    public static void startActivity(Activity activity, String companyId, Long localId) {
         Intent intent = new Intent(activity, CompanyInfoDetailActivity.class);
         intent.putExtra("companyId", companyId);
-//        intent.putExtra("localId", localId);
+        intent.putExtra("localId", localId);
         activity.startActivity(intent);
     }
 
@@ -123,18 +119,18 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     public void initView() {
         super.initView();
         mCompanyId = getIntent().getStringExtra("companyId");
-//        mLocalId = getIntent().getStringExtra("localId");
+        mLocalId = getIntent().getLongExtra("localId", 0l);
         tv_save.setOnClickListener(this);
         titlebar_name.setText("企业详情");
         tv_add_icon.setOnClickListener(this);
-        if (!TextUtils.isEmpty(mCompanyId)) {
-            titlebar_right.setText(R.string.edit);
-            tv_save.setText(R.string.save);
-            setEditTextInput(false);
-        } else {
+        if (TextUtils.isEmpty(mCompanyId) && mLocalId == 0l) {
             titlebar_right.setVisibility(View.GONE);
             tv_save.setText(R.string.add);
             tv_save.setVisibility(View.VISIBLE);
+        } else if (!TextUtils.isEmpty(mCompanyId) || mLocalId != 0l) {
+            titlebar_right.setText(R.string.edit);
+            tv_save.setText(R.string.save);
+            setEditTextInput(false);
         }
         cameraCore = new CameraCore.Builder(this)
                 .setNeedCrop(true)
@@ -153,13 +149,6 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
         mDicInfoDaoGreendaoManager = new GreendaoManager<>(mDicInfoDao);
         //得到本地数据
         mDicInfoLocalList = mDicInfoDaoGreendaoManager.queryAll();
-
-        //得到Dao对象
-        mFileInfoBeanDao = MyApplication.getInstance().getDaoSession().getFileInfoBeanDao();
-        //得到Dao对象管理器
-        mFileInfoBeanDaoGreendaoManager = new GreendaoManager<>(mFileInfoBeanDao);
-        //得到本地数据
-        mFileInfoLocalList = mFileInfoBeanDaoGreendaoManager.queryAll();
     }
 
     @Override
@@ -176,9 +165,7 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     protected void requestData() {
         mPresenter.getCompanyType(COMPANY_TYPE_CODE);
         mPresenter.getState(STATE_CODE);
-        if (!TextUtils.isEmpty(mCompanyId)) {
-            mPresenter.getCompanyInfoDetail(mCompanyId);
-        }
+        mPresenter.getCompanyInfoDetail(mCompanyId);
     }
 
 
@@ -220,7 +207,7 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
                     toastMsg("尚未选择企业状态");
                     return;
                 }
-                if (TextUtils.isEmpty(mCompanyId)) {
+                if (TextUtils.isEmpty(mCompanyId) || mLocalId == 0l) {
                     if (mState.equals("2")) {
                         toastMsg("新增企业状态不可禁用");
                         return;
@@ -282,7 +269,6 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
             //头像
             mHeadCode = companyInfo.getHead();
             GlideUtil.showImg(iv_icon, mHeadCode);
-            addImgToLocal(isLocal);
             for (CompanyInfo localInfo : mCompanyInfoLocalList) {
                 if (localInfo.getId().equals(companyInfo.getId())) {
                     companyInfo.setLocalId(localInfo.getLocalId());
@@ -291,26 +277,6 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
             }
         }
 
-    }
-
-    /**
-     * 图片存储本地数据库
-     *
-     * @param isLocal
-     */
-    private void addImgToLocal(boolean isLocal) {
-        Long mLocalId = 0l;
-        for (FileInfoBean info : mFileInfoLocalList) {
-            if (mHeadCode.equals(info.getCode())) {
-                mLocalId = info.getLocalId();
-            }
-        }
-        FileInfoBean localInfoBean = new FileInfoBean(mLocalId, mCompanyId, mHeadCode, isLocal);
-        if (mLocalId == 0l) {
-            mFileInfoBeanDaoGreendaoManager.insertOrReplace(localInfoBean);
-        } else {
-            mFileInfoBeanDaoGreendaoManager.correct(localInfoBean);
-        }
     }
 
     @Override
@@ -351,35 +317,32 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
 
     @Override
     public void uploadImages(FileInfoBean fileInfoBean, boolean isLocal) {
-        if (isLocal) {
-            mHeadCode = mLocalPath;
-        } else {
-            mHeadCode = fileInfoBean.getCode();
-        }
+        mHeadCode = fileInfoBean.getCode();
         GlideUtil.showImg(iv_icon, mHeadCode);
-        addImgToLocal(isLocal);
     }
 
 
     @Override
     public void saveCompanyInfo(UploadInfoBean uploadInfoBean, boolean isLocal) {
         String toastString = "";
-        if (TextUtils.isEmpty(mCompanyId)) {
+        if (TextUtils.isEmpty(mCompanyId) || mLocalId == 0l) {
             toastString = "企业信息创建成功";
         } else {
             toastString = "企业信息修改成功";
         }
-        Long mLocalId = 0l;
-        for (CompanyInfo companyInfo : mCompanyInfoLocalList) {
-            if (mCompanyId.equals(companyInfo.getId())) {
-                mLocalId = companyInfo.getLocalId();
+        if (isLocal) {
+            CompanyInfo companyInfo = null;
+            if (mLocalId == 0l) {
+                companyInfo = new CompanyInfo(StringUtil.getText(et_area), StringUtil.getText(et_profession), StringUtil.getText(et_code), StringUtil.getText(et_address), StringUtil.getText(et_numA), StringUtil.getText(et_company_code), mCompanyType, spinner_type.getText(), mHeadCode, TimeUtils.getCurrentTime(new Date()), StringUtil.getText(et_phone_number), StringUtil.getText(et_company_name), mCompanyId, mState, spinner_state.getText(), StringUtil.getText(et_email), false, isLocal);
+                mCompanyInfoDaoGreendaoManager.insertOrReplace(companyInfo);
+            } else {
+                for (CompanyInfo info : mCompanyInfoLocalList) {
+                    if (mLocalId == info.getLocalId()) {
+                        companyInfo = new CompanyInfo(info.getLocalId(), StringUtil.getText(et_area), StringUtil.getText(et_profession), StringUtil.getText(et_code), StringUtil.getText(et_address), StringUtil.getText(et_numA), StringUtil.getText(et_company_code), mCompanyType, spinner_type.getText(), mHeadCode, TimeUtils.getCurrentTime(new Date()), StringUtil.getText(et_phone_number), StringUtil.getText(et_company_name), mCompanyId, mState, spinner_state.getText(), StringUtil.getText(et_email), false, isLocal);
+                        mCompanyInfoDaoGreendaoManager.correct(companyInfo);
+                    }
+                }
             }
-        }
-        CompanyInfo companyInfo = new CompanyInfo(mLocalId, StringUtil.getText(et_area), StringUtil.getText(et_profession), StringUtil.getText(et_code), StringUtil.getText(et_address), StringUtil.getText(et_numA), StringUtil.getText(et_company_code), mCompanyType, spinner_type.getText(), mHeadCode, TimeUtils.getCurrentTime(new Date()), StringUtil.getText(et_phone_number), StringUtil.getText(et_company_name), mCompanyId, mState, spinner_state.getText(), StringUtil.getText(et_email), false, false, isLocal);
-        if (mLocalId == 0l) {
-            mCompanyInfoDaoGreendaoManager.insertOrReplace(companyInfo);
-        } else {
-            mCompanyInfoDaoGreendaoManager.correct(companyInfo);
         }
         EventBus.getDefault().post(new AddOrSaveCompanyEvent(toastString));
         finish();
@@ -445,19 +408,13 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
                 getState(stateList);
                 break;
             case REQUEST_UPLOAD_IMAGE:
-                Long mLocalId = 0l;
-                for (FileInfoBean info : mFileInfoLocalList) {
-                    if (mHeadCode.equals(info.getCode())) {
-                        mLocalId = info.getLocalId();
-                    }
-                }
-                FileInfoBean localInfoBean = new FileInfoBean(mLocalId, mCompanyId, mHeadCode, true);
+                FileInfoBean localInfoBean = new FileInfoBean(mLocalPath);
                 uploadImages(localInfoBean, true);
                 break;
             case REQUEST_COMPANY_INFO_DETAIL:
                 CompanyInfo companyInfo = null;
                 for (CompanyInfo info : mCompanyInfoLocalList) {
-                    if (info.getId().equals(mCompanyId)) {
+                    if (mLocalId == info.getLocalId()) {
                         companyInfo = info;
                     }
                 }

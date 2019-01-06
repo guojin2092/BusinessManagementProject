@@ -370,6 +370,7 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
     @Subscribe
     public void Event(AddOrSaveCompanyDeliveryOrderEvent addOrSaveCompanyDeliveryOrderEvent) {
         toastMsg(addOrSaveCompanyDeliveryOrderEvent.getMsg());
+        page = 1;
         requestData();
     }
 

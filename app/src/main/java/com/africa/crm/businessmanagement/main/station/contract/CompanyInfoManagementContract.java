@@ -20,7 +20,7 @@ public class CompanyInfoManagementContract {
 
         void getCompanyInfoList(CompanyInfoBean companyInfoBean);
 
-        void deleteCompanyInfo(BaseEntity baseEntity, boolean isdeleted, boolean isLocal);
+        void deleteCompanyInfo(BaseEntity baseEntity, boolean isLocal);
     }
 
     public interface Presenter extends IBasePresenter<CompanyInfoManagementContract.View> {

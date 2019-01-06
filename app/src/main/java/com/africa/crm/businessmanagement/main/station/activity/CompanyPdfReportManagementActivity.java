@@ -306,6 +306,7 @@ public class CompanyPdfReportManagementActivity extends BaseRefreshMvpActivity<C
     @Subscribe
     public void Event(AddOrSaveCompanyPdfEvent addOrSaveCompanyPdfEvent) {
         toastMsg(addOrSaveCompanyPdfEvent.getMsg());
+        page = 1;
         requestData();
     }
 

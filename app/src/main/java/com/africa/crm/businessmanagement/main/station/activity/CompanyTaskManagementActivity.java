@@ -368,6 +368,7 @@ public class CompanyTaskManagementActivity extends BaseRefreshMvpActivity<Compan
     @Subscribe
     public void Event(AddOrSaveTaskEvent addOrSaveTaskEvent) {
         toastMsg(addOrSaveTaskEvent.getMsg());
+        page = 1;
         requestData();
     }
 

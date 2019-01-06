@@ -289,6 +289,7 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
     @Subscribe
     public void Event(AddOrSaveCompanySupplierEvent addOrSaveCompanySupplierEvent) {
         toastMsg(addOrSaveCompanySupplierEvent.getMsg());
+        page = 1;
         requestData();
     }
 

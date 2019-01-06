@@ -425,6 +425,7 @@ public class CompanyTradingOrderManagementActivity extends BaseRefreshMvpActivit
     @Subscribe
     public void Event(AddOrSaveCompanyTradingOrderEvent addOrSaveCompanyTradingOrderEvent) {
         toastMsg(addOrSaveCompanyTradingOrderEvent.getMsg());
+        page = 1;
         requestData();
     }
 

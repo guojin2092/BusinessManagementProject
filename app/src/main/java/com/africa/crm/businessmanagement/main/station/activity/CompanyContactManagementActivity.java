@@ -323,6 +323,7 @@ public class CompanyContactManagementActivity extends BaseRefreshMvpActivity<Con
     @Subscribe
     public void Event(AddOrSaveCompanyContactEvent addOrSaveCompanyContactEvent) {
         toastMsg(addOrSaveCompanyContactEvent.getMsg());
+        page = 1;
         requestData();
     }
 

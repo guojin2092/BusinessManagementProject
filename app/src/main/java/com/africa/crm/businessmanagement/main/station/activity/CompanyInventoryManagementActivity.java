@@ -295,6 +295,7 @@ public class CompanyInventoryManagementActivity extends BaseRefreshMvpActivity<C
     @Subscribe
     public void Event(AddOrSaveCompanyInventoryEvent addOrSaveCompanyInventoryEvent) {
         toastMsg(addOrSaveCompanyInventoryEvent.getMsg());
+        page = 1;
         requestData();
     }
 

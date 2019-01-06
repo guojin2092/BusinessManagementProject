@@ -320,6 +320,7 @@ public class CompanyProductManagementActivity extends BaseRefreshMvpActivity<Com
     @Subscribe
     public void Event(AddOrSaveCompanyProductEvent addOrSaveCompanyProductEvent) {
         toastMsg(addOrSaveCompanyProductEvent.getMsg());
+        page = 1;
         requestData();
     }
 

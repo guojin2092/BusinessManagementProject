@@ -370,6 +370,7 @@ public class CompanyPurchasingManagementActivity extends BaseRefreshMvpActivity<
     @Subscribe
     public void Event(AddOrSaveCompanyPurchasingOrderEvent addOrSaveCompanyPurchasingOrderEvent) {
         toastMsg(addOrSaveCompanyPurchasingOrderEvent.getMsg());
+        page = 1;
         requestData();
     }
 

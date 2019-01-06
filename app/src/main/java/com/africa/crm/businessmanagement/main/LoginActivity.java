@@ -11,16 +11,30 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.library.base.progress.BaseFragmentProgress;
+import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
 import com.africa.crm.businessmanagement.main.contract.LoginContract;
+import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.presenter.LoginPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseEasyMvpActivity;
+import com.africa.crm.businessmanagement.network.error.ComConsumer;
 import com.africa.crm.businessmanagement.network.error.ComException;
+import com.africa.crm.businessmanagement.network.util.RxUtils;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
+import io.reactivex.functions.Consumer;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_STATE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_TYPE;
 
 /**
  * Project：BusinessManagementProject
@@ -45,6 +59,16 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
 
     //登陆成功
     public final static int LOGIN_SUCCESS = 1002;
+
+    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoGreendaoManager;
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
+    private DicInfoDao mDicInfoDao;
+
+    private static final String COMPANY_TYPE_CODE = "COMPANYTYPE";
+    private List<DicInfo> mSpinnerCompanyTypeList = new ArrayList<>();
+
+    private static final String STATE_CODE = "STATE";
+    private List<DicInfo> mSpinnerStateList = new ArrayList<>();
 
     /**
      * 在activity中请求回调,显示登录界面
@@ -81,8 +105,52 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
 
     @Override
     public void initData() {
-
+        //得到Dao对象
+        mDicInfoDao = MyApplication.getInstance().getDaoSession().getDicInfoDao();
+        //得到Dao对象管理器
+        mDicInfoDaoGreendaoManager = new GreendaoManager<>(mDicInfoDao);
+        //得到本地数据
+        mDicInfoLocalList = mDicInfoDaoGreendaoManager.queryAll();
     }
+
+
+    @Override
+    protected LoginPresenter injectPresenter() {
+        return new LoginPresenter();
+    }
+
+    @Override
+    protected void requestData() {
+        addDisposable(mDataManager.getDicByCode(COMPANY_TYPE_CODE)
+                .compose(RxUtils.<List<DicInfo>>ioToMain())
+                .subscribe(new Consumer<List<DicInfo>>() {
+                    @Override
+                    public void accept(List<DicInfo> dicInfoList) throws Exception {
+                        mSpinnerCompanyTypeList.clear();
+                        mSpinnerCompanyTypeList.addAll(dicInfoList);
+                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerCompanyTypeList, mDicInfoLocalList);
+                        for (DicInfo dicInfo : addList) {
+                            dicInfo.setType(COMPANY_TYPE_CODE);
+                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
+                        }
+                    }
+                }, new ComConsumer(null, REQUEST_COMPANY_TYPE)));
+        addDisposable(mDataManager.getDicByCode(STATE_CODE)
+                .compose(RxUtils.<List<DicInfo>>ioToMain())
+                .subscribe(new Consumer<List<DicInfo>>() {
+                    @Override
+                    public void accept(List<DicInfo> dicInfoList) throws Exception {
+                        mSpinnerStateList.clear();
+                        mSpinnerStateList.addAll(dicInfoList);
+                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerStateList, mDicInfoLocalList);
+                        for (DicInfo dicInfo : addList) {
+                            dicInfo.setType(STATE_CODE);
+                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
+                        }
+                    }
+                }, new ComConsumer(null, REQUEST_COMPANY_STATE)));
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -118,15 +186,6 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
             }
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    protected LoginPresenter injectPresenter() {
-        return new LoginPresenter();
-    }
-
-    @Override
-    protected void requestData() {
     }
 
     @Override

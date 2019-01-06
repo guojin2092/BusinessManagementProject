@@ -401,6 +401,7 @@ public class CompanyServiceRecordManagementActivity extends BaseRefreshMvpActivi
     @Subscribe
     public void Event(AddOrSaveServiceRecordEvent addOrSaveServiceRecordEvent) {
         toastMsg(addOrSaveServiceRecordEvent.getMsg());
+        page = 1;
         requestData();
     }
 
