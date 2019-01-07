@@ -8,25 +8,39 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyProductEvent;
-import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
+import com.africa.crm.businessmanagement.main.dao.CompanyProductInfoDao;
+import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyProductDetailContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyProductDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
-import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.MySpinner;
+import com.africa.crm.businessmanagement.widget.StringUtil;
+import com.africa.crm.businessmanagement.widget.TimeUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.DicUtil.PRODUCT_TYPE;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_SUPPLIERS;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_SUPPLIER_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_PRODUCT_DETAIL;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_PRODUCT_TYPE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SAVE_COMPANY_PRODUCT;
 
 public class CompanyProductDetailActivity extends BaseMvpActivity<CompanyProductDetailPresenter> implements CompanyProductDetailContract.View {
     @BindView(R.id.et_product_name)
@@ -53,19 +67,27 @@ public class CompanyProductDetailActivity extends BaseMvpActivity<CompanyProduct
 
     @BindView(R.id.spinner_product_type)
     MySpinner spinner_product_type;
-    private static final String CONTACT_PRODUCT_TYPE = "PRODUCTTYPE";
     private List<DicInfo> mSpinnerProductList = new ArrayList<>();
     private String mProductType = "";
 
     private String mProductId = "";
     private String mCompanyId = "";
+    private String mCompanyName = "";
+    private Long mLocalId = 0l;//本地数据库ID
+
+    private GreendaoManager<CompanyProductInfo, CompanyProductInfoDao> mProductInfoDaoManager;
+    private List<CompanyProductInfo> mProductInfoLocalList = new ArrayList<>();//本地数据
+
+    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoManager;
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
      */
-    public static void startActivity(Activity activity, String productId) {
+    public static void startActivity(Activity activity, String productId, Long localId) {
         Intent intent = new Intent(activity, CompanyProductDetailActivity.class);
         intent.putExtra("productId", productId);
+        intent.putExtra("localId", localId);
         activity.startActivity(intent);
     }
 
@@ -84,20 +106,30 @@ public class CompanyProductDetailActivity extends BaseMvpActivity<CompanyProduct
         super.initView();
         mProductId = getIntent().getStringExtra("productId");
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
+        mCompanyName = UserInfoManager.getUserLoginInfo(this).getCompanyName();
+        mLocalId = getIntent().getLongExtra("localId", 0l);
         titlebar_name.setText("产品详情");
         tv_save.setOnClickListener(this);
 
-        if (!TextUtils.isEmpty(mProductId)) {
-            titlebar_right.setText(R.string.edit);
-            tv_save.setText(R.string.save);
-            setEditTextInput(false);
-            et_inventory_num.setEnabled(false);
-        } else {
+        if (TextUtils.isEmpty(mProductId) && mLocalId == 0l) {
             titlebar_right.setVisibility(View.GONE);
             tv_save.setText(R.string.add);
             tv_save.setVisibility(View.VISIBLE);
             et_inventory_num.setEnabled(true);
+        } else if (!TextUtils.isEmpty(mProductId) || mLocalId != 0l) {
+            titlebar_right.setText(R.string.edit);
+            tv_save.setText(R.string.save);
+            setEditTextInput(false);
+            et_inventory_num.setEnabled(false);
         }
+        //得到Dao对象管理器
+        mProductInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyProductInfoDao());
+        //得到本地数据
+        mProductInfoLocalList = mProductInfoDaoManager.queryAll();
+        //得到Dao对象管理器
+        mDicInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getDicInfoDao());
+        //得到本地数据
+        mDicInfoLocalList = mDicInfoDaoManager.queryAll();
     }
 
     @Override
@@ -108,8 +140,8 @@ public class CompanyProductDetailActivity extends BaseMvpActivity<CompanyProduct
     @Override
     protected void requestData() {
         mPresenter.getAllSuppliers(mCompanyId);
-        mPresenter.getProductType(CONTACT_PRODUCT_TYPE);
-        if (!TextUtils.isEmpty(mProductId)) {
+        mPresenter.getProductType(PRODUCT_TYPE);
+        if (!TextUtils.isEmpty(mProductId) || mLocalId != 0l) {
             mPresenter.getCompanyProductDetail(mProductId);
         }
     }
@@ -162,7 +194,12 @@ public class CompanyProductDetailActivity extends BaseMvpActivity<CompanyProduct
     public void getAllSuppliers(List<DicInfo2> dicInfoList) {
         List<DicInfo> list = new ArrayList<>();
         for (DicInfo2 dicInfo2 : dicInfoList) {
-            list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getId()));
+            list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getCode()));
+        }
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            dicInfo.setType(QUERY_ALL_SUPPLIERS);
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
         }
         spinner_supplier_name.setListDatas(this, list);
     }
@@ -171,6 +208,11 @@ public class CompanyProductDetailActivity extends BaseMvpActivity<CompanyProduct
     public void getProductType(List<DicInfo> dicInfoList) {
         mSpinnerProductList.clear();
         mSpinnerProductList.addAll(dicInfoList);
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerProductList, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            dicInfo.setType(PRODUCT_TYPE);
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
+        }
         spinner_product_type.setListDatas(this, mSpinnerProductList);
 
         spinner_product_type.addOnItemClickListener(new MySpinner.OnItemClickListener() {
@@ -194,21 +236,79 @@ public class CompanyProductDetailActivity extends BaseMvpActivity<CompanyProduct
         et_inventory_num.setText(companyProductInfo.getStockNum());
         et_warn_num.setText(companyProductInfo.getWarnNum());
         et_remark.setText(companyProductInfo.getRemark());
+        mCompanyName = companyProductInfo.getCompanyName();
+        for (CompanyProductInfo localInfo : mProductInfoLocalList) {
+            if (localInfo.getId().equals(companyProductInfo.getId())) {
+                companyProductInfo.setLocalId(localInfo.getLocalId());
+                mProductInfoDaoManager.correct(companyProductInfo);
+            }
+        }
     }
 
     @Override
-    public void saveCompanyProduct(BaseEntity baseEntity) {
-        if (baseEntity.isSuccess()) {
-            String toastString = "";
-            if (TextUtils.isEmpty(mProductId)) {
-                toastString = "企业产品创建成功";
-            } else {
-                toastString = "企业产品修改成功";
-            }
-            EventBus.getDefault().post(new AddOrSaveCompanyProductEvent(toastString));
-            finish();
+    public void saveCompanyProduct(UploadInfoBean uploadInfoBean, boolean isLocal) {
+        String toastString = "";
+        if (TextUtils.isEmpty(mProductId) && mLocalId == 0l) {
+            toastString = "企业产品创建成功";
         } else {
-            toastMsg(ErrorMsg.showErrorMsg(baseEntity.getReturnMsg()));
+            toastString = "企业产品修改成功";
+        }
+        if (isLocal) {
+            CompanyProductInfo companyProductInfo = null;
+            if (mLocalId == 0l) {
+                companyProductInfo = new CompanyProductInfo(TimeUtils.getCurrentTime(new Date()), spinner_supplier_name.getText(), StringUtil.getText(et_remark), StringUtil.getText(et_inventory_num), StringUtil.getText(et_price), StringUtil.getText(et_code), mCompanyName, mProductType, StringUtil.getText(et_warn_num), mProductId, spinner_product_type.getText(), StringUtil.getText(et_unit), StringUtil.getText(et_product_name), mCompanyId, StringUtil.getText(et_maker_name), false, isLocal);
+                mProductInfoDaoManager.insertOrReplace(companyProductInfo);
+            } else {
+                for (CompanyProductInfo info : mProductInfoLocalList) {
+                    if (mLocalId == info.getLocalId()) {
+                        companyProductInfo = new CompanyProductInfo(info.getLocalId(), TimeUtils.getCurrentTime(new Date()), spinner_supplier_name.getText(), StringUtil.getText(et_remark), StringUtil.getText(et_inventory_num), StringUtil.getText(et_price), StringUtil.getText(et_code), mCompanyName, mProductType, StringUtil.getText(et_warn_num), mProductId, spinner_product_type.getText(), StringUtil.getText(et_unit), StringUtil.getText(et_product_name), mCompanyId, StringUtil.getText(et_maker_name), false, isLocal);
+                        mProductInfoDaoManager.correct(companyProductInfo);
+                    }
+                }
+            }
+        }
+        EventBus.getDefault().post(new AddOrSaveCompanyProductEvent(toastString));
+        finish();
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        switch (port) {
+            case REQUEST_ALL_SUPPLIER_LIST:
+                List<DicInfo2> allSupplierList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(QUERY_ALL_SUPPLIERS)) {
+                        allSupplierList.add(new DicInfo2(dicInfo.getId(), dicInfo.getText(), dicInfo.getCode()));
+                    }
+                }
+                getAllSuppliers(allSupplierList);
+                break;
+            case REQUEST_PRODUCT_TYPE:
+                List<DicInfo> typeList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(PRODUCT_TYPE)) {
+                        typeList.add(dicInfo);
+                    }
+                }
+                getProductType(typeList);
+                break;
+            case REQUEST_COMPANY_PRODUCT_DETAIL:
+                CompanyProductInfo companyProductInfo = null;
+                for (CompanyProductInfo info : mProductInfoLocalList) {
+                    if (mLocalId == info.getLocalId()) {
+                        companyProductInfo = info;
+                    }
+                }
+                getCompanyProductDetail(companyProductInfo);
+                break;
+            case REQUEST_SAVE_COMPANY_PRODUCT:
+                UploadInfoBean uploadInfoBean = new UploadInfoBean();
+                uploadInfoBean.setId(mProductId);
+                uploadInfoBean.setCreateTime(TimeUtils.getCurrentTime(new Date()));
+                uploadInfoBean.setUpdateTime(TimeUtils.getCurrentTime(new Date()));
+                saveCompanyProduct(uploadInfoBean, true);
+                break;
         }
     }
 }

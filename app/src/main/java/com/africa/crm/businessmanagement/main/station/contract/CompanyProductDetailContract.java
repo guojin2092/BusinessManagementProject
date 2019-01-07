@@ -4,6 +4,7 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.mvp.presenter.IBasePresenter;
 import com.africa.crm.businessmanagement.network.base.BaseView;
 
@@ -26,7 +27,7 @@ public class CompanyProductDetailContract {
 
         void getCompanyProductDetail(CompanyProductInfo companyProductInfo);
 
-        void saveCompanyProduct(BaseEntity baseEntity);
+        void saveCompanyProduct(UploadInfoBean uploadInfoBean, boolean isLocal);
     }
 
     public interface Presenter extends IBasePresenter<CompanyProductDetailContract.View> {

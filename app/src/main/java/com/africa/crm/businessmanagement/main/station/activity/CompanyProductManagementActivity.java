@@ -7,15 +7,13 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyProductEvent;
@@ -24,13 +22,18 @@ import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
+import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteProductInfo;
+import com.africa.crm.businessmanagement.main.dao.CompanyDeleteProductInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyProductInfoDao;
+import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.ProductListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyProductManagementContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyProductPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
-import com.africa.crm.businessmanagement.widget.KeyboardUtil;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
@@ -43,6 +46,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.DicUtil.PRODUCT_TYPE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_PRODUCT_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DELETE_COMPANY_PRODUCT;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_PRODUCT_TYPE;
 
 /**
  * Project：BusinessManagementProject
@@ -69,17 +77,22 @@ public class CompanyProductManagementActivity extends BaseRefreshMvpActivity<Com
     RecyclerView recyclerView;
     private ProductListAdapter mProductListAdapter;
     private List<CompanyProductInfo> mDeleteList = new ArrayList<>();
-    private List<CompanyProductInfo> mProductInfoBeanList = new ArrayList<>();
+    private List<CompanyProductInfo> mProductInfoBeanList = new ArrayList<>();//网络数据
+    private List<CompanyProductInfo> mProductInfoLocalList = new ArrayList<>();//本地数据
 
     private boolean mShowCheckBox = false;
     private AlertDialog mDeleteDialog;
 
     @BindView(R.id.spinner_type)
     MySpinner spinner_type;
-    private static final String SUPPLIER_PRODUCT_CODE = "PRODUCTTYPE";
     private List<DicInfo> mSpinnerProductList = new ArrayList<>();
     private String mProductType = "";
     private String mCompanyId = "";
+
+    private GreendaoManager<CompanyProductInfo, CompanyProductInfoDao> mProductInfoDaoManager;
+    private GreendaoManager<CompanyDeleteProductInfo, CompanyDeleteProductInfoDao> mDeleteProductInfoDaoManager;
+    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoManager;
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
@@ -108,7 +121,7 @@ public class CompanyProductManagementActivity extends BaseRefreshMvpActivity<Com
 
     @Override
     protected void requestData() {
-        mPresenter.getProductType(SUPPLIER_PRODUCT_CODE);
+        mPresenter.getProductType(PRODUCT_TYPE);
         pullDownRefresh(page);
     }
 
@@ -129,6 +142,14 @@ public class CompanyProductManagementActivity extends BaseRefreshMvpActivity<Com
         tv_delete.setOnClickListener(this);
         tv_search.setOnClickListener(this);
 
+        //得到Dao对象管理器
+        mProductInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyProductInfoDao());
+        //得到Dao对象管理器
+        mDeleteProductInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeleteProductInfoDao());
+        //得到Dao对象管理器
+        mDicInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getDicInfoDao());
+        //得到本地数据
+        mDicInfoLocalList = mDicInfoDaoManager.queryAll();
 /*
         et_name.addTextChangedListener(new TextWatcher() {
             @Override
@@ -175,7 +196,7 @@ public class CompanyProductManagementActivity extends BaseRefreshMvpActivity<Com
                 }
                 break;
             case R.id.ll_add:
-                CompanyProductDetailActivity.startActivity(CompanyProductManagementActivity.this, "");
+                CompanyProductDetailActivity.startActivity(CompanyProductManagementActivity.this, "",0l);
                 break;
             case R.id.tv_delete:
                 mDeleteList.clear();
@@ -226,6 +247,11 @@ public class CompanyProductManagementActivity extends BaseRefreshMvpActivity<Com
     public void getProductType(List<DicInfo> dicInfoList) {
         mSpinnerProductList.clear();
         mSpinnerProductList.addAll(dicInfoList);
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerProductList, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            dicInfo.setType(PRODUCT_TYPE);
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
+        }
         spinner_type.setListDatas(this, mSpinnerProductList);
 
         spinner_type.addOnItemClickListener(new MySpinner.OnItemClickListener() {
@@ -258,6 +284,7 @@ public class CompanyProductManagementActivity extends BaseRefreshMvpActivity<Com
                     mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
                 }
                 mProductInfoBeanList.clear();
+                mProductInfoLocalList = mProductInfoDaoManager.queryAll();
                 recyclerView.smoothScrollToPosition(0);
             }
             if (mRefreshLayout != null) {
@@ -269,6 +296,22 @@ public class CompanyProductManagementActivity extends BaseRefreshMvpActivity<Com
             }
             if (!ListUtils.isEmpty(companyProductInfoBean.getRows())) {
                 mProductInfoBeanList.addAll(companyProductInfoBean.getRows());
+                List<CompanyProductInfo> addList = DifferentDataUtil.addProductDataToLocal(mProductInfoBeanList, mProductInfoLocalList);
+                if (!ListUtils.isEmpty(addList)) {
+                    for (CompanyProductInfo companyInfo : addList) {
+                        mProductInfoDaoManager.insertOrReplace(companyInfo);
+                    }
+                    mProductInfoLocalList = new ArrayList<>();
+                    mProductInfoLocalList = mProductInfoDaoManager.queryAll();
+                }
+                for (CompanyProductInfo info : mProductInfoBeanList) {
+                    for (CompanyProductInfo localInfo : mProductInfoLocalList) {
+                        if (info.getId().equals(localInfo.getId())) {
+                            info.setLocalId(localInfo.getLocalId());
+                            mProductInfoDaoManager.correct(info);
+                        }
+                    }
+                }
                 if (mProductListAdapter != null) {
                     mProductListAdapter.notifyDataSetChanged();
                 }
@@ -282,7 +325,7 @@ public class CompanyProductManagementActivity extends BaseRefreshMvpActivity<Com
                             mProductInfoBeanList.get(position).setChosen(!cb_choose.isChecked());
                             mProductListAdapter.notifyDataSetChanged();
                         } else {
-                            CompanyProductDetailActivity.startActivity(CompanyProductManagementActivity.this, mProductInfoBeanList.get(position).getId());
+                            CompanyProductDetailActivity.startActivity(CompanyProductManagementActivity.this, mProductInfoBeanList.get(position).getId(),mProductInfoLocalList.get(position).getLocalId());
                         }
                     }
                 });
@@ -292,12 +335,25 @@ public class CompanyProductManagementActivity extends BaseRefreshMvpActivity<Com
     }
 
     @Override
-    public void deleteCompanyProduct(BaseEntity baseEntity) {
+    public void deleteCompanyProduct(BaseEntity baseEntity, boolean isLocal) {
         if (baseEntity.isSuccess()) {
             for (int i = 0; i < mDeleteList.size(); i++) {
                 if (mProductInfoBeanList.contains(mDeleteList.get(i))) {
                     int position = mProductInfoBeanList.indexOf(mDeleteList.get(i));
                     mProductInfoBeanList.remove(mDeleteList.get(i));
+                    if (isLocal) {
+                        for (CompanyProductInfo companyInfo : mDeleteList) {
+                            CompanyDeleteProductInfo deleteInfo = new CompanyDeleteProductInfo(companyInfo.getCreateTime(), companyInfo.getSupplierName(), companyInfo.getRemark(), companyInfo.getStockNum(), companyInfo.getUnitPrice(), companyInfo.getCode(), companyInfo.getCompanyName(), companyInfo.getType(), companyInfo.getWarnNum(), companyInfo.getId(), companyInfo.getTypeName(), companyInfo.getUnit(), companyInfo.getName(), companyInfo.getCompanyId(), companyInfo.getMakerName(), true, true);
+                            mDeleteProductInfoDaoManager.insertOrReplace(deleteInfo);
+                        }
+                    }
+                    for (CompanyProductInfo companyInfo : mProductInfoLocalList) {
+                        if (mDeleteList.get(i).getLocalId().equals(companyInfo.getLocalId())) {
+                            mProductInfoDaoManager.delete(companyInfo.getLocalId());
+                        }
+                    }
+                    mProductInfoLocalList = new ArrayList<>();
+                    mProductInfoLocalList = mProductInfoDaoManager.queryAll();
                     if (mProductListAdapter != null) {
                         mProductListAdapter.notifyItemRemoved(position);
                     }
@@ -328,5 +384,28 @@ public class CompanyProductManagementActivity extends BaseRefreshMvpActivity<Com
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        mRefreshLayout.setEnableLoadmore(false);
+        if (port.equals(REQUEST_PRODUCT_TYPE)) {
+            List<DicInfo> stateList = new ArrayList<>();
+            for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                if (dicInfo.getType().equals(PRODUCT_TYPE)) {
+                    stateList.add(dicInfo);
+                }
+            }
+            getProductType(stateList);
+        } else if (port.equals(REQUEST_COMPANY_PRODUCT_LIST)) {
+            CompanyProductInfoBean companyInfoBean = new CompanyProductInfoBean();
+            companyInfoBean.setRows(mProductInfoDaoManager.queryAll());
+            getCompanyProductList(companyInfoBean);
+        } else if (port.equals(REQUEST_DELETE_COMPANY_PRODUCT)) {
+            BaseEntity baseEntity = new BaseEntity();
+            baseEntity.setSuccess(true);
+            deleteCompanyProduct(baseEntity, true);
+        }
     }
 }

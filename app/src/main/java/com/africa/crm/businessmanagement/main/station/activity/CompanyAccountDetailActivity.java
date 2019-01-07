@@ -413,11 +413,9 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
                 getState(stateList);
                 break;
             case REQUEST_QUERY_ALL_ROLES:
-                List<DicInfo> roleList = new ArrayList<>();
                 List<RoleInfoBean> roleAllList = new ArrayList<>();
                 for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
                     if (dicInfo.getType().equals(QUERY_ALL_ROLES)) {
-                        roleList.add(dicInfo);
                         roleAllList.add(new RoleInfoBean(dicInfo.getId(), dicInfo.getText(), dicInfo.getCode()));
                     }
                 }

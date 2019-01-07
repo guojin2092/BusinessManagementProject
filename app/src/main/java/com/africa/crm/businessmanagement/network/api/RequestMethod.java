@@ -46,4 +46,17 @@ public class RequestMethod {
     public static final String REQUEST_DELETE_COMPANY_SUPPLIER = "request_delete_company_supplier";
     //保存企业供应商
     public static final String REQUEST_SAVE_COMPANY_SUPPLIER = "request_save_company_supplier";
+
+    //产品分类
+    public static final String REQUEST_PRODUCT_TYPE = "request_product_type";
+    //企业产品列表
+    public static final String REQUEST_COMPANY_PRODUCT_LIST = "request_company_product_list";
+    //删除企业产品
+    public static final String REQUEST_DELETE_COMPANY_PRODUCT = "request_delete_company_product";
+    //获取所有供应商列表
+    public static final String REQUEST_ALL_SUPPLIER_LIST = "request_all_supplier_list";
+    //获取企业产品详情
+    public static final String REQUEST_COMPANY_PRODUCT_DETAIL = "request_company_product_detail";
+    //保存企业产品
+    public static final String REQUEST_SAVE_COMPANY_PRODUCT = "request_save_company_product";
 }

@@ -1,4 +1,4 @@
-package com.africa.crm.businessmanagement.main.bean;
+package com.africa.crm.businessmanagement.main.bean.delete;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
@@ -14,7 +14,7 @@ import org.greenrobot.greendao.annotation.Generated;
  * Why & What is modified:
  */
 @Entity
-public class CompanyProductInfo {
+public class CompanyDeleteProductInfo {
     @Id(autoincrement = true)
     private Long localId;
     private String createTime;
@@ -36,10 +36,10 @@ public class CompanyProductInfo {
     private boolean chosen;
     private boolean isLocal = false;
 
-    @Generated(hash = 1425104058)
-    public CompanyProductInfo(Long localId, String createTime, String supplierName,
-            String remark, String stockNum, String unitPrice, String code,
-            String companyName, String type, String warnNum, String id,
+    @Generated(hash = 1348269015)
+    public CompanyDeleteProductInfo(Long localId, String createTime,
+            String supplierName, String remark, String stockNum, String unitPrice,
+            String code, String companyName, String type, String warnNum, String id,
             String typeName, String unit, String name, String companyId,
             String makerName, boolean chosen, boolean isLocal) {
         this.localId = localId;
@@ -62,11 +62,11 @@ public class CompanyProductInfo {
         this.isLocal = isLocal;
     }
 
-    public CompanyProductInfo(String createTime, String supplierName,
-                              String remark, String stockNum, String unitPrice, String code,
-                              String companyName, String type, String warnNum, String id,
-                              String typeName, String unit, String name, String companyId,
-                              String makerName, boolean chosen, boolean isLocal) {
+    public CompanyDeleteProductInfo(String createTime,
+                                    String supplierName, String remark, String stockNum, String unitPrice,
+                                    String code, String companyName, String type, String warnNum, String id,
+                                    String typeName, String unit, String name, String companyId,
+                                    String makerName, boolean chosen, boolean isLocal) {
         this.createTime = createTime;
         this.supplierName = supplierName;
         this.remark = remark;
@@ -86,8 +86,8 @@ public class CompanyProductInfo {
         this.isLocal = isLocal;
     }
 
-    @Generated(hash = 1567827514)
-    public CompanyProductInfo() {
+    @Generated(hash = 1162138210)
+    public CompanyDeleteProductInfo() {
     }
 
     public String getCreateTime() {

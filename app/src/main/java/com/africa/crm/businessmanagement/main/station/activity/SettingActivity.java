@@ -17,6 +17,7 @@ import com.africa.crm.businessmanagement.main.LoginActivity;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
@@ -24,12 +25,15 @@ import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteAccountInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteInfo;
+import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteProductInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteSupplierInfo;
 import com.africa.crm.businessmanagement.main.dao.CompanyAccountInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteAccountInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyDeleteProductInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteSupplierInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyProductInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanySupplierInfoDao;
 import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
@@ -122,6 +126,14 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
     private List<CompanyDeleteSupplierInfo> mCompanyDeleteSupplierInfoList = new ArrayList<>();//本地数据
 
     /**
+     * 企业产品本地数据库
+     */
+    private GreendaoManager<CompanyProductInfo, CompanyProductInfoDao> mProductInfoDaoManager;
+    private List<CompanyProductInfo> mProductInfoLocalList = new ArrayList<>();//本地数据
+    private GreendaoManager<CompanyDeleteProductInfo, CompanyDeleteProductInfoDao> mDeleteProductInfoDaoManager;
+    private List<CompanyDeleteProductInfo> mDeleteProductInfoList = new ArrayList<>();//本地数据
+
+    /**
      * @param activity
      */
     public static void startActivity(Activity activity, WorkStationInfo workStationInfo) {
@@ -177,6 +189,12 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
         //删除企业供应商dao
         mDeleteSupplierInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeleteSupplierInfoDao());
         mCompanyDeleteSupplierInfoList = mDeleteSupplierInfoDaoManager.queryAll();
+        //企业产品dao
+        mProductInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyProductInfoDao());
+        mProductInfoLocalList = mProductInfoDaoManager.queryAll();
+        //删除企业产品dao
+        mDeleteProductInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeleteProductInfoDao());
+        mDeleteProductInfoList = mDeleteProductInfoDaoManager.queryAll();
     }
 
     @Override
@@ -445,7 +463,7 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                 public ObservableSource<UploadInfoBean> apply(FileInfoBean fileInfoBean) throws Exception {
                                     if (!TextUtils.isEmpty(fileInfoBean.getCode())) {
                                         mHeadCode[0] = fileInfoBean.getCode();
-                                        return mDataManager.saveCompanySupplier(companyInfo.getId(),companyInfo.getCompanyId(),mHeadCode[0],companyInfo.getName(),companyInfo.getType(),companyInfo.getAddress(),companyInfo.getPhone(),companyInfo.getEmail(),companyInfo.getZipCode(),companyInfo.getArea(),companyInfo.getRemark());
+                                        return mDataManager.saveCompanySupplier(companyInfo.getId(), companyInfo.getCompanyId(), mHeadCode[0], companyInfo.getName(), companyInfo.getType(), companyInfo.getAddress(), companyInfo.getPhone(), companyInfo.getEmail(), companyInfo.getZipCode(), companyInfo.getArea(), companyInfo.getRemark());
                                     } else {
                                         return Observable.error(new ComException("上传失败，请重试"));
                                     }
@@ -459,11 +477,10 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                     companyInfo.setIsLocal(false);
                                     companyInfo.setCreateTime(uploadInfoBean.getCreateTime());
                                     mCompanySupplierInfoDaoManager.correct(companyInfo);
-                                    toastMsg("数据上传成功");
                                 }
                             }, new ComConsumer(this)));
                 } else {
-                    addDisposable(mDataManager.saveCompanySupplier(companyInfo.getId(),companyInfo.getCompanyId(),companyInfo.getHead(),companyInfo.getName(),companyInfo.getType(),companyInfo.getAddress(),companyInfo.getPhone(),companyInfo.getEmail(),companyInfo.getZipCode(),companyInfo.getArea(),companyInfo.getRemark())
+                    addDisposable(mDataManager.saveCompanySupplier(companyInfo.getId(), companyInfo.getCompanyId(), companyInfo.getHead(), companyInfo.getName(), companyInfo.getType(), companyInfo.getAddress(), companyInfo.getPhone(), companyInfo.getEmail(), companyInfo.getZipCode(), companyInfo.getArea(), companyInfo.getRemark())
                             .compose(RxUtils.<UploadInfoBean>ioToMain(this))
                             .subscribe(new Consumer<UploadInfoBean>() {
                                 @Override
@@ -472,10 +489,39 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                     companyInfo.setIsLocal(false);
                                     companyInfo.setCreateTime(uploadInfoBean.getCreateTime());
                                     mCompanySupplierInfoDaoManager.correct(companyInfo);
-                                    toastMsg("数据上传成功");
                                 }
                             }, new ComConsumer(this)));
                 }
+            }
+        }
+
+        /**
+         * 企业产品模块
+         */
+        for (final CompanyDeleteProductInfo companyDeleteInfo : mDeleteProductInfoList) {
+            addDisposable(mDataManager.deleteCompanyProduct(companyDeleteInfo.getId())
+                    .compose(RxUtils.<BaseEntity>ioToMain(this))
+                    .subscribe(new Consumer<BaseEntity>() {
+                        @Override
+                        public void accept(BaseEntity baseEntity) throws Exception {
+                            mDeleteProductInfoDaoManager.delete(companyDeleteInfo.getLocalId());
+                        }
+                    }, new ComConsumer(this)));
+        }
+        for (final CompanyProductInfo companyInfo : mProductInfoLocalList) {
+            if (companyInfo.isLocal()) {
+                addDisposable(mDataManager.saveCompanyProduct(companyInfo.getId(),companyInfo.getCompanyId(),companyInfo.getName(),companyInfo.getCode(),companyInfo.getSupplierName(),companyInfo.getMakerName(),companyInfo.getType(),companyInfo.getUnitPrice(),companyInfo.getUnit(),companyInfo.getStockNum(),companyInfo.getWarnNum(),companyInfo.getRemark())
+                        .compose(RxUtils.<UploadInfoBean>ioToMain(this))
+                        .subscribe(new Consumer<UploadInfoBean>() {
+                            @Override
+                            public void accept(UploadInfoBean uploadInfoBean) throws Exception {
+                                companyInfo.setId(uploadInfoBean.getId());
+                                companyInfo.setIsLocal(false);
+                                companyInfo.setCreateTime(uploadInfoBean.getCreateTime());
+                                mProductInfoDaoManager.correct(companyInfo);
+                                toastMsg("数据上传成功");
+                            }
+                        }, new ComConsumer(this)));
             }
         }
     }

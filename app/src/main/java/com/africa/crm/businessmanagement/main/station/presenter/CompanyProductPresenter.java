@@ -12,6 +12,10 @@ import java.util.List;
 
 import io.reactivex.functions.Consumer;
 
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_PRODUCT_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DELETE_COMPANY_PRODUCT;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_PRODUCT_TYPE;
+
 /**
  * Project：BusinessManagementProject
  * Author:  guojin
@@ -32,7 +36,7 @@ public class CompanyProductPresenter extends RxPresenter<CompanyProductManagemen
                     public void accept(List<DicInfo> dicInfoList) throws Exception {
                         mView.getProductType(dicInfoList);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView,REQUEST_PRODUCT_TYPE)));
     }
 
     @Override
@@ -44,7 +48,7 @@ public class CompanyProductPresenter extends RxPresenter<CompanyProductManagemen
                     public void accept(CompanyProductInfoBean companyProductInfoBean) throws Exception {
                         mView.getCompanyProductList(companyProductInfoBean);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView,REQUEST_COMPANY_PRODUCT_LIST)));
 
     }
 
@@ -55,9 +59,9 @@ public class CompanyProductPresenter extends RxPresenter<CompanyProductManagemen
                 .subscribe(new Consumer<BaseEntity>() {
                     @Override
                     public void accept(BaseEntity baseEntity) throws Exception {
-                        mView.deleteCompanyProduct(baseEntity);
+                        mView.deleteCompanyProduct(baseEntity, false);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView,REQUEST_DELETE_COMPANY_PRODUCT)));
 
     }
 }

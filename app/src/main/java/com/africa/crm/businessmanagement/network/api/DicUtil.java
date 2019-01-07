@@ -18,5 +18,8 @@ public class DicUtil {
     public static final String QUERY_ALL_ROLES = "QUERY_ALL_ROLES";
     //供应商分类
     public static final String SUPPLIER_TYPE_CODE = "SUPPLIERTYPE";
-
+    //产品分类
+    public static final String PRODUCT_TYPE = "PRODUCTTYPE";
+    //查询所有供应商
+    public static final String QUERY_ALL_SUPPLIERS = "QUERY_ALL_suppliers";
 }

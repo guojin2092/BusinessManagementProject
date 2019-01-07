@@ -226,7 +226,7 @@ public interface MainApi {
 
     @FormUrlEncoded
     @POST("product/save")
-    Observable<BaseEntity> saveCompanyProduct(@Field("id") String id, @Field("companyId") String companyId, @Field("name") String name, @Field("code") String code, @Field("supplierName") String supplierName, @Field("makerName") String makerName, @Field("type") String type, @Field("unitPrice") String unitPrice, @Field("unit") String unit, @Field("stockNum") String stockNum, @Field("warnNum") String warnNum, @Field("remark") String remark);
+    Observable<BaseEntity<UploadInfoBean>> saveCompanyProduct(@Field("id") String id, @Field("companyId") String companyId, @Field("name") String name, @Field("code") String code, @Field("supplierName") String supplierName, @Field("makerName") String makerName, @Field("type") String type, @Field("unitPrice") String unitPrice, @Field("unit") String unit, @Field("stockNum") String stockNum, @Field("warnNum") String warnNum, @Field("remark") String remark);
 
     @FormUrlEncoded
     @POST("product/queryAll")

@@ -4,6 +4,7 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyProductDetailContract;
 import com.africa.crm.businessmanagement.mvp.presenter.RxPresenter;
 import com.africa.crm.businessmanagement.network.error.ComConsumer;
@@ -12,6 +13,11 @@ import com.africa.crm.businessmanagement.network.util.RxUtils;
 import java.util.List;
 
 import io.reactivex.functions.Consumer;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_SUPPLIER_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_PRODUCT_DETAIL;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_PRODUCT_TYPE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SAVE_COMPANY_PRODUCT;
 
 /**
  * Project：BusinessManagementProject
@@ -32,7 +38,7 @@ public class CompanyProductDetailPresenter extends RxPresenter<CompanyProductDet
                     public void accept(List<DicInfo2> dicInfoList) throws Exception {
                         mView.getAllSuppliers(dicInfoList);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_ALL_SUPPLIER_LIST)));
     }
 
     @Override
@@ -44,7 +50,7 @@ public class CompanyProductDetailPresenter extends RxPresenter<CompanyProductDet
                     public void accept(List<DicInfo> dicInfoList) throws Exception {
                         mView.getProductType(dicInfoList);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_PRODUCT_TYPE)));
     }
 
     @Override
@@ -56,19 +62,19 @@ public class CompanyProductDetailPresenter extends RxPresenter<CompanyProductDet
                     public void accept(CompanyProductInfo companyProductInfo) throws Exception {
                         mView.getCompanyProductDetail(companyProductInfo);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_COMPANY_PRODUCT_DETAIL)));
 
     }
 
     @Override
     public void saveCompanyProduct(String id, String companyId, String name, String code, String supplierName, String makerName, String type, String unitPrice, String unit, String stockNum, String warnNum, String remark) {
         addDisposable(mDataManager.saveCompanyProduct(id, companyId, name, code, supplierName, makerName, type, unitPrice, unit, stockNum, warnNum, remark)
-                .compose(RxUtils.<BaseEntity>ioToMain(mView))
-                .subscribe(new Consumer<BaseEntity>() {
+                .compose(RxUtils.<UploadInfoBean>ioToMain(mView))
+                .subscribe(new Consumer<UploadInfoBean>() {
                     @Override
-                    public void accept(BaseEntity baseEntity) throws Exception {
-                        mView.saveCompanyProduct(baseEntity);
+                    public void accept(UploadInfoBean uploadInfoBean) throws Exception {
+                        mView.saveCompanyProduct(uploadInfoBean, false);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_SAVE_COMPANY_PRODUCT)));
     }
 }

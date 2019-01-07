@@ -25,7 +25,7 @@ public class CompanyProductManagementContract {
 
         void getCompanyProductList(CompanyProductInfoBean companyProductInfoBean);
 
-        void deleteCompanyProduct(BaseEntity baseEntity);
+        void deleteCompanyProduct(BaseEntity baseEntity, boolean isLocal);
     }
 
     public interface Presenter extends IBasePresenter<CompanyProductManagementContract.View> {

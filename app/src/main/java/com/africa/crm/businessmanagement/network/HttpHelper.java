@@ -153,7 +153,7 @@ public interface HttpHelper {
 
     Observable<CompanyProductInfo> getCompanyProductDetail(String id);
 
-    Observable<BaseEntity> saveCompanyProduct(String id, String companyId, String name, String code, String supplierName, String makerName, String type, String unitPrice, String unit, String stockNum, String warnNum, String remark);
+    Observable<UploadInfoBean> saveCompanyProduct(String id, String companyId, String name, String code, String supplierName, String makerName, String type, String unitPrice, String unit, String stockNum, String warnNum, String remark);
 
     Observable<List<DicInfo2>> getAllProducts(String companyId);
 
