@@ -40,6 +40,8 @@ import java.util.List;
 
 import butterknife.BindView;
 
+import static com.africa.crm.businessmanagement.network.api.DicUtil.COMPANY_TYPE_CODE;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.STATE_CODE;
 import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_INFO_DETAIL;
 import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_STATE;
 import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_TYPE;
@@ -74,13 +76,11 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
 
     @BindView(R.id.spinner_type)
     MySpinner spinner_type;
-    private static final String COMPANY_TYPE_CODE = "COMPANYTYPE";
     private List<DicInfo> mSpinnerCompanyTypeList = new ArrayList<>();
     private String mCompanyType = "";
 
     @BindView(R.id.spinner_state)
     MySpinner spinner_state;
-    private static final String STATE_CODE = "STATE";
     private List<DicInfo> mSpinnerStateList = new ArrayList<>();
     private String mState = "";
 
@@ -90,15 +90,16 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     private CameraCore cameraCore;
     private SinglePopup singlePopup;
     private String mHeadCode = "";//头像ID
+    private String mLocalPath = "";
 
     private GreendaoManager<CompanyInfo, CompanyInfoDao> mCompanyInfoDaoGreendaoManager;
     private CompanyInfoDao mCompanyInfoDao;
     private List<CompanyInfo> mCompanyInfoLocalList = new ArrayList<>();//本地数据
+
     private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoGreendaoManager;
     private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
     private DicInfoDao mDicInfoDao;
 
-    private String mLocalPath = "";
 
     /**
      * @param activity
@@ -165,7 +166,10 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     protected void requestData() {
         mPresenter.getCompanyType(COMPANY_TYPE_CODE);
         mPresenter.getState(STATE_CODE);
-        mPresenter.getCompanyInfoDetail(mCompanyId);
+
+        if (!TextUtils.isEmpty(mCompanyId) || mLocalId != 0l) {
+            mPresenter.getCompanyInfoDetail(mCompanyId);
+        }
     }
 
 
@@ -240,7 +244,7 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     }
 
     @Override
-    public void getCompanyInfoDetail(CompanyInfo companyInfo, boolean isLocal) {
+    public void getCompanyInfoDetail(CompanyInfo companyInfo) {
         if (companyInfo != null) {
             //企业名称
             et_company_name.setText(companyInfo.getName());
@@ -325,7 +329,7 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     @Override
     public void saveCompanyInfo(UploadInfoBean uploadInfoBean, boolean isLocal) {
         String toastString = "";
-        if (TextUtils.isEmpty(mCompanyId) || mLocalId == 0l) {
+        if (TextUtils.isEmpty(mCompanyId) && mLocalId == 0l) {
             toastString = "企业信息创建成功";
         } else {
             toastString = "企业信息修改成功";
@@ -418,7 +422,7 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
                         companyInfo = info;
                     }
                 }
-                getCompanyInfoDetail(companyInfo, true);
+                getCompanyInfoDetail(companyInfo);
                 break;
             case REQUEST_SAVE_COMPANY_INFO:
                 UploadInfoBean uploadInfoBean = new UploadInfoBean();

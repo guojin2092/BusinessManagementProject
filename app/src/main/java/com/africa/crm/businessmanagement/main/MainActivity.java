@@ -25,7 +25,7 @@ import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.contract.MainContract;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.presenter.MainPresenter;
-import com.africa.crm.businessmanagement.main.station.activity.CompanyAccountActivity;
+import com.africa.crm.businessmanagement.main.station.activity.CompanyAccountManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyClientManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyContactManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyDeliveryOrderManagementActivity;
@@ -411,7 +411,7 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
                             CompanyInfoManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "2":
-                            CompanyAccountActivity.startActivity(MainActivity.this, workStationInfo);
+                            CompanyAccountManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "3":
                             CompanySupplierManagementActivity.startActivity(MainActivity.this, workStationInfo);

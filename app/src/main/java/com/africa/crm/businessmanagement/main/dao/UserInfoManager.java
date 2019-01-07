@@ -21,6 +21,7 @@ public class UserInfoManager {
     public static final String UPDATE_TIME = "updateTime";
     public static final String IS_DELETED = "isdeleted";
     public static final String USER_NAME = "userName";
+    public static final String COMPANY_NAME = "companyName";
     public static final String COMPANY_ID = "companyId";
     public static final String TYPE = "type";
     public static final String PASSWORD = "passWord";
@@ -46,6 +47,7 @@ public class UserInfoManager {
         editor.putBoolean(IS_DELETED, userInfoBean.isIsdeleted());
         editor.putString(USER_NAME, userInfoBean.getUserName());
         editor.putString(COMPANY_ID, userInfoBean.getCompanyId());
+        editor.putString(COMPANY_NAME, userInfoBean.getCompanyName());
         editor.putString(TYPE, userInfoBean.getType());
         editor.putString(PASSWORD, userInfoBean.getPassWord());
         editor.putInt(VERSION, userInfoBean.getVersion());
@@ -70,6 +72,7 @@ public class UserInfoManager {
         loginInfoBean.setIsdeleted(sharedPreferences.getBoolean(IS_DELETED, false));
         loginInfoBean.setUserName(sharedPreferences.getString(USER_NAME, ""));
         loginInfoBean.setCompanyId(sharedPreferences.getString(COMPANY_ID, ""));
+        loginInfoBean.setCompanyName(sharedPreferences.getString(COMPANY_NAME, ""));
         loginInfoBean.setType(sharedPreferences.getString(TYPE, ""));
         loginInfoBean.setPassWord(sharedPreferences.getString(PASSWORD, ""));
         loginInfoBean.setVersion(sharedPreferences.getInt(VERSION, 0));

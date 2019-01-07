@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyAccountEvent;
@@ -20,12 +21,17 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfoBean;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
+import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteAccountInfo;
+import com.africa.crm.businessmanagement.main.dao.CompanyAccountInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyDeleteAccountInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.CompanyAccountListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyAccountContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyAccountPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -38,6 +44,9 @@ import java.util.List;
 
 import butterknife.BindView;
 
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_ACCOUNT_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DELETE_COMPANY_ACCOUNT;
+
 /**
  * Project：BusinessManagementProject
  * Author:  guojin
@@ -47,7 +56,7 @@ import butterknife.BindView;
  * Modification  History:
  * Why & What is modified:
  */
-public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccountPresenter> implements CompanyAccountContract.View {
+public class CompanyAccountManagementActivity extends BaseRefreshMvpActivity<CompanyAccountPresenter> implements CompanyAccountContract.View {
     @BindView(R.id.et_account)
     EditText et_account;
     @BindView(R.id.et_nickname)
@@ -63,6 +72,7 @@ public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccoun
 
     private CompanyAccountListAdapter mCompanyAccountListAdapter;
     private List<CompanyAccountInfo> mCompanyInfoList = new ArrayList<>();
+    private List<CompanyAccountInfo> mCompanyInfoLocalList = new ArrayList<>();//本地数据
     private List<CompanyAccountInfo> mDeleteList = new ArrayList<>();
     private boolean mShowCheckBox = false;
 
@@ -71,11 +81,17 @@ public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccoun
 
     private String mCompanyId = "";
 
+    private GreendaoManager<CompanyAccountInfo, CompanyAccountInfoDao> mAccountInfoDaoManager;
+    private CompanyAccountInfoDao mCompanyAccountInfoDao;
+
+    private GreendaoManager<CompanyDeleteAccountInfo, CompanyDeleteAccountInfoDao> mDeleteAccountInfoDaoManager;
+    private CompanyDeleteAccountInfoDao mDeleteAccountInfoDao;
+
     /**
      * @param activity
      */
     public static void startActivity(Activity activity, WorkStationInfo workStationInfo) {
-        Intent intent = new Intent(activity, CompanyAccountActivity.class);
+        Intent intent = new Intent(activity, CompanyAccountManagementActivity.class);
         intent.putExtra("info", workStationInfo);
         activity.startActivity(intent);
     }
@@ -102,6 +118,16 @@ public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccoun
         tv_search.setOnClickListener(this);
         ll_add.setOnClickListener(this);
         tv_delete.setOnClickListener(this);
+
+        //得到Dao对象
+        mCompanyAccountInfoDao = MyApplication.getInstance().getDaoSession().getCompanyAccountInfoDao();
+        //得到Dao对象管理器
+        mAccountInfoDaoManager = new GreendaoManager<>(mCompanyAccountInfoDao);
+
+        //得到Dao对象
+        mDeleteAccountInfoDao = MyApplication.getInstance().getDaoSession().getCompanyDeleteAccountInfoDao();
+        //得到Dao对象管理器
+        mDeleteAccountInfoDaoManager = new GreendaoManager<>(mDeleteAccountInfoDao);
 
 /*
         et_account.addTextChangedListener(new TextWatcher() {
@@ -196,7 +222,7 @@ public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccoun
                 }
                 break;
             case R.id.ll_add:
-                CompanyAccountDetailActivity.startActivity(CompanyAccountActivity.this, "");
+                CompanyAccountDetailActivity.startActivity(CompanyAccountManagementActivity.this, "", 0l);
                 break;
             case R.id.tv_delete:
                 mDeleteList.clear();
@@ -209,7 +235,7 @@ public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccoun
                     toastMsg("尚未选择删除项");
                     return;
                 }
-                mDeleteDialog = new AlertDialog.Builder(CompanyAccountActivity.this)
+                mDeleteDialog = new AlertDialog.Builder(CompanyAccountManagementActivity.this)
                         .setTitle(R.string.tips)
                         .setMessage(R.string.confirm_delete)
                         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -231,18 +257,6 @@ public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccoun
         }
     }
 
-    @Subscribe
-    public void Event(AddOrSaveCompanyAccountEvent addOrSaveCompanyAccountEvent) {
-        toastMsg(addOrSaveCompanyAccountEvent.getMsg());
-        requestData();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-    }
-
     @Override
     public void getCompanyAccounList(CompanyAccountInfoBean companyAccountInfoBean) {
         if (companyAccountInfoBean != null) {
@@ -260,6 +274,7 @@ public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccoun
                     mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
                 }
                 mCompanyInfoList.clear();
+                mCompanyInfoLocalList = mAccountInfoDaoManager.queryAll();
                 recyclerView.smoothScrollToPosition(0);
             }
             if (mRefreshLayout != null) {
@@ -271,6 +286,22 @@ public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccoun
             }
             if (!ListUtils.isEmpty(companyAccountInfoBean.getRows())) {
                 mCompanyInfoList.addAll(companyAccountInfoBean.getRows());
+                List<CompanyAccountInfo> addList = DifferentDataUtil.addAccountDataToLocal(mCompanyInfoList, mCompanyInfoLocalList);
+                if (!ListUtils.isEmpty(addList)) {
+                    for (CompanyAccountInfo companyInfo : addList) {
+                        mAccountInfoDaoManager.insertOrReplace(companyInfo);
+                    }
+                    mCompanyInfoLocalList = new ArrayList<>();
+                    mCompanyInfoLocalList = mAccountInfoDaoManager.queryAll();
+                }
+                for (CompanyAccountInfo info : mCompanyInfoList) {
+                    for (CompanyAccountInfo localInfo : mCompanyInfoLocalList) {
+                        if (info.getId().equals(localInfo.getId())) {
+                            info.setLocalId(localInfo.getLocalId());
+                            mAccountInfoDaoManager.correct(info);
+                        }
+                    }
+                }
                 if (mCompanyAccountListAdapter != null) {
                     mCompanyAccountListAdapter.notifyDataSetChanged();
                 }
@@ -284,7 +315,7 @@ public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccoun
                             mCompanyInfoList.get(position).setChosen(!cb_choose.isChecked());
                             mCompanyAccountListAdapter.notifyDataSetChanged();
                         } else {
-                            CompanyAccountDetailActivity.startActivity(CompanyAccountActivity.this, mCompanyInfoList.get(position).getId());
+                            CompanyAccountDetailActivity.startActivity(CompanyAccountManagementActivity.this, mCompanyInfoList.get(position).getId(), mCompanyInfoLocalList.get(position).getLocalId());
                         }
                     }
                 });
@@ -294,12 +325,25 @@ public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccoun
     }
 
     @Override
-    public void deleteCompanyAccount(BaseEntity baseEntity) {
+    public void deleteCompanyAccount(BaseEntity baseEntity, boolean isLocal) {
         if (baseEntity.isSuccess()) {
             for (int i = 0; i < mDeleteList.size(); i++) {
                 if (mCompanyInfoList.contains(mDeleteList.get(i))) {
                     int position = mCompanyInfoList.indexOf(mDeleteList.get(i));
                     mCompanyInfoList.remove(mDeleteList.get(i));
+                    if (isLocal) {
+                        for (CompanyAccountInfo companyInfo : mDeleteList) {
+                            CompanyDeleteAccountInfo deleteAccountInfo = new CompanyDeleteAccountInfo(companyInfo.getId(), companyInfo.getCreateTime(), companyInfo.getName(), companyInfo.getUserName(), companyInfo.getRoleId(), companyInfo.getRoleName(), companyInfo.getCompanyId(), companyInfo.getHead(), companyInfo.getCompanyName(), companyInfo.getType(), companyInfo.getTypeName(), companyInfo.getState(), companyInfo.getStateName(), companyInfo.getAddress(), companyInfo.getRoleTypeName(), companyInfo.getPhone(), companyInfo.getRoleCode(), companyInfo.getEmail(), true, true);
+                            mDeleteAccountInfoDaoManager.insertOrReplace(deleteAccountInfo);
+                        }
+                    }
+                    for (CompanyAccountInfo companyInfo : mCompanyInfoLocalList) {
+                        if (mDeleteList.get(i).getLocalId().equals(companyInfo.getLocalId())) {
+                            mAccountInfoDaoManager.delete(companyInfo.getLocalId());
+                        }
+                    }
+                    mCompanyInfoLocalList = new ArrayList<>();
+                    mCompanyInfoLocalList = mAccountInfoDaoManager.queryAll();
                     if (mCompanyAccountListAdapter != null) {
                         mCompanyAccountListAdapter.notifyItemRemoved(position);
                     }
@@ -318,5 +362,35 @@ public class CompanyAccountActivity extends BaseRefreshMvpActivity<CompanyAccoun
             ErrorMsg.showErrorMsg(baseEntity.getReturnMsg());
         }
 
+    }
+
+
+    @Subscribe
+    public void Event(AddOrSaveCompanyAccountEvent addOrSaveCompanyAccountEvent) {
+        toastMsg(addOrSaveCompanyAccountEvent.getMsg());
+        page = 1;
+        requestData();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        mRefreshLayout.setEnableLoadmore(false);
+        if (port.equals(REQUEST_COMPANY_ACCOUNT_LIST)) {
+            List<CompanyAccountInfo> companyInfoList = mAccountInfoDaoManager.queryAll();
+            CompanyAccountInfoBean companyAccountInfoBean = new CompanyAccountInfoBean();
+            companyAccountInfoBean.setRows(companyInfoList);
+            getCompanyAccounList(companyAccountInfoBean);
+        } else if (port.equals(REQUEST_DELETE_COMPANY_ACCOUNT)) {
+            BaseEntity baseEntity = new BaseEntity();
+            baseEntity.setSuccess(true);
+            deleteCompanyAccount(baseEntity, true);
+        }
     }
 }

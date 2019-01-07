@@ -89,7 +89,7 @@ public interface HttpHelper {
 
     Observable<List<DicInfo2>> getAllCompany(String name);
 
-    Observable<List<RoleInfoBean>> getAllRoles(String name);
+    Observable<List<RoleInfoBean>> getAllRoles();
 
     Observable<RoleManagementInfoBean> getRoleList(int page, int rows, String roleName, String roleCode, String typeName);
 
@@ -115,7 +115,7 @@ public interface HttpHelper {
 
     Observable<CompanyAccountInfo> getCompanyAccountDetail(String id);
 
-    Observable<BaseEntity> saveCompanyAccount(String id, String userName, String type, String roleId, String passWord, String name, String phone, String address, String email, String state, String companyId, String head);
+    Observable<UploadInfoBean> saveCompanyAccount(String id, String userName, String type, String roleId, String passWord, String name, String phone, String address, String email, String state, String companyId, String head);
 
     Observable<CompanySupplierInfoBean> getCompanySupplierList(int page, int rows, String companyId, String name, String type);
 

@@ -5,6 +5,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.mvp.presenter.IBasePresenter;
 import com.africa.crm.businessmanagement.network.base.BaseView;
 
@@ -22,31 +23,27 @@ import java.util.List;
 public class CompanyAccountDetailContract {
     public interface View extends BaseView {
 
-        void uploadImages(FileInfoBean fileInfoBean);
-
-        void getUserType(List<DicInfo> dicInfoList);
-
         void getState(List<DicInfo> dicInfoList);
 
         void getAllRoles(List<RoleInfoBean> roleInfoBeanList);
 
         void getCompanyAccountDetail(CompanyAccountInfo companyAccountInfo);
 
-        void saveCompanyAccount(BaseEntity baseEntity);
+        void uploadImages(FileInfoBean fileInfoBean,boolean isLocal);
+
+        void saveCompanyAccount(UploadInfoBean uploadInfoBean, boolean isLocal);
 
     }
 
     public interface Presenter extends IBasePresenter<CompanyAccountDetailContract.View> {
 
-        void uploadImages(String filePath);
-
-        void getUserType(String code);
-
         void getState(String code);
 
-        void getAllRoles(String name);
+        void getAllRoles();
 
         void getCompanyAccountDetail(String id);
+
+        void uploadImages(String filePath);
 
         void saveCompanyAccount(String id, String userName, String type, String roleId, String passWord, String name, String phone, String address, String email, String state, String companyId, String head);
     }

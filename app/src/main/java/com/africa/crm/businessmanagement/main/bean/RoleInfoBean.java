@@ -18,6 +18,15 @@ public class RoleInfoBean implements Serializable {
     private String roleCode;//角色编码
     private String roleName;//角色名称
 
+    public RoleInfoBean() {
+    }
+
+    public RoleInfoBean(String id, String roleName, String roleCode) {
+        this.id = id;
+        this.roleName = roleName;
+        this.roleCode = roleCode;
+    }
+
     public String getTypeName() {
         return typeName;
     }

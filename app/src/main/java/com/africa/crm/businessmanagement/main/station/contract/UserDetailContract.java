@@ -50,6 +50,6 @@ public class UserDetailContract {
 
         void getAllCompany(String name);
 
-        void getAllRoles(String name);
+        void getAllRoles();
     }
 }

@@ -74,7 +74,7 @@ public class CompanyInfoPresenter extends RxPresenter<CompanyInfoContract.View> 
                 .subscribe(new Consumer<CompanyInfo>() {
                     @Override
                     public void accept(CompanyInfo companyInfo) throws Exception {
-                        mView.getCompanyInfoDetail(companyInfo, false);
+                        mView.getCompanyInfoDetail(companyInfo);
                     }
                 }, new ComConsumer(mView, REQUEST_COMPANY_INFO_DETAIL)));
     }

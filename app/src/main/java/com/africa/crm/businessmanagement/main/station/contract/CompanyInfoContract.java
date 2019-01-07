@@ -23,7 +23,7 @@ public class CompanyInfoContract {
 
     public interface View extends BaseView {
 
-        void getCompanyInfoDetail(CompanyInfo companyInfo,boolean isLocal);
+        void getCompanyInfoDetail(CompanyInfo companyInfo);
 
         void getCompanyType(List<DicInfo> dicInfoList);
 

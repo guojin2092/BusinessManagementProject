@@ -129,8 +129,8 @@ public class DataManager implements HttpHelper {
     }
 
     @Override
-    public Observable<List<RoleInfoBean>> getAllRoles(String name) {
-        return mHttpHelper.getAllRoles(name);
+    public Observable<List<RoleInfoBean>> getAllRoles() {
+        return mHttpHelper.getAllRoles();
     }
 
     @Override
@@ -194,7 +194,7 @@ public class DataManager implements HttpHelper {
     }
 
     @Override
-    public Observable<BaseEntity> saveCompanyAccount(String id, String userName, String type, String roleId, String passWord, String name, String phone, String address, String email, String state, String companyId, String head) {
+    public Observable<UploadInfoBean> saveCompanyAccount(String id, String userName, String type, String roleId, String passWord, String name, String phone, String address, String email, String state, String companyId, String head) {
         return mHttpHelper.saveCompanyAccount(id, userName, type, roleId, passWord, name, phone, address, email, state, companyId, head);
     }
 

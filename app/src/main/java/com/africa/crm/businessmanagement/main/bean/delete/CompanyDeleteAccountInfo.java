@@ -1,8 +1,8 @@
-package com.africa.crm.businessmanagement.main.bean;
+package com.africa.crm.businessmanagement.main.bean.delete;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 /**
  * Project：BusinessManagementProject
@@ -14,7 +14,7 @@ import org.greenrobot.greendao.annotation.Generated;
  * Why & What is modified:
  */
 @Entity
-public class CompanyAccountInfo {
+public class CompanyDeleteAccountInfo {
     @Id(autoincrement = true)
     private Long localId;
     private String id;
@@ -35,19 +35,17 @@ public class CompanyAccountInfo {
     private String phone;//联系电话
     private String roleCode;//角色编码
     private String email;//邮箱
-    private String password;
 
     private boolean chosen = false;
     private boolean isLocal = false;
 
-
-    @Generated(hash = 1749676467)
-    public CompanyAccountInfo(Long localId, String id, String createTime,
-            String name, String userName, String roleId, String roleName,
-            String companyId, String head, String companyName, String type,
-            String typeName, String state, String stateName, String address,
-            String roleTypeName, String phone, String roleCode, String email,
-            String password, boolean chosen, boolean isLocal) {
+    @Generated(hash = 1196684907)
+    public CompanyDeleteAccountInfo(Long localId, String id, String createTime,
+                                    String name, String userName, String roleId, String roleName,
+                                    String companyId, String head, String companyName, String type,
+                                    String typeName, String state, String stateName, String address,
+                                    String roleTypeName, String phone, String roleCode, String email,
+                                    boolean chosen, boolean isLocal) {
         this.localId = localId;
         this.id = id;
         this.createTime = createTime;
@@ -67,17 +65,16 @@ public class CompanyAccountInfo {
         this.phone = phone;
         this.roleCode = roleCode;
         this.email = email;
-        this.password = password;
         this.chosen = chosen;
         this.isLocal = isLocal;
     }
 
-    public CompanyAccountInfo(String id, String createTime,
-                              String name, String userName, String roleId, String roleName,
-                              String companyId, String head, String companyName, String type,
-                              String typeName, String state, String stateName, String address,
-                              String roleTypeName, String phone, String roleCode, String email,
-                              String password, boolean chosen, boolean isLocal) {
+    public CompanyDeleteAccountInfo(String id, String createTime,
+                                    String name, String userName, String roleId, String roleName,
+                                    String companyId, String head, String companyName, String type,
+                                    String typeName, String state, String stateName, String address,
+                                    String roleTypeName, String phone, String roleCode, String email,
+                                    boolean chosen, boolean isLocal) {
         this.id = id;
         this.createTime = createTime;
         this.name = name;
@@ -96,15 +93,13 @@ public class CompanyAccountInfo {
         this.phone = phone;
         this.roleCode = roleCode;
         this.email = email;
-        this.password = password;
         this.chosen = chosen;
         this.isLocal = isLocal;
     }
 
-    @Generated(hash = 1170551434)
-    public CompanyAccountInfo() {
+    @Generated(hash = 794246807)
+    public CompanyDeleteAccountInfo() {
     }
-
 
     public Long getLocalId() {
         return localId;
@@ -256,14 +251,6 @@ public class CompanyAccountInfo {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public boolean isChosen() {

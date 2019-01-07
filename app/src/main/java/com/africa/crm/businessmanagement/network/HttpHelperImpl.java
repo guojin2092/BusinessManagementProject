@@ -64,7 +64,6 @@ import java.util.List;
 import io.reactivex.Observable;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 
@@ -146,8 +145,8 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
-    public Observable<List<RoleInfoBean>> getAllRoles(String name) {
-        return mainApi.getAllRoles(name).compose(RxUtils.<List<RoleInfoBean>>handleResult());
+    public Observable<List<RoleInfoBean>> getAllRoles() {
+        return mainApi.getAllRoles("").compose(RxUtils.<List<RoleInfoBean>>handleResult());
     }
 
     @Override
@@ -211,8 +210,8 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
-    public Observable<BaseEntity> saveCompanyAccount(String id, String userName, String type, String roleId, String passWord, String name, String phone, String address, String email, String state, String companyId, String head) {
-        return mainApi.saveCompanyAccount(id, userName, type, roleId, passWord, name, phone, address, email, state, companyId, head);
+    public Observable<UploadInfoBean> saveCompanyAccount(String id, String userName, String type, String roleId, String passWord, String name, String phone, String address, String email, String state, String companyId, String head) {
+        return mainApi.saveCompanyAccount(id, userName, type, roleId, passWord, name, phone, address, email, state, companyId, head).compose(RxUtils.<UploadInfoBean>handleResult());
     }
 
     @Override

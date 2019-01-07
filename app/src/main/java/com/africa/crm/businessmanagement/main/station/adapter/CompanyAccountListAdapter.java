@@ -42,15 +42,13 @@ public class CompanyAccountListAdapter extends BaseQuickAdapter<CompanyAccountIn
     @Override
     protected void convert(BaseViewHolder helper, CompanyAccountInfo item) {
         ImageView iv_icon = helper.getView(R.id.iv_icon);
-        TextView tv_company = helper.getView(R.id.tv_company);
-        TextView tv_location = helper.getView(R.id.tv_location);
+        TextView tv_role_name = helper.getView(R.id.tv_role_name);
         TextView tv_company_account = helper.getView(R.id.tv_company_account);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
         GlideUtil.showImg(iv_icon, item.getHead());
-        tv_company.setText(item.getName());
-        tv_location.setText(item.getArea());
-        tv_company_account.setText("企业账号：" + item.getUserName());
+        tv_role_name.setText(item.getRoleName());
+        tv_company_account.setText("用戶名：" + item.getUserName());
         cb_choose.setChecked(item.isChosen());
         if (mIsDeleted) {
             cb_choose.setVisibility(View.VISIBLE);

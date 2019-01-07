@@ -2,13 +2,15 @@ package com.africa.crm.businessmanagement.main.station.presenter;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfoBean;
-import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyAccountContract;
 import com.africa.crm.businessmanagement.mvp.presenter.RxPresenter;
 import com.africa.crm.businessmanagement.network.error.ComConsumer;
 import com.africa.crm.businessmanagement.network.util.RxUtils;
 
 import io.reactivex.functions.Consumer;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_ACCOUNT_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DELETE_COMPANY_ACCOUNT;
 
 /**
  * Project：BusinessManagementProject
@@ -29,7 +31,7 @@ public class CompanyAccountPresenter extends RxPresenter<CompanyAccountContract.
                     public void accept(CompanyAccountInfoBean companyInfoBean) throws Exception {
                         mView.getCompanyAccounList(companyInfoBean);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_COMPANY_ACCOUNT_LIST)));
 
     }
 
@@ -40,9 +42,9 @@ public class CompanyAccountPresenter extends RxPresenter<CompanyAccountContract.
                 .subscribe(new Consumer<BaseEntity>() {
                     @Override
                     public void accept(BaseEntity baseEntity) throws Exception {
-                        mView.deleteCompanyAccount(baseEntity);
+                        mView.deleteCompanyAccount(baseEntity, false);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_DELETE_COMPANY_ACCOUNT)));
 
     }
 }

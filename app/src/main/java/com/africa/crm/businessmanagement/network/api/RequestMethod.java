@@ -24,4 +24,15 @@ public class RequestMethod {
     public static final String REQUEST_COMPANY_INFO_DETAIL = "request_company_info_detail";
     //保存企业信息
     public static final String REQUEST_SAVE_COMPANY_INFO = "request_save_company_info";
+
+    //所有用户角色
+    public static final String REQUEST_QUERY_ALL_ROLES = "request_query_all_roles";
+    //企业账号列表
+    public static final String REQUEST_COMPANY_ACCOUNT_LIST = "request_company_account_list";
+    //删除企业账号
+    public static final String REQUEST_DELETE_COMPANY_ACCOUNT = "request_delete_company_account";
+    //获取企业账号详情
+    public static final String REQUEST_COMPANY_ACCOUNT_DETAIL = "request_company_account_detail";
+    //保存企业账号
+    public static final String REQUEST_SAVE_COMPANY_ACCOUNT = "request_save_company_account";
 }

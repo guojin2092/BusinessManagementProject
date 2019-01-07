@@ -100,8 +100,8 @@ public class UserDetailPresenter extends RxPresenter<UserDetailContract.View> im
     }
 
     @Override
-    public void getAllRoles(String name) {
-        addDisposable(mDataManager.getAllRoles(name)
+    public void getAllRoles() {
+        addDisposable(mDataManager.getAllRoles()
                 .compose(RxUtils.<List<RoleInfoBean>>ioToMain(mView))
                 .subscribe(new Consumer<List<RoleInfoBean>>() {
                     @Override

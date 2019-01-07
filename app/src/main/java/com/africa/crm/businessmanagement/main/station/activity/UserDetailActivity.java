@@ -151,7 +151,7 @@ public class UserDetailActivity extends BaseMvpActivity<UserDetailPresenter> imp
         mPresenter.getUserType(CONTACT_USER_TYPE);
         mPresenter.getStateType(CONTACT_STATE_TYPE);
         mPresenter.getAllCompany("");
-        mPresenter.getAllRoles("");
+        mPresenter.getAllRoles();
         if (!TextUtils.isEmpty(mUserId))
             mPresenter.getUserInfo(mUserId);
     }

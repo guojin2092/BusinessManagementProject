@@ -12,14 +12,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyAccountEvent;
-import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
+import com.africa.crm.businessmanagement.main.dao.CompanyAccountInfoDao;
+import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.glide.GlideUtil;
 import com.africa.crm.businessmanagement.main.photo.SinglePopup;
@@ -27,15 +31,26 @@ import com.africa.crm.businessmanagement.main.photo.camera.CameraCore;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyAccountDetailContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyAccountDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
-import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.MySpinner;
+import com.africa.crm.businessmanagement.widget.StringUtil;
+import com.africa.crm.businessmanagement.widget.TimeUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_ROLES;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.STATE_CODE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_ACCOUNT_DETAIL;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_STATE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_QUERY_ALL_ROLES;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SAVE_COMPANY_ACCOUNT;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_UPLOAD_IMAGE;
 
 public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccountDetailPresenter> implements CompanyAccountDetailContract.View, SinglePopup.OnPopItemClickListener, CameraCore.CameraResult {
     @BindView(R.id.iv_icon)
@@ -50,8 +65,6 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
     LinearLayout ll_password;
     @BindView(R.id.et_nickname)
     EditText et_nickname;
-    @BindView(R.id.et_company_name)
-    EditText et_company_name;
     @BindView(R.id.et_role_name)
     EditText et_role_name;
     @BindView(R.id.et_role_code)
@@ -71,31 +84,41 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
 
     @BindView(R.id.spinner_user_type)
     MySpinner spinner_user_type;
-    private static final String USER_TYPE = "USERTYPE";
-    private List<DicInfo> mSpinnerUserTypeList = new ArrayList<>();
     private String mUserType = "";
 
     @BindView(R.id.spinner_state)
     MySpinner spinner_state;
-    private static final String STATE_CODE = "STATE";
     private List<DicInfo> mSpinnerStateList = new ArrayList<>();
     private String mState = "";
 
     private List<DicInfo> mSpinnerRoleList = new ArrayList<>();
     private String mRoleId = "";
 
-    private String mCompanyId;//企业ID
+    private String mAccountId;//账号ID
+    private String mCompanyId;//所属企业ID
+    private String mCompanyName;//所属企业名称
+    private Long mLocalId = 0l;//本地数据库ID
 
     private CameraCore cameraCore;
     private SinglePopup singlePopup;
     private String mHeadCode = "";//头像ID
+    private String mLocalPath = "";
+
+    private GreendaoManager<CompanyAccountInfo, CompanyAccountInfoDao> mAccountInfoDaoManager;
+    private CompanyAccountInfoDao mCompanyAccountInfoDao;
+    private List<CompanyAccountInfo> mCompanyAccountLocalInfoList = new ArrayList<>();//本地数据
+
+    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoManager;
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
+    private DicInfoDao mDicInfoDao;
 
     /**
      * @param activity
      */
-    public static void startActivity(Activity activity, String companyId) {
+    public static void startActivity(Activity activity, String accountId, Long localId) {
         Intent intent = new Intent(activity, CompanyAccountDetailActivity.class);
-        intent.putExtra("companyId", companyId);
+        intent.putExtra("accountId", accountId);
+        intent.putExtra("localId", localId);
         activity.startActivity(intent);
     }
 
@@ -112,21 +135,16 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
     @Override
     public void initView() {
         super.initView();
-        mCompanyId = getIntent().getStringExtra("companyId");
+        mAccountId = getIntent().getStringExtra("accountId");
+        mLocalId = getIntent().getLongExtra("localId", 0l);
+        mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
+        mCompanyName = UserInfoManager.getUserLoginInfo(this).getCompanyName();
         titlebar_name.setText("企业账号详情");
         tv_save.setOnClickListener(this);
         spinner_user_type.getTextView().setEnabled(false);
         spinner_user_type.setText("企业用户");
         mUserType = "2";
-        if (!TextUtils.isEmpty(mCompanyId)) {
-            ll_password.setVisibility(View.GONE);
-            titlebar_right.setText(R.string.edit);
-            tv_save.setText(R.string.save);
-            spinner_role.setEnabled(false);
-            et_role_name.setEnabled(false);
-            et_role_code.setEnabled(false);
-            setEditTextInput(false);
-        } else {
+        if (TextUtils.isEmpty(mAccountId) && mLocalId == 0l) {
             ll_password.setVisibility(View.VISIBLE);
             titlebar_right.setVisibility(View.GONE);
             spinner_role.setEnabled(true);
@@ -134,6 +152,14 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
             tv_save.setVisibility(View.VISIBLE);
             et_role_name.setEnabled(true);
             et_role_code.setEnabled(true);
+        } else if (!TextUtils.isEmpty(mAccountId) || mLocalId != 0l) {
+            ll_password.setVisibility(View.GONE);
+            titlebar_right.setText(R.string.edit);
+            tv_save.setText(R.string.save);
+            spinner_role.setEnabled(false);
+            et_role_name.setEnabled(false);
+            et_role_code.setEnabled(false);
+            setEditTextInput(false);
         }
         tv_add_icon.setOnClickListener(this);
         cameraCore = new CameraCore.Builder(this)
@@ -141,6 +167,19 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
                 .setZipInfo(new CameraCore.ZipInfo(true, 200, 200, 100 * 1024))
                 .build();
 
+        //得到Dao对象
+        mCompanyAccountInfoDao = MyApplication.getInstance().getDaoSession().getCompanyAccountInfoDao();
+        //得到Dao对象管理器
+        mAccountInfoDaoManager = new GreendaoManager<>(mCompanyAccountInfoDao);
+        //得到本地数据
+        mCompanyAccountLocalInfoList = mAccountInfoDaoManager.queryAll();
+
+        //得到Dao对象
+        mDicInfoDao = MyApplication.getInstance().getDaoSession().getDicInfoDao();
+        //得到Dao对象管理器
+        mDicInfoDaoManager = new GreendaoManager<>(mDicInfoDao);
+        //得到本地数据
+        mDicInfoLocalList = mDicInfoDaoManager.queryAll();
     }
 
 
@@ -151,12 +190,10 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
 
     @Override
     protected void requestData() {
-//        mPresenter.getCompanyType(USER_TYPE);
         mPresenter.getState(STATE_CODE);
-        mPresenter.getAllRoles("");
-        if (!TextUtils.isEmpty(mCompanyId)) {
-            mPresenter.getCompanyAccountDetail(mCompanyId);
-        }
+        mPresenter.getAllRoles();
+        if (!TextUtils.isEmpty(mAccountId) || mLocalId != 0l)
+            mPresenter.getCompanyAccountDetail(mAccountId);
     }
 
     @Override
@@ -189,7 +226,7 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
                     toastMsg("尚未填写用户名");
                     return;
                 }
-                if (TextUtils.isEmpty(mCompanyId)) {
+                if (TextUtils.isEmpty(mAccountId) && mLocalId == 0l) {
                     if (TextUtils.isEmpty(et_password.getText().toString().trim())) {
                         toastMsg("尚未填写密码");
                         return;
@@ -199,16 +236,11 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
                     toastMsg("尚未选择角色分类");
                     return;
                 }
-                /*if (TextUtils.isEmpty(mUserType)) {
-                    toastMsg("尚未选择用户类型");
-                    return;
-                }*/
                 if (TextUtils.isEmpty(mState)) {
                     toastMsg("尚未选择企业状态");
                     return;
                 }
-                String ownCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
-                mPresenter.saveCompanyAccount(mCompanyId, et_username.getText().toString().trim(), mUserType, mRoleId, et_password.getText().toString().trim(), et_nickname.getText().toString().trim(), et_phone.getText().toString().trim(), et_address.getText().toString().trim(), et_email.getText().toString().trim(), mState, ownCompanyId, mHeadCode);
+                mPresenter.saveCompanyAccount(mAccountId, et_username.getText().toString().trim(), mUserType, mRoleId, et_password.getText().toString().trim(), et_nickname.getText().toString().trim(), et_phone.getText().toString().trim(), et_address.getText().toString().trim(), et_email.getText().toString().trim(), mState, mCompanyId, mHeadCode);
                 break;
         }
     }
@@ -221,7 +253,6 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
     private void setEditTextInput(boolean canInput) {
         et_username.setEnabled(canInput);
         et_nickname.setEnabled(canInput);
-        et_company_name.setEnabled(canInput);
         spinner_role.getTextView().setEnabled(canInput);
         et_address.setEnabled(canInput);
         et_email.setEnabled(canInput);
@@ -231,25 +262,15 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
     }
 
     @Override
-    public void getUserType(List<DicInfo> dicInfoList) {
-        /*mSpinnerUserTypeList.clear();
-        mSpinnerUserTypeList.addAll(dicInfoList);
-        spinner_user_type.setListDatas(this, mSpinnerUserTypeList);
-
-        spinner_user_type.addOnItemClickListener(new MySpinner.OnItemClickListener() {
-            @Override
-            public void onItemClick(DicInfo dicInfo, int position) {
-                mUserType = dicInfo.getCode();
-            }
-        });*/
-    }
-
-    @Override
     public void getState(List<DicInfo> dicInfoList) {
         mSpinnerStateList.clear();
         mSpinnerStateList.addAll(dicInfoList);
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerStateList, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            dicInfo.setType(STATE_CODE);
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
+        }
         spinner_state.setListDatas(this, mSpinnerStateList);
-
         spinner_state.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
@@ -262,15 +283,19 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
     public void getAllRoles(final List<RoleInfoBean> roleInfoBeanList) {
         mSpinnerRoleList.clear();
         if (roleInfoBeanList.size() == 3) {
-            mSpinnerRoleList.add(new DicInfo(roleInfoBeanList.get(0).getRoleName(), roleInfoBeanList.get(0).getId()));
-            mSpinnerRoleList.add(new DicInfo(roleInfoBeanList.get(1).getRoleName(), roleInfoBeanList.get(1).getId()));
+            mSpinnerRoleList.add(new DicInfo(roleInfoBeanList.get(0).getId(), QUERY_ALL_ROLES, roleInfoBeanList.get(0).getRoleName(), roleInfoBeanList.get(0).getId()));
+            mSpinnerRoleList.add(new DicInfo(roleInfoBeanList.get(1).getId(), QUERY_ALL_ROLES, roleInfoBeanList.get(1).getRoleName(), roleInfoBeanList.get(1).getId()));
         } else {
             if (!ListUtils.isEmpty(roleInfoBeanList)) {
                 for (RoleInfoBean roleInfoBean : roleInfoBeanList) {
-                    DicInfo dicInfo = new DicInfo(roleInfoBean.getTypeName(), roleInfoBean.getId());
+                    DicInfo dicInfo = new DicInfo(roleInfoBean.getId(), QUERY_ALL_ROLES, roleInfoBean.getRoleName(), roleInfoBean.getId());
                     mSpinnerRoleList.add(dicInfo);
                 }
             }
+        }
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerRoleList, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
         }
         spinner_role.setListDatas(getBVActivity(), mSpinnerRoleList);
         spinner_role.addOnItemClickListener(new MySpinner.OnItemClickListener() {
@@ -285,39 +310,57 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
 
     @Override
     public void getCompanyAccountDetail(CompanyAccountInfo companyAccountInfo) {
-        et_username.setText(companyAccountInfo.getUserName());
-        et_nickname.setText(companyAccountInfo.getName());
-        et_company_name.setText(companyAccountInfo.getCompanyName());
-        et_role_name.setText(companyAccountInfo.getRoleName());
-        et_role_code.setText(companyAccountInfo.getRoleCode());
-        spinner_role.setText(companyAccountInfo.getRoleTypeName());
-        mRoleId = companyAccountInfo.getRoleId();
-        et_address.setText(companyAccountInfo.getAddress());
-        et_email.setText(companyAccountInfo.getEmail());
-        et_phone.setText(companyAccountInfo.getPhone());
-        spinner_user_type.setText(companyAccountInfo.getTypeName());
-        mUserType = companyAccountInfo.getType();
-        spinner_state.setText(companyAccountInfo.getStateName());
-        mState = companyAccountInfo.getState();
-        //头像
-        mHeadCode = companyAccountInfo.getHead();
-        GlideUtil.showImg(iv_icon, mHeadCode);
+        if (companyAccountInfo != null) {
+            et_username.setText(companyAccountInfo.getUserName());
+            et_nickname.setText(companyAccountInfo.getName());
+            et_role_name.setText(companyAccountInfo.getRoleName());
+            et_role_code.setText(companyAccountInfo.getRoleCode());
+            spinner_role.setText(companyAccountInfo.getRoleName());
+            mRoleId = companyAccountInfo.getRoleId();
+            et_address.setText(companyAccountInfo.getAddress());
+            et_email.setText(companyAccountInfo.getEmail());
+            et_phone.setText(companyAccountInfo.getPhone());
+            spinner_user_type.setText(companyAccountInfo.getTypeName());
+            mUserType = companyAccountInfo.getType();
+            spinner_state.setText(companyAccountInfo.getStateName());
+            mState = companyAccountInfo.getState();
+            mCompanyName = companyAccountInfo.getCompanyName();
+            //头像
+            mHeadCode = companyAccountInfo.getHead();
+            GlideUtil.showImg(iv_icon, mHeadCode);
+            for (CompanyAccountInfo localInfo : mCompanyAccountLocalInfoList) {
+                if (localInfo.getId().equals(companyAccountInfo.getId())) {
+                    companyAccountInfo.setLocalId(localInfo.getLocalId());
+                    mAccountInfoDaoManager.correct(companyAccountInfo);
+                }
+            }
+        }
     }
 
     @Override
-    public void saveCompanyAccount(BaseEntity baseEntity) {
-        if (baseEntity.isSuccess()) {
-            String toastString = "";
-            if (TextUtils.isEmpty(mCompanyId)) {
-                toastString = "企业账号创建成功";
-            } else {
-                toastString = "企业账号修改成功";
-            }
-            EventBus.getDefault().post(new AddOrSaveCompanyAccountEvent(toastString));
-            finish();
+    public void saveCompanyAccount(UploadInfoBean uploadInfoBean, boolean isLocal) {
+        String toastString = "";
+        if (TextUtils.isEmpty(mAccountId) && mLocalId == 0l) {
+            toastString = "企业账号创建成功";
         } else {
-            toastMsg(ErrorMsg.showErrorMsg(baseEntity.getReturnMsg()));
+            toastString = "企业账号修改成功";
         }
+        if (isLocal) {
+            CompanyAccountInfo companyAccountInfo = null;
+            if (mLocalId == 0l) {
+                companyAccountInfo = new CompanyAccountInfo(mAccountId, TimeUtils.getCurrentTime(new Date()), StringUtil.getText(et_nickname), StringUtil.getText(et_username), mRoleId, spinner_role.getText(), mCompanyId, mHeadCode, mCompanyName, mUserType, spinner_user_type.getText(), mState, spinner_state.getText(), StringUtil.getText(et_address), spinner_role.getText(), StringUtil.getText(et_phone), mRoleId, StringUtil.getText(et_email), StringUtil.getText(et_password), false, isLocal);
+                mCompanyAccountInfoDao.insertOrReplace(companyAccountInfo);
+            } else {
+                for (CompanyAccountInfo info : mCompanyAccountLocalInfoList) {
+                    if (mLocalId == info.getLocalId()) {
+                        companyAccountInfo = new CompanyAccountInfo(info.getLocalId(), mAccountId, TimeUtils.getCurrentTime(new Date()), StringUtil.getText(et_nickname), StringUtil.getText(et_username), mRoleId, spinner_role.getText(), mCompanyId, mHeadCode, mCompanyName, mUserType, spinner_user_type.getText(), mState, spinner_state.getText(), StringUtil.getText(et_address), spinner_role.getText(), StringUtil.getText(et_phone), mRoleId, StringUtil.getText(et_email), StringUtil.getText(et_password), false, isLocal);
+                        mAccountInfoDaoManager.correct(companyAccountInfo);
+                    }
+                }
+            }
+        }
+        EventBus.getDefault().post(new AddOrSaveCompanyAccountEvent(toastString));
+        finish();
     }
 
     @Override
@@ -335,12 +378,13 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
     @Override
     public void success(String path) {
         if (!TextUtils.isEmpty(path)) {
-            mPresenter.uploadImages(path);
+            mLocalPath = path;
+            mPresenter.uploadImages(mLocalPath);
         }
     }
 
     @Override
-    public void uploadImages(FileInfoBean fileInfoBean) {
+    public void uploadImages(FileInfoBean fileInfoBean, boolean isLocal) {
         if (!TextUtils.isEmpty(fileInfoBean.getCode())) {
             mHeadCode = fileInfoBean.getCode();
             GlideUtil.showImg(iv_icon, mHeadCode);
@@ -362,5 +406,52 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         cameraCore.onPermission(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        switch (port) {
+            case REQUEST_COMPANY_STATE:
+                List<DicInfo> stateList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(STATE_CODE)) {
+                        stateList.add(dicInfo);
+                    }
+                }
+                getState(stateList);
+                break;
+            case REQUEST_QUERY_ALL_ROLES:
+                List<DicInfo> roleList = new ArrayList<>();
+                List<RoleInfoBean> roleAllList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(QUERY_ALL_ROLES)) {
+                        roleList.add(dicInfo);
+                        roleAllList.add(new RoleInfoBean(dicInfo.getId(), dicInfo.getText(), dicInfo.getCode()));
+                    }
+                }
+                getAllRoles(roleAllList);
+                break;
+            case REQUEST_COMPANY_ACCOUNT_DETAIL:
+                CompanyAccountInfo companyAccountInfo = null;
+                for (CompanyAccountInfo info : mCompanyAccountLocalInfoList) {
+                    if (mLocalId == info.getLocalId()) {
+                        companyAccountInfo = info;
+                    }
+                }
+                getCompanyAccountDetail(companyAccountInfo);
+                break;
+            case REQUEST_UPLOAD_IMAGE:
+                FileInfoBean localInfoBean = new FileInfoBean(mLocalPath);
+                uploadImages(localInfoBean, true);
+                break;
+            case REQUEST_SAVE_COMPANY_ACCOUNT:
+                UploadInfoBean uploadInfoBean = new UploadInfoBean();
+                uploadInfoBean.setId(mAccountId);
+                uploadInfoBean.setCreateTime(TimeUtils.getCurrentTime(new Date()));
+                uploadInfoBean.setUpdateTime(TimeUtils.getCurrentTime(new Date()));
+                saveCompanyAccount(uploadInfoBean, true);
+                break;
+        }
     }
 }

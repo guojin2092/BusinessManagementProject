@@ -52,7 +52,6 @@ import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 import java.util.List;
 
 import io.reactivex.Observable;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -151,7 +150,7 @@ public interface MainApi {
 
     @FormUrlEncoded
     @POST("companyUser/save")
-    Observable<BaseEntity> saveCompanyAccount(@Field("id") String id, @Field("userName") String userName, @Field("type") String type, @Field("roleIds") String roleId, @Field("passWord") String passWord, @Field("name") String name, @Field("phone") String phone, @Field("address") String address, @Field("email") String email, @Field("state") String state, @Field("companyId") String companyId, @Field("head") String head);
+    Observable<BaseEntity<UploadInfoBean>> saveCompanyAccount(@Field("id") String id, @Field("userName") String userName, @Field("type") String type, @Field("roleIds") String roleId, @Field("passWord") String passWord, @Field("name") String name, @Field("phone") String phone, @Field("address") String address, @Field("email") String email, @Field("state") String state, @Field("companyId") String companyId, @Field("head") String head);
 
     @FormUrlEncoded
     @POST("supplier/grid")

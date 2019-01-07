@@ -20,10 +20,10 @@ import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyEvent;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
-import com.africa.crm.businessmanagement.main.bean.CompanyDeleteInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
+import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteInfo;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyInfoDao;
 import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
@@ -293,9 +293,8 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
                     mCompanyInfoList.remove(mDeleteList.get(i));
                     if (isLocal) {
                         for (CompanyInfo companyInfo : mDeleteList) {
-                            mDeleteInfoGreendaoManager.insertOrReplace(new CompanyDeleteInfo(companyInfo.getArea(), companyInfo.getProfession(), companyInfo.getCode(), companyInfo.getAddress(), companyInfo.getNumA(), companyInfo.getMid(), companyInfo.getType(),
-                                    companyInfo.getTypeName(), companyInfo.getHead(), companyInfo.getCreateTime(), companyInfo.getPhone(), companyInfo.getName(), companyInfo.getId(), companyInfo.getState(), companyInfo.getStateName(), companyInfo.getEmail(),
-                                    true, true));
+                            CompanyDeleteInfo deleteInfo = new CompanyDeleteInfo(companyInfo.getArea(), companyInfo.getProfession(), companyInfo.getCode(), companyInfo.getAddress(), companyInfo.getNumA(), companyInfo.getMid(), companyInfo.getType(), companyInfo.getTypeName(), companyInfo.getHead(), companyInfo.getCreateTime(), companyInfo.getPhone(), companyInfo.getName(), companyInfo.getId(), companyInfo.getState(), companyInfo.getStateName(), companyInfo.getEmail(), true, true);
+                            mDeleteInfoGreendaoManager.insertOrReplace(deleteInfo);
                         }
                     }
                     for (CompanyInfo companyInfo : mCompanyInfoLocalList) {

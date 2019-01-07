@@ -20,7 +20,7 @@ public class CompanyAccountContract {
 
         void getCompanyAccounList(CompanyAccountInfoBean companyAccountInfoBean);
 
-        void deleteCompanyAccount(BaseEntity baseEntity);
+        void deleteCompanyAccount(BaseEntity baseEntity, boolean isLocal);
     }
 
     public interface Presenter extends IBasePresenter<CompanyAccountContract.View> {

@@ -18,6 +18,7 @@ public class LoginInfoBean implements Serializable {
     private boolean isdeleted;//是否删除
     private String userName;//用户名
     private String companyId;//所属公司ID
+    private String companyName;//所属企业名称
     private String type;//用户类型，1：系统管理员，2：企业用户
     private String passWord;//密码
     private int version;//版本号
@@ -68,6 +69,14 @@ public class LoginInfoBean implements Serializable {
 
     public void setCompanyId(String companyId) {
         this.companyId = companyId;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 
     public String getType() {
