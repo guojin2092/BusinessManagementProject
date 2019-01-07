@@ -82,10 +82,7 @@ public class CompanyAccountManagementActivity extends BaseRefreshMvpActivity<Com
     private String mCompanyId = "";
 
     private GreendaoManager<CompanyAccountInfo, CompanyAccountInfoDao> mAccountInfoDaoManager;
-    private CompanyAccountInfoDao mCompanyAccountInfoDao;
-
     private GreendaoManager<CompanyDeleteAccountInfo, CompanyDeleteAccountInfoDao> mDeleteAccountInfoDaoManager;
-    private CompanyDeleteAccountInfoDao mDeleteAccountInfoDao;
 
     /**
      * @param activity
@@ -119,15 +116,10 @@ public class CompanyAccountManagementActivity extends BaseRefreshMvpActivity<Com
         ll_add.setOnClickListener(this);
         tv_delete.setOnClickListener(this);
 
-        //得到Dao对象
-        mCompanyAccountInfoDao = MyApplication.getInstance().getDaoSession().getCompanyAccountInfoDao();
         //得到Dao对象管理器
-        mAccountInfoDaoManager = new GreendaoManager<>(mCompanyAccountInfoDao);
-
-        //得到Dao对象
-        mDeleteAccountInfoDao = MyApplication.getInstance().getDaoSession().getCompanyDeleteAccountInfoDao();
+        mAccountInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyAccountInfoDao());
         //得到Dao对象管理器
-        mDeleteAccountInfoDaoManager = new GreendaoManager<>(mDeleteAccountInfoDao);
+        mDeleteAccountInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeleteAccountInfoDao());
 
 /*
         et_account.addTextChangedListener(new TextWatcher() {

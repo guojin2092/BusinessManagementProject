@@ -16,5 +16,7 @@ public class DicUtil {
     public static final String STATE_CODE = "STATE";
     //查询所有用户角色
     public static final String QUERY_ALL_ROLES = "QUERY_ALL_ROLES";
+    //供应商分类
+    public static final String SUPPLIER_TYPE_CODE = "SUPPLIERTYPE";
 
 }

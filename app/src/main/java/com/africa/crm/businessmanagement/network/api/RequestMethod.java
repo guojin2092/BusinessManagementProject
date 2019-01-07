@@ -35,4 +35,15 @@ public class RequestMethod {
     public static final String REQUEST_COMPANY_ACCOUNT_DETAIL = "request_company_account_detail";
     //保存企业账号
     public static final String REQUEST_SAVE_COMPANY_ACCOUNT = "request_save_company_account";
+
+    //供应商分类
+    public static final String REQUEST_SUPPLIER_TYPE = "request_supplier_type";
+    //企业供应商列表
+    public static final String REQUEST_COMPANY_SUPPLIER_LIST = "request_company_supplier_list";
+    //获取企业供应商详情
+    public static final String REQUEST_COMPANY_SUPPLIER_DETAIL = "request_company_supplier_detail";
+    //删除企业供应商
+    public static final String REQUEST_DELETE_COMPANY_SUPPLIER = "request_delete_company_supplier";
+    //保存企业供应商
+    public static final String REQUEST_SAVE_COMPANY_SUPPLIER = "request_save_company_supplier";
 }

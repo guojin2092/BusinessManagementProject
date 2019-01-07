@@ -38,8 +38,10 @@ import io.reactivex.functions.Consumer;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.COMPANY_TYPE_CODE;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_ROLES;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.STATE_CODE;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.SUPPLIER_TYPE_CODE;
 import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_STATE;
 import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_TYPE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SUPPLIER_TYPE;
 
 /**
  * Project：BusinessManagementProject
@@ -72,6 +74,7 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
     private List<DicInfo> mSpinnerCompanyTypeList = new ArrayList<>();
     private List<DicInfo> mSpinnerStateList = new ArrayList<>();
     private List<DicInfo> mSpinnerRoleList = new ArrayList<>();
+    private List<DicInfo> mSpinnerSupplierTypeList = new ArrayList<>();
 
 
     /**
@@ -179,7 +182,21 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
                         }
                     }
                 }, new ComConsumer(null)));
-
+        //供应商分类
+        addDisposable(mDataManager.getDicByCode(SUPPLIER_TYPE_CODE)
+                .compose(RxUtils.<List<DicInfo>>ioToMain())
+                .subscribe(new Consumer<List<DicInfo>>() {
+                    @Override
+                    public void accept(List<DicInfo> dicInfoList) throws Exception {
+                        mSpinnerSupplierTypeList.clear();
+                        mSpinnerSupplierTypeList.addAll(dicInfoList);
+                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerSupplierTypeList, mDicInfoLocalList);
+                        for (DicInfo dicInfo : addList) {
+                            dicInfo.setType(SUPPLIER_TYPE_CODE);
+                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
+                        }
+                    }
+                }, new ComConsumer(null)));
     }
 
 

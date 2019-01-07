@@ -58,6 +58,19 @@ public class CompanyAccountDetailPresenter extends RxPresenter<CompanyAccountDet
     }
 
     @Override
+    public void uploadImages(String filePath) {
+        addDisposable(mDataManager.uploadFiles(filePath)
+                .compose(RxUtils.<FileInfoBean>ioToMain(mView))
+                .subscribe(new Consumer<FileInfoBean>() {
+                    @Override
+                    public void accept(FileInfoBean fileInfoBean) throws Exception {
+                        mView.uploadImages(fileInfoBean);
+                    }
+                }, new ComConsumer(mView, REQUEST_UPLOAD_IMAGE)));
+    }
+
+
+    @Override
     public void getCompanyAccountDetail(String id) {
         addDisposable(mDataManager.getCompanyAccountDetail(id)
                 .compose(RxUtils.<CompanyAccountInfo>ioToMain(mView))
@@ -68,19 +81,6 @@ public class CompanyAccountDetailPresenter extends RxPresenter<CompanyAccountDet
                     }
                 }, new ComConsumer(mView, REQUEST_COMPANY_ACCOUNT_DETAIL)));
 
-    }
-
-
-    @Override
-    public void uploadImages(String filePath) {
-        addDisposable(mDataManager.uploadFiles(filePath)
-                .compose(RxUtils.<FileInfoBean>ioToMain(mView))
-                .subscribe(new Consumer<FileInfoBean>() {
-                    @Override
-                    public void accept(FileInfoBean fileInfoBean) throws Exception {
-                        mView.uploadImages(fileInfoBean,false);
-                    }
-                }, new ComConsumer(mView, REQUEST_UPLOAD_IMAGE)));
     }
 
     @Override

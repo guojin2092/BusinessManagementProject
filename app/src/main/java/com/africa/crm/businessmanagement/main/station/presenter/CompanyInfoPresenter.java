@@ -1,6 +1,5 @@
 package com.africa.crm.businessmanagement.main.station.presenter;
 
-import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
@@ -62,7 +61,7 @@ public class CompanyInfoPresenter extends RxPresenter<CompanyInfoContract.View> 
                 .subscribe(new Consumer<FileInfoBean>() {
                     @Override
                     public void accept(FileInfoBean fileInfoBean) throws Exception {
-                        mView.uploadImages(fileInfoBean, false);
+                        mView.uploadImages(fileInfoBean);
                     }
                 }, new ComConsumer(mView, REQUEST_UPLOAD_IMAGE)));
     }

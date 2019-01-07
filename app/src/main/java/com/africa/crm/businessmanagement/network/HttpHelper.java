@@ -123,7 +123,7 @@ public interface HttpHelper {
 
     Observable<CompanySupplierInfo> getCompanySupplierDetail(String id);
 
-    Observable<BaseEntity> saveCompanySupplier(String id, String companyId, String head, String name, String type, String address, String phone, String email, String zipCode, String area, String remark);
+    Observable<UploadInfoBean> saveCompanySupplier(String id, String companyId, String head, String name, String type, String address, String phone, String email, String zipCode, String area, String remark);
 
     Observable<List<DicInfo2>> getAllSuppliers(String companyId);
 

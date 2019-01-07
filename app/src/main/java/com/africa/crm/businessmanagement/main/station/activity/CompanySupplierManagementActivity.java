@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanySupplierEvent;
@@ -21,13 +22,18 @@ import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
+import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteSupplierInfo;
+import com.africa.crm.businessmanagement.main.dao.CompanyDeleteSupplierInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanySupplierInfoDao;
+import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.CompanySupplierListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanySupplierContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanySupplierPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
-import com.africa.crm.businessmanagement.widget.KeyboardUtil;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
@@ -40,6 +46,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.DicUtil.SUPPLIER_TYPE_CODE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_SUPPLIER_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DELETE_COMPANY_SUPPLIER;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SUPPLIER_TYPE;
 
 /**
  * Project：BusinessManagementProject
@@ -65,9 +76,9 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
     private List<CompanySupplierInfo> mDeleteList = new ArrayList<>();
     private List<CompanySupplierInfo> mCompanySupplierInfoList = new ArrayList<>();
 
+
     @BindView(R.id.spinner_supplier_type)
     MySpinner spinner_supplier_type;
-    private static final String SUPPLIER_TYPE_CODE = "SUPPLIERTYPE";
     private List<DicInfo> mSpinnerSupplierTypeList = new ArrayList<>();
     private String mSupplierType = "";
 
@@ -75,6 +86,13 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
     private WorkStationInfo mWorkStationInfo;
     private AlertDialog mDeleteDialog;
     private String mCompanyId = "";
+
+    private GreendaoManager<CompanySupplierInfo, CompanySupplierInfoDao> mSupplierInfoDaoManager;
+    private GreendaoManager<CompanyDeleteSupplierInfo, CompanyDeleteSupplierInfoDao> mDeleteInfoGreendaoManager;
+    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoManager;
+
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
+    private List<CompanySupplierInfo> mCompanySupplierLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
@@ -108,6 +126,14 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
         ll_add.setOnClickListener(this);
         tv_delete.setOnClickListener(this);
         tv_search.setOnClickListener(this);
+        //得到Dao对象管理器
+        mSupplierInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanySupplierInfoDao());
+        //得到Dao对象管理器
+        mDeleteInfoGreendaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeleteSupplierInfoDao());
+        //得到Dao对象管理器
+        mDicInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getDicInfoDao());
+        //得到本地数据
+        mDicInfoLocalList = mDicInfoDaoManager.queryAll();
     }
 
     @Override
@@ -160,7 +186,7 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
                 }
                 break;
             case R.id.ll_add:
-                CompanySupplierDetailActivity.startActivity(CompanySupplierManagementActivity.this, "");
+                CompanySupplierDetailActivity.startActivity(CompanySupplierManagementActivity.this, "", 0l);
                 break;
             case R.id.tv_delete:
                 mDeleteList.clear();
@@ -199,6 +225,11 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
     public void getSupplierType(List<DicInfo> dicInfoList) {
         mSpinnerSupplierTypeList.clear();
         mSpinnerSupplierTypeList.addAll(dicInfoList);
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerSupplierTypeList, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            dicInfo.setType(SUPPLIER_TYPE_CODE);
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
+        }
         spinner_supplier_type.setListDatas(this, mSpinnerSupplierTypeList);
 
         spinner_supplier_type.addOnItemClickListener(new MySpinner.OnItemClickListener() {
@@ -226,6 +257,7 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
                     mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
                 }
                 mCompanySupplierInfoList.clear();
+                mCompanySupplierLocalList = mSupplierInfoDaoManager.queryAll();
                 recyclerView.smoothScrollToPosition(0);
             }
             if (mRefreshLayout != null) {
@@ -237,6 +269,22 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
             }
             if (!ListUtils.isEmpty(companySupplierInfoBean.getRows())) {
                 mCompanySupplierInfoList.addAll(companySupplierInfoBean.getRows());
+                List<CompanySupplierInfo> addList = DifferentDataUtil.addSupplierDataToLocal(mCompanySupplierInfoList, mCompanySupplierLocalList);
+                if (!ListUtils.isEmpty(addList)) {
+                    for (CompanySupplierInfo companyInfo : addList) {
+                        mSupplierInfoDaoManager.insertOrReplace(companyInfo);
+                    }
+                    mCompanySupplierLocalList = new ArrayList<>();
+                    mCompanySupplierLocalList = mSupplierInfoDaoManager.queryAll();
+                }
+                for (CompanySupplierInfo info : mCompanySupplierInfoList) {
+                    for (CompanySupplierInfo localInfo : mCompanySupplierLocalList) {
+                        if (info.getId().equals(localInfo.getId())) {
+                            info.setLocalId(localInfo.getLocalId());
+                            mSupplierInfoDaoManager.correct(info);
+                        }
+                    }
+                }
                 if (mCompanySupplierListAdapter != null) {
                     mCompanySupplierListAdapter.notifyDataSetChanged();
                 }
@@ -250,7 +298,7 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
                             mCompanySupplierInfoList.get(position).setChosen(!cb_choose.isChecked());
                             mCompanySupplierListAdapter.notifyDataSetChanged();
                         } else {
-                            CompanySupplierDetailActivity.startActivity(CompanySupplierManagementActivity.this, mCompanySupplierInfoList.get(position).getId());
+                            CompanySupplierDetailActivity.startActivity(CompanySupplierManagementActivity.this, mCompanySupplierInfoList.get(position).getId(), mCompanySupplierLocalList.get(position).getLocalId());
                         }
                     }
                 });
@@ -260,12 +308,25 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
     }
 
     @Override
-    public void deleteCompanySupplier(BaseEntity baseEntity) {
+    public void deleteCompanySupplier(BaseEntity baseEntity, boolean isLocal) {
         if (baseEntity.isSuccess()) {
             for (int i = 0; i < mDeleteList.size(); i++) {
                 if (mCompanySupplierInfoList.contains(mDeleteList.get(i))) {
                     int position = mCompanySupplierInfoList.indexOf(mDeleteList.get(i));
                     mCompanySupplierInfoList.remove(mDeleteList.get(i));
+                    if (isLocal) {
+                        for (CompanySupplierInfo companyInfo : mDeleteList) {
+                            CompanyDeleteSupplierInfo deleteInfo = new CompanyDeleteSupplierInfo(companyInfo.getId(), companyInfo.getArea(), companyInfo.getZipCode(), companyInfo.getAddress(), companyInfo.getCompanyName(), companyInfo.getTypeName(), companyInfo.getRemark(), companyInfo.getType(), companyInfo.getHead(), companyInfo.getCompanyId(), companyInfo.getCreateTime(), companyInfo.getPhone(), companyInfo.getName(), companyInfo.getEmail(), true, true);
+                            mDeleteInfoGreendaoManager.insertOrReplace(deleteInfo);
+                        }
+                    }
+                    for (CompanySupplierInfo companyInfo : mCompanySupplierLocalList) {
+                        if (mDeleteList.get(i).getLocalId().equals(companyInfo.getLocalId())) {
+                            mSupplierInfoDaoManager.delete(companyInfo.getLocalId());
+                        }
+                    }
+                    mCompanySupplierLocalList = new ArrayList<>();
+                    mCompanySupplierLocalList = mSupplierInfoDaoManager.queryAll();
                     if (mCompanySupplierListAdapter != null) {
                         mCompanySupplierListAdapter.notifyItemRemoved(position);
                     }
@@ -283,7 +344,6 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
         } else {
             ErrorMsg.showErrorMsg(baseEntity.getReturnMsg());
         }
-
     }
 
     @Subscribe
@@ -297,5 +357,32 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        mRefreshLayout.setEnableLoadmore(false);
+        switch (port) {
+            case REQUEST_SUPPLIER_TYPE:
+                List<DicInfo> stateList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(SUPPLIER_TYPE_CODE)) {
+                        stateList.add(dicInfo);
+                    }
+                }
+                getSupplierType(stateList);
+                break;
+            case REQUEST_COMPANY_SUPPLIER_LIST:
+                CompanySupplierInfoBean companySupplierInfoBean = new CompanySupplierInfoBean();
+                companySupplierInfoBean.setRows(mSupplierInfoDaoManager.queryAll());
+                getCompanySupplierList(companySupplierInfoBean);
+                break;
+            case REQUEST_DELETE_COMPANY_SUPPLIER:
+                BaseEntity baseEntity = new BaseEntity();
+                baseEntity.setSuccess(true);
+                deleteCompanySupplier(baseEntity, true);
+                break;
+        }
     }
 }

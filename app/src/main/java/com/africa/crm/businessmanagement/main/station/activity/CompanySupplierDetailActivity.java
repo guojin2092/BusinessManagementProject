@@ -11,12 +11,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanySupplierEvent;
-import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
+import com.africa.crm.businessmanagement.main.dao.CompanySupplierInfoDao;
+import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.glide.GlideUtil;
 import com.africa.crm.businessmanagement.main.photo.SinglePopup;
@@ -24,15 +28,24 @@ import com.africa.crm.businessmanagement.main.photo.camera.CameraCore;
 import com.africa.crm.businessmanagement.main.station.contract.CompanySupplierDetailContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanySupplierDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
-import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.MySpinner;
+import com.africa.crm.businessmanagement.widget.StringUtil;
+import com.africa.crm.businessmanagement.widget.TimeUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.DicUtil.SUPPLIER_TYPE_CODE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_SUPPLIER_DETAIL;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SAVE_COMPANY_SUPPLIER;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SUPPLIER_TYPE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_UPLOAD_IMAGE;
 
 /**
  * Project：BusinessManagementProject
@@ -69,23 +82,30 @@ public class CompanySupplierDetailActivity extends BaseMvpActivity<CompanySuppli
 
     @BindView(R.id.spinner_type)
     MySpinner spinner_type;
-    private static final String SUPPLIER_TYPE_CODE = "SUPPLIERTYPE";
     private List<DicInfo> mSpinnerCompanyTypeList = new ArrayList<>();
     private String mCompanyType = "";
     private String mCompanyId = "";
+    private Long mLocalId = 0l;//本地数据库ID
 
     private CameraCore cameraCore;
     private SinglePopup singlePopup;
     private String mHeadCode = "";//头像ID
+    private String mLocalPath = "";
+
+    private GreendaoManager<CompanySupplierInfo, CompanySupplierInfoDao> mCompanySupplierInfoDaoManager;
+    private List<CompanySupplierInfo> mCompanySupplierLocalList = new ArrayList<>();//本地数据
+
+    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoGreendaoManager;
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
      */
-    public static void startActivity(Activity activity, String supplierId) {
+    public static void startActivity(Activity activity, String supplierId, Long localId) {
         Intent intent = new Intent(activity, CompanySupplierDetailActivity.class);
         intent.putExtra(SUPPLIER_ID, supplierId);
+        intent.putExtra("localId", localId);
         activity.startActivity(intent);
-        activity.overridePendingTransition(R.anim.anim_right_in, R.anim.anim_left_out);
     }
 
     @Override
@@ -103,24 +123,45 @@ public class CompanySupplierDetailActivity extends BaseMvpActivity<CompanySuppli
         super.initView();
         mSupplierId = getIntent().getStringExtra(SUPPLIER_ID);
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
+        mLocalId = getIntent().getLongExtra("localId", 0l);
         tv_save.setOnClickListener(this);
         titlebar_right.setText(R.string.edit);
         titlebar_name.setText("供应商详情");
         iv_icon.setOnClickListener(this);
-        if (!TextUtils.isEmpty(mSupplierId)) {
-            titlebar_right.setText(R.string.edit);
-            tv_save.setText(R.string.save);
-            setEditTextInput(false);
-        } else {
+        if (TextUtils.isEmpty(mSupplierId) && mLocalId == 0l) {
             titlebar_right.setVisibility(View.GONE);
             tv_save.setText(R.string.add);
             tv_save.setVisibility(View.VISIBLE);
+        } else if (!TextUtils.isEmpty(mSupplierId) || mLocalId != 0l) {
+            titlebar_right.setText(R.string.edit);
+            tv_save.setText(R.string.save);
+            setEditTextInput(false);
         }
         cameraCore = new CameraCore.Builder(this)
                 .setNeedCrop(true)
                 .setZipInfo(new CameraCore.ZipInfo(true, 200, 200, 100 * 1024))
                 .build();
+        //得到Dao对象管理器
+        mCompanySupplierInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanySupplierInfoDao());
+        //得到本地数据
+        mCompanySupplierLocalList = mCompanySupplierInfoDaoManager.queryAll();
+        //得到Dao对象管理器
+        mDicInfoDaoGreendaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getDicInfoDao());
+        //得到本地数据
+        mDicInfoLocalList = mDicInfoDaoGreendaoManager.queryAll();
+    }
 
+    @Override
+    public void initData() {
+
+    }
+
+    @Override
+    protected void requestData() {
+        mPresenter.getSupplierType(SUPPLIER_TYPE_CODE);
+        if (!TextUtils.isEmpty(mSupplierId) || mLocalId != 0l) {
+            mPresenter.getCompanySupplierDetail(mSupplierId);
+        }
     }
 
     @Override
@@ -158,19 +199,6 @@ public class CompanySupplierDetailActivity extends BaseMvpActivity<CompanySuppli
         }
     }
 
-    @Override
-    protected void requestData() {
-        mPresenter.getSupplierType(SUPPLIER_TYPE_CODE);
-        if (!TextUtils.isEmpty(mSupplierId)) {
-            mPresenter.getCompanySupplierDetail(mSupplierId);
-        }
-    }
-
-    @Override
-    public void initData() {
-
-    }
-
     /**
      * 控制输入框是否可输入
      *
@@ -193,6 +221,11 @@ public class CompanySupplierDetailActivity extends BaseMvpActivity<CompanySuppli
     public void getSupplierType(List<DicInfo> dicInfoList) {
         mSpinnerCompanyTypeList.clear();
         mSpinnerCompanyTypeList.addAll(dicInfoList);
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerCompanyTypeList, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            dicInfo.setType(SUPPLIER_TYPE_CODE);
+            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
+        }
         spinner_type.setListDatas(this, mSpinnerCompanyTypeList);
 
         spinner_type.addOnItemClickListener(new MySpinner.OnItemClickListener() {
@@ -205,36 +238,62 @@ public class CompanySupplierDetailActivity extends BaseMvpActivity<CompanySuppli
 
     @Override
     public void getCompanySupplierDetail(CompanySupplierInfo companySupplierInfo) {
-        et_supplier_name.setText(companySupplierInfo.getName());
-        et_company_name.setText(companySupplierInfo.getCompanyName());
-        spinner_type.setText(companySupplierInfo.getTypeName());
-        mCompanyType = companySupplierInfo.getType();
-        et_email.setText(companySupplierInfo.getEmail());
-        et_phone.setText(companySupplierInfo.getPhone());
-        et_area.setText(companySupplierInfo.getArea());
-        et_address.setText(companySupplierInfo.getAddress());
-        et_zip_code.setText(companySupplierInfo.getZipCode());
-        et_remark.setText(companySupplierInfo.getRemark());
-        //头像
-        mHeadCode = companySupplierInfo.getHead();
-        GlideUtil.showImg(iv_icon, mHeadCode);
+        if (companySupplierInfo != null) {
+            et_supplier_name.setText(companySupplierInfo.getName());
+            et_company_name.setText(companySupplierInfo.getCompanyName());
+            spinner_type.setText(companySupplierInfo.getTypeName());
+            mCompanyType = companySupplierInfo.getType();
+            et_email.setText(companySupplierInfo.getEmail());
+            et_phone.setText(companySupplierInfo.getPhone());
+            et_area.setText(companySupplierInfo.getArea());
+            et_address.setText(companySupplierInfo.getAddress());
+            et_zip_code.setText(companySupplierInfo.getZipCode());
+            et_remark.setText(companySupplierInfo.getRemark());
+            //头像
+            mHeadCode = companySupplierInfo.getHead();
+            GlideUtil.showImg(iv_icon, mHeadCode);
+            for (CompanySupplierInfo localInfo : mCompanySupplierLocalList) {
+                if (localInfo.getId().equals(companySupplierInfo.getId())) {
+                    companySupplierInfo.setLocalId(localInfo.getLocalId());
+                    mCompanySupplierInfoDaoManager.correct(companySupplierInfo);
+                }
+            }
+        }
+
     }
 
     @Override
-    public void saveCompanySupplier(BaseEntity baseEntity) {
-        if (baseEntity.isSuccess()) {
-            String toastString = "";
-            if (TextUtils.isEmpty(mSupplierId)) {
-                toastString = "企业供应商创建成功";
-            } else {
-                toastString = "企业供应商修改成功";
-            }
-            EventBus.getDefault().post(new AddOrSaveCompanySupplierEvent(toastString));
-            finish();
+    public void saveCompanySupplier(UploadInfoBean uploadInfoBean, boolean isLocal) {
+        String toastString = "";
+        if (TextUtils.isEmpty(mSupplierId) && mLocalId == 0l) {
+            toastString = "企业供应商创建成功";
         } else {
-            toastMsg(ErrorMsg.showErrorMsg(baseEntity.getReturnMsg()));
+            toastString = "企业供应商修改成功";
         }
+        if (isLocal) {
+            CompanySupplierInfo companyInfo = null;
+            if (mLocalId == 0l) {
+                companyInfo = new CompanySupplierInfo(mSupplierId, StringUtil.getText(et_area), StringUtil.getText(et_zip_code), StringUtil.getText(et_address), StringUtil.getText(et_company_name), spinner_type.getText(), StringUtil.getText(et_remark), mCompanyType, mHeadCode, mCompanyId, TimeUtils.getCurrentTime(new Date()), StringUtil.getText(et_phone), StringUtil.getText(et_supplier_name), StringUtil.getText(et_email), false, true);
+                mCompanySupplierInfoDaoManager.insertOrReplace(companyInfo);
+            } else {
+                for (CompanySupplierInfo info : mCompanySupplierLocalList) {
+                    if (mLocalId == info.getLocalId()) {
+                        companyInfo = new CompanySupplierInfo(info.getLocalId(), mSupplierId, StringUtil.getText(et_area), StringUtil.getText(et_zip_code), StringUtil.getText(et_address), StringUtil.getText(et_company_name), spinner_type.getText(), StringUtil.getText(et_remark), mCompanyType, mHeadCode, mCompanyId, TimeUtils.getCurrentTime(new Date()), StringUtil.getText(et_phone), StringUtil.getText(et_supplier_name), StringUtil.getText(et_email), false, true);
+                        mCompanySupplierInfoDaoManager.correct(companyInfo);
+                    }
+                }
+            }
+        }
+        EventBus.getDefault().post(new AddOrSaveCompanySupplierEvent(toastString));
+        finish();
     }
+
+    @Override
+    public void uploadImages(FileInfoBean fileInfoBean) {
+        mHeadCode = fileInfoBean.getCode();
+        GlideUtil.showImg(iv_icon, mHeadCode);
+    }
+
     @Override
     public void itemClick(int position, String s) {
         switch (position) {
@@ -249,17 +308,8 @@ public class CompanySupplierDetailActivity extends BaseMvpActivity<CompanySuppli
 
     @Override
     public void success(String path) {
-        if (!TextUtils.isEmpty(path)) {
-            mPresenter.uploadImages(path);
-        }
-    }
-
-    @Override
-    public void uploadImages(FileInfoBean fileInfoBean) {
-        if (!TextUtils.isEmpty(fileInfoBean.getCode())) {
-            mHeadCode = fileInfoBean.getCode();
-            GlideUtil.showImg(iv_icon, mHeadCode);
-        }
+        mLocalPath = path;
+        mPresenter.uploadImages(mLocalPath);
     }
 
     @Override
@@ -277,5 +327,41 @@ public class CompanySupplierDetailActivity extends BaseMvpActivity<CompanySuppli
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         cameraCore.onPermission(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        switch (port) {
+            case REQUEST_SUPPLIER_TYPE:
+                List<DicInfo> typeList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoGreendaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(SUPPLIER_TYPE_CODE)) {
+                        typeList.add(dicInfo);
+                    }
+                }
+                getSupplierType(typeList);
+                break;
+            case REQUEST_UPLOAD_IMAGE:
+                FileInfoBean localInfoBean = new FileInfoBean(mLocalPath);
+                uploadImages(localInfoBean);
+                break;
+            case REQUEST_COMPANY_SUPPLIER_DETAIL:
+                CompanySupplierInfo companyInfo = null;
+                for (CompanySupplierInfo info : mCompanySupplierLocalList) {
+                    if (mLocalId == info.getLocalId()) {
+                        companyInfo = info;
+                    }
+                }
+                getCompanySupplierDetail(companyInfo);
+                break;
+            case REQUEST_SAVE_COMPANY_SUPPLIER:
+                UploadInfoBean uploadInfoBean = new UploadInfoBean();
+                uploadInfoBean.setId(mCompanyId);
+                uploadInfoBean.setCreateTime(TimeUtils.getCurrentTime(new Date()));
+                uploadInfoBean.setUpdateTime(TimeUtils.getCurrentTime(new Date()));
+                saveCompanySupplier(uploadInfoBean, true);
+                break;
+        }
     }
 }

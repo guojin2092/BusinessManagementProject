@@ -1,7 +1,6 @@
 package com.africa.crm.businessmanagement.main.station.presenter;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
-import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.station.contract.CompanySupplierContract;
@@ -12,6 +11,10 @@ import com.africa.crm.businessmanagement.network.util.RxUtils;
 import java.util.List;
 
 import io.reactivex.functions.Consumer;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_SUPPLIER_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DELETE_COMPANY_SUPPLIER;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SUPPLIER_TYPE;
 
 /**
  * Project：BusinessManagementProject
@@ -33,7 +36,7 @@ public class CompanySupplierPresenter extends RxPresenter<CompanySupplierContrac
                     public void accept(List<DicInfo> dicInfoList) throws Exception {
                         mView.getSupplierType(dicInfoList);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_SUPPLIER_TYPE)));
     }
 
     @Override
@@ -45,7 +48,7 @@ public class CompanySupplierPresenter extends RxPresenter<CompanySupplierContrac
                     public void accept(CompanySupplierInfoBean companySupplierInfoBean) throws Exception {
                         mView.getCompanySupplierList(companySupplierInfoBean);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_COMPANY_SUPPLIER_LIST)));
 
     }
 
@@ -56,9 +59,9 @@ public class CompanySupplierPresenter extends RxPresenter<CompanySupplierContrac
                 .subscribe(new Consumer<BaseEntity>() {
                     @Override
                     public void accept(BaseEntity baseEntity) throws Exception {
-                        mView.deleteCompanySupplier(baseEntity);
+                        mView.deleteCompanySupplier(baseEntity, false);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_DELETE_COMPANY_SUPPLIER)));
 
     }
 }

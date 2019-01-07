@@ -93,12 +93,10 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     private String mLocalPath = "";
 
     private GreendaoManager<CompanyInfo, CompanyInfoDao> mCompanyInfoDaoGreendaoManager;
-    private CompanyInfoDao mCompanyInfoDao;
     private List<CompanyInfo> mCompanyInfoLocalList = new ArrayList<>();//本地数据
 
     private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoGreendaoManager;
     private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
-    private DicInfoDao mDicInfoDao;
 
 
     /**
@@ -137,17 +135,12 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
                 .setNeedCrop(true)
                 .setZipInfo(new CameraCore.ZipInfo(true, 200, 200, 100 * 1024))
                 .build();
-        //得到Dao对象
-        mCompanyInfoDao = MyApplication.getInstance().getDaoSession().getCompanyInfoDao();
         //得到Dao对象管理器
-        mCompanyInfoDaoGreendaoManager = new GreendaoManager<>(mCompanyInfoDao);
+        mCompanyInfoDaoGreendaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyInfoDao());
         //得到本地数据
         mCompanyInfoLocalList = mCompanyInfoDaoGreendaoManager.queryAll();
-
-        //得到Dao对象
-        mDicInfoDao = MyApplication.getInstance().getDaoSession().getDicInfoDao();
         //得到Dao对象管理器
-        mDicInfoDaoGreendaoManager = new GreendaoManager<>(mDicInfoDao);
+        mDicInfoDaoGreendaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getDicInfoDao());
         //得到本地数据
         mDicInfoLocalList = mDicInfoDaoGreendaoManager.queryAll();
     }
@@ -211,7 +204,7 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
                     toastMsg("尚未选择企业状态");
                     return;
                 }
-                if (TextUtils.isEmpty(mCompanyId) || mLocalId == 0l) {
+                if (TextUtils.isEmpty(mCompanyId) && mLocalId == 0l) {
                     if (mState.equals("2")) {
                         toastMsg("新增企业状态不可禁用");
                         return;
@@ -320,7 +313,7 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     }
 
     @Override
-    public void uploadImages(FileInfoBean fileInfoBean, boolean isLocal) {
+    public void uploadImages(FileInfoBean fileInfoBean) {
         mHeadCode = fileInfoBean.getCode();
         GlideUtil.showImg(iv_icon, mHeadCode);
     }
@@ -413,7 +406,7 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
                 break;
             case REQUEST_UPLOAD_IMAGE:
                 FileInfoBean localInfoBean = new FileInfoBean(mLocalPath);
-                uploadImages(localInfoBean, true);
+                uploadImages(localInfoBean);
                 break;
             case REQUEST_COMPANY_INFO_DETAIL:
                 CompanyInfo companyInfo = null;

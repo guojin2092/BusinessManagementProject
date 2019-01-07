@@ -27,9 +27,9 @@ public class CompanyAccountDetailContract {
 
         void getAllRoles(List<RoleInfoBean> roleInfoBeanList);
 
-        void getCompanyAccountDetail(CompanyAccountInfo companyAccountInfo);
+        void uploadImages(FileInfoBean fileInfoBean);
 
-        void uploadImages(FileInfoBean fileInfoBean,boolean isLocal);
+        void getCompanyAccountDetail(CompanyAccountInfo companyAccountInfo);
 
         void saveCompanyAccount(UploadInfoBean uploadInfoBean, boolean isLocal);
 

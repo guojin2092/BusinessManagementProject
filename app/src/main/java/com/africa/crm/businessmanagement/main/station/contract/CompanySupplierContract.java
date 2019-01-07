@@ -24,7 +24,7 @@ public class CompanySupplierContract {
 
         void getCompanySupplierList(CompanySupplierInfoBean companySupplierInfoBean);
 
-        void deleteCompanySupplier(BaseEntity baseEntity);
+        void deleteCompanySupplier(BaseEntity baseEntity, boolean isLocal);
     }
 
     public interface Presenter extends IBasePresenter<CompanySupplierContract.View> {

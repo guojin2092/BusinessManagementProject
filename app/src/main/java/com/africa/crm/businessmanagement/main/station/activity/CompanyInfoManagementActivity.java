@@ -78,10 +78,7 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
     private AlertDialog mDeleteDialog;
 
     private GreendaoManager<CompanyInfo, CompanyInfoDao> mGreendaoManager;
-    private CompanyInfoDao mCompanyInfoDao;
-
     private GreendaoManager<CompanyDeleteInfo, CompanyDeleteInfoDao> mDeleteInfoGreendaoManager;
-    private CompanyDeleteInfoDao mCompanyDeleteInfo;
 
     /**
      * @param activity
@@ -114,15 +111,10 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
         ll_add.setOnClickListener(this);
         tv_delete.setOnClickListener(this);
         titlebar_right.setText(R.string.delete);
-        //得到Dao对象
-        mCompanyInfoDao = MyApplication.getInstance().getDaoSession().getCompanyInfoDao();
         //得到Dao对象管理器
-        mGreendaoManager = new GreendaoManager<>(mCompanyInfoDao);
-
-        //得到Dao对象
-        mCompanyDeleteInfo = MyApplication.getInstance().getDaoSession().getCompanyDeleteInfoDao();
+        mGreendaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyInfoDao());
         //得到Dao对象管理器
-        mDeleteInfoGreendaoManager = new GreendaoManager<>(mCompanyDeleteInfo);
+        mDeleteInfoGreendaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeleteInfoDao());
     }
 
     @Override
@@ -341,9 +333,8 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
         super.loadLocalData(port);
         mRefreshLayout.setEnableLoadmore(false);
         if (port.equals(REQUEST_COMPANY_INFO_LIST)) {
-            List<CompanyInfo> companyInfoList = mGreendaoManager.queryAll();
             CompanyInfoBean companyInfoBean = new CompanyInfoBean();
-            companyInfoBean.setRows(companyInfoList);
+            companyInfoBean.setRows(mGreendaoManager.queryAll());
             getCompanyInfoList(companyInfoBean);
         } else if (port.equals(REQUEST_DELETE_COMPANY_INFO)) {
             BaseEntity baseEntity = new BaseEntity();

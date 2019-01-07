@@ -105,12 +105,10 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
     private String mLocalPath = "";
 
     private GreendaoManager<CompanyAccountInfo, CompanyAccountInfoDao> mAccountInfoDaoManager;
-    private CompanyAccountInfoDao mCompanyAccountInfoDao;
     private List<CompanyAccountInfo> mCompanyAccountLocalInfoList = new ArrayList<>();//本地数据
 
     private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoManager;
     private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
-    private DicInfoDao mDicInfoDao;
 
     /**
      * @param activity
@@ -167,17 +165,12 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
                 .setZipInfo(new CameraCore.ZipInfo(true, 200, 200, 100 * 1024))
                 .build();
 
-        //得到Dao对象
-        mCompanyAccountInfoDao = MyApplication.getInstance().getDaoSession().getCompanyAccountInfoDao();
         //得到Dao对象管理器
-        mAccountInfoDaoManager = new GreendaoManager<>(mCompanyAccountInfoDao);
+        mAccountInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyAccountInfoDao());
         //得到本地数据
         mCompanyAccountLocalInfoList = mAccountInfoDaoManager.queryAll();
-
-        //得到Dao对象
-        mDicInfoDao = MyApplication.getInstance().getDaoSession().getDicInfoDao();
         //得到Dao对象管理器
-        mDicInfoDaoManager = new GreendaoManager<>(mDicInfoDao);
+        mDicInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getDicInfoDao());
         //得到本地数据
         mDicInfoLocalList = mDicInfoDaoManager.queryAll();
     }
@@ -349,7 +342,7 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
             CompanyAccountInfo companyAccountInfo = null;
             if (mLocalId == 0l) {
                 companyAccountInfo = new CompanyAccountInfo(mAccountId, TimeUtils.getCurrentTime(new Date()), StringUtil.getText(et_nickname), StringUtil.getText(et_username), mRoleId, spinner_role.getText(), mCompanyId, mHeadCode, mCompanyName, mUserType, spinner_user_type.getText(), mState, spinner_state.getText(), StringUtil.getText(et_address), spinner_role.getText(), StringUtil.getText(et_phone), mRoleId, StringUtil.getText(et_email), StringUtil.getText(et_password), false, isLocal);
-                mCompanyAccountInfoDao.insertOrReplace(companyAccountInfo);
+                mAccountInfoDaoManager.insertOrReplace(companyAccountInfo);
             } else {
                 for (CompanyAccountInfo info : mCompanyAccountLocalInfoList) {
                     if (mLocalId == info.getLocalId()) {
@@ -384,11 +377,9 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
     }
 
     @Override
-    public void uploadImages(FileInfoBean fileInfoBean, boolean isLocal) {
-        if (!TextUtils.isEmpty(fileInfoBean.getCode())) {
-            mHeadCode = fileInfoBean.getCode();
-            GlideUtil.showImg(iv_icon, mHeadCode);
-        }
+    public void uploadImages(FileInfoBean fileInfoBean) {
+        mHeadCode = fileInfoBean.getCode();
+        GlideUtil.showImg(iv_icon, mHeadCode);
     }
 
     @Override
@@ -443,7 +434,7 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
                 break;
             case REQUEST_UPLOAD_IMAGE:
                 FileInfoBean localInfoBean = new FileInfoBean(mLocalPath);
-                uploadImages(localInfoBean, true);
+                uploadImages(localInfoBean);
                 break;
             case REQUEST_SAVE_COMPANY_ACCOUNT:
                 UploadInfoBean uploadInfoBean = new UploadInfoBean();
