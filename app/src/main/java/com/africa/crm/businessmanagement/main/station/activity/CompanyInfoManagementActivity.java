@@ -285,7 +285,7 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
                     mCompanyInfoList.remove(mDeleteList.get(i));
                     if (isLocal) {
                         for (CompanyInfo companyInfo : mDeleteList) {
-                            CompanyDeleteInfo deleteInfo = new CompanyDeleteInfo(companyInfo.getArea(), companyInfo.getProfession(), companyInfo.getCode(), companyInfo.getAddress(), companyInfo.getNumA(), companyInfo.getMid(), companyInfo.getType(), companyInfo.getTypeName(), companyInfo.getHead(), companyInfo.getCreateTime(), companyInfo.getPhone(), companyInfo.getName(), companyInfo.getId(), companyInfo.getState(), companyInfo.getStateName(), companyInfo.getEmail(), true, true);
+                            CompanyDeleteInfo deleteInfo = new CompanyDeleteInfo(companyInfo.getArea(), companyInfo.getProfession(), companyInfo.getCode(), companyInfo.getAddress(), companyInfo.getNumA(), companyInfo.getMid(), companyInfo.getType(), companyInfo.getTypeName(), companyInfo.getHead(), companyInfo.getCreateTime(), companyInfo.getPhone(), companyInfo.getName(), companyInfo.getId(), companyInfo.getState(), companyInfo.getStateName(), companyInfo.getEmail(), false, true);
                             mDeleteInfoGreendaoManager.insertOrReplace(deleteInfo);
                         }
                     }

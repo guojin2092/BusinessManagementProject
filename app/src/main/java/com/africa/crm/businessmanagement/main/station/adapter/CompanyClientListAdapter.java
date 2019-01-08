@@ -44,12 +44,13 @@ public class CompanyClientListAdapter extends BaseQuickAdapter<CompanyClientInfo
         ImageView iv_icon = helper.getView(R.id.iv_icon);
         TextView tv_company_name = helper.getView(R.id.tv_company_name);
         TextView tv_industry_name = helper.getView(R.id.tv_industry_name);
+        TextView tv_client_name = helper.getView(R.id.tv_client_name);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
         GlideUtil.showImg(iv_icon, item.getHead());
         tv_company_name.setText(item.getCompanyName());
         tv_industry_name.setText(item.getIndustryName());
-
+        tv_client_name.setText(item.getName());
         cb_choose.setChecked(item.isChosen());
         if (mIsDeleted) {
             cb_choose.setVisibility(View.VISIBLE);

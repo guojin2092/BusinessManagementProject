@@ -316,7 +316,7 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
                     mCompanySupplierInfoList.remove(mDeleteList.get(i));
                     if (isLocal) {
                         for (CompanySupplierInfo companyInfo : mDeleteList) {
-                            CompanyDeleteSupplierInfo deleteInfo = new CompanyDeleteSupplierInfo(companyInfo.getId(), companyInfo.getArea(), companyInfo.getZipCode(), companyInfo.getAddress(), companyInfo.getCompanyName(), companyInfo.getTypeName(), companyInfo.getRemark(), companyInfo.getType(), companyInfo.getHead(), companyInfo.getCompanyId(), companyInfo.getCreateTime(), companyInfo.getPhone(), companyInfo.getName(), companyInfo.getEmail(), true, true);
+                            CompanyDeleteSupplierInfo deleteInfo = new CompanyDeleteSupplierInfo(companyInfo.getId(), companyInfo.getArea(), companyInfo.getZipCode(), companyInfo.getAddress(), companyInfo.getCompanyName(), companyInfo.getTypeName(), companyInfo.getRemark(), companyInfo.getType(), companyInfo.getHead(), companyInfo.getCompanyId(), companyInfo.getCreateTime(), companyInfo.getPhone(), companyInfo.getName(), companyInfo.getEmail(), false, true);
                             mDeleteInfoGreendaoManager.insertOrReplace(deleteInfo);
                         }
                     }

@@ -25,7 +25,7 @@ public class CompanyClientContract {
 
         void getCompanyClientList(CompanyClientInfoBean companyClientInfoBean);
 
-        void deleteCompanyClient(BaseEntity baseEntity);
+        void deleteCompanyClient(BaseEntity baseEntity, boolean isLocal);
     }
 
     public interface Presenter extends IBasePresenter<CompanyClientContract.View> {

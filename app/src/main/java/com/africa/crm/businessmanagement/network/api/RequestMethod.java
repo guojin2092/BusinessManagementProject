@@ -59,4 +59,17 @@ public class RequestMethod {
     public static final String REQUEST_COMPANY_PRODUCT_DETAIL = "request_company_product_detail";
     //保存企业产品
     public static final String REQUEST_SAVE_COMPANY_PRODUCT = "request_save_company_product";
+
+    //行业分类
+    public static final String REQUEST_INDUSTRY_TYPE = "request_industry_type";
+    //企业客户列表
+    public static final String REQUEST_COMPANY_CLIENT_LIST = "request_company_client_list";
+    //删除企业客户
+    public static final String REQUEST_DELETE_COMPANY_CLIENT = "request_delete_company_client";
+    //获取所有用户列表
+    public static final String REQUEST_ALL_USERS_LIST = "request_all_users_list";
+    //获取企业客户详情
+    public static final String REQUEST_COMPANY_CLIENT_DETAIL = "request_company_client_detail";
+    //保存企业客户
+    public static final String REQUEST_SAVE_COMPANY_CLIENT = "request_save_company_client";
 }

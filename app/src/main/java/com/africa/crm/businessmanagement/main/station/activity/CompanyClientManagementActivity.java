@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyClientEvent;
@@ -21,12 +22,18 @@ import com.africa.crm.businessmanagement.main.bean.CompanyClientInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyClientInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
+import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteClientInfo;
+import com.africa.crm.businessmanagement.main.dao.CompanyClientInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyDeleteClientInfoDao;
+import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.CompanyClientListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyClientContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyClientPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
@@ -39,6 +46,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.DicUtil.INDUSTRY_CODE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_CLIENT_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DELETE_COMPANY_CLIENT;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_INDUSTRY_TYPE;
 
 /**
  * Project：BusinessManagementProject
@@ -64,6 +76,8 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
     private CompanyClientListAdapter mCompanyClientListAdapter;
     private List<CompanyClientInfo> mDeleteList = new ArrayList<>();
     private List<CompanyClientInfo> mCompanyClientInfoList = new ArrayList<>();
+    private List<CompanyClientInfo> mCompanyClientLocalList = new ArrayList<>();//本地数据
+
 
     private AlertDialog mDeleteDialog;
 
@@ -74,9 +88,13 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
 
     @BindView(R.id.spinner_industry)
     MySpinner spinner_industry;
-    private static final String SUPPLIER_INDUSTRY_CODE = "INDUSTRYTYPE";
     private List<DicInfo> mSpinnerCompanyIndustryList = new ArrayList<>();
     private String mIndustryType = "";
+
+    private GreendaoManager<CompanyClientInfo, CompanyClientInfoDao> mClientInfoDaoManager;
+    private GreendaoManager<CompanyDeleteClientInfo, CompanyDeleteClientInfoDao> mDeleteClientInfoDaoManager;
+    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoManager;
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
@@ -114,6 +132,14 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
         tv_delete.setOnClickListener(this);
         tv_search.setOnClickListener(this);
 
+        //得到Dao对象管理器
+        mClientInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyClientInfoDao());
+        //得到Dao对象管理器
+        mDeleteClientInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeleteClientInfoDao());
+        //得到Dao对象管理器
+        mDicInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getDicInfoDao());
+        //得到本地数据
+        mDicInfoLocalList = mDicInfoDaoManager.queryAll();
 /*
         et_name.addTextChangedListener(new TextWatcher() {
             @Override
@@ -144,7 +170,7 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
 
     @Override
     protected void requestData() {
-        mPresenter.getIndustryType(SUPPLIER_INDUSTRY_CODE);
+        mPresenter.getIndustryType(INDUSTRY_CODE);
         pullDownRefresh(page);
     }
 
@@ -176,7 +202,7 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
                 }
                 break;
             case R.id.ll_add:
-                CompanyClientDetailActivity.startActivity(CompanyClientManagementActivity.this, "");
+                CompanyClientDetailActivity.startActivity(CompanyClientManagementActivity.this, "", 0l);
                 break;
             case R.id.tv_delete:
                 mDeleteList.clear();
@@ -226,6 +252,11 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
     public void getIndustryType(List<DicInfo> dicInfoList) {
         mSpinnerCompanyIndustryList.clear();
         mSpinnerCompanyIndustryList.addAll(dicInfoList);
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerCompanyIndustryList, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            dicInfo.setType(INDUSTRY_CODE);
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
+        }
         spinner_industry.setListDatas(this, mSpinnerCompanyIndustryList);
 
         spinner_industry.addOnItemClickListener(new MySpinner.OnItemClickListener() {
@@ -258,6 +289,7 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
                     mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
                 }
                 mCompanyClientInfoList.clear();
+                mCompanyClientLocalList = mClientInfoDaoManager.queryAll();
                 recyclerView.smoothScrollToPosition(0);
             }
             if (mRefreshLayout != null) {
@@ -269,6 +301,22 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
             }
             if (!ListUtils.isEmpty(companyClientInfoBean.getRows())) {
                 mCompanyClientInfoList.addAll(companyClientInfoBean.getRows());
+                List<CompanyClientInfo> addList = DifferentDataUtil.addClientDataToLocal(mCompanyClientInfoList, mCompanyClientLocalList);
+                if (!ListUtils.isEmpty(addList)) {
+                    for (CompanyClientInfo companyInfo : addList) {
+                        mClientInfoDaoManager.insertOrReplace(companyInfo);
+                    }
+                    mCompanyClientLocalList = new ArrayList<>();
+                    mCompanyClientLocalList = mClientInfoDaoManager.queryAll();
+                }
+                for (CompanyClientInfo info : mCompanyClientInfoList) {
+                    for (CompanyClientInfo localInfo : mCompanyClientLocalList) {
+                        if (info.getId().equals(localInfo.getId())) {
+                            info.setLocalId(localInfo.getLocalId());
+                            mClientInfoDaoManager.correct(info);
+                        }
+                    }
+                }
                 if (mCompanyClientListAdapter != null) {
                     mCompanyClientListAdapter.notifyDataSetChanged();
                 }
@@ -282,7 +330,7 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
                             mCompanyClientInfoList.get(position).setChosen(!cb_choose.isChecked());
                             mCompanyClientListAdapter.notifyDataSetChanged();
                         } else {
-                            CompanyClientDetailActivity.startActivity(CompanyClientManagementActivity.this, mCompanyClientInfoList.get(position).getId());
+                            CompanyClientDetailActivity.startActivity(CompanyClientManagementActivity.this, mCompanyClientInfoList.get(position).getId(), mCompanyClientLocalList.get(position).getLocalId());
                         }
                     }
                 });
@@ -292,12 +340,25 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
     }
 
     @Override
-    public void deleteCompanyClient(BaseEntity baseEntity) {
+    public void deleteCompanyClient(BaseEntity baseEntity, boolean isLocal) {
         if (baseEntity.isSuccess()) {
             for (int i = 0; i < mDeleteList.size(); i++) {
                 if (mCompanyClientInfoList.contains(mDeleteList.get(i))) {
                     int position = mCompanyClientInfoList.indexOf(mDeleteList.get(i));
                     mCompanyClientInfoList.remove(mDeleteList.get(i));
+                    if (isLocal) {
+                        for (CompanyClientInfo companyInfo : mDeleteList) {
+                            CompanyDeleteClientInfo deleteAccountInfo = new CompanyDeleteClientInfo(companyInfo.getId(), companyInfo.getCreateTime(), companyInfo.getIndustryName(), companyInfo.getRemark(), companyInfo.getWorkerNum(), companyInfo.getTel(), companyInfo.getCompanyName(), companyInfo.getAddress(), companyInfo.getYearIncome(), companyInfo.getUserId(), companyInfo.getUserNickName(), companyInfo.getName(), companyInfo.getCompanyId(), companyInfo.getHead(), companyInfo.getIndustry(), false, true);
+                            mDeleteClientInfoDaoManager.insertOrReplace(deleteAccountInfo);
+                        }
+                    }
+                    for (CompanyClientInfo companyInfo : mCompanyClientLocalList) {
+                        if (mDeleteList.get(i).getLocalId().equals(companyInfo.getLocalId())) {
+                            mClientInfoDaoManager.delete(companyInfo.getLocalId());
+                        }
+                    }
+                    mCompanyClientLocalList = new ArrayList<>();
+                    mCompanyClientLocalList = mClientInfoDaoManager.queryAll();
                     if (mCompanyClientListAdapter != null) {
                         mCompanyClientListAdapter.notifyItemRemoved(position);
                     }
@@ -328,5 +389,32 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        mRefreshLayout.setEnableLoadmore(false);
+        switch (port) {
+            case REQUEST_INDUSTRY_TYPE:
+                List<DicInfo> stateList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(INDUSTRY_CODE)) {
+                        stateList.add(dicInfo);
+                    }
+                }
+                getIndustryType(stateList);
+                break;
+            case REQUEST_COMPANY_CLIENT_LIST:
+                CompanyClientInfoBean companyClientInfoBean = new CompanyClientInfoBean();
+                companyClientInfoBean.setRows(mClientInfoDaoManager.queryAll());
+                getCompanyClientList(companyClientInfoBean);
+                break;
+            case REQUEST_DELETE_COMPANY_CLIENT:
+                BaseEntity baseEntity = new BaseEntity();
+                baseEntity.setSuccess(true);
+                deleteCompanyClient(baseEntity, true);
+                break;
+        }
     }
 }

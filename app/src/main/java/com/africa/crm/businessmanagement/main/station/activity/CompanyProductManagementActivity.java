@@ -343,7 +343,7 @@ public class CompanyProductManagementActivity extends BaseRefreshMvpActivity<Com
                     mProductInfoBeanList.remove(mDeleteList.get(i));
                     if (isLocal) {
                         for (CompanyProductInfo companyInfo : mDeleteList) {
-                            CompanyDeleteProductInfo deleteInfo = new CompanyDeleteProductInfo(companyInfo.getCreateTime(), companyInfo.getSupplierName(), companyInfo.getRemark(), companyInfo.getStockNum(), companyInfo.getUnitPrice(), companyInfo.getCode(), companyInfo.getCompanyName(), companyInfo.getType(), companyInfo.getWarnNum(), companyInfo.getId(), companyInfo.getTypeName(), companyInfo.getUnit(), companyInfo.getName(), companyInfo.getCompanyId(), companyInfo.getMakerName(), true, true);
+                            CompanyDeleteProductInfo deleteInfo = new CompanyDeleteProductInfo(companyInfo.getCreateTime(), companyInfo.getSupplierName(), companyInfo.getRemark(), companyInfo.getStockNum(), companyInfo.getUnitPrice(), companyInfo.getCode(), companyInfo.getCompanyName(), companyInfo.getType(), companyInfo.getWarnNum(), companyInfo.getId(), companyInfo.getTypeName(), companyInfo.getUnit(), companyInfo.getName(), companyInfo.getCompanyId(), companyInfo.getMakerName(), false, true);
                             mDeleteProductInfoDaoManager.insertOrReplace(deleteInfo);
                         }
                     }

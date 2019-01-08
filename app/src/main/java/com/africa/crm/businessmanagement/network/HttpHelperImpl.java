@@ -280,8 +280,8 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
-    public Observable<BaseEntity> saveCompanyClient(String id, String companyId, String userId, String head, String name, String industry, String address, String workerNum, String tel, String yearIncome, String remark) {
-        return mainApi.saveCompanyClient(id, companyId, userId, head, name, industry, address, workerNum, tel, yearIncome, remark);
+    public Observable<UploadInfoBean> saveCompanyClient(String id, String companyId, String userId, String head, String name, String industry, String address, String workerNum, String tel, String yearIncome, String remark) {
+        return mainApi.saveCompanyClient(id, companyId, userId, head, name, industry, address, workerNum, tel, yearIncome, remark).compose(RxUtils.<UploadInfoBean>handleResult());
     }
 
     @Override

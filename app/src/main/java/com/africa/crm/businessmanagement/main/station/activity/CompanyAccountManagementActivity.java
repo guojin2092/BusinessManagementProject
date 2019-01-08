@@ -325,7 +325,7 @@ public class CompanyAccountManagementActivity extends BaseRefreshMvpActivity<Com
                     mCompanyInfoList.remove(mDeleteList.get(i));
                     if (isLocal) {
                         for (CompanyAccountInfo companyInfo : mDeleteList) {
-                            CompanyDeleteAccountInfo deleteAccountInfo = new CompanyDeleteAccountInfo(companyInfo.getId(), companyInfo.getCreateTime(), companyInfo.getName(), companyInfo.getUserName(), companyInfo.getRoleId(), companyInfo.getRoleName(), companyInfo.getCompanyId(), companyInfo.getHead(), companyInfo.getCompanyName(), companyInfo.getType(), companyInfo.getTypeName(), companyInfo.getState(), companyInfo.getStateName(), companyInfo.getAddress(), companyInfo.getRoleTypeName(), companyInfo.getPhone(), companyInfo.getRoleCode(), companyInfo.getEmail(), true, true);
+                            CompanyDeleteAccountInfo deleteAccountInfo = new CompanyDeleteAccountInfo(companyInfo.getId(), companyInfo.getCreateTime(), companyInfo.getName(), companyInfo.getUserName(), companyInfo.getRoleId(), companyInfo.getRoleName(), companyInfo.getCompanyId(), companyInfo.getHead(), companyInfo.getCompanyName(), companyInfo.getType(), companyInfo.getTypeName(), companyInfo.getState(), companyInfo.getStateName(), companyInfo.getAddress(), companyInfo.getRoleTypeName(), companyInfo.getPhone(), companyInfo.getRoleCode(), companyInfo.getEmail(), false, true);
                             mDeleteAccountInfoDaoManager.insertOrReplace(deleteAccountInfo);
                         }
                     }

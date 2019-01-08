@@ -37,9 +37,11 @@ import butterknife.BindView;
 import io.reactivex.functions.Consumer;
 
 import static com.africa.crm.businessmanagement.network.api.DicUtil.COMPANY_TYPE_CODE;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.INDUSTRY_CODE;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.PRODUCT_TYPE;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_ROLES;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_SUPPLIERS;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_USERS;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.STATE_CODE;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.SUPPLIER_TYPE_CODE;
 import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_STATE;
@@ -225,7 +227,38 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
                         }
                     }
                 }, new ComConsumer(null)));
-
+        //所有所属用户
+        addDisposable(mDataManager.getAllCompanyUser("")
+                .compose(RxUtils.<List<DicInfo2>>ioToMain())
+                .subscribe(new Consumer<List<DicInfo2>>() {
+                    @Override
+                    public void accept(List<DicInfo2> dicInfoList) throws Exception {
+                        List<DicInfo> list = new ArrayList<>();
+                        for (DicInfo2 dicInfo2 : dicInfoList) {
+                            list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getCode()));
+                        }
+                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
+                        for (DicInfo dicInfo : addList) {
+                            dicInfo.setType(QUERY_ALL_USERS);
+                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
+                        }
+                    }
+                }, new ComConsumer(null)));
+        //行业分类
+        addDisposable(mDataManager.getDicByCode(INDUSTRY_CODE)
+                .compose(RxUtils.<List<DicInfo>>ioToMain())
+                .subscribe(new Consumer<List<DicInfo>>() {
+                    @Override
+                    public void accept(List<DicInfo> dicInfoList) throws Exception {
+                        List<DicInfo> spinnerSupplierTypeList = new ArrayList<>();
+                        spinnerSupplierTypeList.addAll(dicInfoList);
+                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerSupplierTypeList, mDicInfoLocalList);
+                        for (DicInfo dicInfo : addList) {
+                            dicInfo.setType(INDUSTRY_CODE);
+                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
+                        }
+                    }
+                }, new ComConsumer(null)));
     }
 
 

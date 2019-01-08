@@ -22,4 +22,8 @@ public class DicUtil {
     public static final String PRODUCT_TYPE = "PRODUCTTYPE";
     //查询所有供应商
     public static final String QUERY_ALL_SUPPLIERS = "QUERY_ALL_suppliers";
+    //行业分类
+    public static final String INDUSTRY_CODE = "INDUSTRYTYPE";
+    //查询所有用户
+    public static final String QUERY_ALL_USERS = "QUERY_ALL_users";
 }

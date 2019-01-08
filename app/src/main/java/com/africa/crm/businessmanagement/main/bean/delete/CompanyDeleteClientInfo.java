@@ -1,4 +1,4 @@
-package com.africa.crm.businessmanagement.main.bean;
+package com.africa.crm.businessmanagement.main.bean.delete;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
@@ -14,7 +14,7 @@ import org.greenrobot.greendao.annotation.Id;
  * Why & What is modified:
  */
 @Entity
-public class CompanyClientInfo {
+public class CompanyDeleteClientInfo {
     @Id(autoincrement = true)
     private Long localId;
     private String id;
@@ -36,12 +36,12 @@ public class CompanyClientInfo {
     private boolean chosen = false;
     private boolean isLocal = false;
 
-    @Generated(hash = 831906208)
-    public CompanyClientInfo(Long localId, String id, String createTime,
-                             String industryName, String remark, String workerNum, String tel,
-                             String companyName, String address, String yearIncome, String userId,
-                             String userNickName, String name, String companyId, String head,
-                             String industry, boolean chosen, boolean isLocal) {
+    @Generated(hash = 2115662772)
+    public CompanyDeleteClientInfo(Long localId, String id, String createTime,
+                                   String industryName, String remark, String workerNum, String tel,
+                                   String companyName, String address, String yearIncome, String userId,
+                                   String userNickName, String name, String companyId, String head,
+                                   String industry, boolean chosen, boolean isLocal) {
         this.localId = localId;
         this.id = id;
         this.createTime = createTime;
@@ -62,11 +62,11 @@ public class CompanyClientInfo {
         this.isLocal = isLocal;
     }
 
-    public CompanyClientInfo(String id, String createTime,
-                             String industryName, String remark, String workerNum, String tel,
-                             String companyName, String address, String yearIncome, String userId,
-                             String userNickName, String name, String companyId, String head,
-                             String industry, boolean chosen, boolean isLocal) {
+    public CompanyDeleteClientInfo(String id, String createTime,
+                                   String industryName, String remark, String workerNum, String tel,
+                                   String companyName, String address, String yearIncome, String userId,
+                                   String userNickName, String name, String companyId, String head,
+                                   String industry, boolean chosen, boolean isLocal) {
         this.id = id;
         this.createTime = createTime;
         this.industryName = industryName;
@@ -86,9 +86,8 @@ public class CompanyClientInfo {
         this.isLocal = isLocal;
     }
 
-
-    @Generated(hash = 1833259408)
-    public CompanyClientInfo() {
+    @Generated(hash = 1238558823)
+    public CompanyDeleteClientInfo() {
     }
 
     public String getId() {

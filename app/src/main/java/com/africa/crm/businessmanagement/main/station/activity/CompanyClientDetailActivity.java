@@ -12,14 +12,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyClientEvent;
-import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyClientInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
+import com.africa.crm.businessmanagement.main.dao.CompanyClientInfoDao;
+import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.glide.GlideUtil;
 import com.africa.crm.businessmanagement.main.photo.SinglePopup;
@@ -27,15 +31,26 @@ import com.africa.crm.businessmanagement.main.photo.camera.CameraCore;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyClientDetailContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyClientDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
-import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.MySpinner;
+import com.africa.crm.businessmanagement.widget.StringUtil;
+import com.africa.crm.businessmanagement.widget.TimeUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.DicUtil.INDUSTRY_CODE;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_USERS;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_USERS_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_CLIENT_DETAIL;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_INDUSTRY_TYPE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SAVE_COMPANY_CLIENT;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_UPLOAD_IMAGE;
 
 /**
  * Project：BusinessManagementProject
@@ -70,7 +85,6 @@ public class CompanyClientDetailActivity extends BaseMvpActivity<CompanyClientDe
 
     @BindView(R.id.spinner_industry)
     MySpinner spinner_industry;
-    private static final String CONTACT_INDUSTRY_TYPE = "INDUSTRYTYPE";
     private List<DicInfo> mSpinnerIndustryList = new ArrayList<>();
     private String mIndustryType = "";
 
@@ -82,19 +96,28 @@ public class CompanyClientDetailActivity extends BaseMvpActivity<CompanyClientDe
     private String mFromUserId = "";
 
     private String mClientId = "";//联系人Id
+    private Long mLocalId = 0l;//本地数据库ID
     private String mRoleCode = "";//角色code
     private String mCompanyId = "";
 
     private CameraCore cameraCore;
     private SinglePopup singlePopup;
     private String mHeadCode = "";//头像ID
+    private String mLocalPath = "";
+
+    private GreendaoManager<CompanyClientInfo, CompanyClientInfoDao> mClientInfoDaoManager;
+    private List<CompanyClientInfo> mCompanyClientLocalList = new ArrayList<>();//本地数据
+
+    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoManager;
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
      */
-    public static void startActivity(Activity activity, String id) {
+    public static void startActivity(Activity activity, String id, Long localId) {
         Intent intent = new Intent(activity, CompanyClientDetailActivity.class);
         intent.putExtra("clientId", id);
+        intent.putExtra("localId", localId);
         activity.startActivity(intent);
     }
 
@@ -112,25 +135,33 @@ public class CompanyClientDetailActivity extends BaseMvpActivity<CompanyClientDe
     public void initView() {
         super.initView();
         mClientId = getIntent().getStringExtra("clientId");
+        mLocalId = getIntent().getLongExtra("localId", 0l);
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
         mRoleCode = UserInfoManager.getUserLoginInfo(this).getRoleCode();
         titlebar_name.setText("客户详情");
         tv_add_icon.setOnClickListener(this);
         tv_save.setOnClickListener(this);
-
-        if (!TextUtils.isEmpty(mClientId)) {
-            titlebar_right.setText(R.string.edit);
-            tv_save.setText(R.string.save);
-            setEditTextInput(false);
-        } else {
+        if (TextUtils.isEmpty(mClientId) && mLocalId == 0l) {
             titlebar_right.setVisibility(View.GONE);
             tv_save.setText(R.string.add);
             tv_save.setVisibility(View.VISIBLE);
+        } else if (!TextUtils.isEmpty(mClientId) || mLocalId != 0l) {
+            titlebar_right.setText(R.string.edit);
+            tv_save.setText(R.string.save);
+            setEditTextInput(false);
         }
         cameraCore = new CameraCore.Builder(this)
                 .setNeedCrop(true)
                 .setZipInfo(new CameraCore.ZipInfo(true, 200, 200, 100 * 1024))
                 .build();
+        //得到Dao对象管理器
+        mClientInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyClientInfoDao());
+        //得到本地数据
+        mCompanyClientLocalList = mClientInfoDaoManager.queryAll();
+        //得到Dao对象管理器
+        mDicInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getDicInfoDao());
+        //得到本地数据
+        mDicInfoLocalList = mDicInfoDaoManager.queryAll();
     }
 
     @Override
@@ -182,8 +213,8 @@ public class CompanyClientDetailActivity extends BaseMvpActivity<CompanyClientDe
         } else {
             ll_from_user.setVisibility(View.GONE);
         }
-        mPresenter.getIndustry(CONTACT_INDUSTRY_TYPE);
-        if (!TextUtils.isEmpty(mClientId)) {
+        mPresenter.getIndustry(INDUSTRY_CODE);
+        if (!TextUtils.isEmpty(mClientId) || mLocalId != 0l) {
             mPresenter.getCompanyClientDetail(mClientId);
         }
 
@@ -217,8 +248,13 @@ public class CompanyClientDetailActivity extends BaseMvpActivity<CompanyClientDe
         mSpinnerCompanyUserList.clear();
         if (!ListUtils.isEmpty(dicInfo2List)) {
             for (DicInfo2 dicInfo2 : dicInfo2List) {
-                DicInfo dicInfo = new DicInfo(dicInfo2.getName(), dicInfo2.getId());
+                DicInfo dicInfo = new DicInfo(dicInfo2.getId(), QUERY_ALL_USERS, dicInfo2.getName(), dicInfo2.getCode());
                 mSpinnerCompanyUserList.add(dicInfo);
+            }
+            List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerCompanyUserList, mDicInfoLocalList);
+            for (DicInfo dicInfo : addList) {
+                dicInfo.setType(QUERY_ALL_USERS);
+                mDicInfoDaoManager.insertOrReplace(dicInfo);
             }
             spinner_from_user.setListDatas(getBVActivity(), mSpinnerCompanyUserList);
             spinner_from_user.addOnItemClickListener(new MySpinner.OnItemClickListener() {
@@ -234,8 +270,12 @@ public class CompanyClientDetailActivity extends BaseMvpActivity<CompanyClientDe
     public void getIndustry(List<DicInfo> dicInfoList) {
         mSpinnerIndustryList.clear();
         mSpinnerIndustryList.addAll(dicInfoList);
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerIndustryList, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            dicInfo.setType(INDUSTRY_CODE);
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
+        }
         spinner_industry.setListDatas(this, mSpinnerIndustryList);
-
         spinner_industry.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
@@ -246,36 +286,55 @@ public class CompanyClientDetailActivity extends BaseMvpActivity<CompanyClientDe
 
     @Override
     public void getCompanyClientDetail(CompanyClientInfo companyClientInfo) {
-        et_name.setText(companyClientInfo.getName());
-        spinner_from_user.setText(companyClientInfo.getUserNickName());
-        mFromUserId = companyClientInfo.getUserId();
-        et_from_company_name.setText(companyClientInfo.getCompanyName());
-        et_company_staff_num.setText(companyClientInfo.getIndustryName());
-        mIndustryType = companyClientInfo.getIndustry();
-        spinner_industry.setText(companyClientInfo.getIndustryName());
-        mIndustryType = companyClientInfo.getIndustry();
-        et_income.setText(companyClientInfo.getYearIncome());
-        et_phone.setText(companyClientInfo.getTel());
-        et_address.setText(companyClientInfo.getAddress());
-        et_remark.setText(companyClientInfo.getRemark());
-        mHeadCode = companyClientInfo.getHead();
-        GlideUtil.showImg(iv_icon, mHeadCode);
+        if (companyClientInfo != null) {
+            et_name.setText(companyClientInfo.getName());
+            spinner_from_user.setText(companyClientInfo.getUserNickName());
+            mFromUserId = companyClientInfo.getUserId();
+            et_from_company_name.setText(companyClientInfo.getCompanyName());
+            et_company_staff_num.setText(companyClientInfo.getWorkerNum());
+            mIndustryType = companyClientInfo.getIndustry();
+            spinner_industry.setText(companyClientInfo.getIndustryName());
+            mIndustryType = companyClientInfo.getIndustry();
+            et_income.setText(companyClientInfo.getYearIncome());
+            et_phone.setText(companyClientInfo.getTel());
+            et_address.setText(companyClientInfo.getAddress());
+            et_remark.setText(companyClientInfo.getRemark());
+            mHeadCode = companyClientInfo.getHead();
+            GlideUtil.showImg(iv_icon, mHeadCode);
+            mCompanyId = companyClientInfo.getCompanyId();
+            for (CompanyClientInfo localInfo : mCompanyClientLocalList) {
+                if (localInfo.getId().equals(companyClientInfo.getId())) {
+                    companyClientInfo.setLocalId(localInfo.getLocalId());
+                    mClientInfoDaoManager.correct(companyClientInfo);
+                }
+            }
+        }
     }
 
     @Override
-    public void saveCompanyClient(BaseEntity baseEntity) {
-        if (baseEntity.isSuccess()) {
-            String toastString = "";
-            if (TextUtils.isEmpty(mClientId)) {
-                toastString = "企业客户创建成功";
-            } else {
-                toastString = "企业客户修改成功";
-            }
-            EventBus.getDefault().post(new AddOrSaveCompanyClientEvent(toastString));
-            finish();
+    public void saveCompanyClient(UploadInfoBean uploadInfoBean, boolean isLocal) {
+        String toastString = "";
+        if (TextUtils.isEmpty(mClientId) && mLocalId == 0l) {
+            toastString = "企业客户创建成功";
         } else {
-            toastMsg(ErrorMsg.showErrorMsg(baseEntity.getReturnMsg()));
+            toastString = "企业客户修改成功";
         }
+        if (isLocal) {
+            CompanyClientInfo companyClientInfo = null;
+            if (mLocalId == 0l) {
+                companyClientInfo = new CompanyClientInfo(mClientId, TimeUtils.getCurrentTime(new Date()), spinner_industry.getText(), StringUtil.getText(et_remark), StringUtil.getText(et_company_staff_num), StringUtil.getText(et_phone), StringUtil.getText(et_from_company_name), StringUtil.getText(et_address), StringUtil.getText(et_income), mFromUserId, spinner_from_user.getText(), StringUtil.getText(et_name), mCompanyId, mHeadCode, mIndustryType, false, isLocal);
+                mClientInfoDaoManager.insertOrReplace(companyClientInfo);
+            } else {
+                for (CompanyClientInfo info : mCompanyClientLocalList) {
+                    if (mLocalId == info.getLocalId()) {
+                        companyClientInfo = new CompanyClientInfo(info.getLocalId(), mClientId, TimeUtils.getCurrentTime(new Date()), spinner_industry.getText(), StringUtil.getText(et_remark), StringUtil.getText(et_company_staff_num), StringUtil.getText(et_phone), StringUtil.getText(et_from_company_name), StringUtil.getText(et_address), StringUtil.getText(et_income), mFromUserId, spinner_from_user.getText(), StringUtil.getText(et_name), mCompanyId, mHeadCode, mIndustryType, false, isLocal);
+                        mClientInfoDaoManager.correct(companyClientInfo);
+                    }
+                }
+            }
+        }
+        EventBus.getDefault().post(new AddOrSaveCompanyClientEvent(toastString));
+        finish();
     }
 
     @Override
@@ -293,7 +352,8 @@ public class CompanyClientDetailActivity extends BaseMvpActivity<CompanyClientDe
     @Override
     public void success(String path) {
         if (!TextUtils.isEmpty(path)) {
-            mPresenter.uploadImages(path);
+            mLocalPath = path;
+            mPresenter.uploadImages(mLocalPath);
         }
     }
 
@@ -320,5 +380,50 @@ public class CompanyClientDetailActivity extends BaseMvpActivity<CompanyClientDe
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         cameraCore.onPermission(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        switch (port) {
+            case REQUEST_ALL_USERS_LIST:
+                List<DicInfo2> allUserList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(QUERY_ALL_USERS)) {
+                        allUserList.add(new DicInfo2(dicInfo.getId(), dicInfo.getText(), dicInfo.getCode()));
+                    }
+                }
+                getAllCompanyUsers(allUserList);
+                break;
+            case REQUEST_INDUSTRY_TYPE:
+                List<DicInfo> typeList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(INDUSTRY_CODE)) {
+                        typeList.add(dicInfo);
+                    }
+                }
+                getIndustry(typeList);
+                break;
+            case REQUEST_UPLOAD_IMAGE:
+                FileInfoBean localInfoBean = new FileInfoBean(mLocalPath);
+                uploadImages(localInfoBean);
+                break;
+            case REQUEST_COMPANY_CLIENT_DETAIL:
+                CompanyClientInfo companyClientInfo = null;
+                for (CompanyClientInfo info : mCompanyClientLocalList) {
+                    if (mLocalId == info.getLocalId()) {
+                        companyClientInfo = info;
+                    }
+                }
+                getCompanyClientDetail(companyClientInfo);
+                break;
+            case REQUEST_SAVE_COMPANY_CLIENT:
+                UploadInfoBean uploadInfoBean = new UploadInfoBean();
+                uploadInfoBean.setId(mClientId);
+                uploadInfoBean.setCreateTime(TimeUtils.getCurrentTime(new Date()));
+                uploadInfoBean.setUpdateTime(TimeUtils.getCurrentTime(new Date()));
+                saveCompanyClient(uploadInfoBean, true);
+                break;
+        }
     }
 }

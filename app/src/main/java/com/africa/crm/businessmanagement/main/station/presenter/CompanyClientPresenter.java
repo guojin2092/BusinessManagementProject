@@ -2,7 +2,6 @@ package com.africa.crm.businessmanagement.main.station.presenter;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyClientInfoBean;
-import com.africa.crm.businessmanagement.main.bean.CompanyInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyClientContract;
 import com.africa.crm.businessmanagement.mvp.presenter.RxPresenter;
@@ -12,6 +11,10 @@ import com.africa.crm.businessmanagement.network.util.RxUtils;
 import java.util.List;
 
 import io.reactivex.functions.Consumer;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_CLIENT_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DELETE_COMPANY_CLIENT;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_INDUSTRY_TYPE;
 
 /**
  * Project：BusinessManagementProject
@@ -33,7 +36,7 @@ public class CompanyClientPresenter extends RxPresenter<CompanyClientContract.Vi
                     public void accept(List<DicInfo> dicInfoList) throws Exception {
                         mView.getIndustryType(dicInfoList);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_INDUSTRY_TYPE)));
 
     }
 
@@ -46,7 +49,7 @@ public class CompanyClientPresenter extends RxPresenter<CompanyClientContract.Vi
                     public void accept(CompanyClientInfoBean companyClientInfoBean) throws Exception {
                         mView.getCompanyClientList(companyClientInfoBean);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_COMPANY_CLIENT_LIST)));
     }
 
     @Override
@@ -56,9 +59,9 @@ public class CompanyClientPresenter extends RxPresenter<CompanyClientContract.Vi
                 .subscribe(new Consumer<BaseEntity>() {
                     @Override
                     public void accept(BaseEntity baseEntity) throws Exception {
-                        mView.deleteCompanyClient(baseEntity);
+                        mView.deleteCompanyClient(baseEntity, false);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_DELETE_COMPANY_CLIENT)));
     }
 
 }

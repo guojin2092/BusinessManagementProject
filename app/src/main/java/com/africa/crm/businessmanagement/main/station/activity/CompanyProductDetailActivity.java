@@ -225,22 +225,24 @@ public class CompanyProductDetailActivity extends BaseMvpActivity<CompanyProduct
 
     @Override
     public void getCompanyProductDetail(CompanyProductInfo companyProductInfo) {
-        et_product_name.setText(companyProductInfo.getName());
-        et_code.setText(companyProductInfo.getCode());
-        spinner_supplier_name.setText(companyProductInfo.getSupplierName());
-        et_maker_name.setText(companyProductInfo.getMakerName());
-        spinner_product_type.setText(companyProductInfo.getTypeName());
-        mProductType = companyProductInfo.getType();
-        et_price.setText(companyProductInfo.getUnitPrice());
-        et_unit.setText(companyProductInfo.getUnit());
-        et_inventory_num.setText(companyProductInfo.getStockNum());
-        et_warn_num.setText(companyProductInfo.getWarnNum());
-        et_remark.setText(companyProductInfo.getRemark());
-        mCompanyName = companyProductInfo.getCompanyName();
-        for (CompanyProductInfo localInfo : mProductInfoLocalList) {
-            if (localInfo.getId().equals(companyProductInfo.getId())) {
-                companyProductInfo.setLocalId(localInfo.getLocalId());
-                mProductInfoDaoManager.correct(companyProductInfo);
+        if (companyProductInfo != null) {
+            et_product_name.setText(companyProductInfo.getName());
+            et_code.setText(companyProductInfo.getCode());
+            spinner_supplier_name.setText(companyProductInfo.getSupplierName());
+            et_maker_name.setText(companyProductInfo.getMakerName());
+            spinner_product_type.setText(companyProductInfo.getTypeName());
+            mProductType = companyProductInfo.getType();
+            et_price.setText(companyProductInfo.getUnitPrice());
+            et_unit.setText(companyProductInfo.getUnit());
+            et_inventory_num.setText(companyProductInfo.getStockNum());
+            et_warn_num.setText(companyProductInfo.getWarnNum());
+            et_remark.setText(companyProductInfo.getRemark());
+            mCompanyName = companyProductInfo.getCompanyName();
+            for (CompanyProductInfo localInfo : mProductInfoLocalList) {
+                if (localInfo.getId().equals(companyProductInfo.getId())) {
+                    companyProductInfo.setLocalId(localInfo.getLocalId());
+                    mProductInfoDaoManager.correct(companyProductInfo);
+                }
             }
         }
     }

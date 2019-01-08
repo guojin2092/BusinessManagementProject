@@ -49,14 +49,11 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/tv_location"
+        android:id="@+id/tv_client_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:drawableLeft="@drawable/iv_location_logo"
-        android:drawablePadding="10dp"
-        android:text="上海"
-        android:textColor="@color/B2B2B2"
-        android:textSize="20sp"
-        android:visibility="gone" />
+        android:textColor="@color/A586683"
+        android:textSize="20sp" />
+
 </LinearLayout>

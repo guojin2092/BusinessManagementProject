@@ -6,6 +6,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.mvp.presenter.IBasePresenter;
 import com.africa.crm.businessmanagement.network.base.BaseView;
 
@@ -30,7 +31,7 @@ public class CompanyClientDetailContract {
 
         void getCompanyClientDetail(CompanyClientInfo companyClientInfo);
 
-        void saveCompanyClient(BaseEntity baseEntity);
+        void saveCompanyClient(UploadInfoBean uploadInfoBean, boolean isLocal);
 
     }
 

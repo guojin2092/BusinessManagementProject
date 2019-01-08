@@ -143,7 +143,7 @@ public interface HttpHelper {
 
     Observable<CompanyClientInfo> getCompanyClientDetail(String id);
 
-    Observable<BaseEntity> saveCompanyClient(String id, String companyId, String userId, String head, String name, String industry, String address, String workerNum, String tel, String yearIncome, String remark);
+    Observable<UploadInfoBean> saveCompanyClient(String id, String companyId, String userId, String head, String name, String industry, String address, String workerNum, String tel, String yearIncome, String remark);
 
     Observable<List<DicInfo2>> getAllCustomers(String companyId);
 
