@@ -37,11 +37,13 @@ import com.africa.crm.businessmanagement.network.error.ErrorMsg;
 import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
+import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.greendao.query.WhereCondition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -410,8 +412,15 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
                 getIndustryType(stateList);
                 break;
             case REQUEST_COMPANY_CLIENT_LIST:
+                List<CompanyClientInfo> rows = new ArrayList<>();
+                if (!TextUtils.isEmpty(StringUtil.getText(et_name)) || !TextUtils.isEmpty(spinner_industry.getText())) {
+                    WhereCondition condition = mClientInfoDaoManager.queryBuilder().and(CompanyClientInfoDao.Properties.Name.like("%" + StringUtil.getText(et_name) + "%"), CompanyClientInfoDao.Properties.Industry.eq(mIndustryType));
+                    rows = mClientInfoDaoManager.queryBuilder().where(condition).list();
+                } else {
+                    rows = mClientInfoDaoManager.queryAll();
+                }
                 CompanyClientInfoBean companyClientInfoBean = new CompanyClientInfoBean();
-                companyClientInfoBean.setRows(mClientInfoDaoManager.queryAll());
+                companyClientInfoBean.setRows(rows);
                 getCompanyClientList(companyClientInfoBean);
                 break;
             case REQUEST_DELETE_COMPANY_CLIENT:

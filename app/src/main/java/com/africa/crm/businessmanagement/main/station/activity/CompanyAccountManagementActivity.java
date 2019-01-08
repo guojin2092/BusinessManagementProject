@@ -34,11 +34,13 @@ import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
 import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
+import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.greendao.query.WhereCondition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -378,9 +380,15 @@ public class CompanyAccountManagementActivity extends BaseRefreshMvpActivity<Com
         super.loadLocalData(port);
         mRefreshLayout.setEnableLoadmore(false);
         if (port.equals(REQUEST_COMPANY_ACCOUNT_LIST)) {
-            List<CompanyAccountInfo> companyInfoList = mAccountInfoDaoManager.queryAll();
+            List<CompanyAccountInfo> rows = new ArrayList<>();
+            if (!TextUtils.isEmpty(StringUtil.getText(et_account)) || !TextUtils.isEmpty(StringUtil.getText(et_nickname))) {
+                WhereCondition condition = mAccountInfoDaoManager.queryBuilder().and(CompanyAccountInfoDao.Properties.UserName.like("%" + StringUtil.getText(et_account) + "%"), CompanyAccountInfoDao.Properties.Name.like("%" + StringUtil.getText(et_nickname) + "%"));
+                rows = mAccountInfoDaoManager.queryBuilder().where(condition).list();
+            } else {
+                rows = mAccountInfoDaoManager.queryAll();
+            }
             CompanyAccountInfoBean companyAccountInfoBean = new CompanyAccountInfoBean();
-            companyAccountInfoBean.setRows(companyInfoList);
+            companyAccountInfoBean.setRows(rows);
             getCompanyAccounList(companyAccountInfoBean);
         } else if (port.equals(REQUEST_DELETE_COMPANY_ACCOUNT)) {
             BaseEntity baseEntity = new BaseEntity();

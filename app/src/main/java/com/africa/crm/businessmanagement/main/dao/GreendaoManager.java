@@ -2,6 +2,7 @@ package com.africa.crm.businessmanagement.main.dao;
 
 import org.greenrobot.greendao.AbstractDao;
 import org.greenrobot.greendao.query.LazyList;
+import org.greenrobot.greendao.query.QueryBuilder;
 import org.greenrobot.greendao.query.WhereCondition;
 
 import java.util.List;
@@ -76,5 +77,12 @@ public class GreendaoManager<T, D extends AbstractDao<T, Long>> {
         return DBbeans;
     }
 
+    /**
+     * 获取queryBuilder
+     * @return
+     */
+    public QueryBuilder queryBuilder() {
+        return dao.queryBuilder();
+    }
 
 }

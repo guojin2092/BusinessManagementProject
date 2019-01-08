@@ -37,11 +37,13 @@ import com.africa.crm.businessmanagement.network.error.ErrorMsg;
 import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
+import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.greendao.query.WhereCondition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -197,7 +199,7 @@ public class CompanyProductManagementActivity extends BaseRefreshMvpActivity<Com
                 }
                 break;
             case R.id.ll_add:
-                CompanyProductDetailActivity.startActivity(CompanyProductManagementActivity.this, "",0l);
+                CompanyProductDetailActivity.startActivity(CompanyProductManagementActivity.this, "", 0l);
                 break;
             case R.id.tv_delete:
                 mDeleteList.clear();
@@ -328,7 +330,7 @@ public class CompanyProductManagementActivity extends BaseRefreshMvpActivity<Com
                             mProductInfoBeanList.get(position).setChosen(!cb_choose.isChecked());
                             mProductListAdapter.notifyDataSetChanged();
                         } else {
-                            CompanyProductDetailActivity.startActivity(CompanyProductManagementActivity.this, mProductInfoBeanList.get(position).getId(),mProductInfoLocalList.get(position).getLocalId());
+                            CompanyProductDetailActivity.startActivity(CompanyProductManagementActivity.this, mProductInfoBeanList.get(position).getId(), mProductInfoLocalList.get(position).getLocalId());
                         }
                     }
                 });
@@ -402,8 +404,15 @@ public class CompanyProductManagementActivity extends BaseRefreshMvpActivity<Com
             }
             getProductType(stateList);
         } else if (port.equals(REQUEST_COMPANY_PRODUCT_LIST)) {
+            List<CompanyProductInfo> rows = new ArrayList<>();
+            if (!TextUtils.isEmpty(StringUtil.getText(et_name)) || !TextUtils.isEmpty(spinner_type.getText())) {
+                WhereCondition condition = mProductInfoDaoManager.queryBuilder().and(CompanyProductInfoDao.Properties.Name.like("%" + StringUtil.getText(et_name) + "%"), CompanyProductInfoDao.Properties.Type.eq(mProductType));
+                rows = mProductInfoDaoManager.queryBuilder().where(condition).list();
+            } else {
+                rows = mProductInfoDaoManager.queryAll();
+            }
             CompanyProductInfoBean companyInfoBean = new CompanyProductInfoBean();
-            companyInfoBean.setRows(mProductInfoDaoManager.queryAll());
+            companyInfoBean.setRows(rows);
             getCompanyProductList(companyInfoBean);
         } else if (port.equals(REQUEST_DELETE_COMPANY_PRODUCT)) {
             BaseEntity baseEntity = new BaseEntity();

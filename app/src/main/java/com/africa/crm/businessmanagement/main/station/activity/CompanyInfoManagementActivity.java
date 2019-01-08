@@ -36,6 +36,7 @@ import com.africa.crm.businessmanagement.network.error.ErrorMsg;
 import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.KeyboardUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
+import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
@@ -62,6 +63,8 @@ import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUES
 public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<CompanyInfoManagementPresenter> implements CompanyInfoManagementContract.View {
     @BindView(R.id.et_search)
     EditText et_search;
+    @BindView(R.id.tv_search)
+    TextView tv_search;
     @BindView(R.id.ll_add)
     LinearLayout ll_add;
     @BindView(R.id.tv_delete)
@@ -110,6 +113,7 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
             titlebar_name.setText(mWorkStationInfo.getWork_name());
         }
         et_search.setHint("请输入企业名称查询");
+        tv_search.setOnClickListener(this);
         ll_add.setOnClickListener(this);
         tv_delete.setOnClickListener(this);
         titlebar_right.setText(R.string.delete);
@@ -162,6 +166,10 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()) {
+            case R.id.tv_search:
+                page = 1;
+                pullDownRefresh(page);
+                break;
             case R.id.titlebar_right:
                 if (titlebar_right.getText().toString().equals(getString(R.string.delete))) {
                     titlebar_right.setText(R.string.cancel);
@@ -337,8 +345,14 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
         super.loadLocalData(port);
         mRefreshLayout.setEnableLoadmore(false);
         if (port.equals(REQUEST_COMPANY_INFO_LIST)) {
+            List<CompanyInfo> rows = new ArrayList<>();
+            if (!TextUtils.isEmpty(StringUtil.getText(et_search))) {
+                rows = mGreendaoManager.queryBuilder().where(CompanyInfoDao.Properties.Name.like("%" + StringUtil.getText(et_search) + "%")).list();
+            } else {
+                rows = mGreendaoManager.queryAll();
+            }
             CompanyInfoBean companyInfoBean = new CompanyInfoBean();
-            companyInfoBean.setRows(mGreendaoManager.queryAll());
+            companyInfoBean.setRows(rows);
             getCompanyInfoList(companyInfoBean);
         } else if (port.equals(REQUEST_DELETE_COMPANY_INFO)) {
             BaseEntity baseEntity = new BaseEntity();

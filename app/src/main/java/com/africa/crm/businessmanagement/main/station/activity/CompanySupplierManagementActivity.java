@@ -37,11 +37,13 @@ import com.africa.crm.businessmanagement.network.error.ErrorMsg;
 import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
+import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.greendao.query.WhereCondition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -377,8 +379,15 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
                 getSupplierType(stateList);
                 break;
             case REQUEST_COMPANY_SUPPLIER_LIST:
+                List<CompanySupplierInfo> rows = new ArrayList<>();
+                if (!TextUtils.isEmpty(StringUtil.getText(et_supplier_name)) || !TextUtils.isEmpty(spinner_supplier_type.getText())) {
+                    WhereCondition condition = mSupplierInfoDaoManager.queryBuilder().and(CompanySupplierInfoDao.Properties.Name.like("%" + StringUtil.getText(et_supplier_name) + "%"), CompanySupplierInfoDao.Properties.Type.eq(mSupplierType));
+                    rows = mSupplierInfoDaoManager.queryBuilder().where(condition).list();
+                } else {
+                    rows = mSupplierInfoDaoManager.queryAll();
+                }
                 CompanySupplierInfoBean companySupplierInfoBean = new CompanySupplierInfoBean();
-                companySupplierInfoBean.setRows(mSupplierInfoDaoManager.queryAll());
+                companySupplierInfoBean.setRows(rows);
                 getCompanySupplierList(companySupplierInfoBean);
                 break;
             case REQUEST_DELETE_COMPANY_SUPPLIER:
