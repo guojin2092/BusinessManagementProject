@@ -37,6 +37,7 @@ import butterknife.BindView;
 import io.reactivex.functions.Consumer;
 
 import static com.africa.crm.businessmanagement.network.api.DicUtil.COMPANY_TYPE_CODE;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.FROM_TYPE_CODE;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.INDUSTRY_CODE;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.PRODUCT_TYPE;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_ROLES;
@@ -255,6 +256,21 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
                         List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerSupplierTypeList, mDicInfoLocalList);
                         for (DicInfo dicInfo : addList) {
                             dicInfo.setType(INDUSTRY_CODE);
+                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
+                        }
+                    }
+                }, new ComConsumer(null)));
+        //联系人来源分类
+        addDisposable(mDataManager.getDicByCode(FROM_TYPE_CODE)
+                .compose(RxUtils.<List<DicInfo>>ioToMain())
+                .subscribe(new Consumer<List<DicInfo>>() {
+                    @Override
+                    public void accept(List<DicInfo> dicInfoList) throws Exception {
+                        List<DicInfo> spinnerSupplierTypeList = new ArrayList<>();
+                        spinnerSupplierTypeList.addAll(dicInfoList);
+                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerSupplierTypeList, mDicInfoLocalList);
+                        for (DicInfo dicInfo : addList) {
+                            dicInfo.setType(FROM_TYPE_CODE);
                             mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
                         }
                     }

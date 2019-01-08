@@ -186,7 +186,7 @@ public interface MainApi {
 
     @FormUrlEncoded
     @POST("contact/save")
-    Observable<BaseEntity> saveCompanyContact(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("head") String head, @Field("name") String name, @Field("fromType") String fromType, @Field("address") String address, @Field("mailAddress") String mailAddress, @Field("phone") String phone, @Field("tel") String tel, @Field("email") String email, @Field("job") String job, @Field("remark") String remark);
+    Observable<BaseEntity<UploadInfoBean>> saveCompanyContact(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("head") String head, @Field("name") String name, @Field("fromType") String fromType, @Field("address") String address, @Field("mailAddress") String mailAddress, @Field("phone") String phone, @Field("tel") String tel, @Field("email") String email, @Field("job") String job, @Field("remark") String remark);
 
     @FormUrlEncoded
     @POST("contact/queryAll")

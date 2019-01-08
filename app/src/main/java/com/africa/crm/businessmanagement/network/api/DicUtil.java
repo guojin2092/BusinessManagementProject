@@ -26,4 +26,7 @@ public class DicUtil {
     public static final String INDUSTRY_CODE = "INDUSTRYTYPE";
     //查询所有用户
     public static final String QUERY_ALL_USERS = "QUERY_ALL_users";
+    //联系人来源分类
+    public static final String FROM_TYPE_CODE = "CONTACTFROMTYPE";
+
 }

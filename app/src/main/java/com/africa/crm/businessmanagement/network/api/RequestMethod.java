@@ -72,4 +72,15 @@ public class RequestMethod {
     public static final String REQUEST_COMPANY_CLIENT_DETAIL = "request_company_client_detail";
     //保存企业客户
     public static final String REQUEST_SAVE_COMPANY_CLIENT = "request_save_company_client";
+
+    //联系人来源分类
+    public static final String REQUEST_CONTACT_FROM_TYPE = "request_contact_from_type";
+    //企业联系人列表
+    public static final String REQUEST_COMPANY_CONTACT_LIST = "request_company_contact_list";
+    //删除企业联系人
+    public static final String REQUEST_DELETE_COMPANY_CONTACT = "request_delete_company_contact";
+    //获取企业联系人详情
+    public static final String REQUEST_COMPANY_CONTACT_DETAIL = "request_company_contact_detail";
+    //保存企业联系人
+    public static final String REQUEST_SAVE_COMPANY_CONTACT = "request_save_company_contact";
 }

@@ -5,6 +5,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyContactDetailContract;
 import com.africa.crm.businessmanagement.mvp.presenter.RxPresenter;
 import com.africa.crm.businessmanagement.network.error.ComConsumer;
@@ -13,6 +14,12 @@ import com.africa.crm.businessmanagement.network.util.RxUtils;
 import java.util.List;
 
 import io.reactivex.functions.Consumer;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_USERS_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_CONTACT_DETAIL;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_CONTACT_FROM_TYPE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SAVE_COMPANY_CONTACT;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_UPLOAD_IMAGE;
 
 /**
  * Project：BusinessManagementProject
@@ -23,7 +30,7 @@ import io.reactivex.functions.Consumer;
  * Modification  History:
  * Why & What is modified:
  */
-public class CompanyContactPresenter extends RxPresenter<CompanyContactDetailContract.View> implements CompanyContactDetailContract.Presenter {
+public class CompanyContactDetailPresenter extends RxPresenter<CompanyContactDetailContract.View> implements CompanyContactDetailContract.Presenter {
 
     @Override
     public void uploadImages(String filePath) {
@@ -34,7 +41,7 @@ public class CompanyContactPresenter extends RxPresenter<CompanyContactDetailCon
                     public void accept(FileInfoBean fileInfoBean) throws Exception {
                         mView.uploadImages(fileInfoBean);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_UPLOAD_IMAGE)));
     }
 
     @Override
@@ -46,7 +53,7 @@ public class CompanyContactPresenter extends RxPresenter<CompanyContactDetailCon
                     public void accept(List<DicInfo2> dicInfoList) throws Exception {
                         mView.getAllCompanyUsers(dicInfoList);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView,REQUEST_ALL_USERS_LIST)));
 
     }
 
@@ -59,7 +66,7 @@ public class CompanyContactPresenter extends RxPresenter<CompanyContactDetailCon
                     public void accept(List<DicInfo> dicInfoList) throws Exception {
                         mView.getFromType(dicInfoList);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView,REQUEST_CONTACT_FROM_TYPE)));
     }
 
     @Override
@@ -71,19 +78,19 @@ public class CompanyContactPresenter extends RxPresenter<CompanyContactDetailCon
                     public void accept(CompanyContactInfo companyContactInfo) throws Exception {
                         mView.getContactDetail(companyContactInfo);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView,REQUEST_COMPANY_CONTACT_DETAIL)));
     }
 
     @Override
     public void saveCompanyContact(String id, String companyId, String userId, String head, String name, String fromType, String address, String mailAddress, String phone, String tel, String email, String job, String remark) {
         addDisposable(mDataManager.saveCompanyContact(id, companyId, userId, head, name, fromType, address, mailAddress, phone, tel, email, job, remark)
-                .compose(RxUtils.<BaseEntity>ioToMain(mView))
-                .subscribe(new Consumer<BaseEntity>() {
+                .compose(RxUtils.<UploadInfoBean>ioToMain(mView))
+                .subscribe(new Consumer<UploadInfoBean>() {
                     @Override
-                    public void accept(BaseEntity baseEntity) throws Exception {
-                        mView.saveCompanyContact(baseEntity);
+                    public void accept(UploadInfoBean uploadInfoBean) throws Exception {
+                        mView.saveCompanyContact(uploadInfoBean, false);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView,REQUEST_SAVE_COMPANY_CONTACT)));
     }
 
 }

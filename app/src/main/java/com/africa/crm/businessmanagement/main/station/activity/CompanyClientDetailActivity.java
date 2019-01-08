@@ -94,6 +94,7 @@ public class CompanyClientDetailActivity extends BaseMvpActivity<CompanyClientDe
     MySpinner spinner_from_user;
     private List<DicInfo> mSpinnerCompanyUserList = new ArrayList<>();
     private String mFromUserId = "";
+    private String mUserId = "";
 
     private String mClientId = "";//联系人Id
     private Long mLocalId = 0l;//本地数据库ID
@@ -194,13 +195,12 @@ public class CompanyClientDetailActivity extends BaseMvpActivity<CompanyClientDe
                     toastMsg("尚未填写姓名");
                     return;
                 }
-                String userId = "";
                 if (mRoleCode.equals("companySales")) {
-                    userId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
+                    mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
                 } else {
-                    userId = mFromUserId;
+                    mUserId = mFromUserId;
                 }
-                mPresenter.saveCompanyClient(mClientId, mCompanyId, userId, mHeadCode, et_name.getText().toString().trim(), mIndustryType, et_address.getText().toString().trim(), et_company_staff_num.getText().toString().trim(), et_phone.getText().toString().trim(), et_income.getText().toString().trim(), et_remark.getText().toString().trim());
+                mPresenter.saveCompanyClient(mClientId, mCompanyId, mUserId, mHeadCode, et_name.getText().toString().trim(), mIndustryType, et_address.getText().toString().trim(), et_company_staff_num.getText().toString().trim(), et_phone.getText().toString().trim(), et_income.getText().toString().trim(), et_remark.getText().toString().trim());
                 break;
         }
     }
@@ -324,12 +324,12 @@ public class CompanyClientDetailActivity extends BaseMvpActivity<CompanyClientDe
         if (isLocal) {
             CompanyClientInfo companyClientInfo = null;
             if (mLocalId == 0l) {
-                companyClientInfo = new CompanyClientInfo(mClientId, TimeUtils.getCurrentTime(new Date()), spinner_industry.getText(), StringUtil.getText(et_remark), StringUtil.getText(et_company_staff_num), StringUtil.getText(et_phone), StringUtil.getText(et_from_company_name), StringUtil.getText(et_address), StringUtil.getText(et_income), mFromUserId, spinner_from_user.getText(), StringUtil.getText(et_name), mCompanyId, mHeadCode, mIndustryType, false, isLocal);
+                companyClientInfo = new CompanyClientInfo(mClientId, TimeUtils.getCurrentTime(new Date()), spinner_industry.getText(), StringUtil.getText(et_remark), StringUtil.getText(et_company_staff_num), StringUtil.getText(et_phone), StringUtil.getText(et_from_company_name), StringUtil.getText(et_address), StringUtil.getText(et_income), mUserId, spinner_from_user.getText(), StringUtil.getText(et_name), mCompanyId, mHeadCode, mIndustryType, false, isLocal);
                 mClientInfoDaoManager.insertOrReplace(companyClientInfo);
             } else {
                 for (CompanyClientInfo info : mCompanyClientLocalList) {
                     if (mLocalId == info.getLocalId()) {
-                        companyClientInfo = new CompanyClientInfo(info.getLocalId(), mClientId, TimeUtils.getCurrentTime(new Date()), spinner_industry.getText(), StringUtil.getText(et_remark), StringUtil.getText(et_company_staff_num), StringUtil.getText(et_phone), StringUtil.getText(et_from_company_name), StringUtil.getText(et_address), StringUtil.getText(et_income), mFromUserId, spinner_from_user.getText(), StringUtil.getText(et_name), mCompanyId, mHeadCode, mIndustryType, false, isLocal);
+                        companyClientInfo = new CompanyClientInfo(info.getLocalId(), mClientId, TimeUtils.getCurrentTime(new Date()), spinner_industry.getText(), StringUtil.getText(et_remark), StringUtil.getText(et_company_staff_num), StringUtil.getText(et_phone), StringUtil.getText(et_from_company_name), StringUtil.getText(et_address), StringUtil.getText(et_income), mUserId, spinner_from_user.getText(), StringUtil.getText(et_name), mCompanyId, mHeadCode, mIndustryType, false, isLocal);
                         mClientInfoDaoManager.correct(companyClientInfo);
                     }
                 }
@@ -361,10 +361,8 @@ public class CompanyClientDetailActivity extends BaseMvpActivity<CompanyClientDe
 
     @Override
     public void uploadImages(FileInfoBean fileInfoBean) {
-        if (!TextUtils.isEmpty(fileInfoBean.getCode())) {
-            mHeadCode = fileInfoBean.getCode();
-            GlideUtil.showImg(iv_icon, mHeadCode);
-        }
+        mHeadCode = fileInfoBean.getCode();
+        GlideUtil.showImg(iv_icon, mHeadCode);
     }
 
     @Override

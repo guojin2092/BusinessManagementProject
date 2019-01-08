@@ -15,7 +15,7 @@ public class ContactManagementContract {
 
         void getCompanyContactList(CompanyContactInfoBean companyContactInfoBean);
 
-        void deleteCompanyContact(BaseEntity baseEntity);
+        void deleteCompanyContact(BaseEntity baseEntity, boolean isLocal);
     }
 
     public interface Presenter extends IBasePresenter<ContactManagementContract.View> {

@@ -17,6 +17,7 @@ import com.africa.crm.businessmanagement.main.LoginActivity;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyClientInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
@@ -26,13 +27,16 @@ import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteAccountInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteClientInfo;
+import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteContactInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteProductInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteSupplierInfo;
 import com.africa.crm.businessmanagement.main.dao.CompanyAccountInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyClientInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyContactInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteAccountInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteClientInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyDeleteContactInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteProductInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteSupplierInfoDao;
@@ -146,6 +150,14 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
     private List<CompanyDeleteClientInfo> mCompanyDeleteClientLocalList = new ArrayList<>();//本地数据
 
     /**
+     * 企业联系人本地数据库
+     */
+    private GreendaoManager<CompanyContactInfo, CompanyContactInfoDao> mContactInfoDaoManager;
+    private List<CompanyContactInfo> mCompanyContactLocalList = new ArrayList<>();//本地数据
+    private GreendaoManager<CompanyDeleteContactInfo, CompanyDeleteContactInfoDao> mDeleteContactInfoDaoManager;
+    private List<CompanyDeleteContactInfo> mCompanyDeleteContactLocalList = new ArrayList<>();//本地数据
+
+    /**
      * @param activity
      */
     public static void startActivity(Activity activity, WorkStationInfo workStationInfo) {
@@ -213,6 +225,12 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
         //删除企业用户dao
         mDeleteClientInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeleteClientInfoDao());
         mCompanyDeleteClientLocalList = mDeleteClientInfoDaoManager.queryAll();
+        //企业联系人dao
+        mContactInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyContactInfoDao());
+        mCompanyContactLocalList = mContactInfoDaoManager.queryAll();
+        //删除企业联系人dao
+        mDeleteContactInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeleteContactInfoDao());
+        mCompanyDeleteContactLocalList = mDeleteContactInfoDaoManager.queryAll();
     }
 
     @Override
@@ -555,7 +573,6 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                         }
                     }, new ComConsumer(this)));
         }
-
         for (final CompanyClientInfo companyInfo : mCompanyClientLocalList) {
             final String[] mHeadCode = {""};
             if (companyInfo.isLocal()) {
@@ -580,11 +597,10 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                     companyInfo.setIsLocal(false);
                                     companyInfo.setCreateTime(uploadInfoBean.getCreateTime());
                                     mClientInfoDaoManager.correct(companyInfo);
-                                    toastMsg("数据上传成功");
                                 }
                             }, new ComConsumer(this)));
                 } else {
-                    addDisposable(mDataManager.saveCompanyClient(companyInfo.getId(), companyInfo.getCompanyId(), companyInfo.getUserId(),companyInfo.getHead(), companyInfo.getName(), companyInfo.getIndustry(), companyInfo.getAddress(), companyInfo.getWorkerNum(), companyInfo.getTel(), companyInfo.getYearIncome(), companyInfo.getRemark())
+                    addDisposable(mDataManager.saveCompanyClient(companyInfo.getId(), companyInfo.getCompanyId(), companyInfo.getUserId(), companyInfo.getHead(), companyInfo.getName(), companyInfo.getIndustry(), companyInfo.getAddress(), companyInfo.getWorkerNum(), companyInfo.getTel(), companyInfo.getYearIncome(), companyInfo.getRemark())
                             .compose(RxUtils.<UploadInfoBean>ioToMain(this))
                             .subscribe(new Consumer<UploadInfoBean>() {
                                 @Override
@@ -593,11 +609,66 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                     companyInfo.setIsLocal(false);
                                     companyInfo.setCreateTime(uploadInfoBean.getCreateTime());
                                     mClientInfoDaoManager.correct(companyInfo);
-                                    toastMsg("数据上传成功");
                                 }
                             }, new ComConsumer(this)));
                 }
             }
         }
+
+        /**
+         * 企业联系人模块
+         */
+        for (final CompanyDeleteContactInfo companyDeleteInfo : mCompanyDeleteContactLocalList) {
+            addDisposable(mDataManager.deleteCompanyContact(companyDeleteInfo.getId())
+                    .compose(RxUtils.<BaseEntity>ioToMain(this))
+                    .subscribe(new Consumer<BaseEntity>() {
+                        @Override
+                        public void accept(BaseEntity baseEntity) throws Exception {
+                            mDeleteContactInfoDaoManager.delete(companyDeleteInfo.getLocalId());
+                        }
+                    }, new ComConsumer(this)));
+        }
+        for (final CompanyContactInfo companyInfo : mCompanyContactLocalList) {
+            final String[] mHeadCode = {""};
+            if (companyInfo.isLocal()) {
+                if (companyInfo.getHead().contains(".jpg")) {
+                    addDisposable(mDataManager.uploadImages(companyInfo.getHead())
+                            .flatMap(new Function<FileInfoBean, ObservableSource<UploadInfoBean>>() {
+                                @Override
+                                public ObservableSource<UploadInfoBean> apply(FileInfoBean fileInfoBean) throws Exception {
+                                    if (!TextUtils.isEmpty(fileInfoBean.getCode())) {
+                                        mHeadCode[0] = fileInfoBean.getCode();
+                                        return mDataManager.saveCompanyContact(companyInfo.getId(), companyInfo.getCompanyId(), companyInfo.getUserId(), mHeadCode[0], companyInfo.getName(), companyInfo.getFromType(), companyInfo.getAddress(), companyInfo.getMailAddress(), companyInfo.getPhone(), companyInfo.getTel(), companyInfo.getEmail(), companyInfo.getJob(), companyInfo.getRemark());
+                                    } else {
+                                        return Observable.error(new ComException("上传失败，请重试"));
+                                    }
+                                }
+                            }).compose(RxUtils.<UploadInfoBean>ioToMain(this))
+                            .subscribe(new Consumer<UploadInfoBean>() {
+                                @Override
+                                public void accept(UploadInfoBean uploadInfoBean) throws Exception {
+                                    companyInfo.setId(uploadInfoBean.getId());
+                                    companyInfo.setHead(mHeadCode[0]);
+                                    companyInfo.setIsLocal(false);
+                                    companyInfo.setCreateTime(uploadInfoBean.getCreateTime());
+                                    mContactInfoDaoManager.correct(companyInfo);
+                                }
+                            }, new ComConsumer(this)));
+                } else {
+                    addDisposable(mDataManager.saveCompanyContact(companyInfo.getId(), companyInfo.getCompanyId(), companyInfo.getUserId(), mHeadCode[0], companyInfo.getName(), companyInfo.getFromType(), companyInfo.getAddress(), companyInfo.getMailAddress(), companyInfo.getPhone(), companyInfo.getTel(), companyInfo.getEmail(), companyInfo.getJob(), companyInfo.getRemark())
+                            .compose(RxUtils.<UploadInfoBean>ioToMain(this))
+                            .subscribe(new Consumer<UploadInfoBean>() {
+                                @Override
+                                public void accept(UploadInfoBean uploadInfoBean) throws Exception {
+                                    companyInfo.setId(uploadInfoBean.getId());
+                                    companyInfo.setIsLocal(false);
+                                    companyInfo.setCreateTime(uploadInfoBean.getCreateTime());
+                                    mContactInfoDaoManager.correct(companyInfo);
+                                }
+                            }, new ComConsumer(this)));
+                }
+            }
+        }
+        toastMsg("数据上传成功");
     }
 }

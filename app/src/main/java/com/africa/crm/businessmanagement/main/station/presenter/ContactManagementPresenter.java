@@ -12,6 +12,10 @@ import java.util.List;
 
 import io.reactivex.functions.Consumer;
 
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_CONTACT_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_CONTACT_FROM_TYPE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DELETE_COMPANY_CONTACT;
+
 public class ContactManagementPresenter extends RxPresenter<ContactManagementContract.View> implements ContactManagementContract.Presenter {
     @Override
     public void getFromType(String code) {
@@ -22,7 +26,7 @@ public class ContactManagementPresenter extends RxPresenter<ContactManagementCon
                     public void accept(List<DicInfo> dicInfoList) throws Exception {
                         mView.getFromType(dicInfoList);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_CONTACT_FROM_TYPE)));
 
     }
 
@@ -35,20 +39,20 @@ public class ContactManagementPresenter extends RxPresenter<ContactManagementCon
                     public void accept(CompanyContactInfoBean companyContactInfoBean) throws Exception {
                         mView.getCompanyContactList(companyContactInfoBean);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_COMPANY_CONTACT_LIST)));
 
     }
 
     @Override
     public void deleteCompanyContact(String id) {
-        addDisposable(mDataManager.deleteCompanyAccount(id)
+        addDisposable(mDataManager.deleteCompanyContact(id)
                 .compose(RxUtils.<BaseEntity>ioToMain(mView))
                 .subscribe(new Consumer<BaseEntity>() {
                     @Override
                     public void accept(BaseEntity baseEntity) throws Exception {
-                        mView.deleteCompanyContact(baseEntity);
+                        mView.deleteCompanyContact(baseEntity, false);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_DELETE_COMPANY_CONTACT)));
 
     }
 }

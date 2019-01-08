@@ -23,11 +23,13 @@ public class DaoMaster extends AbstractDaoMaster {
     public static void createAllTables(Database db, boolean ifNotExists) {
         CompanyAccountInfoDao.createTable(db, ifNotExists);
         CompanyClientInfoDao.createTable(db, ifNotExists);
+        CompanyContactInfoDao.createTable(db, ifNotExists);
         CompanyInfoDao.createTable(db, ifNotExists);
         CompanyProductInfoDao.createTable(db, ifNotExists);
         CompanySupplierInfoDao.createTable(db, ifNotExists);
         CompanyDeleteAccountInfoDao.createTable(db, ifNotExists);
         CompanyDeleteClientInfoDao.createTable(db, ifNotExists);
+        CompanyDeleteContactInfoDao.createTable(db, ifNotExists);
         CompanyDeleteInfoDao.createTable(db, ifNotExists);
         CompanyDeleteProductInfoDao.createTable(db, ifNotExists);
         CompanyDeleteSupplierInfoDao.createTable(db, ifNotExists);
@@ -38,11 +40,13 @@ public class DaoMaster extends AbstractDaoMaster {
     public static void dropAllTables(Database db, boolean ifExists) {
         CompanyAccountInfoDao.dropTable(db, ifExists);
         CompanyClientInfoDao.dropTable(db, ifExists);
+        CompanyContactInfoDao.dropTable(db, ifExists);
         CompanyInfoDao.dropTable(db, ifExists);
         CompanyProductInfoDao.dropTable(db, ifExists);
         CompanySupplierInfoDao.dropTable(db, ifExists);
         CompanyDeleteAccountInfoDao.dropTable(db, ifExists);
         CompanyDeleteClientInfoDao.dropTable(db, ifExists);
+        CompanyDeleteContactInfoDao.dropTable(db, ifExists);
         CompanyDeleteInfoDao.dropTable(db, ifExists);
         CompanyDeleteProductInfoDao.dropTable(db, ifExists);
         CompanyDeleteSupplierInfoDao.dropTable(db, ifExists);
@@ -67,11 +71,13 @@ public class DaoMaster extends AbstractDaoMaster {
         super(db, SCHEMA_VERSION);
         registerDaoClass(CompanyAccountInfoDao.class);
         registerDaoClass(CompanyClientInfoDao.class);
+        registerDaoClass(CompanyContactInfoDao.class);
         registerDaoClass(CompanyInfoDao.class);
         registerDaoClass(CompanyProductInfoDao.class);
         registerDaoClass(CompanySupplierInfoDao.class);
         registerDaoClass(CompanyDeleteAccountInfoDao.class);
         registerDaoClass(CompanyDeleteClientInfoDao.class);
+        registerDaoClass(CompanyDeleteContactInfoDao.class);
         registerDaoClass(CompanyDeleteInfoDao.class);
         registerDaoClass(CompanyDeleteProductInfoDao.class);
         registerDaoClass(CompanyDeleteSupplierInfoDao.class);

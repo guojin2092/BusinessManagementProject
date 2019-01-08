@@ -73,7 +73,6 @@ public class CompanyAccountManagementActivity extends BaseRefreshMvpActivity<Com
 
     private CompanyAccountListAdapter mCompanyAccountListAdapter;
     private List<CompanyAccountInfo> mCompanyInfoList = new ArrayList<>();
-    private List<CompanyAccountInfo> mCompanyInfoLocalList = new ArrayList<>();//本地数据
     private List<CompanyAccountInfo> mDeleteList = new ArrayList<>();
     private boolean mShowCheckBox = false;
 
@@ -84,6 +83,7 @@ public class CompanyAccountManagementActivity extends BaseRefreshMvpActivity<Com
 
     private GreendaoManager<CompanyAccountInfo, CompanyAccountInfoDao> mAccountInfoDaoManager;
     private GreendaoManager<CompanyDeleteAccountInfo, CompanyDeleteAccountInfoDao> mDeleteAccountInfoDaoManager;
+    private List<CompanyAccountInfo> mCompanyInfoLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity

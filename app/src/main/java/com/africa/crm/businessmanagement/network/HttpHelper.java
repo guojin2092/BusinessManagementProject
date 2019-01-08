@@ -133,7 +133,7 @@ public interface HttpHelper {
 
     Observable<CompanyContactInfo> getContactDetail(String id);
 
-    Observable<BaseEntity> saveCompanyContact(String id, String companyId, String userId, String head, String name, String fromType, String address, String mailAddress, String phone, String tel, String email, String job, String remark);
+    Observable<UploadInfoBean> saveCompanyContact(String id, String companyId, String userId, String head, String name, String fromType, String address, String mailAddress, String phone, String tel, String email, String job, String remark);
 
     Observable<List<DicInfo2>> getAllContact(String companyId);
 

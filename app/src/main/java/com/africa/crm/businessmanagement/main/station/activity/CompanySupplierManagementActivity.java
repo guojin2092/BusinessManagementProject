@@ -92,8 +92,8 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
     private GreendaoManager<CompanyDeleteSupplierInfo, CompanyDeleteSupplierInfoDao> mDeleteInfoGreendaoManager;
     private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoManager;
 
-    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
     private List<CompanySupplierInfo> mCompanySupplierLocalList = new ArrayList<>();//本地数据
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity

@@ -77,7 +77,6 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
     private CompanyClientListAdapter mCompanyClientListAdapter;
     private List<CompanyClientInfo> mDeleteList = new ArrayList<>();
     private List<CompanyClientInfo> mCompanyClientInfoList = new ArrayList<>();
-    private List<CompanyClientInfo> mCompanyClientLocalList = new ArrayList<>();//本地数据
 
 
     private AlertDialog mDeleteDialog;
@@ -95,6 +94,8 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
     private GreendaoManager<CompanyClientInfo, CompanyClientInfoDao> mClientInfoDaoManager;
     private GreendaoManager<CompanyDeleteClientInfo, CompanyDeleteClientInfoDao> mDeleteClientInfoDaoManager;
     private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoManager;
+
+    private List<CompanyClientInfo> mCompanyClientLocalList = new ArrayList<>();//本地数据
     private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
 
     /**

@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyContactEvent;
@@ -21,12 +23,18 @@ import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
+import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteContactInfo;
+import com.africa.crm.businessmanagement.main.dao.CompanyContactInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyDeleteContactInfoDao;
+import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.ContactListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.ContactManagementContract;
 import com.africa.crm.businessmanagement.main.station.presenter.ContactManagementPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
@@ -39,6 +47,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.DicUtil.FROM_TYPE_CODE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_CONTACT_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_CONTACT_FROM_TYPE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DELETE_COMPANY_CONTACT;
 
 /**
  * Project：BusinessManagementProject
@@ -68,7 +81,6 @@ public class CompanyContactManagementActivity extends BaseRefreshMvpActivity<Con
 
     @BindView(R.id.spinner_from_type)
     MySpinner spinner_from_type;
-    private static final String FROM_TYPE_CODE = "CONTACTFROMTYPE";
     private List<DicInfo> mFromTypeList = new ArrayList<>();
     private String mFromType = "";
 
@@ -76,6 +88,13 @@ public class CompanyContactManagementActivity extends BaseRefreshMvpActivity<Con
     private String mCompanyId = "";
     private AlertDialog mDeleteDialog;
     private boolean mShowCheckBox = false;
+
+    private GreendaoManager<CompanyContactInfo, CompanyContactInfoDao> mContactInfoDaoManager;
+    private GreendaoManager<CompanyDeleteContactInfo, CompanyDeleteContactInfoDao> mDeleteContactInfoDaoManager;
+    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoManager;
+
+    private List<CompanyContactInfo> mCompanyContactLocalList = new ArrayList<>();//本地数据
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
@@ -108,6 +127,15 @@ public class CompanyContactManagementActivity extends BaseRefreshMvpActivity<Con
         ll_add.setOnClickListener(this);
         tv_delete.setOnClickListener(this);
         tv_search.setOnClickListener(this);
+
+        //得到Dao对象管理器
+        mContactInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyContactInfoDao());
+        //得到Dao对象管理器
+        mDeleteContactInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeleteContactInfoDao());
+        //得到Dao对象管理器
+        mDicInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getDicInfoDao());
+        //得到本地数据
+        mDicInfoLocalList = mDicInfoDaoManager.queryAll();
 
 /*
         et_name.addTextChangedListener(new TextWatcher() {
@@ -189,7 +217,7 @@ public class CompanyContactManagementActivity extends BaseRefreshMvpActivity<Con
                 }
                 break;
             case R.id.ll_add:
-                CompanyContactDetailActivity.startActivity(CompanyContactManagementActivity.this, "");
+                CompanyContactDetailActivity.startActivity(CompanyContactManagementActivity.this, "", 0l);
                 break;
             case R.id.tv_delete:
                 mDeleteList.clear();
@@ -229,6 +257,11 @@ public class CompanyContactManagementActivity extends BaseRefreshMvpActivity<Con
     public void getFromType(List<DicInfo> dicInfoList) {
         mFromTypeList.clear();
         mFromTypeList.addAll(dicInfoList);
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mFromTypeList, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            dicInfo.setType(FROM_TYPE_CODE);
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
+        }
         spinner_from_type.setListDatas(this, mFromTypeList);
 
         spinner_from_type.addOnItemClickListener(new MySpinner.OnItemClickListener() {
@@ -261,6 +294,7 @@ public class CompanyContactManagementActivity extends BaseRefreshMvpActivity<Con
                     mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
                 }
                 mContactListDatas.clear();
+                mCompanyContactLocalList = mContactInfoDaoManager.queryAll();
                 recyclerView.smoothScrollToPosition(0);
             }
             if (mRefreshLayout != null) {
@@ -272,6 +306,24 @@ public class CompanyContactManagementActivity extends BaseRefreshMvpActivity<Con
             }
             if (!ListUtils.isEmpty(companyContactInfoBean.getRows())) {
                 mContactListDatas.addAll(companyContactInfoBean.getRows());
+                List<CompanyContactInfo> addList = DifferentDataUtil.addContactDataToLocal(mContactListDatas, mCompanyContactLocalList);
+                if (!ListUtils.isEmpty(addList)) {
+                    for (CompanyContactInfo companyInfo : addList) {
+                        mContactInfoDaoManager.insertOrReplace(companyInfo);
+                    }
+                    mCompanyContactLocalList = new ArrayList<>();
+                    mCompanyContactLocalList = mContactInfoDaoManager.queryAll();
+                }
+                for (CompanyContactInfo info : mContactListDatas) {
+                    for (CompanyContactInfo localInfo : mCompanyContactLocalList) {
+                        if (!TextUtils.isEmpty(info.getId()) && !TextUtils.isEmpty(localInfo.getId())) {
+                            if (info.getId().equals(localInfo.getId())) {
+                                info.setLocalId(localInfo.getLocalId());
+                                mContactInfoDaoManager.correct(info);
+                            }
+                        }
+                    }
+                }
                 if (mContactListAdapter != null) {
                     mContactListAdapter.notifyDataSetChanged();
                 }
@@ -285,7 +337,7 @@ public class CompanyContactManagementActivity extends BaseRefreshMvpActivity<Con
                             mContactListDatas.get(position).setChosen(!cb_choose.isChecked());
                             mContactListAdapter.notifyDataSetChanged();
                         } else {
-                            CompanyContactDetailActivity.startActivity(CompanyContactManagementActivity.this, mContactListDatas.get(position).getId());
+                            CompanyContactDetailActivity.startActivity(CompanyContactManagementActivity.this, mContactListDatas.get(position).getId(), mCompanyContactLocalList.get(position).getLocalId());
                         }
                     }
                 });
@@ -295,12 +347,25 @@ public class CompanyContactManagementActivity extends BaseRefreshMvpActivity<Con
     }
 
     @Override
-    public void deleteCompanyContact(BaseEntity baseEntity) {
+    public void deleteCompanyContact(BaseEntity baseEntity, boolean isLocal) {
         if (baseEntity.isSuccess()) {
             for (int i = 0; i < mDeleteList.size(); i++) {
                 if (mContactListDatas.contains(mDeleteList.get(i))) {
                     int position = mContactListDatas.indexOf(mDeleteList.get(i));
                     mContactListDatas.remove(mDeleteList.get(i));
+                    if (isLocal) {
+                        for (CompanyContactInfo companyInfo : mDeleteList) {
+                            CompanyDeleteContactInfo deleteAccountInfo = new CompanyDeleteContactInfo(companyInfo.getId(), companyInfo.getCreateTime(), companyInfo.getAddress(), companyInfo.getCompanyName(), companyInfo.getMailAddress(), companyInfo.getRemark(), companyInfo.getUserId(), companyInfo.getFromTypeName(), companyInfo.getHead(), companyInfo.getCompanyId(), companyInfo.getFromType(), companyInfo.getPhone(), companyInfo.getName(), companyInfo.getTel(), companyInfo.getUserNickName(), companyInfo.getJob(), companyInfo.getEmail(), false, isLocal);
+                            mDeleteContactInfoDaoManager.insertOrReplace(deleteAccountInfo);
+                        }
+                    }
+                    for (CompanyContactInfo companyInfo : mCompanyContactLocalList) {
+                        if (mDeleteList.get(i).getLocalId().equals(companyInfo.getLocalId())) {
+                            mContactInfoDaoManager.delete(companyInfo.getLocalId());
+                        }
+                    }
+                    mCompanyContactLocalList = new ArrayList<>();
+                    mCompanyContactLocalList = mContactInfoDaoManager.queryAll();
                     if (mContactListAdapter != null) {
                         mContactListAdapter.notifyItemRemoved(position);
                     }
@@ -331,5 +396,32 @@ public class CompanyContactManagementActivity extends BaseRefreshMvpActivity<Con
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        mRefreshLayout.setEnableLoadmore(false);
+        switch (port) {
+            case REQUEST_CONTACT_FROM_TYPE:
+                List<DicInfo> stateList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(FROM_TYPE_CODE)) {
+                        stateList.add(dicInfo);
+                    }
+                }
+                getFromType(stateList);
+                break;
+            case REQUEST_COMPANY_CONTACT_LIST:
+                CompanyContactInfoBean companyContactInfoBean = new CompanyContactInfoBean();
+                companyContactInfoBean.setRows(mContactInfoDaoManager.queryAll());
+                getCompanyContactList(companyContactInfoBean);
+                break;
+            case REQUEST_DELETE_COMPANY_CONTACT:
+                BaseEntity baseEntity = new BaseEntity();
+                baseEntity.setSuccess(true);
+                deleteCompanyContact(baseEntity, true);
+                break;
+        }
     }
 }

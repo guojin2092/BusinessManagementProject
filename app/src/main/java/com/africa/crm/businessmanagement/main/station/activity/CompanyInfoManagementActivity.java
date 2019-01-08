@@ -71,7 +71,6 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
 
     private CompanyInfoListAdapter mCompanyInfoListAdapter;
     private List<CompanyInfo> mCompanyInfoList = new ArrayList<>();//网络数据
-    private List<CompanyInfo> mCompanyInfoLocalList = new ArrayList<>();//本地数据
     private List<CompanyInfo> mDeleteList = new ArrayList<>();
     private boolean mShowCheckBox = false;
 
@@ -80,6 +79,8 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
 
     private GreendaoManager<CompanyInfo, CompanyInfoDao> mGreendaoManager;
     private GreendaoManager<CompanyDeleteInfo, CompanyDeleteInfoDao> mDeleteInfoGreendaoManager;
+
+    private List<CompanyInfo> mCompanyInfoLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
