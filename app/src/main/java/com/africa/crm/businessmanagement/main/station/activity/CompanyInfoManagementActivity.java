@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -248,9 +249,11 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
                 }
                 for (CompanyInfo info : mCompanyInfoList) {
                     for (CompanyInfo localInfo : mCompanyInfoLocalList) {
-                        if (info.getId().equals(localInfo.getId())) {
-                            info.setLocalId(localInfo.getLocalId());
-                            mGreendaoManager.correct(info);
+                        if (!TextUtils.isEmpty(info.getId()) && !TextUtils.isEmpty(localInfo.getId())) {
+                            if (info.getId().equals(localInfo.getId())) {
+                                info.setLocalId(localInfo.getLocalId());
+                                mGreendaoManager.correct(info);
+                            }
                         }
                     }
                 }

@@ -303,9 +303,11 @@ public class CompanyClientDetailActivity extends BaseMvpActivity<CompanyClientDe
             GlideUtil.showImg(iv_icon, mHeadCode);
             mCompanyId = companyClientInfo.getCompanyId();
             for (CompanyClientInfo localInfo : mCompanyClientLocalList) {
-                if (localInfo.getId().equals(companyClientInfo.getId())) {
-                    companyClientInfo.setLocalId(localInfo.getLocalId());
-                    mClientInfoDaoManager.correct(companyClientInfo);
+                if (!TextUtils.isEmpty(localInfo.getId()) && !TextUtils.isEmpty(companyClientInfo.getId())) {
+                    if (localInfo.getId().equals(companyClientInfo.getId())) {
+                        companyClientInfo.setLocalId(localInfo.getLocalId());
+                        mClientInfoDaoManager.correct(companyClientInfo);
+                    }
                 }
             }
         }

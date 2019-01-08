@@ -239,9 +239,11 @@ public class CompanyProductDetailActivity extends BaseMvpActivity<CompanyProduct
             et_remark.setText(companyProductInfo.getRemark());
             mCompanyName = companyProductInfo.getCompanyName();
             for (CompanyProductInfo localInfo : mProductInfoLocalList) {
-                if (localInfo.getId().equals(companyProductInfo.getId())) {
-                    companyProductInfo.setLocalId(localInfo.getLocalId());
-                    mProductInfoDaoManager.correct(companyProductInfo);
+                if (!TextUtils.isEmpty(localInfo.getId()) && !TextUtils.isEmpty(companyProductInfo.getId())) {
+                    if (localInfo.getId().equals(companyProductInfo.getId())) {
+                        companyProductInfo.setLocalId(localInfo.getLocalId());
+                        mProductInfoDaoManager.correct(companyProductInfo);
+                    }
                 }
             }
         }

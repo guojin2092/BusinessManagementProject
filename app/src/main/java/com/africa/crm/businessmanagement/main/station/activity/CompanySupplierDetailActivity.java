@@ -253,9 +253,11 @@ public class CompanySupplierDetailActivity extends BaseMvpActivity<CompanySuppli
             mHeadCode = companySupplierInfo.getHead();
             GlideUtil.showImg(iv_icon, mHeadCode);
             for (CompanySupplierInfo localInfo : mCompanySupplierLocalList) {
-                if (localInfo.getId().equals(companySupplierInfo.getId())) {
-                    companySupplierInfo.setLocalId(localInfo.getLocalId());
-                    mCompanySupplierInfoDaoManager.correct(companySupplierInfo);
+                if (!TextUtils.isEmpty(localInfo.getId()) && !TextUtils.isEmpty(companySupplierInfo.getId())) {
+                    if (localInfo.getId().equals(companySupplierInfo.getId())) {
+                        companySupplierInfo.setLocalId(localInfo.getLocalId());
+                        mCompanySupplierInfoDaoManager.correct(companySupplierInfo);
+                    }
                 }
             }
         }

@@ -322,9 +322,11 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
             mHeadCode = companyAccountInfo.getHead();
             GlideUtil.showImg(iv_icon, mHeadCode);
             for (CompanyAccountInfo localInfo : mCompanyAccountLocalInfoList) {
-                if (localInfo.getId().equals(companyAccountInfo.getId())) {
-                    companyAccountInfo.setLocalId(localInfo.getLocalId());
-                    mAccountInfoDaoManager.correct(companyAccountInfo);
+                if (!TextUtils.isEmpty(localInfo.getId()) && !TextUtils.isEmpty(companyAccountInfo.getId())) {
+                    if (localInfo.getId().equals(companyAccountInfo.getId())) {
+                        companyAccountInfo.setLocalId(localInfo.getLocalId());
+                        mAccountInfoDaoManager.correct(companyAccountInfo);
+                    }
                 }
             }
         }

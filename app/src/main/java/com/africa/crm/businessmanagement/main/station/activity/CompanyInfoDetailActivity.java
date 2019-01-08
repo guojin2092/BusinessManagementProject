@@ -267,9 +267,11 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
             mHeadCode = companyInfo.getHead();
             GlideUtil.showImg(iv_icon, mHeadCode);
             for (CompanyInfo localInfo : mCompanyInfoLocalList) {
-                if (localInfo.getId().equals(companyInfo.getId())) {
-                    companyInfo.setLocalId(localInfo.getLocalId());
-                    mCompanyInfoDaoGreendaoManager.correct(companyInfo);
+                if (!TextUtils.isEmpty(localInfo.getId()) && !TextUtils.isEmpty(companyInfo.getId())) {
+                    if (localInfo.getId().equals(companyInfo.getId())) {
+                        companyInfo.setLocalId(localInfo.getLocalId());
+                        mCompanyInfoDaoGreendaoManager.correct(companyInfo);
+                    }
                 }
             }
         }

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -311,9 +312,11 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
                 }
                 for (CompanyClientInfo info : mCompanyClientInfoList) {
                     for (CompanyClientInfo localInfo : mCompanyClientLocalList) {
-                        if (info.getId().equals(localInfo.getId())) {
-                            info.setLocalId(localInfo.getLocalId());
-                            mClientInfoDaoManager.correct(info);
+                        if (!TextUtils.isEmpty(info.getId()) && !TextUtils.isEmpty(localInfo.getId())) {
+                            if (info.getId().equals(localInfo.getId())) {
+                                info.setLocalId(localInfo.getLocalId());
+                                mClientInfoDaoManager.correct(info);
+                            }
                         }
                     }
                 }
