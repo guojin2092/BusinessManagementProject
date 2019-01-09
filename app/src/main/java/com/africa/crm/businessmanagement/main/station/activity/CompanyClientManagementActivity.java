@@ -336,7 +336,7 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
                             mCompanyClientInfoList.get(position).setChosen(!cb_choose.isChecked());
                             mCompanyClientListAdapter.notifyDataSetChanged();
                         } else {
-                            CompanyClientDetailActivity.startActivity(CompanyClientManagementActivity.this, mCompanyClientInfoList.get(position).getId(), mCompanyClientLocalList.get(position).getLocalId());
+                            CompanyClientDetailActivity.startActivity(CompanyClientManagementActivity.this, mCompanyClientInfoList.get(position).getId(), mCompanyClientInfoList.get(position).getLocalId());
                         }
                     }
                 });
@@ -414,8 +414,7 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
             case REQUEST_COMPANY_CLIENT_LIST:
                 List<CompanyClientInfo> rows = new ArrayList<>();
                 if (!TextUtils.isEmpty(StringUtil.getText(et_name)) || !TextUtils.isEmpty(spinner_industry.getText())) {
-                    WhereCondition condition = mClientInfoDaoManager.queryBuilder().and(CompanyClientInfoDao.Properties.Name.like("%" + StringUtil.getText(et_name) + "%"), CompanyClientInfoDao.Properties.Industry.eq(mIndustryType));
-                    rows = mClientInfoDaoManager.queryBuilder().where(condition).list();
+                    rows = mClientInfoDaoManager.queryBuilder().where(CompanyClientInfoDao.Properties.Name.like("%" + StringUtil.getText(et_name) + "%"), CompanyClientInfoDao.Properties.Industry.eq(mIndustryType)).list();
                 } else {
                     rows = mClientInfoDaoManager.queryAll();
                 }

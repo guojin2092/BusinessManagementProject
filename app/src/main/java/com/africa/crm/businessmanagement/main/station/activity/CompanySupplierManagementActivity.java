@@ -43,7 +43,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.greendao.query.WhereCondition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -303,7 +302,7 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
                             mCompanySupplierInfoList.get(position).setChosen(!cb_choose.isChecked());
                             mCompanySupplierListAdapter.notifyDataSetChanged();
                         } else {
-                            CompanySupplierDetailActivity.startActivity(CompanySupplierManagementActivity.this, mCompanySupplierInfoList.get(position).getId(), mCompanySupplierLocalList.get(position).getLocalId());
+                            CompanySupplierDetailActivity.startActivity(CompanySupplierManagementActivity.this, mCompanySupplierInfoList.get(position).getId(), mCompanySupplierInfoList.get(position).getLocalId());
                         }
                     }
                 });
@@ -381,8 +380,7 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
             case REQUEST_COMPANY_SUPPLIER_LIST:
                 List<CompanySupplierInfo> rows = new ArrayList<>();
                 if (!TextUtils.isEmpty(StringUtil.getText(et_supplier_name)) || !TextUtils.isEmpty(spinner_supplier_type.getText())) {
-                    WhereCondition condition = mSupplierInfoDaoManager.queryBuilder().and(CompanySupplierInfoDao.Properties.Name.like("%" + StringUtil.getText(et_supplier_name) + "%"), CompanySupplierInfoDao.Properties.Type.eq(mSupplierType));
-                    rows = mSupplierInfoDaoManager.queryBuilder().where(condition).list();
+                    rows = mSupplierInfoDaoManager.queryBuilder().where(CompanySupplierInfoDao.Properties.Name.like("%" + StringUtil.getText(et_supplier_name) + "%"), CompanySupplierInfoDao.Properties.Type.eq(mSupplierType)).list();
                 } else {
                     rows = mSupplierInfoDaoManager.queryAll();
                 }

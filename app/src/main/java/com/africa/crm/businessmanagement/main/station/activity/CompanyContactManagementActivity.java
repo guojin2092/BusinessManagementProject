@@ -341,7 +341,7 @@ public class CompanyContactManagementActivity extends BaseRefreshMvpActivity<Con
                             mContactListDatas.get(position).setChosen(!cb_choose.isChecked());
                             mContactListAdapter.notifyDataSetChanged();
                         } else {
-                            CompanyContactDetailActivity.startActivity(CompanyContactManagementActivity.this, mContactListDatas.get(position).getId(), mCompanyContactLocalList.get(position).getLocalId());
+                            CompanyContactDetailActivity.startActivity(CompanyContactManagementActivity.this, mContactListDatas.get(position).getId(), mContactListDatas.get(position).getLocalId());
                         }
                     }
                 });
@@ -419,8 +419,7 @@ public class CompanyContactManagementActivity extends BaseRefreshMvpActivity<Con
             case REQUEST_COMPANY_CONTACT_LIST:
                 List<CompanyContactInfo> rows = new ArrayList<>();
                 if (!TextUtils.isEmpty(StringUtil.getText(et_name)) || !TextUtils.isEmpty(spinner_from_type.getText())) {
-                    WhereCondition condition = mContactInfoDaoManager.queryBuilder().and(CompanyContactInfoDao.Properties.Name.like("%" + StringUtil.getText(et_name) + "%"), CompanyContactInfoDao.Properties.FromType.eq(mFromType));
-                    rows = mContactInfoDaoManager.queryBuilder().where(condition).list();
+                    rows = mContactInfoDaoManager.queryBuilder().where(CompanyContactInfoDao.Properties.Name.like("%" + StringUtil.getText(et_name) + "%"), CompanyContactInfoDao.Properties.FromType.eq(mFromType)).list();
                 } else {
                     rows = mContactInfoDaoManager.queryAll();
                 }

@@ -312,7 +312,7 @@ public class CompanyAccountManagementActivity extends BaseRefreshMvpActivity<Com
                             mCompanyInfoList.get(position).setChosen(!cb_choose.isChecked());
                             mCompanyAccountListAdapter.notifyDataSetChanged();
                         } else {
-                            CompanyAccountDetailActivity.startActivity(CompanyAccountManagementActivity.this, mCompanyInfoList.get(position).getId(), mCompanyInfoLocalList.get(position).getLocalId());
+                            CompanyAccountDetailActivity.startActivity(CompanyAccountManagementActivity.this, mCompanyInfoList.get(position).getId(), mCompanyInfoList.get(position).getLocalId());
                         }
                     }
                 });

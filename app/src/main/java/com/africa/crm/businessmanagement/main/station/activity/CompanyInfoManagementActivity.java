@@ -279,7 +279,7 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
                             mCompanyInfoList.get(position).setChosen(!cb_choose.isChecked());
                             mCompanyInfoListAdapter.notifyDataSetChanged();
                         } else {
-                            CompanyInfoDetailActivity.startActivity(CompanyInfoManagementActivity.this, mCompanyInfoList.get(position).getId(), mCompanyInfoLocalList.get(position).getLocalId());
+                            CompanyInfoDetailActivity.startActivity(CompanyInfoManagementActivity.this, mCompanyInfoList.get(position).getId(), mCompanyInfoList.get(position).getLocalId());
                         }
                     }
                 });

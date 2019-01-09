@@ -330,7 +330,7 @@ public class CompanyProductManagementActivity extends BaseRefreshMvpActivity<Com
                             mProductInfoBeanList.get(position).setChosen(!cb_choose.isChecked());
                             mProductListAdapter.notifyDataSetChanged();
                         } else {
-                            CompanyProductDetailActivity.startActivity(CompanyProductManagementActivity.this, mProductInfoBeanList.get(position).getId(), mProductInfoLocalList.get(position).getLocalId());
+                            CompanyProductDetailActivity.startActivity(CompanyProductManagementActivity.this, mProductInfoBeanList.get(position).getId(), mProductInfoBeanList.get(position).getLocalId());
                         }
                     }
                 });
@@ -406,8 +406,7 @@ public class CompanyProductManagementActivity extends BaseRefreshMvpActivity<Com
         } else if (port.equals(REQUEST_COMPANY_PRODUCT_LIST)) {
             List<CompanyProductInfo> rows = new ArrayList<>();
             if (!TextUtils.isEmpty(StringUtil.getText(et_name)) || !TextUtils.isEmpty(spinner_type.getText())) {
-                WhereCondition condition = mProductInfoDaoManager.queryBuilder().and(CompanyProductInfoDao.Properties.Name.like("%" + StringUtil.getText(et_name) + "%"), CompanyProductInfoDao.Properties.Type.eq(mProductType));
-                rows = mProductInfoDaoManager.queryBuilder().where(condition).list();
+                rows = mProductInfoDaoManager.queryBuilder().where(CompanyProductInfoDao.Properties.Name.like("%" + StringUtil.getText(et_name) + "%"), CompanyProductInfoDao.Properties.Type.eq(mProductType)).list();
             } else {
                 rows = mProductInfoDaoManager.queryAll();
             }
