@@ -118,4 +118,17 @@ public class RequestMethod {
     public static final String REQUEST_COMPANY_SALE_ORDER_DETAIL = "request_company_sale_order_detail";
     //保存企业销售单
     public static final String REQUEST_SAVE_COMPANY_SALE_ORDER = "request_save_company_sale_order";
+
+    //企业发货单列表
+    public static final String REQUEST_DELIVERY_ORDER_LIST = "request_delivery_order_list";
+    //删除企业发货单
+    public static final String REQUEST_DELETE_DELIVERY_ORDER = "request_delete_delivery_order";
+    //发货单状态
+    public static final String REQUEST_INVOICE_STATE = "request_invoice_state";
+    //获取全部销售单
+    public static final String REQUEST_ALL_SALES_ORDER = "request_all_sales_order";
+    //获取企业发货单详情
+    public static final String REQUEST_COMPANY_DELIVERY_ORDER_DETAIL = "request_company_delivery_order_detail";
+    //保存企业发货单
+    public static final String REQUEST_SAVE_COMPANY_DELIVERY_ORDER = "request_save_company_delivery_order";
 }

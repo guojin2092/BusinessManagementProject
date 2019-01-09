@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyDeliveryOrderEvent;
@@ -20,17 +22,23 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
-import com.africa.crm.businessmanagement.main.bean.UserInfoBean;
-import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
+import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
+import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteDeliveryOrderInfo;
+import com.africa.crm.businessmanagement.main.dao.CompanyDeleteDeliveryOrderInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyDeliveryOrderInfoDao;
+import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.DeliveryOrderListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyDeliveryOrderContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyDeliveryOrderPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
+import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.bigkoo.pickerview.TimePickerView;
@@ -44,6 +52,11 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_USERS;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_USERS_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DELETE_DELIVERY_ORDER;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DELIVERY_ORDER_LIST;
 
 /**
  * Project：BusinessManagementProject
@@ -72,8 +85,8 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
 
     @BindView(R.id.spinner_user)
     MySpinner spinner_user;
-    private List<UserInfoBean> mUserInfoBeanList = new ArrayList<>();
-    private List<DicInfo> mUserInfoList = new ArrayList<>();
+    private List<DicInfo> mSpinnerCompanyUserList = new ArrayList<>();
+    private String mFromUserId = "";
     private String mUserId = "";
 
     @BindView(R.id.recyclerView)
@@ -90,6 +103,13 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
 
     private TimePickerView pvStartTime, pvEndTime;
     private Date mStartDate, mEndDate;
+
+    private GreendaoManager<CompanyDeliveryOrderInfo, CompanyDeliveryOrderInfoDao> mDeliveryOrderInfoDaoManager;
+    private GreendaoManager<CompanyDeleteDeliveryOrderInfo, CompanyDeleteDeliveryOrderInfoDao> mDeleteDeliveryOrderInfoDaoManager;
+    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoManager;
+
+    private List<CompanyDeliveryOrderInfo> mDeliveryOrderDaoLocalList = new ArrayList<>();//本地数据
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
@@ -140,6 +160,15 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
         tv_start_time.setOnClickListener(this);
         tv_end_time.setOnClickListener(this);
         initTimePicker();
+
+        //得到Dao对象管理器
+        mDeliveryOrderInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeliveryOrderInfoDao());
+        //得到Dao对象管理器
+        mDeleteDeliveryOrderInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeleteDeliveryOrderInfoDao());
+        //得到Dao对象管理器
+        mDicInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getDicInfoDao());
+        //得到本地数据
+        mDicInfoLocalList = mDicInfoDaoManager.queryAll();
     }
 
     private void initTimePicker() {
@@ -184,17 +213,20 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
 
     @Override
     protected void requestData() {
-        mPresenter.getCompanyUserList(page, rows, "", "2", mCompanyId, "1", "");
+        if ("companyRoot".equals(mRoleCode)) {
+            mPresenter.getAllCompanyUsers(mCompanyId);
+        }
         pullDownRefresh(page);
     }
 
     @Override
     public void pullDownRefresh(int page) {
-        if (mRoleCode.equals("companyRoot")) {
-            mPresenter.getCompanyDeliveryOrderList(page, rows, mCompanyId, mUserId, et_quotation_name.getText().toString().trim(), et_code.getText().toString().trim(), tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
+        if (mRoleCode.equals("companySales")) {
+            mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
         } else {
-            mPresenter.getCompanyDeliveryOrderList(page, rows, mCompanyId, String.valueOf(UserInfoManager.getUserLoginInfo(this).getId()), et_quotation_name.getText().toString().trim(), et_code.getText().toString().trim(), tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
+            mUserId = mFromUserId;
         }
+        mPresenter.getCompanyDeliveryOrderList(page, rows, mCompanyId, mUserId, et_quotation_name.getText().toString().trim(), et_code.getText().toString().trim(), tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
     }
 
     @Override
@@ -228,7 +260,7 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
                 }
                 break;
             case R.id.ll_add:
-                CompanyDeliveryOrderDetailActivity.startActivity(CompanyDeliveryOrderManagementActivity.this, "");
+                CompanyDeliveryOrderDetailActivity.startActivity(CompanyDeliveryOrderManagementActivity.this, "", 0l);
                 break;
             case R.id.tv_delete:
                 mDeleteList.clear();
@@ -274,24 +306,27 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
         recyclerView.setNestedScrollingEnabled(false);
     }
 
-
     @Override
-    public void getCompanyUserList(UserManagementInfoBean userManagementInfoBean) {
-        mUserInfoBeanList.clear();
-        mUserInfoBeanList.addAll(userManagementInfoBean.getRows());
-        mUserInfoList.clear();
-        if (!ListUtils.isEmpty(mUserInfoBeanList)) {
-            for (int i = 0; i < mUserInfoBeanList.size(); i++) {
-                mUserInfoList.add(new DicInfo(mUserInfoBeanList.get(i).getUserName(), mUserInfoBeanList.get(i).getId()));
+    public void getAllCompanyUsers(List<DicInfo2> dicInfo2List) {
+        mSpinnerCompanyUserList.clear();
+        if (!ListUtils.isEmpty(dicInfo2List)) {
+            for (DicInfo2 dicInfo2 : dicInfo2List) {
+                DicInfo dicInfo = new DicInfo(dicInfo2.getId(), QUERY_ALL_USERS, dicInfo2.getName(), dicInfo2.getCode());
+                mSpinnerCompanyUserList.add(dicInfo);
             }
+            List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerCompanyUserList, mDicInfoLocalList);
+            for (DicInfo dicInfo : addList) {
+                dicInfo.setType(QUERY_ALL_USERS);
+                mDicInfoDaoManager.insertOrReplace(dicInfo);
+            }
+            spinner_user.setListDatas(getBVActivity(), mSpinnerCompanyUserList);
+            spinner_user.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+                @Override
+                public void onItemClick(DicInfo dicInfo, int position) {
+                    mFromUserId = dicInfo.getCode();
+                }
+            });
         }
-        spinner_user.setListDatas(this, mUserInfoList);
-        spinner_user.addOnItemClickListener(new MySpinner.OnItemClickListener() {
-            @Override
-            public void onItemClick(DicInfo dicInfo, int position) {
-                mUserId = dicInfo.getCode();
-            }
-        });
     }
 
     @Override
@@ -309,6 +344,7 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
                     mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
                 }
                 mDeliveryOrderInfoList.clear();
+                mDeliveryOrderDaoLocalList = mDeliveryOrderInfoDaoManager.queryAll();
                 recyclerView.smoothScrollToPosition(0);
             }
             if (mRefreshLayout != null) {
@@ -320,6 +356,24 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
             }
             if (!ListUtils.isEmpty(companyDeliveryOrderInfoBean.getRows())) {
                 mDeliveryOrderInfoList.addAll(companyDeliveryOrderInfoBean.getRows());
+                List<CompanyDeliveryOrderInfo> addList = DifferentDataUtil.addDeliveryOrderDataToLocal(mDeliveryOrderInfoList, mDeliveryOrderDaoLocalList);
+                if (!ListUtils.isEmpty(addList)) {
+                    for (CompanyDeliveryOrderInfo companyInfo : addList) {
+                        mDeliveryOrderInfoDaoManager.insertOrReplace(companyInfo);
+                    }
+                    mDeliveryOrderDaoLocalList = new ArrayList<>();
+                    mDeliveryOrderDaoLocalList = mDeliveryOrderInfoDaoManager.queryAll();
+                }
+                for (CompanyDeliveryOrderInfo info : mDeliveryOrderInfoList) {
+                    for (CompanyDeliveryOrderInfo localInfo : mDeliveryOrderDaoLocalList) {
+                        if (!TextUtils.isEmpty(info.getId()) && !TextUtils.isEmpty(localInfo.getId())) {
+                            if (info.getId().equals(localInfo.getId())) {
+                                info.setLocalId(localInfo.getLocalId());
+                                mDeliveryOrderInfoDaoManager.correct(info);
+                            }
+                        }
+                    }
+                }
                 if (mDeliveryOrderListAdapter != null) {
                     mDeliveryOrderListAdapter.notifyDataSetChanged();
                 }
@@ -333,7 +387,7 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
                             mDeliveryOrderInfoList.get(position).setChosen(!cb_choose.isChecked());
                             mDeliveryOrderListAdapter.notifyDataSetChanged();
                         } else {
-                            CompanyDeliveryOrderDetailActivity.startActivity(CompanyDeliveryOrderManagementActivity.this, mDeliveryOrderInfoList.get(position).getId());
+                            CompanyDeliveryOrderDetailActivity.startActivity(CompanyDeliveryOrderManagementActivity.this, mDeliveryOrderInfoList.get(position).getId(), mDeliveryOrderInfoList.get(position).getLocalId());
                         }
                     }
                 });
@@ -342,12 +396,25 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
     }
 
     @Override
-    public void deleteCompanyDeliveryOrder(BaseEntity baseEntity) {
+    public void deleteCompanyDeliveryOrder(BaseEntity baseEntity, boolean isLocal) {
         if (baseEntity.isSuccess()) {
             for (int i = 0; i < mDeleteList.size(); i++) {
                 if (mDeliveryOrderInfoList.contains(mDeleteList.get(i))) {
                     int position = mDeliveryOrderInfoList.indexOf(mDeleteList.get(i));
                     mDeliveryOrderInfoList.remove(mDeleteList.get(i));
+                    if (isLocal) {
+                        for (CompanyDeliveryOrderInfo companyInfo : mDeleteList) {
+                            CompanyDeleteDeliveryOrderInfo deleteDeliveryOrderInfo = new CompanyDeleteDeliveryOrderInfo(companyInfo.getCreateTime(), companyInfo.getCreateTimeDate(), companyInfo.getSendAddress(), companyInfo.getRemark(), companyInfo.getSalesOrderId(), companyInfo.getState(), companyInfo.getCode(), companyInfo.getCompanyName(), companyInfo.getUserNickName(), companyInfo.getId(), companyInfo.getLogisticsCode(), companyInfo.getArriveDate(), companyInfo.getEditAble(), companyInfo.getDestinationAddress(), companyInfo.getSendAddressZipCode(), companyInfo.getStateName(), companyInfo.getUserId(), companyInfo.getName(), companyInfo.getSalesOrderName(), companyInfo.getCompanyId(), companyInfo.getProducts(), companyInfo.getClause(), companyInfo.getDestinationAddressZipCode(), false, isLocal);
+                            mDeleteDeliveryOrderInfoDaoManager.insertOrReplace(deleteDeliveryOrderInfo);
+                        }
+                    }
+                    for (CompanyDeliveryOrderInfo companyInfo : mDeliveryOrderDaoLocalList) {
+                        if (mDeleteList.get(i).getLocalId().equals(companyInfo.getLocalId())) {
+                            mDeliveryOrderInfoDaoManager.delete(companyInfo.getLocalId());
+                        }
+                    }
+                    mDeliveryOrderDaoLocalList = new ArrayList<>();
+                    mDeliveryOrderDaoLocalList = mDeliveryOrderInfoDaoManager.queryAll();
                     if (mDeliveryOrderListAdapter != null) {
                         mDeliveryOrderListAdapter.notifyItemRemoved(position);
                     }
@@ -378,5 +445,42 @@ public class CompanyDeliveryOrderManagementActivity extends BaseRefreshMvpActivi
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        mRefreshLayout.setEnableLoadmore(false);
+        switch (port) {
+            case REQUEST_ALL_USERS_LIST:
+                List<DicInfo2> allUserList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(QUERY_ALL_USERS)) {
+                        allUserList.add(new DicInfo2(dicInfo.getId(), dicInfo.getText(), dicInfo.getCode()));
+                    }
+                }
+                getAllCompanyUsers(allUserList);
+                break;
+            case REQUEST_DELIVERY_ORDER_LIST:
+                List<CompanyDeliveryOrderInfo> rows = new ArrayList<>();
+                if (!TextUtils.isEmpty(StringUtil.getText(et_quotation_name)) || !TextUtils.isEmpty(StringUtil.getText(et_code)) || !TextUtils.isEmpty(mFromUserId) || !TextUtils.isEmpty(StringUtil.getText(tv_start_time)) || !TextUtils.isEmpty(StringUtil.getText(tv_end_time))) {
+                    if (!TextUtils.isEmpty(mFromUserId)) {
+                        rows = mDeliveryOrderInfoDaoManager.queryBuilder().where(CompanyDeliveryOrderInfoDao.Properties.Name.like("%" + StringUtil.getText(et_quotation_name) + "%"), CompanyDeliveryOrderInfoDao.Properties.Code.like("%" + StringUtil.getText(et_code) + "%"), CompanyDeliveryOrderInfoDao.Properties.UserId.eq(mFromUserId), CompanyDeliveryOrderInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyDeliveryOrderInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+                    } else {
+                        rows = mDeliveryOrderInfoDaoManager.queryBuilder().where(CompanyDeliveryOrderInfoDao.Properties.Name.like("%" + StringUtil.getText(et_quotation_name) + "%"), CompanyDeliveryOrderInfoDao.Properties.Code.like("%" + StringUtil.getText(et_code) + "%"), CompanyDeliveryOrderInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyDeliveryOrderInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+                    }
+                } else {
+                    rows = mDeliveryOrderInfoDaoManager.queryAll();
+                }
+                CompanyDeliveryOrderInfoBean companyDeliveryOrderInfoBean = new CompanyDeliveryOrderInfoBean();
+                companyDeliveryOrderInfoBean.setRows(rows);
+                getCompanyDeliveryOrderList(companyDeliveryOrderInfoBean);
+                break;
+            case REQUEST_DELETE_DELIVERY_ORDER:
+                BaseEntity baseEntity = new BaseEntity();
+                baseEntity.setSuccess(true);
+                deleteCompanyDeliveryOrder(baseEntity, true);
+                break;
+        }
     }
 }

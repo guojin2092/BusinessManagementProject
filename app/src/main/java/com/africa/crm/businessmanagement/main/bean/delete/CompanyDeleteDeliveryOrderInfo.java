@@ -1,4 +1,4 @@
-package com.africa.crm.businessmanagement.main.bean;
+package com.africa.crm.businessmanagement.main.bean.delete;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
@@ -14,7 +14,7 @@ import org.greenrobot.greendao.annotation.Id;
  * Why & What is modified:
  */
 @Entity
-public class CompanyDeliveryOrderInfo {
+public class CompanyDeleteDeliveryOrderInfo {
     @Id(autoincrement = true)
     private Long localId;
     private String createTime;
@@ -44,15 +44,15 @@ public class CompanyDeliveryOrderInfo {
     private boolean chosen = false;
     private boolean isLocal = false;
 
-    @Generated(hash = 1020026180)
-    public CompanyDeliveryOrderInfo(Long localId, String createTime,
-                                    Long createTimeDate, String sendAddress, String remark,
-                                    String salesOrderId, String state, String code, String companyName,
-                                    String userNickName, String id, String logisticsCode, String arriveDate,
-                                    String editAble, String destinationAddress, String sendAddressZipCode,
-                                    String stateName, String userId, String name, String salesOrderName,
-                                    String companyId, String products, String clause,
-                                    String destinationAddressZipCode, boolean chosen, boolean isLocal) {
+    @Generated(hash = 1199378878)
+    public CompanyDeleteDeliveryOrderInfo(Long localId, String createTime,
+                                          Long createTimeDate, String sendAddress, String remark,
+                                          String salesOrderId, String state, String code, String companyName,
+                                          String userNickName, String id, String logisticsCode, String arriveDate,
+                                          String editAble, String destinationAddress, String sendAddressZipCode,
+                                          String stateName, String userId, String name, String salesOrderName,
+                                          String companyId, String products, String clause,
+                                          String destinationAddressZipCode, boolean chosen, boolean isLocal) {
         this.localId = localId;
         this.createTime = createTime;
         this.createTimeDate = createTimeDate;
@@ -81,14 +81,14 @@ public class CompanyDeliveryOrderInfo {
         this.isLocal = isLocal;
     }
 
-    public CompanyDeliveryOrderInfo(String createTime,
-                                    Long createTimeDate, String sendAddress, String remark,
-                                    String salesOrderId, String state, String code, String companyName,
-                                    String userNickName, String id, String logisticsCode, String arriveDate,
-                                    String editAble, String destinationAddress, String sendAddressZipCode,
-                                    String stateName, String userId, String name, String salesOrderName,
-                                    String companyId, String products, String clause,
-                                    String destinationAddressZipCode, boolean chosen, boolean isLocal) {
+    public CompanyDeleteDeliveryOrderInfo(String createTime,
+                                          Long createTimeDate, String sendAddress, String remark,
+                                          String salesOrderId, String state, String code, String companyName,
+                                          String userNickName, String id, String logisticsCode, String arriveDate,
+                                          String editAble, String destinationAddress, String sendAddressZipCode,
+                                          String stateName, String userId, String name, String salesOrderName,
+                                          String companyId, String products, String clause,
+                                          String destinationAddressZipCode, boolean chosen, boolean isLocal) {
         this.createTime = createTime;
         this.createTimeDate = createTimeDate;
         this.sendAddress = sendAddress;
@@ -116,8 +116,8 @@ public class CompanyDeliveryOrderInfo {
         this.isLocal = isLocal;
     }
 
-    @Generated(hash = 1402363012)
-    public CompanyDeliveryOrderInfo() {
+    @Generated(hash = 21290027)
+    public CompanyDeleteDeliveryOrderInfo() {
     }
 
     public String getCreateTime() {

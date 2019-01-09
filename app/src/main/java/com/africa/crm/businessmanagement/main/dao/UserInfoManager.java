@@ -23,6 +23,7 @@ public class UserInfoManager {
     public static final String USER_NAME = "userName";
     public static final String COMPANY_NAME = "companyName";
     public static final String COMPANY_ID = "companyId";
+    public static final String NAME = "name";
     public static final String TYPE = "type";
     public static final String PASSWORD = "passWord";
     public static final String VERSION = "version";
@@ -48,6 +49,7 @@ public class UserInfoManager {
         editor.putString(USER_NAME, userInfoBean.getUserName());
         editor.putString(COMPANY_ID, userInfoBean.getCompanyId());
         editor.putString(COMPANY_NAME, userInfoBean.getCompanyName());
+        editor.putString(NAME, userInfoBean.getName());
         editor.putString(TYPE, userInfoBean.getType());
         editor.putString(PASSWORD, userInfoBean.getPassWord());
         editor.putInt(VERSION, userInfoBean.getVersion());
@@ -73,6 +75,7 @@ public class UserInfoManager {
         loginInfoBean.setUserName(sharedPreferences.getString(USER_NAME, ""));
         loginInfoBean.setCompanyId(sharedPreferences.getString(COMPANY_ID, ""));
         loginInfoBean.setCompanyName(sharedPreferences.getString(COMPANY_NAME, ""));
+        loginInfoBean.setName(sharedPreferences.getString(NAME, ""));
         loginInfoBean.setType(sharedPreferences.getString(TYPE, ""));
         loginInfoBean.setPassWord(sharedPreferences.getString(PASSWORD, ""));
         loginInfoBean.setVersion(sharedPreferences.getInt(VERSION, 0));

@@ -18,6 +18,7 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyClientInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
@@ -31,6 +32,7 @@ import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteAccountInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteClientInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteContactInfo;
+import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteDeliveryOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteProductInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteQuotationInfo;
@@ -43,12 +45,14 @@ import com.africa.crm.businessmanagement.main.dao.CompanyContactInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteAccountInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteClientInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteContactInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyDeleteDeliveryOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteProductInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteQuotationInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteSalesOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteSupplierInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteTradingOrderInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyDeliveryOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyProductInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyQuotationInfoDao;
@@ -194,6 +198,14 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
     private List<CompanyDeleteSalesOrderInfo> mCompanyDeleteSalesOrderLocalList = new ArrayList<>();//本地数据
 
     /**
+     * 企业发货单本地数据库
+     */
+    private GreendaoManager<CompanyDeliveryOrderInfo, CompanyDeliveryOrderInfoDao> mDeliveryOrderInfoDaoManager;
+    private List<CompanyDeliveryOrderInfo> mDeliveryOrderLocalList = new ArrayList<>();//本地数据
+    private GreendaoManager<CompanyDeleteDeliveryOrderInfo, CompanyDeleteDeliveryOrderInfoDao> mDeleteDeliveryOrderInfoDaoManager;
+    private List<CompanyDeleteDeliveryOrderInfo> mDeleteDeliveryOrderLocalList = new ArrayList<>();//本地数据
+
+    /**
      * @param activity
      */
     public static void startActivity(Activity activity, WorkStationInfo workStationInfo) {
@@ -285,6 +297,12 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
         //删除企业销售单dao
         mDeleteSalesOrderInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeleteSalesOrderInfoDao());
         mCompanyDeleteSalesOrderLocalList = mDeleteSalesOrderInfoDaoManager.queryAll();
+        //企业发货单dao
+        mDeliveryOrderInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeliveryOrderInfoDao());
+        mDeliveryOrderLocalList = mDeliveryOrderInfoDaoManager.queryAll();
+        //删除企业发货单dao
+        mDeleteDeliveryOrderInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeleteDeliveryOrderInfoDao());
+        mDeleteDeliveryOrderLocalList = mDeleteDeliveryOrderInfoDaoManager.queryAll();
     }
 
     @Override
@@ -347,6 +365,8 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                 mDeleteQuotationInfoDaoManager.deleteAll();
                                 mSalesOrderInfoDaoManager.deleteAll();
                                 mDeleteSalesOrderInfoDaoManager.deleteAll();
+                                mDeliveryOrderInfoDaoManager.deleteAll();
+                                mDeleteDeliveryOrderInfoDaoManager.deleteAll();
                                 MyApplication.getInstance().finishAllActivities();
                                 LoginActivity.startActivityForResult(SettingActivity.this, 0);
                                 mLoginOutDialog.dismiss();
@@ -824,6 +844,35 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                 companyInfo.setIsLocal(false);
                                 companyInfo.setCreateTime(uploadInfoBean.getCreateTime());
                                 mSalesOrderInfoDaoManager.correct(companyInfo);
+                            }
+                        }, new ComConsumer(this)));
+            }
+        }
+
+        /**
+         * 企业发货单模块
+         */
+        for (final CompanyDeleteDeliveryOrderInfo companyDeleteInfo : mDeleteDeliveryOrderLocalList) {
+            addDisposable(mDataManager.deleteCompanyDeliveryOrder(companyDeleteInfo.getId())
+                    .compose(RxUtils.<BaseEntity>ioToMain(this))
+                    .subscribe(new Consumer<BaseEntity>() {
+                        @Override
+                        public void accept(BaseEntity baseEntity) throws Exception {
+                            mDeleteDeliveryOrderInfoDaoManager.delete(companyDeleteInfo.getLocalId());
+                        }
+                    }, new ComConsumer(this)));
+        }
+        for (final CompanyDeliveryOrderInfo companyInfo : mDeliveryOrderLocalList) {
+            if (companyInfo.isLocal()) {
+                addDisposable(mDataManager.saveCompanyDeliveryOrder(companyInfo.getId(), companyInfo.getCompanyId(), companyInfo.getUserId(), companyInfo.getName(), companyInfo.getSalesOrderId(), companyInfo.getLogisticsCode(), companyInfo.getState(), companyInfo.getArriveDate(), companyInfo.getSendAddress(), companyInfo.getSendAddressZipCode(), companyInfo.getDestinationAddress(), companyInfo.getDestinationAddressZipCode(), companyInfo.getProducts(), companyInfo.getClause(), companyInfo.getRemark())
+                        .compose(RxUtils.<UploadInfoBean>ioToMain(this))
+                        .subscribe(new Consumer<UploadInfoBean>() {
+                            @Override
+                            public void accept(UploadInfoBean uploadInfoBean) throws Exception {
+                                companyInfo.setId(uploadInfoBean.getId());
+                                companyInfo.setIsLocal(false);
+                                companyInfo.setCreateTime(uploadInfoBean.getCreateTime());
+                                mDeliveryOrderInfoDaoManager.correct(companyInfo);
                             }
                         }, new ComConsumer(this)));
             }

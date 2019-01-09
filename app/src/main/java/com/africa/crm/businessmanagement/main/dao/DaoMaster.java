@@ -24,6 +24,7 @@ public class DaoMaster extends AbstractDaoMaster {
         CompanyAccountInfoDao.createTable(db, ifNotExists);
         CompanyClientInfoDao.createTable(db, ifNotExists);
         CompanyContactInfoDao.createTable(db, ifNotExists);
+        CompanyDeliveryOrderInfoDao.createTable(db, ifNotExists);
         CompanyInfoDao.createTable(db, ifNotExists);
         CompanyProductInfoDao.createTable(db, ifNotExists);
         CompanyQuotationInfoDao.createTable(db, ifNotExists);
@@ -33,6 +34,7 @@ public class DaoMaster extends AbstractDaoMaster {
         CompanyDeleteAccountInfoDao.createTable(db, ifNotExists);
         CompanyDeleteClientInfoDao.createTable(db, ifNotExists);
         CompanyDeleteContactInfoDao.createTable(db, ifNotExists);
+        CompanyDeleteDeliveryOrderInfoDao.createTable(db, ifNotExists);
         CompanyDeleteInfoDao.createTable(db, ifNotExists);
         CompanyDeleteProductInfoDao.createTable(db, ifNotExists);
         CompanyDeleteQuotationInfoDao.createTable(db, ifNotExists);
@@ -47,6 +49,7 @@ public class DaoMaster extends AbstractDaoMaster {
         CompanyAccountInfoDao.dropTable(db, ifExists);
         CompanyClientInfoDao.dropTable(db, ifExists);
         CompanyContactInfoDao.dropTable(db, ifExists);
+        CompanyDeliveryOrderInfoDao.dropTable(db, ifExists);
         CompanyInfoDao.dropTable(db, ifExists);
         CompanyProductInfoDao.dropTable(db, ifExists);
         CompanyQuotationInfoDao.dropTable(db, ifExists);
@@ -56,6 +59,7 @@ public class DaoMaster extends AbstractDaoMaster {
         CompanyDeleteAccountInfoDao.dropTable(db, ifExists);
         CompanyDeleteClientInfoDao.dropTable(db, ifExists);
         CompanyDeleteContactInfoDao.dropTable(db, ifExists);
+        CompanyDeleteDeliveryOrderInfoDao.dropTable(db, ifExists);
         CompanyDeleteInfoDao.dropTable(db, ifExists);
         CompanyDeleteProductInfoDao.dropTable(db, ifExists);
         CompanyDeleteQuotationInfoDao.dropTable(db, ifExists);
@@ -84,6 +88,7 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(CompanyAccountInfoDao.class);
         registerDaoClass(CompanyClientInfoDao.class);
         registerDaoClass(CompanyContactInfoDao.class);
+        registerDaoClass(CompanyDeliveryOrderInfoDao.class);
         registerDaoClass(CompanyInfoDao.class);
         registerDaoClass(CompanyProductInfoDao.class);
         registerDaoClass(CompanyQuotationInfoDao.class);
@@ -93,6 +98,7 @@ public class DaoMaster extends AbstractDaoMaster {
         registerDaoClass(CompanyDeleteAccountInfoDao.class);
         registerDaoClass(CompanyDeleteClientInfoDao.class);
         registerDaoClass(CompanyDeleteContactInfoDao.class);
+        registerDaoClass(CompanyDeleteDeliveryOrderInfoDao.class);
         registerDaoClass(CompanyDeleteInfoDao.class);
         registerDaoClass(CompanyDeleteProductInfoDao.class);
         registerDaoClass(CompanyDeleteQuotationInfoDao.class);

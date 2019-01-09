@@ -4,6 +4,7 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.mvp.presenter.IBasePresenter;
 import com.africa.crm.businessmanagement.network.base.BaseView;
 
@@ -29,7 +30,7 @@ public class CompanyDeliveryOrderDetailContract {
 
         void getCompanyDeliveryOrderDetail(CompanyDeliveryOrderInfo companyDeliveryOrderInfo);
 
-        void saveCompanyDeliveryOrder(BaseEntity baseEntity);
+        void saveCompanyDeliveryOrder(UploadInfoBean uploadInfoBean, boolean isLocal);
 
     }
 
@@ -38,7 +39,7 @@ public class CompanyDeliveryOrderDetailContract {
 
         void getAllProduct(String companyId);
 
-        void getAllSaleOrders(String companyId,String userId);
+        void getAllSaleOrders(String companyId, String userId);
 
         void getCompanyDeliveryOrderDetail(String id);
 

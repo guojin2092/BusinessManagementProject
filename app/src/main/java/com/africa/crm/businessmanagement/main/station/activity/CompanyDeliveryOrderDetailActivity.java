@@ -13,23 +13,28 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyDeliveryOrderEvent;
-import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.OrderProductInfo;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
+import com.africa.crm.businessmanagement.main.dao.CompanyDeliveryOrderInfoDao;
+import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.OrderProductListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyDeliveryOrderDetailContract;
 import com.africa.crm.businessmanagement.main.station.dialog.AddProductDialog;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyDeliveryOrderDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
-import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
+import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.bigkoo.pickerview.TimePickerView;
@@ -45,6 +50,15 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.DicUtil.INVOICE_STATE;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_PRODUCTS;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_SALE_ORDER;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_PRODUCTS_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_SALES_ORDER;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_DELIVERY_ORDER_DETAIL;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_INVOICE_STATE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SAVE_COMPANY_DELIVERY_ORDER;
 
 public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyDeliveryOrderDetailPresenter> implements CompanyDeliveryOrderDetailContract.View {
     @BindView(R.id.et_delivery_order_name)
@@ -69,8 +83,13 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
     TextView tv_save;
 
     private String mDeliveryOrderId = "";
+    private Long mLocalId = 0l;//本地数据库ID
     private String mCompanyId = "";
+    private String mCompanyName = "";
+    private String mFromName = "";
     private String mUserId = "";
+    private String mDeliveryCode = "";
+    private String mEditAble = "1";
 
     @BindView(R.id.tv_delete)
     TextView tv_delete;
@@ -95,16 +114,23 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
 
     @BindView(R.id.spinner_state)
     MySpinner spinner_state;
-    private static final String STATE_TYPE = "INVOICESTATE";
     private List<DicInfo> mSpinnerStateList = new ArrayList<>();
     private String mStateCode = "";
+    private String mStateName = "";
+
+    private GreendaoManager<CompanyDeliveryOrderInfo, CompanyDeliveryOrderInfoDao> mDeliveryOrderInfoDaoManager;
+    private List<CompanyDeliveryOrderInfo> mDeliveryOrderLocalList = new ArrayList<>();//本地数据
+
+    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoManager;
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
      */
-    public static void startActivity(Activity activity, String deliveryOrderId) {
+    public static void startActivity(Activity activity, String deliveryOrderId, Long localId) {
         Intent intent = new Intent(activity, CompanyDeliveryOrderDetailActivity.class);
         intent.putExtra("id", deliveryOrderId);
+        intent.putExtra("localId", localId);
         activity.startActivity(intent);
     }
 
@@ -123,7 +149,10 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
     public void initView() {
         super.initView();
         mDeliveryOrderId = getIntent().getStringExtra("id");
+        mLocalId = getIntent().getLongExtra("localId", 0l);
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
+        mCompanyName = UserInfoManager.getUserLoginInfo(this).getCompanyName();
+        mFromName = UserInfoManager.getUserLoginInfo(this).getName();
         mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
         titlebar_name.setText("发货单详情");
 
@@ -134,14 +163,14 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
         tv_save.setOnClickListener(this);
         String roleCode = UserInfoManager.getUserLoginInfo(this).getRoleCode();
         if (roleCode.equals("companySales")) {
-            if (!TextUtils.isEmpty(mDeliveryOrderId)) {
-                titlebar_right.setText(R.string.edit);
-                tv_save.setText(R.string.save);
-                setEditTextInput(false);
-            } else {
+            if (TextUtils.isEmpty(mDeliveryOrderId) && mLocalId == 0l) {
                 titlebar_right.setVisibility(View.GONE);
                 tv_save.setText(R.string.add);
                 tv_save.setVisibility(View.VISIBLE);
+            } else if (!TextUtils.isEmpty(mDeliveryOrderId) || mLocalId != 0l) {
+                titlebar_right.setText(R.string.edit);
+                tv_save.setText(R.string.save);
+                setEditTextInput(false);
             }
         } else {
             titlebar_right.setVisibility(View.GONE);
@@ -174,6 +203,14 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
         });
         initTimePicker();
         initProductList();
+        //得到Dao对象管理器
+        mDeliveryOrderInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeliveryOrderInfoDao());
+        //得到本地数据
+        mDeliveryOrderLocalList = mDeliveryOrderInfoDaoManager.queryAll();
+        //得到Dao对象管理器
+        mDicInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getDicInfoDao());
+        //得到本地数据
+        mDicInfoLocalList = mDicInfoDaoManager.queryAll();
     }
 
     private void initTimePicker() {
@@ -212,9 +249,9 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
 
     @Override
     protected void requestData() {
-        mPresenter.getState(STATE_TYPE);
+        mPresenter.getState(INVOICE_STATE);
         mPresenter.getAllSaleOrders(mCompanyId, mUserId);
-        if (!TextUtils.isEmpty(mDeliveryOrderId)) {
+        if (!TextUtils.isEmpty(mDeliveryOrderId) || mLocalId != 0l) {
             mPresenter.getCompanyDeliveryOrderDetail(mDeliveryOrderId);
         }
     }
@@ -357,12 +394,18 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
     public void getState(List<DicInfo> dicInfoList) {
         mSpinnerStateList.clear();
         mSpinnerStateList.addAll(dicInfoList);
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerStateList, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            dicInfo.setType(INVOICE_STATE);
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
+        }
         spinner_state.setListDatas(this, mSpinnerStateList);
 
         spinner_state.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
                 mStateCode = dicInfo.getCode();
+                mStateName = dicInfo.getText();
             }
         });
     }
@@ -371,7 +414,11 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
     public void getAllProduct(List<DicInfo2> dicInfoList) {
         List<DicInfo> list = new ArrayList<>();
         for (DicInfo2 dicInfo2 : dicInfoList) {
-            list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getId()));
+            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_PRODUCTS, dicInfo2.getName(), dicInfo2.getId()));
+        }
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
         }
         mAddProductDialog.show();
         mAddProductDialog.setListDatas(this, list);
@@ -381,7 +428,11 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
     public void getAllSaleOrders(List<DicInfo2> dicInfoList) {
         List<DicInfo> list = new ArrayList<>();
         for (DicInfo2 dicInfo2 : dicInfoList) {
-            list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getId()));
+            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_SALE_ORDER, dicInfo2.getName(), dicInfo2.getId()));
+        }
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
         }
         spinner_sales_id.setListDatas(this, list);
         spinner_sales_id.addOnItemClickListener(new MySpinner.OnItemClickListener() {
@@ -394,40 +445,113 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
 
     @Override
     public void getCompanyDeliveryOrderDetail(CompanyDeliveryOrderInfo companyDeliveryOrderInfo) {
-        et_delivery_order_name.setText(companyDeliveryOrderInfo.getName());
-        spinner_sales_id.setText(companyDeliveryOrderInfo.getSalesOrderName());
-        mSalesId = companyDeliveryOrderInfo.getSalesOrderId();
-        spinner_state.setText(companyDeliveryOrderInfo.getStateName());
-        mStateCode = companyDeliveryOrderInfo.getState();
-        et_logistics_code.setText(companyDeliveryOrderInfo.getLogisticsCode());
-        tv_arrive_date.setText(companyDeliveryOrderInfo.getArriveDate());
-        et_deliver_address.setText(companyDeliveryOrderInfo.getSendAddress());
-        et_deliver_zip_code.setText(companyDeliveryOrderInfo.getSendAddressZipCode());
-        et_receiver_address.setText(companyDeliveryOrderInfo.getDestinationAddress());
-        et_receiver_zip_code.setText(companyDeliveryOrderInfo.getDestinationAddressZipCode());
-        List<OrderProductInfo> list = new Gson().fromJson(companyDeliveryOrderInfo.getProducts(), new TypeToken<List<OrderProductInfo>>() {
-        }.getType());
-        mOrderProductInfoList.addAll(list);
-        if (mOrderProductListAdapter != null) {
-            mOrderProductListAdapter.notifyDataSetChanged();
+        if (companyDeliveryOrderInfo != null) {
+            et_delivery_order_name.setText(companyDeliveryOrderInfo.getName());
+            spinner_sales_id.setText(companyDeliveryOrderInfo.getSalesOrderName());
+            mSalesId = companyDeliveryOrderInfo.getSalesOrderId();
+            spinner_state.setText(companyDeliveryOrderInfo.getStateName());
+            mStateCode = companyDeliveryOrderInfo.getState();
+            et_logistics_code.setText(companyDeliveryOrderInfo.getLogisticsCode());
+            tv_arrive_date.setText(companyDeliveryOrderInfo.getArriveDate());
+            et_deliver_address.setText(companyDeliveryOrderInfo.getSendAddress());
+            et_deliver_zip_code.setText(companyDeliveryOrderInfo.getSendAddressZipCode());
+            et_receiver_address.setText(companyDeliveryOrderInfo.getDestinationAddress());
+            et_receiver_zip_code.setText(companyDeliveryOrderInfo.getDestinationAddressZipCode());
+            mDeliveryCode = companyDeliveryOrderInfo.getCode();
+            mCompanyName = companyDeliveryOrderInfo.getCompanyName();
+            mFromName = companyDeliveryOrderInfo.getUserNickName();
+            mEditAble = companyDeliveryOrderInfo.getEditAble();
+            List<OrderProductInfo> list = new Gson().fromJson(companyDeliveryOrderInfo.getProducts(), new TypeToken<List<OrderProductInfo>>() {
+            }.getType());
+            mOrderProductInfoList.addAll(list);
+            if (mOrderProductListAdapter != null) {
+                mOrderProductListAdapter.notifyDataSetChanged();
+            }
+            et_clause.setText(companyDeliveryOrderInfo.getClause());
+            for (CompanyDeliveryOrderInfo localInfo : mDeliveryOrderLocalList) {
+                if (!TextUtils.isEmpty(localInfo.getId()) && !TextUtils.isEmpty(companyDeliveryOrderInfo.getId())) {
+                    if (localInfo.getId().equals(companyDeliveryOrderInfo.getId())) {
+                        companyDeliveryOrderInfo.setLocalId(localInfo.getLocalId());
+                        mDeliveryOrderInfoDaoManager.correct(companyDeliveryOrderInfo);
+                    }
+                }
+            }
         }
-        et_clause.setText(companyDeliveryOrderInfo.getClause());
-
     }
 
     @Override
-    public void saveCompanyDeliveryOrder(BaseEntity baseEntity) {
-        if (baseEntity.isSuccess()) {
-            String toastString = "";
-            if (TextUtils.isEmpty(mDeliveryOrderId)) {
-                toastString = "发货单创建成功";
-            } else {
-                toastString = "发货单修改成功";
-            }
-            EventBus.getDefault().post(new AddOrSaveCompanyDeliveryOrderEvent(toastString));
-            finish();
+    public void saveCompanyDeliveryOrder(UploadInfoBean uploadInfoBean, boolean isLocal) {
+        String toastString = "";
+        if (TextUtils.isEmpty(mDeliveryOrderId) && mLocalId == 0l) {
+            toastString = "发货单创建成功";
         } else {
-            toastMsg(ErrorMsg.showErrorMsg(baseEntity.getReturnMsg()));
+            toastString = "发货单修改成功";
+        }
+        if (isLocal) {
+            CompanyDeliveryOrderInfo companyDeliveryOrderInfo = null;
+            if (mLocalId == 0l) {
+                companyDeliveryOrderInfo = new CompanyDeliveryOrderInfo(TimeUtils.getCurrentTime(new Date()), TimeUtils.getDateByCreateTime(TimeUtils.getTime(new Date())), StringUtil.getText(et_deliver_address), StringUtil.getText(et_remark), mSalesId, mStateCode, mDeliveryCode, mCompanyName, mFromName, mDeliveryOrderId, StringUtil.getText(et_logistics_code), StringUtil.getText(tv_arrive_date), mEditAble, StringUtil.getText(et_receiver_address), StringUtil.getText(et_deliver_zip_code), mStateName, mUserId, StringUtil.getText(et_delivery_order_name), spinner_sales_id.getText(), mCompanyId, new Gson().toJson(mOrderProductInfoList), StringUtil.getText(et_clause), StringUtil.getText(et_receiver_zip_code), false, isLocal);
+                mDeliveryOrderInfoDaoManager.insertOrReplace(companyDeliveryOrderInfo);
+            } else {
+                for (CompanyDeliveryOrderInfo info : mDeliveryOrderLocalList) {
+                    if (mLocalId == info.getLocalId()) {
+                        companyDeliveryOrderInfo = new CompanyDeliveryOrderInfo(info.getLocalId(), TimeUtils.getCurrentTime(new Date()), TimeUtils.getDateByCreateTime(TimeUtils.getTime(new Date())), StringUtil.getText(et_deliver_address), StringUtil.getText(et_remark), mSalesId, mStateCode, mDeliveryCode, mCompanyName, mFromName, mDeliveryOrderId, StringUtil.getText(et_logistics_code), StringUtil.getText(tv_arrive_date), mEditAble, StringUtil.getText(et_receiver_address), StringUtil.getText(et_deliver_zip_code), mStateName, mUserId, StringUtil.getText(et_delivery_order_name), spinner_sales_id.getText(), mCompanyId, new Gson().toJson(mOrderProductInfoList), StringUtil.getText(et_clause), StringUtil.getText(et_receiver_zip_code), false, isLocal);
+                        mDeliveryOrderInfoDaoManager.correct(companyDeliveryOrderInfo);
+                    }
+                }
+            }
+        }
+        EventBus.getDefault().post(new AddOrSaveCompanyDeliveryOrderEvent(toastString));
+        finish();
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        switch (port) {
+            case REQUEST_INVOICE_STATE:
+                List<DicInfo> typeList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(INVOICE_STATE)) {
+                        typeList.add(dicInfo);
+                    }
+                }
+                getState(typeList);
+                break;
+            case REQUEST_ALL_PRODUCTS_LIST:
+                List<DicInfo2> allProducts = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(QUERY_ALL_PRODUCTS)) {
+                        allProducts.add(new DicInfo2(dicInfo.getId(), dicInfo.getText(), dicInfo.getCode()));
+                    }
+                }
+                getAllProduct(allProducts);
+                break;
+            case REQUEST_ALL_SALES_ORDER:
+                List<DicInfo2> allSaleOrder = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(QUERY_ALL_SALE_ORDER)) {
+                        allSaleOrder.add(new DicInfo2(dicInfo.getId(), dicInfo.getText(), dicInfo.getCode()));
+                    }
+                }
+                getAllSaleOrders(allSaleOrder);
+                break;
+            case REQUEST_COMPANY_DELIVERY_ORDER_DETAIL:
+                CompanyDeliveryOrderInfo companyDeliveryOrderInfo = null;
+                for (CompanyDeliveryOrderInfo info : mDeliveryOrderLocalList) {
+                    if (mLocalId == info.getLocalId()) {
+                        companyDeliveryOrderInfo = info;
+                    }
+                }
+                getCompanyDeliveryOrderDetail(companyDeliveryOrderInfo);
+                break;
+            case REQUEST_SAVE_COMPANY_DELIVERY_ORDER:
+                UploadInfoBean uploadInfoBean = new UploadInfoBean();
+                uploadInfoBean.setId(mDeliveryOrderId);
+                uploadInfoBean.setCreateTime(TimeUtils.getCurrentTime(new Date()));
+                uploadInfoBean.setUpdateTime(TimeUtils.getCurrentTime(new Date()));
+                saveCompanyDeliveryOrder(uploadInfoBean, true);
+                break;
         }
     }
 }

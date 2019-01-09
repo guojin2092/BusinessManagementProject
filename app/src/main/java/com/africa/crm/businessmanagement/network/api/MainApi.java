@@ -302,7 +302,7 @@ public interface MainApi {
 
     @FormUrlEncoded
     @POST("invoiceOrder/save")
-    Observable<BaseEntity> saveCompanyDeliveryOrder(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("salesOrderId") String salesOrderId, @Field("logisticsCode") String logisticsCode, @Field("state") String state, @Field("arriveDate") String arriveDate, @Field("sendAddress") String sendAddress, @Field("sendAddressZipCode") String sendAddressZipCode, @Field("destinationAddress") String destinationAddress, @Field("destinationAddressZipCode") String destinationAddressZipCode, @Field("products") String products, @Field("clause") String clause, @Field("remark") String remark);
+    Observable<BaseEntity<UploadInfoBean>> saveCompanyDeliveryOrder(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("salesOrderId") String salesOrderId, @Field("logisticsCode") String logisticsCode, @Field("state") String state, @Field("arriveDate") String arriveDate, @Field("sendAddress") String sendAddress, @Field("sendAddressZipCode") String sendAddressZipCode, @Field("destinationAddress") String destinationAddress, @Field("destinationAddressZipCode") String destinationAddressZipCode, @Field("products") String products, @Field("clause") String clause, @Field("remark") String remark);
 
     @FormUrlEncoded
     @POST("paymentOrder/grid")

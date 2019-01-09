@@ -1,7 +1,6 @@
 package com.africa.crm.businessmanagement.main.bean;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Project：BusinessManagementProject
@@ -19,6 +18,7 @@ public class LoginInfoBean implements Serializable {
     private String userName;//用户名
     private String companyId;//所属公司ID
     private String companyName;//所属企业名称
+    private String name;
     private String type;//用户类型，1：系统管理员，2：企业用户
     private String passWord;//密码
     private int version;//版本号
@@ -157,5 +157,13 @@ public class LoginInfoBean implements Serializable {
 
     public void setRoleName(String roleName) {
         this.roleName = roleName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
