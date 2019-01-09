@@ -461,7 +461,7 @@ public class CompanyTradingOrderManagementActivity extends BaseRefreshMvpActivit
                     mTradingOrderInfoBeanList.remove(mDeleteList.get(i));
                     if (isLocal) {
                         for (CompanyTradingOrderInfo companyInfo : mDeleteList) {
-                            CompanyDeleteTradingOrderInfo deleteTradingOrderInfo = new CompanyDeleteTradingOrderInfo(companyInfo.getCustomerName(), companyInfo.getCreateTimeDate(), companyInfo.getCreateTime(), companyInfo.getRemark(), companyInfo.getClueSource(), companyInfo.getPossibility(), companyInfo.getCompanyName(), companyInfo.getUserNickName(), companyInfo.getId(), companyInfo.getEstimateProfit(), companyInfo.getPrice(), companyInfo.getEditAble(), companyInfo.getContactName(), companyInfo.getUserId(), companyInfo.getName(), companyInfo.getCompanyId(), false, true);
+                            CompanyDeleteTradingOrderInfo deleteTradingOrderInfo = new CompanyDeleteTradingOrderInfo(companyInfo.getCustomerName(), companyInfo.getCreateTimeDate(), companyInfo.getCreateTime(), companyInfo.getRemark(), companyInfo.getClueSource(), companyInfo.getPossibility(), companyInfo.getCompanyName(), companyInfo.getUserNickName(), companyInfo.getId(), companyInfo.getEstimateProfit(), companyInfo.getPrice(), companyInfo.getEditAble(), companyInfo.getContactName(), companyInfo.getUserId(), companyInfo.getName(), companyInfo.getCompanyId(), false, isLocal);
                             mDeleteTradingOrderInfoDaoManager.insertOrReplace(deleteTradingOrderInfo);
                         }
                     }

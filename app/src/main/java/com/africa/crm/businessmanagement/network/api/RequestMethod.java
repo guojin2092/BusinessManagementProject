@@ -107,4 +107,15 @@ public class RequestMethod {
     public static final String REQUEST_COMPANY_QUOTATION_DETAIL = "request_company_trading_quotation_detail";
     //保存企业报价单
     public static final String REQUEST_SAVE_COMPANY_QUOTATION = "request_save_company_quotation";
+
+    //销售单状态
+    public static final String REQUEST_SALE_ORDER_STATE = "request_sale_order_state";
+    //企业销售单列表
+    public static final String REQUEST_SALE_ORDER_LIST = "request_sale_order_list";
+    //删除企业销售单
+    public static final String REQUEST_DELETE_SALE_ORDER = "request_delete_sale_order";
+    //获取企业销售单详情
+    public static final String REQUEST_COMPANY_SALE_ORDER_DETAIL = "request_company_sale_order_detail";
+    //保存企业销售单
+    public static final String REQUEST_SAVE_COMPANY_SALE_ORDER = "request_save_company_sale_order";
 }

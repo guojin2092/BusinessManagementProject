@@ -1,9 +1,9 @@
 package com.africa.crm.businessmanagement.main.station.contract;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
-import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
+import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 import com.africa.crm.businessmanagement.mvp.presenter.IBasePresenter;
 import com.africa.crm.businessmanagement.network.base.BaseView;
@@ -22,17 +22,17 @@ import java.util.List;
 public class CompanySalesOrderContract {
 
     public interface View extends BaseView {
-        void getCompanyUserList(UserManagementInfoBean userManagementInfoBean);
+        void getAllCompanyUsers(List<DicInfo2> dicInfo2List);
 
         void getStateType(List<DicInfo> dicInfoList);
 
         void getCompanySalesOrderList(CompanySalesOrderInfoBean companySalesOrderInfoBean);
 
-        void deleteCompanySalesOrder(BaseEntity baseEntity);
+        void deleteCompanySalesOrder(BaseEntity baseEntity, boolean isLocal);
     }
 
     public interface Presenter extends IBasePresenter<CompanySalesOrderContract.View> {
-        void getCompanyUserList(int page, int rows, String userName, String type, String companyId, String state, String name);
+        void getAllCompanyUsers(String companyId);
 
         void getStateType(String code);
 

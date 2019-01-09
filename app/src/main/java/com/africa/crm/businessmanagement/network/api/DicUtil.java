@@ -34,4 +34,6 @@ public class DicUtil {
     public static final String QUERY_ALL_CUSTOMERS = "QUERY_ALL_CUSTOMERS";
     //查询所有产品
     public static final String QUERY_ALL_PRODUCTS = "QUERY_ALL_PRODUCTS";
+    //销售单状态
+    public static final String SALE_ORDER_STATE = "SALEORDERSTATE";
 }

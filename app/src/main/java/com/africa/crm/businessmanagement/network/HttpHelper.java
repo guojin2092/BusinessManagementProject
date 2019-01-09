@@ -171,7 +171,7 @@ public interface HttpHelper {
 
     Observable<CompanySalesOrderInfo> getCompanySalesOrderDetail(String id);
 
-    Observable<BaseEntity> saveCompanySalesOrder(String id, String companyId, String userId, String name, String customerName, String contactName, String saleCommission, String state, String sendAddress, String sendAddressZipCode, String destinationAddress, String destinationAddressZipCode, String products, String clause, String remark);
+    Observable<UploadInfoBean> saveCompanySalesOrder(String id, String companyId, String userId, String name, String customerName, String contactName, String saleCommission, String state, String sendAddress, String sendAddressZipCode, String destinationAddress, String destinationAddressZipCode, String products, String clause, String remark);
 
     Observable<List<DicInfo2>> getAllSaleOrders(String companyId, String userId);
 

@@ -13,24 +13,29 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanySalesOrderEvent;
-import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.OrderProductInfo;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
+import com.africa.crm.businessmanagement.main.dao.CompanySalesOrderInfoDao;
+import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.OrderProductListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanySalesOrderDetailContract;
 import com.africa.crm.businessmanagement.main.station.dialog.AddProductDialog;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanySalesOrderDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
-import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
-import com.africa.crm.businessmanagement.widget.MySpinner2;
+import com.africa.crm.businessmanagement.widget.StringUtil;
+import com.africa.crm.businessmanagement.widget.TimeUtils;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
@@ -40,9 +45,21 @@ import com.google.gson.reflect.TypeToken;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_CONTACTS;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_CUSTOMERS;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_PRODUCTS;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.SALE_ORDER_STATE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_CONTACT_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_CUSTOMER_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_PRODUCTS_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_SALE_ORDER_DETAIL;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SALE_ORDER_STATE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SAVE_COMPANY_SALE_ORDER;
 
 public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySalesOrderDetailPresenter> implements CompanySalesOrderDetailContract.View {
     @BindView(R.id.et_sale_order_name)
@@ -66,12 +83,13 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
 
     @BindView(R.id.spinner_state)
     MySpinner spinner_state;
-    private static final String STATE_CODE = "SALEORDERSTATE";
     private List<DicInfo> mSalesOrderStateList = new ArrayList<>();
     private String mStateCode = "";
 
     private String mSalesOrderId;
+    private Long mLocalId = 0l;//本地数据库ID
     private String mCompanyId = "";
+    private String mCompanyName = "";
     private String mUserId = "";
 
     @BindView(R.id.tv_delete)
@@ -90,16 +108,26 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
 
     @BindView(R.id.spinner_customer_name)
     MySpinner spinner_customer_name;
-
+    private String mFromName = "";
     @BindView(R.id.spinner_contact_name)
     MySpinner spinner_contact_name;
+    private String mContactName = "";
+
+    private String mEditAble = "1";
+
+    private GreendaoManager<CompanySalesOrderInfo, CompanySalesOrderInfoDao> mSalesOrderInfoDaoManager;
+    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoManager;
+
+    private List<CompanySalesOrderInfo> mCompanySalesOrderLocalList = new ArrayList<>();//本地数据
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
      */
-    public static void startActivity(Activity activity, String id) {
+    public static void startActivity(Activity activity, String id, Long localId) {
         Intent intent = new Intent(activity, CompanySaleOrdersDetailActivity.class);
         intent.putExtra("id", id);
+        intent.putExtra("localId", localId);
         activity.startActivity(intent);
     }
 
@@ -118,8 +146,8 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
     protected void requestData() {
         mPresenter.getAllContact(mCompanyId);
         mPresenter.getAllCustomers(mCompanyId);
-        mPresenter.getOrderState(STATE_CODE);
-        if (!TextUtils.isEmpty(mSalesOrderId)) {
+        mPresenter.getOrderState(SALE_ORDER_STATE);
+        if (!TextUtils.isEmpty(mSalesOrderId) || mLocalId != 0l) {
             mPresenter.getCompanySalesOrderDetail(mSalesOrderId);
         }
     }
@@ -128,7 +156,9 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
     public void initView() {
         super.initView();
         mSalesOrderId = getIntent().getStringExtra("id");
+        mLocalId = getIntent().getLongExtra("localId", 0l);
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
+        mCompanyName = UserInfoManager.getUserLoginInfo(this).getCompanyName();
         mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
         titlebar_name.setText("销售单详情");
         tv_delete.setOnClickListener(this);
@@ -138,14 +168,14 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
 
         String roleCode = UserInfoManager.getUserLoginInfo(this).getRoleCode();
         if (roleCode.equals("companySales")) {
-            if (!TextUtils.isEmpty(mSalesOrderId)) {
-                titlebar_right.setText(R.string.edit);
-                tv_save.setText(R.string.save);
-                setEditTextInput(false);
-            } else {
+            if (TextUtils.isEmpty(mSalesOrderId) && mLocalId == 0l) {
                 titlebar_right.setVisibility(View.GONE);
                 tv_save.setText(R.string.add);
                 tv_save.setVisibility(View.VISIBLE);
+            } else if (!TextUtils.isEmpty(mSalesOrderId) || mLocalId != 0l) {
+                titlebar_right.setText(R.string.edit);
+                tv_save.setText(R.string.save);
+                setEditTextInput(false);
             }
         } else {
             titlebar_right.setVisibility(View.GONE);
@@ -176,6 +206,14 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
                 mAddProductDialog.dismiss();
             }
         });
+        //得到Dao对象管理器
+        mSalesOrderInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanySalesOrderInfoDao());
+        //得到本地数据
+        mCompanySalesOrderLocalList = mSalesOrderInfoDaoManager.queryAll();
+        //得到Dao对象管理器
+        mDicInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getDicInfoDao());
+        //得到本地数据
+        mDicInfoLocalList = mDicInfoDaoManager.queryAll();
         initProductList();
     }
 
@@ -344,25 +382,49 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
     public void getAllContact(List<DicInfo2> dicInfoList) {
         List<DicInfo> list = new ArrayList<>();
         for (DicInfo2 dicInfo2 : dicInfoList) {
-            list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getId()));
+            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_CONTACTS, dicInfo2.getName(), dicInfo2.getId()));
+        }
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
         }
         spinner_contact_name.setListDatas(this, list);
+        spinner_contact_name.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+            @Override
+            public void onItemClick(DicInfo dicInfo, int position) {
+                mContactName = dicInfo.getText();
+            }
+        });
     }
 
     @Override
     public void getAllCustomers(List<DicInfo2> dicInfoList) {
         List<DicInfo> list = new ArrayList<>();
         for (DicInfo2 dicInfo2 : dicInfoList) {
-            list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getId()));
+            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_CUSTOMERS, dicInfo2.getName(), dicInfo2.getId()));
+        }
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
         }
         spinner_customer_name.setListDatas(this, list);
+        spinner_customer_name.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+            @Override
+            public void onItemClick(DicInfo dicInfo, int position) {
+                mFromName = dicInfo.getText();
+            }
+        });
     }
 
     @Override
     public void getAllProduct(List<DicInfo2> dicInfoList) {
         List<DicInfo> list = new ArrayList<>();
         for (DicInfo2 dicInfo2 : dicInfoList) {
-            list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getId()));
+            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_PRODUCTS, dicInfo2.getName(), dicInfo2.getId()));
+        }
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
         }
         mAddProductDialog.show();
         mAddProductDialog.setListDatas(this, list);
@@ -372,6 +434,11 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
     public void getOrderState(List<DicInfo> dicInfoList) {
         mSalesOrderStateList.clear();
         mSalesOrderStateList.addAll(dicInfoList);
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSalesOrderStateList, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            dicInfo.setType(SALE_ORDER_STATE);
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
+        }
         spinner_state.setListDatas(this, mSalesOrderStateList);
 
         spinner_state.addOnItemClickListener(new MySpinner.OnItemClickListener() {
@@ -384,39 +451,121 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
 
     @Override
     public void getCompanySalesOrderDetail(CompanySalesOrderInfo companySalesOrderInfo) {
-        et_sale_order_name.setText(companySalesOrderInfo.getName());
-        spinner_state.setText(companySalesOrderInfo.getStateName());
-        mStateCode = companySalesOrderInfo.getState();
-        spinner_customer_name.setText(companySalesOrderInfo.getCustomerName());
-        spinner_contact_name.setText(companySalesOrderInfo.getContactName());
-        et_money.setText(companySalesOrderInfo.getSaleCommission());
-        et_deliver_address.setText(companySalesOrderInfo.getSendAddress());
-        et_deliver_zip_code.setText(companySalesOrderInfo.getSendAddressZipCode());
-        et_receiver_address.setText(companySalesOrderInfo.getDestinationAddress());
-        et_receiver_zip_code.setText(companySalesOrderInfo.getDestinationAddressZipCode());
-        et_clause.setText(companySalesOrderInfo.getClause());
-        et_remark.setText(companySalesOrderInfo.getRemark());
-        List<OrderProductInfo> list = new Gson().fromJson(companySalesOrderInfo.getProducts(), new TypeToken<List<OrderProductInfo>>() {
-        }.getType());
-        mOrderProductInfoList.addAll(list);
-        if (mOrderProductListAdapter != null) {
-            mOrderProductListAdapter.notifyDataSetChanged();
+        if (companySalesOrderInfo != null) {
+            et_sale_order_name.setText(companySalesOrderInfo.getName());
+            spinner_state.setText(companySalesOrderInfo.getStateName());
+            mStateCode = companySalesOrderInfo.getState();
+            spinner_customer_name.setText(companySalesOrderInfo.getCustomerName());
+            spinner_contact_name.setText(companySalesOrderInfo.getContactName());
+            et_money.setText(companySalesOrderInfo.getSaleCommission());
+            et_deliver_address.setText(companySalesOrderInfo.getSendAddress());
+            et_deliver_zip_code.setText(companySalesOrderInfo.getSendAddressZipCode());
+            et_receiver_address.setText(companySalesOrderInfo.getDestinationAddress());
+            et_receiver_zip_code.setText(companySalesOrderInfo.getDestinationAddressZipCode());
+            et_clause.setText(companySalesOrderInfo.getClause());
+            et_remark.setText(companySalesOrderInfo.getRemark());
+            mFromName = companySalesOrderInfo.getUserNickName();
+            mEditAble = companySalesOrderInfo.getEditAble();
+            mContactName = companySalesOrderInfo.getContactName();
+            List<OrderProductInfo> list = new Gson().fromJson(companySalesOrderInfo.getProducts(), new TypeToken<List<OrderProductInfo>>() {
+            }.getType());
+            mOrderProductInfoList.addAll(list);
+            if (mOrderProductListAdapter != null) {
+                mOrderProductListAdapter.notifyDataSetChanged();
+            }
+            for (CompanySalesOrderInfo localInfo : mCompanySalesOrderLocalList) {
+                if (!TextUtils.isEmpty(localInfo.getId()) && !TextUtils.isEmpty(companySalesOrderInfo.getId())) {
+                    if (localInfo.getId().equals(companySalesOrderInfo.getId())) {
+                        companySalesOrderInfo.setLocalId(localInfo.getLocalId());
+                        mSalesOrderInfoDaoManager.correct(companySalesOrderInfo);
+                    }
+                }
+            }
         }
     }
 
     @Override
-    public void saveCompanySalesOrder(BaseEntity baseEntity) {
-        if (baseEntity.isSuccess()) {
-            String toastString = "";
-            if (TextUtils.isEmpty(mSalesOrderId)) {
-                toastString = "销售单创建成功";
-            } else {
-                toastString = "销售单修改成功";
-            }
-            EventBus.getDefault().post(new AddOrSaveCompanySalesOrderEvent(toastString));
-            finish();
+    public void saveCompanySalesOrder(UploadInfoBean uploadInfoBean, boolean isLocal) {
+        String toastString = "";
+        if (TextUtils.isEmpty(mSalesOrderId) && mLocalId == 0l) {
+            toastString = "销售单创建成功";
         } else {
-            toastMsg(ErrorMsg.showErrorMsg(baseEntity.getReturnMsg()));
+            toastString = "销售单修改成功";
+        }
+        if (isLocal) {
+            CompanySalesOrderInfo companySalesOrderInfo = null;
+            if (mLocalId == 0l) {
+                companySalesOrderInfo = new CompanySalesOrderInfo(spinner_customer_name.getText(), TimeUtils.getCurrentTime(new Date()), TimeUtils.getDateByCreateTime(TimeUtils.getTime(new Date())), StringUtil.getText(et_deliver_address), StringUtil.getText(et_remark), mStateCode, mCompanyName, mFromName, mSalesOrderId, mEditAble, StringUtil.getText(et_receiver_address), mContactName, StringUtil.getText(et_deliver_zip_code), mUserId, StringUtil.getText(et_sale_order_name), spinner_state.getText(), StringUtil.getText(et_money), mCompanyId, new Gson().toJson(mOrderProductInfoList), StringUtil.getText(et_clause), StringUtil.getText(et_receiver_zip_code), false, isLocal);
+                mSalesOrderInfoDaoManager.insertOrReplace(companySalesOrderInfo);
+            } else {
+                for (CompanySalesOrderInfo info : mCompanySalesOrderLocalList) {
+                    if (mLocalId == info.getLocalId()) {
+                        companySalesOrderInfo = new CompanySalesOrderInfo(info.getLocalId(), spinner_customer_name.getText(), TimeUtils.getCurrentTime(new Date()), TimeUtils.getDateByCreateTime(TimeUtils.getTime(new Date())), StringUtil.getText(et_deliver_address), StringUtil.getText(et_remark), mStateCode, mCompanyName, mFromName, mSalesOrderId, mEditAble, StringUtil.getText(et_receiver_address), mContactName, StringUtil.getText(et_deliver_zip_code), mUserId, StringUtil.getText(et_sale_order_name), spinner_state.getText(), StringUtil.getText(et_money), mCompanyId, new Gson().toJson(mOrderProductInfoList), StringUtil.getText(et_clause), StringUtil.getText(et_receiver_zip_code), false, isLocal);
+                        mSalesOrderInfoDaoManager.correct(companySalesOrderInfo);
+                    }
+                }
+            }
+        }
+        EventBus.getDefault().post(new AddOrSaveCompanySalesOrderEvent(toastString));
+        finish();
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        switch (port) {
+            case REQUEST_ALL_CONTACT_LIST:
+                List<DicInfo2> allContactList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(QUERY_ALL_CONTACTS)) {
+                        allContactList.add(new DicInfo2(dicInfo.getId(), dicInfo.getText(), dicInfo.getCode()));
+                    }
+                }
+                getAllContact(allContactList);
+                break;
+            case REQUEST_ALL_CUSTOMER_LIST:
+                List<DicInfo2> allCustomers = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(QUERY_ALL_CUSTOMERS)) {
+                        allCustomers.add(new DicInfo2(dicInfo.getId(), dicInfo.getText(), dicInfo.getCode()));
+                    }
+                }
+                getAllCustomers(allCustomers);
+                break;
+            case REQUEST_ALL_PRODUCTS_LIST:
+                List<DicInfo2> allProducts = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(QUERY_ALL_PRODUCTS)) {
+                        allProducts.add(new DicInfo2(dicInfo.getId(), dicInfo.getText(), dicInfo.getCode()));
+                    }
+                }
+                getAllProduct(allProducts);
+                break;
+            case REQUEST_SALE_ORDER_STATE:
+                List<DicInfo> typeList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(SALE_ORDER_STATE)) {
+                        typeList.add(dicInfo);
+                    }
+                }
+                getOrderState(typeList);
+                break;
+            case REQUEST_COMPANY_SALE_ORDER_DETAIL:
+                CompanySalesOrderInfo companySalesOrderInfo = null;
+                for (CompanySalesOrderInfo info : mCompanySalesOrderLocalList) {
+                    if (mLocalId == info.getLocalId()) {
+                        companySalesOrderInfo = info;
+                    }
+                }
+                getCompanySalesOrderDetail(companySalesOrderInfo);
+                break;
+            case REQUEST_SAVE_COMPANY_SALE_ORDER:
+                UploadInfoBean uploadInfoBean = new UploadInfoBean();
+                uploadInfoBean.setId(mSalesOrderId);
+                uploadInfoBean.setCreateTime(TimeUtils.getCurrentTime(new Date()));
+                uploadInfoBean.setUpdateTime(TimeUtils.getCurrentTime(new Date()));
+                saveCompanySalesOrder(uploadInfoBean, true);
+                break;
         }
     }
 }
