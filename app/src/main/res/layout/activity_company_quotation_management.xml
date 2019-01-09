@@ -22,21 +22,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@drawable/et_bg_search"
-            android:hint="请输入发货单名称"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:textColor="@color/a333333"
-            android:textColorHint="@color/C4C4C4"
-            android:textSize="18sp" />
-
-        <EditText
-            android:id="@+id/et_code"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="20dp"
-            android:layout_weight="1"
-            android:background="@drawable/et_bg_search"
-            android:hint="请输入发货单编号"
+            android:hint="请输入报价单名称"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
             android:textColor="@color/a333333"

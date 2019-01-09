@@ -202,7 +202,6 @@ public class CompanyTradingOrderDetailActivity extends BaseMvpActivity<CompanyTr
         }
         List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
         for (DicInfo dicInfo : addList) {
-            dicInfo.setType(QUERY_ALL_CONTACTS);
             mDicInfoDaoManager.insertOrReplace(dicInfo);
         }
         spinner_contact_name.setListDatas(this, list);
@@ -222,7 +221,6 @@ public class CompanyTradingOrderDetailActivity extends BaseMvpActivity<CompanyTr
         }
         List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
         for (DicInfo dicInfo : addList) {
-            dicInfo.setType(QUERY_ALL_CUSTOMERS);
             mDicInfoDaoManager.insertOrReplace(dicInfo);
         }
         spinner_customer_name.setListDatas(this, list);

@@ -13,23 +13,28 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyQuotationEvent;
-import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.ProductInfo;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
+import com.africa.crm.businessmanagement.main.dao.CompanyQuotationInfoDao;
+import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.QuotationProductListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyQuotationDetailContract;
 import com.africa.crm.businessmanagement.main.station.dialog.AddQuotationProductDialog;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyQuotationDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
-import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
+import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.bigkoo.pickerview.TimePickerView;
@@ -45,6 +50,15 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_CONTACTS;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_CUSTOMERS;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_PRODUCTS;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_CONTACT_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_CUSTOMER_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_PRODUCTS_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_QUOTATION_DETAIL;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SAVE_COMPANY_QUOTATION;
 
 public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuotationDetailPresenter> implements CompanyQuotationDetailContract.View {
     @BindView(R.id.et_quotation_name)
@@ -68,7 +82,9 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
     @BindView(R.id.tv_save)
     TextView tv_save;
     private String mQuotationId = "";//报价单Id
+    private Long mLocalId = 0l;//本地数据库ID
     private String mCompanyId = "";
+    private String mCompanyName = "";
     private String mUserId = "";
 
     private TimePickerView pvTime;
@@ -89,17 +105,27 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
 
     @BindView(R.id.spinner_customer_name)
     MySpinner spinner_customer_name;
+    private String mFromName = "";
 
     @BindView(R.id.spinner_contact_name)
     MySpinner spinner_contact_name;
+    private String mContactName = "";
 
+    private String mEditAble = "1";
+
+    private GreendaoManager<CompanyQuotationInfo, CompanyQuotationInfoDao> mQuotationInfoDaoManager;
+    private List<CompanyQuotationInfo> mCompanyQuotationLocalList = new ArrayList<>();
+
+    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoManager;
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
      */
-    public static void startActivity(Activity activity, String id) {
+    public static void startActivity(Activity activity, String id, Long localId) {
         Intent intent = new Intent(activity, CompanyQuotationDetailActivity.class);
         intent.putExtra("quotationId", id);
+        intent.putExtra("localId", localId);
         activity.startActivity(intent);
     }
 
@@ -118,7 +144,9 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
     public void initView() {
         super.initView();
         mQuotationId = getIntent().getStringExtra("quotationId");
+        mLocalId = getIntent().getLongExtra("localId", 0l);
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
+        mCompanyName = UserInfoManager.getUserLoginInfo(this).getCompanyName();
         mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
         titlebar_name.setText("报价单详情");
         tv_delete.setOnClickListener(this);
@@ -127,15 +155,16 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
         tv_save.setOnClickListener(this);
         tv_validity_date.setOnClickListener(this);
         String roleCode = UserInfoManager.getUserLoginInfo(this).getRoleCode();
+
         if (roleCode.equals("companySales")) {
-            if (!TextUtils.isEmpty(mQuotationId)) {
-                titlebar_right.setText(R.string.edit);
-                tv_save.setText(R.string.save);
-                setEditTextInput(false);
-            } else {
+            if (TextUtils.isEmpty(mQuotationId) && mLocalId == 0l) {
                 titlebar_right.setVisibility(View.GONE);
                 tv_save.setText(R.string.add);
                 tv_save.setVisibility(View.VISIBLE);
+            } else if (!TextUtils.isEmpty(mQuotationId) || mLocalId != 0l) {
+                titlebar_right.setText(R.string.edit);
+                tv_save.setText(R.string.save);
+                setEditTextInput(false);
             }
         } else {
             titlebar_right.setVisibility(View.GONE);
@@ -166,6 +195,14 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
                 mAddProductDialog.dismiss();
             }
         });
+        //得到Dao对象管理器
+        mQuotationInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyQuotationInfoDao());
+        //得到本地数据
+        mCompanyQuotationLocalList = mQuotationInfoDaoManager.queryAll();
+        //得到Dao对象管理器
+        mDicInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getDicInfoDao());
+        //得到本地数据
+        mDicInfoLocalList = mDicInfoDaoManager.queryAll();
         initTimePicker();
         initProductList();
     }
@@ -213,7 +250,7 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
     protected void requestData() {
         mPresenter.getAllContact(mCompanyId);
         mPresenter.getAllCustomers(mCompanyId);
-        if (!TextUtils.isEmpty(mQuotationId)) {
+        if (!TextUtils.isEmpty(mQuotationId) || mLocalId != 0l) {
             mPresenter.getCompanyQuotationDetail(mQuotationId);
         }
     }
@@ -376,25 +413,49 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
     public void getAllContact(List<DicInfo2> dicInfoList) {
         List<DicInfo> list = new ArrayList<>();
         for (DicInfo2 dicInfo2 : dicInfoList) {
-            list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getId()));
+            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_CONTACTS, dicInfo2.getName(), dicInfo2.getId()));
+        }
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
         }
         spinner_contact_name.setListDatas(this, list);
+        spinner_contact_name.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+            @Override
+            public void onItemClick(DicInfo dicInfo, int position) {
+                mContactName = dicInfo.getText();
+            }
+        });
     }
 
     @Override
     public void getAllCustomers(List<DicInfo2> dicInfoList) {
         List<DicInfo> list = new ArrayList<>();
         for (DicInfo2 dicInfo2 : dicInfoList) {
-            list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getId()));
+            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_CUSTOMERS, dicInfo2.getName(), dicInfo2.getId()));
+        }
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
         }
         spinner_customer_name.setListDatas(this, list);
+        spinner_customer_name.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+            @Override
+            public void onItemClick(DicInfo dicInfo, int position) {
+                mFromName = dicInfo.getText();
+            }
+        });
     }
 
     @Override
     public void getAllProduct(List<DicInfo2> dicInfoList) {
         List<DicInfo> list = new ArrayList<>();
         for (DicInfo2 dicInfo2 : dicInfoList) {
-            list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getId()));
+            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_PRODUCTS, dicInfo2.getName(), dicInfo2.getId()));
+        }
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
         }
         mAddProductDialog.show();
         mAddProductDialog.setListDatas(this, list);
@@ -402,38 +463,109 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
 
     @Override
     public void getCompanyQuotationDetail(CompanyQuotationInfo companyQuotationInfo) {
-        et_quotation_name.setText(companyQuotationInfo.getName());
-        et_price.setText(companyQuotationInfo.getPrice());
-        tv_validity_date.setText(companyQuotationInfo.getTermOfValidity());
-        spinner_customer_name.setText(companyQuotationInfo.getCustomerName());
-        spinner_contact_name.setText(companyQuotationInfo.getContactName());
-        et_deliver_address.setText(companyQuotationInfo.getSendAddress());
-        et_deliver_zip_code.setText(companyQuotationInfo.getSendAddressZipCode());
-        et_receiver_address.setText(companyQuotationInfo.getDestinationAddress());
-        et_receiver_zip_code.setText(companyQuotationInfo.getDestinationAddressZipCode());
-        et_clause.setText(companyQuotationInfo.getClause());
-        et_remark.setText(companyQuotationInfo.getRemark());
-        List<ProductInfo> list = new Gson().fromJson(companyQuotationInfo.getProducts(), new TypeToken<List<ProductInfo>>() {
-        }.getType());
-        mOrderProductInfoList.addAll(list);
-        if (mOrderProductListAdapter != null) {
-            mOrderProductListAdapter.notifyDataSetChanged();
+        if (companyQuotationInfo != null) {
+            et_quotation_name.setText(companyQuotationInfo.getName());
+            et_price.setText(companyQuotationInfo.getPrice());
+            tv_validity_date.setText(companyQuotationInfo.getTermOfValidity());
+            spinner_customer_name.setText(companyQuotationInfo.getCustomerName());
+            spinner_contact_name.setText(companyQuotationInfo.getContactName());
+            et_deliver_address.setText(companyQuotationInfo.getSendAddress());
+            et_deliver_zip_code.setText(companyQuotationInfo.getSendAddressZipCode());
+            et_receiver_address.setText(companyQuotationInfo.getDestinationAddress());
+            et_receiver_zip_code.setText(companyQuotationInfo.getDestinationAddressZipCode());
+            et_clause.setText(companyQuotationInfo.getClause());
+            et_remark.setText(companyQuotationInfo.getRemark());
+            mEditAble = companyQuotationInfo.getEditAble();
+            List<ProductInfo> list = new Gson().fromJson(companyQuotationInfo.getProducts(), new TypeToken<List<ProductInfo>>() {
+            }.getType());
+            mOrderProductInfoList.addAll(list);
+            if (mOrderProductListAdapter != null) {
+                mOrderProductListAdapter.notifyDataSetChanged();
+            }
+            for (CompanyQuotationInfo localInfo : mCompanyQuotationLocalList) {
+                if (!TextUtils.isEmpty(localInfo.getId()) && !TextUtils.isEmpty(companyQuotationInfo.getId())) {
+                    if (localInfo.getId().equals(companyQuotationInfo.getId())) {
+                        companyQuotationInfo.setLocalId(localInfo.getLocalId());
+                        mQuotationInfoDaoManager.correct(companyQuotationInfo);
+                    }
+                }
+            }
         }
     }
 
     @Override
-    public void saveCompanyQuotation(BaseEntity baseEntity) {
-        if (baseEntity.isSuccess()) {
-            String toastString = "";
-            if (TextUtils.isEmpty(mQuotationId)) {
-                toastString = "报价单创建成功";
-            } else {
-                toastString = "报价单修改成功";
-            }
-            EventBus.getDefault().post(new AddOrSaveCompanyQuotationEvent(toastString));
-            finish();
+    public void saveCompanyQuotation(UploadInfoBean uploadInfoBean, boolean isLocal) {
+        String toastString = "";
+        if (TextUtils.isEmpty(mQuotationId) && mLocalId == 0l) {
+            toastString = "报价单创建成功";
         } else {
-            toastMsg(ErrorMsg.showErrorMsg(baseEntity.getReturnMsg()));
+            toastString = "报价单修改成功";
+        }
+        if (isLocal) {
+            CompanyQuotationInfo companyQuotationInfo = null;
+            if (mLocalId == 0l) {
+                companyQuotationInfo = new CompanyQuotationInfo(spinner_customer_name.getText(), TimeUtils.getCurrentTime(new Date()), TimeUtils.getDateByCreateTime(TimeUtils.getTime(new Date())), StringUtil.getText(et_deliver_address), StringUtil.getText(et_remark), StringUtil.getText(tv_validity_date), mCompanyName, mFromName, mQuotationId, StringUtil.getText(et_price), mEditAble, StringUtil.getText(et_receiver_address), mContactName, mUserId, StringUtil.getText(et_quotation_name), StringUtil.getText(et_deliver_zip_code), mCompanyId, new Gson().toJson(mOrderProductInfoList), StringUtil.getText(et_clause), StringUtil.getText(et_receiver_zip_code), false, isLocal);
+                mQuotationInfoDaoManager.insertOrReplace(companyQuotationInfo);
+            } else {
+                for (CompanyQuotationInfo info : mCompanyQuotationLocalList) {
+                    if (mLocalId == info.getLocalId()) {
+                        companyQuotationInfo = new CompanyQuotationInfo(info.getLocalId(), spinner_customer_name.getText(), TimeUtils.getCurrentTime(new Date()), TimeUtils.getDateByCreateTime(TimeUtils.getTime(new Date())), StringUtil.getText(et_deliver_address), StringUtil.getText(et_remark), StringUtil.getText(tv_validity_date), mCompanyName, mFromName, mQuotationId, StringUtil.getText(et_price), mEditAble, StringUtil.getText(et_receiver_address), mContactName, mUserId, StringUtil.getText(et_quotation_name), StringUtil.getText(et_deliver_zip_code), mCompanyId, new Gson().toJson(mOrderProductInfoList), StringUtil.getText(et_clause), StringUtil.getText(et_receiver_zip_code), false, isLocal);
+                        mQuotationInfoDaoManager.correct(companyQuotationInfo);
+                    }
+                }
+            }
+        }
+        EventBus.getDefault().post(new AddOrSaveCompanyQuotationEvent(toastString));
+        finish();
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        switch (port) {
+            case REQUEST_ALL_CONTACT_LIST:
+                List<DicInfo2> allContactList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(QUERY_ALL_CONTACTS)) {
+                        allContactList.add(new DicInfo2(dicInfo.getId(), dicInfo.getText(), dicInfo.getCode()));
+                    }
+                }
+                getAllContact(allContactList);
+                break;
+            case REQUEST_ALL_CUSTOMER_LIST:
+                List<DicInfo2> allCustomers = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(QUERY_ALL_CUSTOMERS)) {
+                        allCustomers.add(new DicInfo2(dicInfo.getId(), dicInfo.getText(), dicInfo.getCode()));
+                    }
+                }
+                getAllCustomers(allCustomers);
+                break;
+            case REQUEST_ALL_PRODUCTS_LIST:
+                List<DicInfo2> allProducts = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(QUERY_ALL_PRODUCTS)) {
+                        allProducts.add(new DicInfo2(dicInfo.getId(), dicInfo.getText(), dicInfo.getCode()));
+                    }
+                }
+                getAllProduct(allProducts);
+                break;
+            case REQUEST_COMPANY_QUOTATION_DETAIL:
+                CompanyQuotationInfo companyQuotationInfo = null;
+                for (CompanyQuotationInfo info : mCompanyQuotationLocalList) {
+                    if (mLocalId == info.getLocalId()) {
+                        companyQuotationInfo = info;
+                    }
+                }
+                getCompanyQuotationDetail(companyQuotationInfo);
+                break;
+            case REQUEST_SAVE_COMPANY_QUOTATION:
+                UploadInfoBean uploadInfoBean = new UploadInfoBean();
+                uploadInfoBean.setId(mQuotationId);
+                uploadInfoBean.setCreateTime(TimeUtils.getCurrentTime(new Date()));
+                uploadInfoBean.setUpdateTime(TimeUtils.getCurrentTime(new Date()));
+                saveCompanyQuotation(uploadInfoBean, true);
+                break;
         }
     }
 }

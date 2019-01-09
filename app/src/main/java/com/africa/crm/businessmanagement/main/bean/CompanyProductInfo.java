@@ -1,8 +1,8 @@
 package com.africa.crm.businessmanagement.main.bean;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 /**
  * Project：BusinessManagementProject
@@ -33,15 +33,15 @@ public class CompanyProductInfo {
     private String companyId;//所属企业ID
     private String makerName;//制造商名称
 
-    private boolean chosen;
+    private boolean chosen = false;
     private boolean isLocal = false;
 
     @Generated(hash = 1425104058)
     public CompanyProductInfo(Long localId, String createTime, String supplierName,
-            String remark, String stockNum, String unitPrice, String code,
-            String companyName, String type, String warnNum, String id,
-            String typeName, String unit, String name, String companyId,
-            String makerName, boolean chosen, boolean isLocal) {
+                              String remark, String stockNum, String unitPrice, String code,
+                              String companyName, String type, String warnNum, String id,
+                              String typeName, String unit, String name, String companyId,
+                              String makerName, boolean chosen, boolean isLocal) {
         this.localId = localId;
         this.createTime = createTime;
         this.supplierName = supplierName;

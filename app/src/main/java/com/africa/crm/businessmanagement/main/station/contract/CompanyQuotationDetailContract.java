@@ -4,6 +4,7 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.mvp.presenter.IBasePresenter;
 import com.africa.crm.businessmanagement.network.base.BaseView;
 
@@ -29,7 +30,7 @@ public class CompanyQuotationDetailContract {
 
         void getCompanyQuotationDetail(CompanyQuotationInfo companyQuotationInfo);
 
-        void saveCompanyQuotation(BaseEntity baseEntity);
+        void saveCompanyQuotation(UploadInfoBean uploadInfoBean, boolean isLocal);
 
     }
 

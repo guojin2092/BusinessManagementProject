@@ -89,7 +89,8 @@
                     android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:text="@string/forget_password"
                     android:textColor="@color/A9A9B9B"
-                    android:textSize="21sp" />
+                    android:textSize="21sp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tv_login"

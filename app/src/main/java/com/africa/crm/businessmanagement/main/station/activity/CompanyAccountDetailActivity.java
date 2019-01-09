@@ -143,7 +143,7 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
         spinner_user_type.setText("企业用户");
         mUserType = "2";
         if (TextUtils.isEmpty(mAccountId) && mLocalId == 0l) {
-            ll_password.setVisibility(View.VISIBLE);
+//            ll_password.setVisibility(View.VISIBLE);
             titlebar_right.setVisibility(View.GONE);
             spinner_role.setEnabled(true);
             tv_save.setText(R.string.add);
@@ -151,7 +151,7 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
             et_role_name.setEnabled(true);
             et_role_code.setEnabled(true);
         } else if (!TextUtils.isEmpty(mAccountId) || mLocalId != 0l) {
-            ll_password.setVisibility(View.GONE);
+//            ll_password.setVisibility(View.GONE);
             titlebar_right.setText(R.string.edit);
             tv_save.setText(R.string.save);
             spinner_role.setEnabled(false);
@@ -246,6 +246,7 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
     private void setEditTextInput(boolean canInput) {
         et_username.setEnabled(canInput);
         et_nickname.setEnabled(canInput);
+        et_password.setEnabled(canInput);
         spinner_role.getTextView().setEnabled(canInput);
         et_address.setEnabled(canInput);
         et_email.setEnabled(canInput);

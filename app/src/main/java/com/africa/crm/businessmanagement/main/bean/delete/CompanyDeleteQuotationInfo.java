@@ -1,4 +1,4 @@
-package com.africa.crm.businessmanagement.main.bean;
+package com.africa.crm.businessmanagement.main.bean.delete;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
@@ -14,7 +14,7 @@ import org.greenrobot.greendao.annotation.Id;
  * Why & What is modified:
  */
 @Entity
-public class CompanyQuotationInfo {
+public class CompanyDeleteQuotationInfo {
     @Id(autoincrement = true)
     private Long localId;
     private String customerName;//客户名称
@@ -41,15 +41,15 @@ public class CompanyQuotationInfo {
     private boolean chosen = false;
     private boolean isLocal = false;
 
-    @Generated(hash = 2113847829)
-    public CompanyQuotationInfo(Long localId, String customerName,
-                                String createTime, Long createTimeDate, String sendAddress,
-                                String remark, String termOfValidity, String companyName,
-                                String userNickName, String id, String price, String editAble,
-                                String destinationAddress, String contactName, String userId,
-                                String name, String sendAddressZipCode, String companyId,
-                                String products, String clause, String destinationAddressZipCode,
-                                boolean chosen, boolean isLocal) {
+    @Generated(hash = 1366455488)
+    public CompanyDeleteQuotationInfo(Long localId, String customerName,
+                                      String createTime, Long createTimeDate, String sendAddress,
+                                      String remark, String termOfValidity, String companyName,
+                                      String userNickName, String id, String price, String editAble,
+                                      String destinationAddress, String contactName, String userId,
+                                      String name, String sendAddressZipCode, String companyId,
+                                      String products, String clause, String destinationAddressZipCode,
+                                      boolean chosen, boolean isLocal) {
         this.localId = localId;
         this.customerName = customerName;
         this.createTime = createTime;
@@ -75,14 +75,14 @@ public class CompanyQuotationInfo {
         this.isLocal = isLocal;
     }
 
-    public CompanyQuotationInfo(String customerName,
-                                String createTime, Long createTimeDate, String sendAddress,
-                                String remark, String termOfValidity, String companyName,
-                                String userNickName, String id, String price, String editAble,
-                                String destinationAddress, String contactName, String userId,
-                                String name, String sendAddressZipCode, String companyId,
-                                String products, String clause, String destinationAddressZipCode,
-                                boolean chosen, boolean isLocal) {
+    public CompanyDeleteQuotationInfo(String customerName,
+                                      String createTime, Long createTimeDate, String sendAddress,
+                                      String remark, String termOfValidity, String companyName,
+                                      String userNickName, String id, String price, String editAble,
+                                      String destinationAddress, String contactName, String userId,
+                                      String name, String sendAddressZipCode, String companyId,
+                                      String products, String clause, String destinationAddressZipCode,
+                                      boolean chosen, boolean isLocal) {
         this.customerName = customerName;
         this.createTime = createTime;
         this.createTimeDate = createTimeDate;
@@ -107,9 +107,8 @@ public class CompanyQuotationInfo {
         this.isLocal = isLocal;
     }
 
-
-    @Generated(hash = 1448775370)
-    public CompanyQuotationInfo() {
+    @Generated(hash = 1927908)
+    public CompanyDeleteQuotationInfo() {
     }
 
     public String getCustomerName() {

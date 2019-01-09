@@ -25,7 +25,6 @@ import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteTradingOrderInfo;
-import com.africa.crm.businessmanagement.main.dao.CompanyClientInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteTradingOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyTradingOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
@@ -521,8 +520,12 @@ public class CompanyTradingOrderManagementActivity extends BaseRefreshMvpActivit
                 break;
             case REQUEST_COMPANY_TRADING_ORDER_LIST:
                 List<CompanyTradingOrderInfo> rows = new ArrayList<>();
-                if (!TextUtils.isEmpty(quotataion_name) || !TextUtils.isEmpty(spinner_user.getText()) || !TextUtils.isEmpty(StringUtil.getText(tv_start_time)) || !TextUtils.isEmpty(StringUtil.getText(tv_end_time))) {
-                    rows = mTradingOrderInfoDaoManager.queryBuilder().where(CompanyTradingOrderInfoDao.Properties.Name.like("%" + quotataion_name + "%"), CompanyClientInfoDao.Properties.UserId.eq(mUserId), CompanyTradingOrderInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByCreateTime(StringUtil.getText(tv_start_time))), CompanyTradingOrderInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByCreateTime(StringUtil.getText(tv_end_time)))).list();
+                if (!TextUtils.isEmpty(quotataion_name) || !TextUtils.isEmpty(mFromUserId) || !TextUtils.isEmpty(StringUtil.getText(tv_start_time)) || !TextUtils.isEmpty(StringUtil.getText(tv_end_time))) {
+                    if (!TextUtils.isEmpty(mFromUserId)) {
+                        rows = mTradingOrderInfoDaoManager.queryBuilder().where(CompanyTradingOrderInfoDao.Properties.Name.like("%" + quotataion_name + "%"), CompanyTradingOrderInfoDao.Properties.UserId.eq(mFromUserId), CompanyTradingOrderInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyTradingOrderInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+                    } else {
+                        rows = mTradingOrderInfoDaoManager.queryBuilder().where(CompanyTradingOrderInfoDao.Properties.Name.like("%" + quotataion_name + "%"), CompanyTradingOrderInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyTradingOrderInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+                    }
                 } else {
                     rows = mTradingOrderInfoDaoManager.queryAll();
                 }

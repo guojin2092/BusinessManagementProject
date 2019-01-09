@@ -96,4 +96,15 @@ public class RequestMethod {
     public static final String REQUEST_COMPANY_TRADING_ORDER_DETAIL = "request_company_trading_order_detail";
     //保存企业交易单
     public static final String REQUEST_SAVE_COMPANY_TRADING_ORDER = "request_save_company_trading_order";
+
+    //企业报价单列表
+    public static final String REQUEST_COMPANY_QUOTATION_LIST = "request_company_quotation_list";
+    //删除企业报价单
+    public static final String REQUEST_DELETE_COMPANY_QUOTATION = "request_delete_company_quotation";
+    //获取所有产品
+    public static final String REQUEST_ALL_PRODUCTS_LIST = "request_all_products_list";
+    //获取企业报价单详情
+    public static final String REQUEST_COMPANY_QUOTATION_DETAIL = "request_company_trading_quotation_detail";
+    //保存企业报价单
+    public static final String REQUEST_SAVE_COMPANY_QUOTATION = "request_save_company_quotation";
 }

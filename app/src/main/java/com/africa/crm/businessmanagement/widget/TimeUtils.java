@@ -1,5 +1,7 @@
 package com.africa.crm.businessmanagement.widget;
 
+import android.text.TextUtils;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -58,5 +60,41 @@ public class TimeUtils {
             e.printStackTrace();
         }
         return date.getTime();
+    }
+
+    public static Long getDateByStartTime(String dateString) {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        // String转Date
+        try {
+            if (!TextUtils.isEmpty(dateString)) {
+                date = format.parse(dateString);  // Thu Jan 18 00:00:00 CST 2007
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (!TextUtils.isEmpty(dateString)) {
+            return date.getTime();
+        } else {
+            return 0l;
+        }
+    }
+
+    public static Long getDateByEndTime(String dateString) {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        // String转Date
+        try {
+            if (!TextUtils.isEmpty(dateString)) {
+                date = format.parse(dateString);  // Thu Jan 18 00:00:00 CST 2007
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (!TextUtils.isEmpty(dateString)) {
+            return date.getTime();
+        } else {
+            return Long.MAX_VALUE;
+        }
     }
 }
