@@ -32,7 +32,7 @@ public class CompanySupplierInfo {
     private String name;//供应商名称
     private String email;//邮箱
 
-    private boolean chosen;
+    private boolean chosen = false;
     private boolean isLocal = false;
 
 

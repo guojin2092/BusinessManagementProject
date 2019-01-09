@@ -1,10 +1,8 @@
-package com.africa.crm.businessmanagement.main.bean;
+package com.africa.crm.businessmanagement.main.bean.delete;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
-
-import java.util.Date;
 
 /**
  * Project：BusinessManagementProject
@@ -16,7 +14,7 @@ import java.util.Date;
  * Why & What is modified:
  */
 @Entity
-public class CompanyTradingOrderInfo {
+public class CompanyDeleteTradingOrderInfo {
     @Id(autoincrement = true)
     private Long localId;
     private String customerName;//客户名称
@@ -40,13 +38,13 @@ public class CompanyTradingOrderInfo {
     private boolean isLocal = false;
 
 
-    @Generated(hash = 1819759670)
-    public CompanyTradingOrderInfo(Long localId, String customerName,
-            Long createTimeDate, String createTime, String remark,
-            String clueSource, String possibility, String companyName,
-            String userNickName, String id, String estimateProfit, String price,
-            String editAble, String contactName, String userId, String name,
-            String companyId, boolean chosen, boolean isLocal) {
+    @Generated(hash = 1938348128)
+    public CompanyDeleteTradingOrderInfo(Long localId, String customerName,
+                                         Long createTimeDate, String createTime, String remark,
+                                         String clueSource, String possibility, String companyName,
+                                         String userNickName, String id, String estimateProfit, String price,
+                                         String editAble, String contactName, String userId, String name,
+                                         String companyId, boolean chosen, boolean isLocal) {
         this.localId = localId;
         this.customerName = customerName;
         this.createTimeDate = createTimeDate;
@@ -68,12 +66,12 @@ public class CompanyTradingOrderInfo {
         this.isLocal = isLocal;
     }
 
-    public CompanyTradingOrderInfo(String customerName,
-                                   Long createTimeDate, String createTime, String remark,
-                                   String clueSource, String possibility, String companyName,
-                                   String userNickName, String id, String estimateProfit, String price,
-                                   String editAble, String contactName, String userId, String name,
-                                   String companyId, boolean chosen, boolean isLocal) {
+    public CompanyDeleteTradingOrderInfo(String customerName,
+                                         Long createTimeDate, String createTime, String remark,
+                                         String clueSource, String possibility, String companyName,
+                                         String userNickName, String id, String estimateProfit, String price,
+                                         String editAble, String contactName, String userId, String name,
+                                         String companyId, boolean chosen, boolean isLocal) {
         this.customerName = customerName;
         this.createTimeDate = createTimeDate;
         this.createTime = createTime;
@@ -94,8 +92,8 @@ public class CompanyTradingOrderInfo {
         this.isLocal = isLocal;
     }
 
-    @Generated(hash = 1914844396)
-    public CompanyTradingOrderInfo() {
+    @Generated(hash = 1654982628)
+    public CompanyDeleteTradingOrderInfo() {
     }
 
 

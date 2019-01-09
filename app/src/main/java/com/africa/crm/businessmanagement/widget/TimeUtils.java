@@ -47,4 +47,16 @@ public class TimeUtils {
         }
         return date;
     }
+
+    public static Long getDateByCreateTime(String dateString) {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        // String转Date
+        try {
+            date = format.parse(dateString);  // Thu Jan 18 00:00:00 CST 2007
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date.getTime();
+    }
 }

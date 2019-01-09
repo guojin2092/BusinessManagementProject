@@ -40,6 +40,8 @@ import static com.africa.crm.businessmanagement.network.api.DicUtil.COMPANY_TYPE
 import static com.africa.crm.businessmanagement.network.api.DicUtil.FROM_TYPE_CODE;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.INDUSTRY_CODE;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.PRODUCT_TYPE;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_CONTACTS;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_CUSTOMERS;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_ROLES;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_SUPPLIERS;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_USERS;
@@ -141,7 +143,7 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
                             mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
                         }
                     }
-                }, new ComConsumer(null, REQUEST_COMPANY_TYPE)));
+                }, new ComConsumer(this, REQUEST_COMPANY_TYPE)));
         //企业状态
         addDisposable(mDataManager.getDicByCode(STATE_CODE)
                 .compose(RxUtils.<List<DicInfo>>ioToMain())
@@ -156,7 +158,7 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
                             mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
                         }
                     }
-                }, new ComConsumer(null, REQUEST_COMPANY_STATE)));
+                }, new ComConsumer(this, REQUEST_COMPANY_STATE)));
         //所有用户角色
         addDisposable(mDataManager.getAllRoles()
                 .compose(RxUtils.<List<RoleInfoBean>>ioToMain(this))
@@ -180,7 +182,7 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
                             mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
                         }
                     }
-                }, new ComConsumer(null)));
+                }, new ComConsumer(this)));
         //供应商分类
         addDisposable(mDataManager.getDicByCode(SUPPLIER_TYPE_CODE)
                 .compose(RxUtils.<List<DicInfo>>ioToMain())
@@ -195,7 +197,7 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
                             mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
                         }
                     }
-                }, new ComConsumer(null)));
+                }, new ComConsumer(this)));
         //所有供应商列表
         addDisposable(mDataManager.getAllSuppliers("")
                 .compose(RxUtils.<List<DicInfo2>>ioToMain())
@@ -204,15 +206,14 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
                     public void accept(List<DicInfo2> dicInfoList) throws Exception {
                         List<DicInfo> list = new ArrayList<>();
                         for (DicInfo2 dicInfo2 : dicInfoList) {
-                            list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getCode()));
+                            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_SUPPLIERS, dicInfo2.getName(), dicInfo2.getCode()));
                         }
                         List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
                         for (DicInfo dicInfo : addList) {
-                            dicInfo.setType(QUERY_ALL_SUPPLIERS);
                             mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
                         }
                     }
-                }, new ComConsumer(null)));
+                }, new ComConsumer(this)));
         //产品分类
         addDisposable(mDataManager.getDicByCode(PRODUCT_TYPE)
                 .compose(RxUtils.<List<DicInfo>>ioToMain())
@@ -227,7 +228,7 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
                             mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
                         }
                     }
-                }, new ComConsumer(null)));
+                }, new ComConsumer(this)));
         //所有所属用户
         addDisposable(mDataManager.getAllCompanyUser("")
                 .compose(RxUtils.<List<DicInfo2>>ioToMain())
@@ -236,15 +237,14 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
                     public void accept(List<DicInfo2> dicInfoList) throws Exception {
                         List<DicInfo> list = new ArrayList<>();
                         for (DicInfo2 dicInfo2 : dicInfoList) {
-                            list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getCode()));
+                            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_USERS, dicInfo2.getName(), dicInfo2.getCode()));
                         }
                         List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
                         for (DicInfo dicInfo : addList) {
-                            dicInfo.setType(QUERY_ALL_USERS);
                             mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
                         }
                     }
-                }, new ComConsumer(null)));
+                }, new ComConsumer(this)));
         //行业分类
         addDisposable(mDataManager.getDicByCode(INDUSTRY_CODE)
                 .compose(RxUtils.<List<DicInfo>>ioToMain())
@@ -259,7 +259,7 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
                             mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
                         }
                     }
-                }, new ComConsumer(null)));
+                }, new ComConsumer(this)));
         //联系人来源分类
         addDisposable(mDataManager.getDicByCode(FROM_TYPE_CODE)
                 .compose(RxUtils.<List<DicInfo>>ioToMain())
@@ -274,7 +274,39 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
                             mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
                         }
                     }
-                }, new ComConsumer(null)));
+                }, new ComConsumer(this)));
+        //所有联系人
+        addDisposable(mDataManager.getAllContact("")
+                .compose(RxUtils.<List<DicInfo2>>ioToMain())
+                .subscribe(new Consumer<List<DicInfo2>>() {
+                    @Override
+                    public void accept(List<DicInfo2> dicInfoList) throws Exception {
+                        List<DicInfo> list = new ArrayList<>();
+                        for (DicInfo2 dicInfo2 : dicInfoList) {
+                            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_CONTACTS, dicInfo2.getName(), dicInfo2.getCode()));
+                        }
+                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
+                        for (DicInfo dicInfo : addList) {
+                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
+                        }
+                    }
+                }, new ComConsumer(this)));
+        //所有客户
+        addDisposable(mDataManager.getAllCustomers("")
+                .compose(RxUtils.<List<DicInfo2>>ioToMain())
+                .subscribe(new Consumer<List<DicInfo2>>() {
+                    @Override
+                    public void accept(List<DicInfo2> dicInfoList) throws Exception {
+                        List<DicInfo> list = new ArrayList<>();
+                        for (DicInfo2 dicInfo2 : dicInfoList) {
+                            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_CUSTOMERS, dicInfo2.getName(), dicInfo2.getCode()));
+                        }
+                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
+                        for (DicInfo dicInfo : addList) {
+                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
+                        }
+                    }
+                }, new ComConsumer(this)));
     }
 
 

@@ -21,12 +21,15 @@ public class DicUtil {
     //产品分类
     public static final String PRODUCT_TYPE = "PRODUCTTYPE";
     //查询所有供应商
-    public static final String QUERY_ALL_SUPPLIERS = "QUERY_ALL_suppliers";
+    public static final String QUERY_ALL_SUPPLIERS = "QUERY_ALL_SUPPLIERS";
     //行业分类
     public static final String INDUSTRY_CODE = "INDUSTRYTYPE";
     //查询所有用户
-    public static final String QUERY_ALL_USERS = "QUERY_ALL_users";
+    public static final String QUERY_ALL_USERS = "QUERY_ALL_USERS";
     //联系人来源分类
     public static final String FROM_TYPE_CODE = "CONTACTFROMTYPE";
-
+    //查询所有联系人
+    public static final String QUERY_ALL_CONTACTS = "QUERY_ALL_CONTACTS";
+    //查询所有客户
+    public static final String QUERY_ALL_CUSTOMERS = "QUERY_ALL_CUSTOMERS";
 }

@@ -83,4 +83,17 @@ public class RequestMethod {
     public static final String REQUEST_COMPANY_CONTACT_DETAIL = "request_company_contact_detail";
     //保存企业联系人
     public static final String REQUEST_SAVE_COMPANY_CONTACT = "request_save_company_contact";
+
+    //企业交易单列表
+    public static final String REQUEST_COMPANY_TRADING_ORDER_LIST = "request_company_trading_order_list";
+    //删除企业交易单
+    public static final String REQUEST_DELETE_COMPANY_TRADING_ORDER = "request_delete_company_trading_order";
+    //获取所有联系人列表
+    public static final String REQUEST_ALL_CONTACT_LIST = "request_all_contact_list";
+    //获取所有客户列表
+    public static final String REQUEST_ALL_CUSTOMER_LIST = "request_all_customer_list";
+    //获取企业交易单详情
+    public static final String REQUEST_COMPANY_TRADING_ORDER_DETAIL = "request_company_trading_order_detail";
+    //保存企业交易单
+    public static final String REQUEST_SAVE_COMPANY_TRADING_ORDER = "request_save_company_trading_order";
 }

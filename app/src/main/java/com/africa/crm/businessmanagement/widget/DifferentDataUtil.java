@@ -7,6 +7,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 
 import java.util.ArrayList;
@@ -242,6 +243,39 @@ public class DifferentDataUtil {
             for (String string : mNetList) {
                 if (!mLocalList.contains(string)) {
                     for (CompanyContactInfo companyInfo : netList) {
+                        if (companyInfo.getId().equals(string)) {
+                            mCompanyInfoAddList.add(companyInfo);
+                        }
+                    }
+                }
+            }
+        } else {
+            mCompanyInfoAddList.addAll(netList);
+        }
+        return mCompanyInfoAddList;
+    }
+
+    /**
+     * 添加字典项数据到本地数据库(去重处理)
+     *
+     * @param netList
+     * @param localList
+     * @return
+     */
+    public static List<CompanyTradingOrderInfo> addTradindOrderDataToLocal(List<CompanyTradingOrderInfo> netList, List<CompanyTradingOrderInfo> localList) {
+        List<CompanyTradingOrderInfo> mCompanyInfoAddList = new ArrayList<>();//差异数据
+        List<String> mNetList = new ArrayList<>();
+        List<String> mLocalList = new ArrayList<>();
+        for (CompanyTradingOrderInfo companyInfo : netList) {
+            mNetList.add(companyInfo.getId());
+        }
+        if (!ListUtils.isEmpty(localList)) {
+            for (CompanyTradingOrderInfo companyInfo : localList) {
+                mLocalList.add(companyInfo.getId());
+            }
+            for (String string : mNetList) {
+                if (!mLocalList.contains(string)) {
+                    for (CompanyTradingOrderInfo companyInfo : netList) {
                         if (companyInfo.getId().equals(string)) {
                             mCompanyInfoAddList.add(companyInfo);
                         }

@@ -3,6 +3,7 @@ package com.africa.crm.businessmanagement.main.station.contract;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.mvp.presenter.IBasePresenter;
 import com.africa.crm.businessmanagement.network.base.BaseView;
 
@@ -26,7 +27,7 @@ public class CompanyTradingOrderDetailContract {
 
         void getCompanyTradingOrderDetail(CompanyTradingOrderInfo companyTradingOrderInfo);
 
-        void saveCompanyTradingOrder(BaseEntity baseEntity);
+        void saveCompanyTradingOrder(UploadInfoBean uploadInfoBean, boolean isLocal);
 
     }
 

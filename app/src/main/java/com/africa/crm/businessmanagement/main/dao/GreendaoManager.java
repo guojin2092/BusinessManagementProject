@@ -5,6 +5,7 @@ import org.greenrobot.greendao.query.LazyList;
 import org.greenrobot.greendao.query.QueryBuilder;
 import org.greenrobot.greendao.query.WhereCondition;
 
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -68,6 +69,7 @@ public class GreendaoManager<T, D extends AbstractDao<T, Long>> {
         return DBbeans;
     }
 
+
     /**
      * 查询所有数据
      */
@@ -82,6 +84,8 @@ public class GreendaoManager<T, D extends AbstractDao<T, Long>> {
      * @return
      */
     public QueryBuilder queryBuilder() {
+        Calendar cal = Calendar.getInstance();
+        cal.getTime();
         return dao.queryBuilder();
     }
 

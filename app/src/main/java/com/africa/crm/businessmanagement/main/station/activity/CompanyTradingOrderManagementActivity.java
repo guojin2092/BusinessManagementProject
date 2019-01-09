@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyTradingOrderEvent;
@@ -20,17 +22,24 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
-import com.africa.crm.businessmanagement.main.bean.UserInfoBean;
-import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
+import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
+import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteTradingOrderInfo;
+import com.africa.crm.businessmanagement.main.dao.CompanyClientInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyDeleteTradingOrderInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyTradingOrderInfoDao;
+import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.TradingOrderListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyTradingOrderContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyTradingOrderPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
+import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.bigkoo.pickerview.TimePickerView;
@@ -44,6 +53,11 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_USERS;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_USERS_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_TRADING_ORDER_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DELETE_COMPANY_TRADING_ORDER;
 
 /**
  * Project：BusinessManagementProject
@@ -74,8 +88,8 @@ public class CompanyTradingOrderManagementActivity extends BaseRefreshMvpActivit
 
     @BindView(R.id.spinner_user)
     MySpinner spinner_user;
-    private List<UserInfoBean> mUserInfoBeanList = new ArrayList<>();
-    private List<DicInfo> mUserInfoList = new ArrayList<>();
+    private List<DicInfo> mSpinnerCompanyUserList = new ArrayList<>();
+    private String mFromUserId = "";
     private String mUserId = "";
 
     @BindView(R.id.recyclerView)
@@ -89,9 +103,16 @@ public class CompanyTradingOrderManagementActivity extends BaseRefreshMvpActivit
     private AlertDialog mDeleteDialog;
     private String mCompanyId = "";
     private String mRoleCode = "";
-
+    private String quotataion_name = "";
     private TimePickerView pvStartTime, pvEndTime;
     private Date mStartDate, mEndDate;
+
+    private GreendaoManager<CompanyTradingOrderInfo, CompanyTradingOrderInfoDao> mTradingOrderInfoDaoManager;
+    private GreendaoManager<CompanyDeleteTradingOrderInfo, CompanyDeleteTradingOrderInfoDao> mDeleteTradingOrderInfoDaoManager;
+    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoManager;
+
+    private List<CompanyTradingOrderInfo> mTradingOrderLocalBeanList = new ArrayList<>();//本地数据
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
@@ -142,6 +163,14 @@ public class CompanyTradingOrderManagementActivity extends BaseRefreshMvpActivit
         tv_start_time.setOnClickListener(this);
         tv_end_time.setOnClickListener(this);
 
+        //得到Dao对象管理器
+        mTradingOrderInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyTradingOrderInfoDao());
+        //得到Dao对象管理器
+        mDeleteTradingOrderInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeleteTradingOrderInfoDao());
+        //得到Dao对象管理器
+        mDicInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getDicInfoDao());
+        //得到本地数据
+        mDicInfoLocalList = mDicInfoDaoManager.queryAll();
 /*
         et_quotation_name_a.addTextChangedListener(new TextWatcher() {
             @Override
@@ -230,17 +259,22 @@ public class CompanyTradingOrderManagementActivity extends BaseRefreshMvpActivit
 
     @Override
     protected void requestData() {
-        mPresenter.getCompanyUserList(page, rows, "", "2", mCompanyId, "1", "");
+        if ("companyRoot".equals(mRoleCode)) {
+            mPresenter.getAllCompanyUsers(mCompanyId);
+        }
         pullDownRefresh(page);
     }
 
     @Override
     public void pullDownRefresh(int page) {
-        if (mRoleCode.equals("companyRoot")) {
-            mPresenter.getCompanyTradingOrderList(page, rows, mCompanyId, mUserId, et_quotation_name_a.getText().toString().trim(), tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
+        if (mRoleCode.equals("companySales")) {
+            quotataion_name = StringUtil.getText(et_quotation_name_b);
+            mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
         } else {
-            mPresenter.getCompanyTradingOrderList(page, rows, mCompanyId, String.valueOf(UserInfoManager.getUserLoginInfo(this).getId()), et_quotation_name_b.getText().toString().trim(), tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
+            quotataion_name = StringUtil.getText(et_quotation_name_a);
+            mUserId = mFromUserId;
         }
+        mPresenter.getCompanyTradingOrderList(page, rows, mCompanyId, mUserId, quotataion_name, StringUtil.getText(tv_start_time), StringUtil.getText(tv_end_time));
     }
 
 
@@ -275,7 +309,7 @@ public class CompanyTradingOrderManagementActivity extends BaseRefreshMvpActivit
                 }
                 break;
             case R.id.ll_add:
-                CompanyTradingOrderDetailActivity.startActivity(CompanyTradingOrderManagementActivity.this, "");
+                CompanyTradingOrderDetailActivity.startActivity(CompanyTradingOrderManagementActivity.this, "", 0l);
                 break;
             case R.id.tv_delete:
                 mDeleteList.clear();
@@ -323,24 +357,28 @@ public class CompanyTradingOrderManagementActivity extends BaseRefreshMvpActivit
     }
 
     @Override
-    public void getCompanyUserList(UserManagementInfoBean userManagementInfoBean) {
-        mUserInfoBeanList.clear();
-        mUserInfoBeanList.addAll(userManagementInfoBean.getRows());
-        mUserInfoList.clear();
-        if (!ListUtils.isEmpty(mUserInfoBeanList)) {
-            for (int i = 0; i < mUserInfoBeanList.size(); i++) {
-                mUserInfoList.add(new DicInfo(mUserInfoBeanList.get(i).getUserName(), mUserInfoBeanList.get(i).getId()));
+    public void getAllCompanyUsers(List<DicInfo2> dicInfo2List) {
+        mSpinnerCompanyUserList.clear();
+        if (!ListUtils.isEmpty(dicInfo2List)) {
+            for (DicInfo2 dicInfo2 : dicInfo2List) {
+                DicInfo dicInfo = new DicInfo(dicInfo2.getId(), QUERY_ALL_USERS, dicInfo2.getName(), dicInfo2.getCode());
+                mSpinnerCompanyUserList.add(dicInfo);
             }
+            List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerCompanyUserList, mDicInfoLocalList);
+            for (DicInfo dicInfo : addList) {
+                dicInfo.setType(QUERY_ALL_USERS);
+                mDicInfoDaoManager.insertOrReplace(dicInfo);
+            }
+            spinner_user.setListDatas(getBVActivity(), mSpinnerCompanyUserList);
+            spinner_user.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+                @Override
+                public void onItemClick(DicInfo dicInfo, int position) {
+                    mFromUserId = dicInfo.getCode();
+                }
+            });
         }
-        spinner_user.setListDatas(this, mUserInfoList);
-        spinner_user.addOnItemClickListener(new MySpinner.OnItemClickListener() {
-            @Override
-            public void onItemClick(DicInfo dicInfo, int position) {
-                mUserId = dicInfo.getCode();
-//                et_quotation_name_a.setText("");
-            }
-        });
     }
+
 
     @Override
     public void getCompanyTradingOrderList(CompanyTradingOrderInfoBean companyTradingOrderInfoBean) {
@@ -363,6 +401,7 @@ public class CompanyTradingOrderManagementActivity extends BaseRefreshMvpActivit
                     mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
                 }
                 mTradingOrderInfoBeanList.clear();
+                mTradingOrderLocalBeanList = mTradingOrderInfoDaoManager.queryAll();
                 recyclerView.smoothScrollToPosition(0);
             }
             if (mRefreshLayout != null) {
@@ -374,6 +413,24 @@ public class CompanyTradingOrderManagementActivity extends BaseRefreshMvpActivit
             }
             if (!ListUtils.isEmpty(companyTradingOrderInfoBean.getRows())) {
                 mTradingOrderInfoBeanList.addAll(companyTradingOrderInfoBean.getRows());
+                List<CompanyTradingOrderInfo> addList = DifferentDataUtil.addTradindOrderDataToLocal(mTradingOrderInfoBeanList, mTradingOrderLocalBeanList);
+                if (!ListUtils.isEmpty(addList)) {
+                    for (CompanyTradingOrderInfo companyInfo : addList) {
+                        mTradingOrderInfoDaoManager.insertOrReplace(companyInfo);
+                    }
+                    mTradingOrderLocalBeanList = new ArrayList<>();
+                    mTradingOrderLocalBeanList = mTradingOrderInfoDaoManager.queryAll();
+                }
+                for (CompanyTradingOrderInfo info : mTradingOrderInfoBeanList) {
+                    for (CompanyTradingOrderInfo localInfo : mTradingOrderLocalBeanList) {
+                        if (!TextUtils.isEmpty(info.getId()) && !TextUtils.isEmpty(localInfo.getId())) {
+                            if (info.getId().equals(localInfo.getId())) {
+                                info.setLocalId(localInfo.getLocalId());
+                                mTradingOrderInfoDaoManager.correct(info);
+                            }
+                        }
+                    }
+                }
                 if (mTradingOrderListAdapter != null) {
                     mTradingOrderListAdapter.notifyDataSetChanged();
                 }
@@ -387,7 +444,7 @@ public class CompanyTradingOrderManagementActivity extends BaseRefreshMvpActivit
                             mTradingOrderInfoBeanList.get(position).setChosen(!cb_choose.isChecked());
                             mTradingOrderListAdapter.notifyDataSetChanged();
                         } else {
-                            CompanyTradingOrderDetailActivity.startActivity(CompanyTradingOrderManagementActivity.this, mTradingOrderInfoBeanList.get(position).getId());
+                            CompanyTradingOrderDetailActivity.startActivity(CompanyTradingOrderManagementActivity.this, mTradingOrderInfoBeanList.get(position).getId(), mTradingOrderInfoBeanList.get(position).getLocalId());
                         }
                     }
                 });
@@ -397,12 +454,25 @@ public class CompanyTradingOrderManagementActivity extends BaseRefreshMvpActivit
     }
 
     @Override
-    public void deleteCompanyTradingOrder(BaseEntity baseEntity) {
+    public void deleteCompanyTradingOrder(BaseEntity baseEntity, boolean isLocal) {
         if (baseEntity.isSuccess()) {
             for (int i = 0; i < mDeleteList.size(); i++) {
                 if (mTradingOrderInfoBeanList.contains(mDeleteList.get(i))) {
                     int position = mTradingOrderInfoBeanList.indexOf(mDeleteList.get(i));
                     mTradingOrderInfoBeanList.remove(mDeleteList.get(i));
+                    if (isLocal) {
+                        for (CompanyTradingOrderInfo companyInfo : mDeleteList) {
+                            CompanyDeleteTradingOrderInfo deleteTradingOrderInfo = new CompanyDeleteTradingOrderInfo(companyInfo.getCustomerName(), companyInfo.getCreateTimeDate(), companyInfo.getCreateTime(), companyInfo.getRemark(), companyInfo.getClueSource(), companyInfo.getPossibility(), companyInfo.getCompanyName(), companyInfo.getUserNickName(), companyInfo.getId(), companyInfo.getEstimateProfit(), companyInfo.getPrice(), companyInfo.getEditAble(), companyInfo.getContactName(), companyInfo.getUserId(), companyInfo.getName(), companyInfo.getCompanyId(), false, true);
+                            mDeleteTradingOrderInfoDaoManager.insertOrReplace(deleteTradingOrderInfo);
+                        }
+                    }
+                    for (CompanyTradingOrderInfo companyInfo : mTradingOrderLocalBeanList) {
+                        if (mDeleteList.get(i).getLocalId().equals(companyInfo.getLocalId())) {
+                            mTradingOrderInfoDaoManager.delete(companyInfo.getLocalId());
+                        }
+                    }
+                    mTradingOrderLocalBeanList = new ArrayList<>();
+                    mTradingOrderLocalBeanList = mTradingOrderInfoDaoManager.queryAll();
                     if (mTradingOrderListAdapter != null) {
                         mTradingOrderListAdapter.notifyItemRemoved(position);
                     }
@@ -433,5 +503,38 @@ public class CompanyTradingOrderManagementActivity extends BaseRefreshMvpActivit
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        mRefreshLayout.setEnableLoadmore(false);
+        switch (port) {
+            case REQUEST_ALL_USERS_LIST:
+                List<DicInfo2> allUserList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(QUERY_ALL_USERS)) {
+                        allUserList.add(new DicInfo2(dicInfo.getId(), dicInfo.getText(), dicInfo.getCode()));
+                    }
+                }
+                getAllCompanyUsers(allUserList);
+                break;
+            case REQUEST_COMPANY_TRADING_ORDER_LIST:
+                List<CompanyTradingOrderInfo> rows = new ArrayList<>();
+                if (!TextUtils.isEmpty(quotataion_name) || !TextUtils.isEmpty(spinner_user.getText()) || !TextUtils.isEmpty(StringUtil.getText(tv_start_time)) || !TextUtils.isEmpty(StringUtil.getText(tv_end_time))) {
+                    rows = mTradingOrderInfoDaoManager.queryBuilder().where(CompanyTradingOrderInfoDao.Properties.Name.like("%" + quotataion_name + "%"), CompanyClientInfoDao.Properties.UserId.eq(mUserId), CompanyTradingOrderInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByCreateTime(StringUtil.getText(tv_start_time))), CompanyTradingOrderInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByCreateTime(StringUtil.getText(tv_end_time)))).list();
+                } else {
+                    rows = mTradingOrderInfoDaoManager.queryAll();
+                }
+                CompanyTradingOrderInfoBean companyTradingOrderInfoBean = new CompanyTradingOrderInfoBean();
+                companyTradingOrderInfoBean.setRows(rows);
+                getCompanyTradingOrderList(companyTradingOrderInfoBean);
+                break;
+            case REQUEST_DELETE_COMPANY_TRADING_ORDER:
+                BaseEntity baseEntity = new BaseEntity();
+                baseEntity.setSuccess(true);
+                deleteCompanyTradingOrder(baseEntity, true);
+                break;
+        }
     }
 }
