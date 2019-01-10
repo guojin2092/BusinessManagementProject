@@ -21,13 +21,11 @@ import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyContactEvent;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfoBean;
-import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteContactInfo;
 import com.africa.crm.businessmanagement.main.dao.CompanyContactInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteContactInfoDao;
-import com.africa.crm.businessmanagement.main.dao.CompanyProductInfoDao;
 import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
 import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
@@ -45,7 +43,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.greendao.query.WhereCondition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -418,8 +415,12 @@ public class CompanyContactManagementActivity extends BaseRefreshMvpActivity<Con
                 break;
             case REQUEST_COMPANY_CONTACT_LIST:
                 List<CompanyContactInfo> rows = new ArrayList<>();
-                if (!TextUtils.isEmpty(StringUtil.getText(et_name)) || !TextUtils.isEmpty(spinner_from_type.getText())) {
-                    rows = mContactInfoDaoManager.queryBuilder().where(CompanyContactInfoDao.Properties.Name.like("%" + StringUtil.getText(et_name) + "%"), CompanyContactInfoDao.Properties.FromType.eq(mFromType)).list();
+                if (!TextUtils.isEmpty(StringUtil.getText(et_name)) || !TextUtils.isEmpty(mFromType)) {
+                    if (!TextUtils.isEmpty(mFromType)) {
+                        rows = mContactInfoDaoManager.queryBuilder().where(CompanyContactInfoDao.Properties.Name.like("%" + StringUtil.getText(et_name) + "%"), CompanyContactInfoDao.Properties.FromType.eq(mFromType)).list();
+                    } else {
+                        rows = mContactInfoDaoManager.queryBuilder().where(CompanyContactInfoDao.Properties.Name.like("%" + StringUtil.getText(et_name) + "%")).list();
+                    }
                 } else {
                     rows = mContactInfoDaoManager.queryAll();
                 }

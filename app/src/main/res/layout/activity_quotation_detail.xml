@@ -59,7 +59,8 @@
 
                         <EditText
                             android:id="@+id/et_price"
-                            style="@style/product_et_blue" />
+                            style="@style/product_et_blue"
+                            android:inputType="numberDecimal" />
                     </LinearLayout>
 
 

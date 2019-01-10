@@ -132,9 +132,16 @@ public class CompanyServiceRecordManagementActivity extends BaseRefreshMvpActivi
             titlebar_name.setText(mWorkStationInfo.getWork_name());
         }
         if (mRoleCode.equals("companyRoot")) {
+            titlebar_right.setVisibility(View.GONE);
             spinner_user.setVisibility(View.VISIBLE);
         } else {
-            spinner_user.setVisibility(View.GONE);
+            titlebar_right.setVisibility(View.VISIBLE);
+            spinner_user.setVisibility(View.INVISIBLE);
+        }
+        if (mRoleCode.equals("companySales")) {
+            ll_add.setVisibility(View.VISIBLE);
+        } else {
+            ll_add.setVisibility(View.GONE);
         }
         ll_add.setOnClickListener(this);
         tv_search.setOnClickListener(this);

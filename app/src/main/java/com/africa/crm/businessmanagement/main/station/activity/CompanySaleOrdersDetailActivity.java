@@ -32,6 +32,7 @@ import com.africa.crm.businessmanagement.main.station.dialog.AddProductDialog;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanySalesOrderDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
 import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
+import com.africa.crm.businessmanagement.widget.EditTextUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
 import com.africa.crm.businessmanagement.widget.StringUtil;
@@ -165,6 +166,7 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
         tv_delete_product.setOnClickListener(this);
         tv_add_product.setOnClickListener(this);
         tv_save.setOnClickListener(this);
+        EditTextUtil.setPricePoint(et_money);
 
         String roleCode = UserInfoManager.getUserLoginInfo(this).getRoleCode();
         if (roleCode.equals("companySales")) {

@@ -17,6 +17,7 @@ import com.africa.crm.businessmanagement.main.station.contract.CompanyExpenditur
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyExpenditureDetailPresenterB;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.EditTextUtil;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
 import com.bigkoo.pickerview.TimePickerView;
 
@@ -71,6 +72,7 @@ public class CompanyExpenditureDetailActivityB extends BaseMvpActivity<CompanyEx
         tv_save.setText(R.string.add);
         tv_save.setOnClickListener(this);
         tv_date.setOnClickListener(this);
+        EditTextUtil.setPricePoint(et_price);
         if (!TextUtils.isEmpty(mExpenditureId)) {
             tv_save.setVisibility(View.GONE);
             setEditTextInput(false);

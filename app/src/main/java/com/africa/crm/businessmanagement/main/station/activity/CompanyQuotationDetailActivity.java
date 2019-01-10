@@ -32,6 +32,7 @@ import com.africa.crm.businessmanagement.main.station.dialog.AddQuotationProduct
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyQuotationDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
 import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
+import com.africa.crm.businessmanagement.widget.EditTextUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
 import com.africa.crm.businessmanagement.widget.StringUtil;
@@ -154,6 +155,7 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
         tv_add_product.setOnClickListener(this);
         tv_save.setOnClickListener(this);
         tv_validity_date.setOnClickListener(this);
+        EditTextUtil.setPricePoint(et_price);
         String roleCode = UserInfoManager.getUserLoginInfo(this).getRoleCode();
 
         if (roleCode.equals("companySales")) {

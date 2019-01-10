@@ -97,7 +97,7 @@
                             <EditText
                                 android:id="@+id/et_pay_price"
                                 style="@style/product_et_blue"
-                                android:inputType="number" />
+                                android:inputType="numberDecimal" />
                         </LinearLayout>
 
 

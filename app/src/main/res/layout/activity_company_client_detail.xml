@@ -196,7 +196,7 @@
                         <EditText
                             android:id="@+id/et_income"
                             style="@style/product_et_blue"
-                            android:inputType="number" />
+                            android:inputType="numberDecimal" />
 
                     </LinearLayout>
 

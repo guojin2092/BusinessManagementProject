@@ -32,6 +32,7 @@ import com.africa.crm.businessmanagement.main.station.contract.CompanyClientDeta
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyClientDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
 import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
+import com.africa.crm.businessmanagement.widget.EditTextUtil;
 import com.africa.crm.businessmanagement.widget.MySpinner;
 import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
@@ -142,6 +143,7 @@ public class CompanyClientDetailActivity extends BaseMvpActivity<CompanyClientDe
         titlebar_name.setText("客户详情");
         tv_add_icon.setOnClickListener(this);
         tv_save.setOnClickListener(this);
+        EditTextUtil.setPricePoint(et_income);
         if (TextUtils.isEmpty(mClientId) && mLocalId == 0l) {
             titlebar_right.setVisibility(View.GONE);
             tv_save.setText(R.string.add);

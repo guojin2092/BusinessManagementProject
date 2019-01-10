@@ -379,8 +379,12 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
                 break;
             case REQUEST_COMPANY_SUPPLIER_LIST:
                 List<CompanySupplierInfo> rows = new ArrayList<>();
-                if (!TextUtils.isEmpty(StringUtil.getText(et_supplier_name)) || !TextUtils.isEmpty(spinner_supplier_type.getText())) {
-                    rows = mSupplierInfoDaoManager.queryBuilder().where(CompanySupplierInfoDao.Properties.Name.like("%" + StringUtil.getText(et_supplier_name) + "%"), CompanySupplierInfoDao.Properties.Type.eq(mSupplierType)).list();
+                if (!TextUtils.isEmpty(StringUtil.getText(et_supplier_name)) || !TextUtils.isEmpty(mSupplierType)) {
+                    if (!TextUtils.isEmpty(mSupplierType)) {
+                        rows = mSupplierInfoDaoManager.queryBuilder().where(CompanySupplierInfoDao.Properties.Name.like("%" + StringUtil.getText(et_supplier_name) + "%"), CompanySupplierInfoDao.Properties.Type.eq(mSupplierType)).list();
+                    } else {
+                        rows = mSupplierInfoDaoManager.queryBuilder().where(CompanySupplierInfoDao.Properties.Name.like("%" + StringUtil.getText(et_supplier_name) + "%")).list();
+                    }
                 } else {
                     rows = mSupplierInfoDaoManager.queryAll();
                 }

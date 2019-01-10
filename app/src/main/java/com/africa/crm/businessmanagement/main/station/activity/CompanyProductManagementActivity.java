@@ -43,7 +43,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.greendao.query.WhereCondition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -405,8 +404,12 @@ public class CompanyProductManagementActivity extends BaseRefreshMvpActivity<Com
             getProductType(stateList);
         } else if (port.equals(REQUEST_COMPANY_PRODUCT_LIST)) {
             List<CompanyProductInfo> rows = new ArrayList<>();
-            if (!TextUtils.isEmpty(StringUtil.getText(et_name)) || !TextUtils.isEmpty(spinner_type.getText())) {
-                rows = mProductInfoDaoManager.queryBuilder().where(CompanyProductInfoDao.Properties.Name.like("%" + StringUtil.getText(et_name) + "%"), CompanyProductInfoDao.Properties.Type.eq(mProductType)).list();
+            if (!TextUtils.isEmpty(StringUtil.getText(et_name)) || !TextUtils.isEmpty(mProductType)) {
+                if (!TextUtils.isEmpty(mProductType)) {
+                    rows = mProductInfoDaoManager.queryBuilder().where(CompanyProductInfoDao.Properties.Name.like("%" + StringUtil.getText(et_name) + "%"), CompanyProductInfoDao.Properties.Type.eq(mProductType)).list();
+                } else {
+                    rows = mProductInfoDaoManager.queryBuilder().where(CompanyProductInfoDao.Properties.Name.like("%" + StringUtil.getText(et_name) + "%")).list();
+                }
             } else {
                 rows = mProductInfoDaoManager.queryAll();
             }

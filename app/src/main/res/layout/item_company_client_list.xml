@@ -32,11 +32,12 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tv_company_name"
+            android:id="@+id/tv_client_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/A606060"
-            android:textSize="22sp" />
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/A586683"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/tv_industry_name"
@@ -49,11 +50,11 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/tv_client_name"
+        android:id="@+id/tv_from_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:textColor="@color/A586683"
-        android:textSize="20sp" />
+        android:textColor="@color/A606060"
+        android:textSize="22sp" />
 
 </LinearLayout>

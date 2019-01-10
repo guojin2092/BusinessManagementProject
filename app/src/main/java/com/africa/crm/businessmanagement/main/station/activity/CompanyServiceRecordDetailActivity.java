@@ -117,14 +117,21 @@ public class CompanyServiceRecordDetailActivity extends BaseMvpActivity<CompanyS
         titlebar_name.setText("服务记录详情");
         tv_save.setOnClickListener(this);
         tv_add_tracking.setOnClickListener(this);
-        if (!TextUtils.isEmpty(mServiceRecordId)) {
-            titlebar_right.setText(R.string.edit);
-            tv_save.setText(R.string.save);
-            setEditTextInput(false);
+        String roleCode = UserInfoManager.getUserLoginInfo(this).getRoleCode();
+        if (roleCode.equals("companySales")) {
+            if (!TextUtils.isEmpty(mServiceRecordId)) {
+                titlebar_right.setText(R.string.edit);
+                tv_save.setText(R.string.save);
+                setEditTextInput(false);
+            } else {
+                titlebar_right.setVisibility(View.GONE);
+                tv_save.setText(R.string.add);
+                tv_save.setVisibility(View.VISIBLE);
+            }
         } else {
             titlebar_right.setVisibility(View.GONE);
-            tv_save.setText(R.string.add);
-            tv_save.setVisibility(View.VISIBLE);
+            tv_save.setVisibility(View.GONE);
+            setEditTextInput(false);
         }
     }
 

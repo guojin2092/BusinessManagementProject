@@ -43,7 +43,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.greendao.query.WhereCondition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -413,8 +412,12 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
                 break;
             case REQUEST_COMPANY_CLIENT_LIST:
                 List<CompanyClientInfo> rows = new ArrayList<>();
-                if (!TextUtils.isEmpty(StringUtil.getText(et_name)) || !TextUtils.isEmpty(spinner_industry.getText())) {
-                    rows = mClientInfoDaoManager.queryBuilder().where(CompanyClientInfoDao.Properties.Name.like("%" + StringUtil.getText(et_name) + "%"), CompanyClientInfoDao.Properties.Industry.eq(mIndustryType)).list();
+                if (!TextUtils.isEmpty(StringUtil.getText(et_name)) || !TextUtils.isEmpty(mIndustryType)) {
+                    if (!TextUtils.isEmpty(mIndustryType)) {
+                        rows = mClientInfoDaoManager.queryBuilder().where(CompanyClientInfoDao.Properties.Name.like("%" + StringUtil.getText(et_name) + "%"), CompanyClientInfoDao.Properties.Industry.eq(mIndustryType)).list();
+                    } else {
+                        rows = mClientInfoDaoManager.queryBuilder().where(CompanyClientInfoDao.Properties.Name.like("%" + StringUtil.getText(et_name) + "%")).list();
+                    }
                 } else {
                     rows = mClientInfoDaoManager.queryAll();
                 }

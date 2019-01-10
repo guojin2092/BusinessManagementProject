@@ -28,6 +28,7 @@ import com.africa.crm.businessmanagement.main.station.contract.CompanyPayOrderDe
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyPayOrderDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.EditTextUtil;
 import com.africa.crm.businessmanagement.widget.MySpinner;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
 import com.bigkoo.pickerview.TimePickerView;
@@ -119,6 +120,7 @@ public class CompanyPaymentDetailActivity extends BaseMvpActivity<CompanyPayOrde
         fl_sf_print.setOnClickListener(this);
         iv_fp_1.setOnClickListener(this);
         iv_fp_2.setOnClickListener(this);
+        EditTextUtil.setPricePoint(et_pay_price);
 
         String roleCode = UserInfoManager.getUserLoginInfo(this).getRoleCode();
         if (roleCode.equals("companySales")) {

@@ -23,6 +23,7 @@ import com.africa.crm.businessmanagement.main.station.contract.CompanyTradingOrd
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyTradingOrderDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
 import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
+import com.africa.crm.businessmanagement.widget.EditTextUtil;
 import com.africa.crm.businessmanagement.widget.MySpinner;
 import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
@@ -106,6 +107,8 @@ public class CompanyTradingOrderDetailActivity extends BaseMvpActivity<CompanyTr
         mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
         titlebar_name.setText("交易单详情");
         tv_save.setOnClickListener(this);
+        EditTextUtil.setPricePoint(et_money);
+        EditTextUtil.setPricePoint(et_income);
 
         String roleCode = UserInfoManager.getUserLoginInfo(this).getRoleCode();
         if (roleCode.equals("companySales")) {

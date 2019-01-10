@@ -23,6 +23,7 @@ import com.africa.crm.businessmanagement.main.station.contract.CompanyProductDet
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyProductDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
 import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
+import com.africa.crm.businessmanagement.widget.EditTextUtil;
 import com.africa.crm.businessmanagement.widget.MySpinner;
 import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
@@ -110,7 +111,7 @@ public class CompanyProductDetailActivity extends BaseMvpActivity<CompanyProduct
         mLocalId = getIntent().getLongExtra("localId", 0l);
         titlebar_name.setText("产品详情");
         tv_save.setOnClickListener(this);
-
+        EditTextUtil.setPricePoint(et_price);
         if (TextUtils.isEmpty(mProductId) && mLocalId == 0l) {
             titlebar_right.setVisibility(View.GONE);
             tv_save.setText(R.string.add);
