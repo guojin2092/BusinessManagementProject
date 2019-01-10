@@ -131,4 +131,15 @@ public class RequestMethod {
     public static final String REQUEST_COMPANY_DELIVERY_ORDER_DETAIL = "request_company_delivery_order_detail";
     //保存企业发货单
     public static final String REQUEST_SAVE_COMPANY_DELIVERY_ORDER = "request_save_company_delivery_order";
+
+    //企业付款单列表
+    public static final String REQUEST_PAY_ORDER_LIST = "request_pay_order_list";
+    //删除企业付款单
+    public static final String REQUEST_DELETE_PAY_ORDER = "request_delete_pay_order";
+    //获取全部交易单
+    public static final String REQUEST_ALL_TRADING_ORDER = "request_all_trading_order";
+    //获取企业付款单详情
+    public static final String REQUEST_COMPANY_PAY_ORDER_DETAIL = "request_company_delivery_pay_detail";
+    //保存企业付款单
+    public static final String REQUEST_SAVE_COMPANY_PAY_ORDER = "request_save_company_pay_order";
 }

@@ -64,10 +64,11 @@ public class CompanyTradingOrderDetailActivity extends BaseMvpActivity<CompanyTr
     private String mCompanyId = "";
     private String mCompanyName = "";
     private String mUserId = "";
+    private String mFromName = "";
 
     @BindView(R.id.spinner_customer_name)
     MySpinner spinner_customer_name;
-    private String mFromName = "";
+    private String mCustomerName = "";
 
     @BindView(R.id.spinner_contact_name)
     MySpinner spinner_contact_name;
@@ -104,6 +105,7 @@ public class CompanyTradingOrderDetailActivity extends BaseMvpActivity<CompanyTr
         mLocalId = getIntent().getLongExtra("localId", 0l);
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
         mCompanyName = UserInfoManager.getUserLoginInfo(this).getCompanyName();
+        mFromName = UserInfoManager.getUserLoginInfo(this).getName();
         mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
         titlebar_name.setText("交易单详情");
         tv_save.setOnClickListener(this);
@@ -230,7 +232,7 @@ public class CompanyTradingOrderDetailActivity extends BaseMvpActivity<CompanyTr
         spinner_customer_name.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
-                mFromName = dicInfo.getText();
+                mCustomerName = dicInfo.getText();
             }
         });
     }
@@ -249,6 +251,7 @@ public class CompanyTradingOrderDetailActivity extends BaseMvpActivity<CompanyTr
             mCompanyName = companyTradingOrderInfo.getCompanyName();
             mFromName = companyTradingOrderInfo.getUserNickName();
             mEditAble = companyTradingOrderInfo.getEditAble();
+            mCustomerName = companyTradingOrderInfo.getCustomerName();
             mContactName = companyTradingOrderInfo.getContactName();
             for (CompanyTradingOrderInfo localInfo : mTradingOrderLocalList) {
                 if (!TextUtils.isEmpty(localInfo.getId()) && !TextUtils.isEmpty(companyTradingOrderInfo.getId())) {
@@ -273,7 +276,7 @@ public class CompanyTradingOrderDetailActivity extends BaseMvpActivity<CompanyTr
         if (isLocal) {
             CompanyTradingOrderInfo companyTradingOrderInfo = null;
             if (mLocalId == 0l) {
-                companyTradingOrderInfo = new CompanyTradingOrderInfo(spinner_customer_name.getText(), TimeUtils.getDateByCreateTime(TimeUtils.getTime(new Date())), TimeUtils.getCurrentTime(new Date()), StringUtil.getText(et_remark), StringUtil.getText(et_thread_from), StringUtil.getText(et_possibility), mCompanyName, mFromName, mTradingOrderId, StringUtil.getText(et_income), StringUtil.getText(et_money), mEditAble, mContactName, mUserId, StringUtil.getText(et_order_name), mCompanyId, false, isLocal);
+                companyTradingOrderInfo = new CompanyTradingOrderInfo(mCustomerName, TimeUtils.getDateByCreateTime(TimeUtils.getTime(new Date())), TimeUtils.getCurrentTime(new Date()), StringUtil.getText(et_remark), StringUtil.getText(et_thread_from), StringUtil.getText(et_possibility), mCompanyName, mFromName, mTradingOrderId, StringUtil.getText(et_income), StringUtil.getText(et_money), mEditAble, mContactName, mUserId, StringUtil.getText(et_order_name), mCompanyId, false, isLocal);
                 mTradingOrderInfoDaoManager.insertOrReplace(companyTradingOrderInfo);
             } else {
                 for (CompanyTradingOrderInfo info : mTradingOrderLocalList) {

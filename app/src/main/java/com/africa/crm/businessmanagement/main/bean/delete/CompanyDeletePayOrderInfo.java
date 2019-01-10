@@ -1,4 +1,4 @@
-package com.africa.crm.businessmanagement.main.bean;
+package com.africa.crm.businessmanagement.main.bean.delete;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
@@ -14,7 +14,7 @@ import org.greenrobot.greendao.annotation.Id;
  * Why & What is modified:
  */
 @Entity
-public class CompanyPayOrderInfo {
+public class CompanyDeletePayOrderInfo {
     @Id(autoincrement = true)
     private Long localId;
     private String hasPrint;//是否打印CODE  字典项：SF
@@ -44,15 +44,16 @@ public class CompanyPayOrderInfo {
     private boolean chosen = false;
     private boolean isLocal = false;
 
-    @Generated(hash = 34323994)
-    public CompanyPayOrderInfo(Long localId, String hasPrint, String customerName,
-                               String createTime, Long createTimeDate, String hasInvoice,
-                               String remark, String hasInvoiceName, String hasPrintName,
-                               String salesOrderId, String code, String companyName, String payTime,
-                               String userNickName, String id, String price, String editAble,
-                               String userId, String name, String salesOrderName, String invoiceFiles,
-                               String companyId, String tradingOrderId, String tradingOrderName,
-                               boolean chosen, boolean isLocal) {
+    @Generated(hash = 862846106)
+    public CompanyDeletePayOrderInfo(Long localId, String hasPrint,
+                                     String customerName, String createTime, Long createTimeDate,
+                                     String hasInvoice, String remark, String hasInvoiceName,
+                                     String hasPrintName, String salesOrderId, String code,
+                                     String companyName, String payTime, String userNickName, String id,
+                                     String price, String editAble, String userId, String name,
+                                     String salesOrderName, String invoiceFiles, String companyId,
+                                     String tradingOrderId, String tradingOrderName, boolean chosen,
+                                     boolean isLocal) {
         this.localId = localId;
         this.hasPrint = hasPrint;
         this.customerName = customerName;
@@ -81,14 +82,15 @@ public class CompanyPayOrderInfo {
         this.isLocal = isLocal;
     }
 
-    public CompanyPayOrderInfo(String hasPrint, String customerName,
-                               String createTime, Long createTimeDate, String hasInvoice,
-                               String remark, String hasInvoiceName, String hasPrintName,
-                               String salesOrderId, String code, String companyName, String payTime,
-                               String userNickName, String id, String price, String editAble,
-                               String userId, String name, String salesOrderName, String invoiceFiles,
-                               String companyId, String tradingOrderId, String tradingOrderName,
-                               boolean chosen, boolean isLocal) {
+    public CompanyDeletePayOrderInfo(String hasPrint,
+                                     String customerName, String createTime, Long createTimeDate,
+                                     String hasInvoice, String remark, String hasInvoiceName,
+                                     String hasPrintName, String salesOrderId, String code,
+                                     String companyName, String payTime, String userNickName, String id,
+                                     String price, String editAble, String userId, String name,
+                                     String salesOrderName, String invoiceFiles, String companyId,
+                                     String tradingOrderId, String tradingOrderName, boolean chosen,
+                                     boolean isLocal) {
         this.hasPrint = hasPrint;
         this.customerName = customerName;
         this.createTime = createTime;
@@ -116,8 +118,8 @@ public class CompanyPayOrderInfo {
         this.isLocal = isLocal;
     }
 
-    @Generated(hash = 1328230330)
-    public CompanyPayOrderInfo() {
+    @Generated(hash = 317145584)
+    public CompanyDeletePayOrderInfo() {
     }
 
     public String getHasPrint() {

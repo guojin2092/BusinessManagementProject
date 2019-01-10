@@ -20,6 +20,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyClientInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfo;
@@ -34,6 +35,7 @@ import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteClientInf
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteContactInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteDeliveryOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteInfo;
+import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeletePayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteProductInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteQuotationInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteSalesOrderInfo;
@@ -47,6 +49,7 @@ import com.africa.crm.businessmanagement.main.dao.CompanyDeleteClientInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteContactInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteDeliveryOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyDeletePayOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteProductInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteQuotationInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteSalesOrderInfoDao;
@@ -54,6 +57,7 @@ import com.africa.crm.businessmanagement.main.dao.CompanyDeleteSupplierInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteTradingOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeliveryOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyPayOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyProductInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyQuotationInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanySalesOrderInfoDao;
@@ -206,6 +210,14 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
     private List<CompanyDeleteDeliveryOrderInfo> mDeleteDeliveryOrderLocalList = new ArrayList<>();//本地数据
 
     /**
+     * 企业付款单本地数据库
+     */
+    private GreendaoManager<CompanyPayOrderInfo, CompanyPayOrderInfoDao> mPayOrderInfoDaoManager;
+    private List<CompanyPayOrderInfo> mPayOrderLocalList = new ArrayList<>();//本地数据
+    private GreendaoManager<CompanyDeletePayOrderInfo, CompanyDeletePayOrderInfoDao> mDeletePayOrderInfoDaoManager;
+    private List<CompanyDeletePayOrderInfo> mDeletePayOrderLocalList = new ArrayList<>();//本地数据
+
+    /**
      * @param activity
      */
     public static void startActivity(Activity activity, WorkStationInfo workStationInfo) {
@@ -303,6 +315,12 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
         //删除企业发货单dao
         mDeleteDeliveryOrderInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeleteDeliveryOrderInfoDao());
         mDeleteDeliveryOrderLocalList = mDeleteDeliveryOrderInfoDaoManager.queryAll();
+        //企业付款单dao
+        mPayOrderInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyPayOrderInfoDao());
+        mPayOrderLocalList = mPayOrderInfoDaoManager.queryAll();
+        //删除企业付款单dao
+        mDeletePayOrderInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeletePayOrderInfoDao());
+        mDeletePayOrderLocalList = mDeletePayOrderInfoDaoManager.queryAll();
     }
 
     @Override
@@ -367,6 +385,8 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                 mDeleteSalesOrderInfoDaoManager.deleteAll();
                                 mDeliveryOrderInfoDaoManager.deleteAll();
                                 mDeleteDeliveryOrderInfoDaoManager.deleteAll();
+                                mPayOrderInfoDaoManager.deleteAll();
+                                mDeletePayOrderInfoDaoManager.deleteAll();
                                 MyApplication.getInstance().finishAllActivities();
                                 LoginActivity.startActivityForResult(SettingActivity.this, 0);
                                 mLoginOutDialog.dismiss();
@@ -875,6 +895,74 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                 mDeliveryOrderInfoDaoManager.correct(companyInfo);
                             }
                         }, new ComConsumer(this)));
+            }
+        }
+
+        /**
+         * 企业付款单模块
+         */
+        for (final CompanyDeletePayOrderInfo companyDeleteInfo : mDeletePayOrderLocalList) {
+            addDisposable(mDataManager.deleteCompanyPayOrder(companyDeleteInfo.getId())
+                    .compose(RxUtils.<BaseEntity>ioToMain(this))
+                    .subscribe(new Consumer<BaseEntity>() {
+                        @Override
+                        public void accept(BaseEntity baseEntity) throws Exception {
+                            mDeletePayOrderInfoDaoManager.delete(companyDeleteInfo.getLocalId());
+                        }
+                    }, new ComConsumer(this)));
+        }
+        for (final CompanyPayOrderInfo companyInfo : mPayOrderLocalList) {
+            final String[] mHeadCode = {""};
+            if (companyInfo.isLocal()) {
+                final String[] localPath = companyInfo.getInvoiceFiles().split(",");
+                if (companyInfo.getInvoiceFiles().contains(".jpg")) {
+                    addDisposable(mDataManager.uploadImages(localPath[0])
+                            .flatMap(new Function<FileInfoBean, ObservableSource<FileInfoBean>>() {
+                                @Override
+                                public ObservableSource<FileInfoBean> apply(FileInfoBean fileInfoBean) throws Exception {
+                                    if (!TextUtils.isEmpty(fileInfoBean.getCode())) {
+                                        mHeadCode[0] = fileInfoBean.getCode();
+                                        return mDataManager.uploadImages(localPath[1]);
+                                    } else {
+                                        return Observable.error(new ComException("上传失败，请重试"));
+                                    }
+                                }
+                            })
+                            .flatMap(new Function<FileInfoBean, ObservableSource<UploadInfoBean>>() {
+                                @Override
+                                public ObservableSource<UploadInfoBean> apply(FileInfoBean fileInfoBean) throws Exception {
+                                    if (!TextUtils.isEmpty(fileInfoBean.getCode())) {
+                                        mHeadCode[1] = fileInfoBean.getCode();
+                                        return mDataManager.saveCompanyPayOrder(companyInfo.getId(), companyInfo.getCompanyId(), companyInfo.getUserId(), companyInfo.getName(), companyInfo.getSalesOrderId(), companyInfo.getTradingOrderId(), companyInfo.getCustomerName(), companyInfo.getPrice(), companyInfo.getPayTime(), companyInfo.getHasInvoice(), companyInfo.getHasPrint(), mHeadCode[0] + "," + mHeadCode[1], companyInfo.getRemark());
+                                    } else {
+                                        return Observable.error(new ComException("上传失败，请重试"));
+                                    }
+                                }
+                            })
+                            .compose(RxUtils.<UploadInfoBean>ioToMain(this))
+                            .subscribe(new Consumer<UploadInfoBean>() {
+                                @Override
+                                public void accept(UploadInfoBean uploadInfoBean) throws Exception {
+                                    companyInfo.setId(uploadInfoBean.getId());
+                                    companyInfo.setInvoiceFiles(mHeadCode[0] + "," + mHeadCode[1]);
+                                    companyInfo.setIsLocal(false);
+                                    companyInfo.setCreateTime(uploadInfoBean.getCreateTime());
+                                    mPayOrderInfoDaoManager.correct(companyInfo);
+                                }
+                            }, new ComConsumer(this)));
+                } else {
+                    addDisposable(mDataManager.saveCompanyPayOrder(companyInfo.getId(), companyInfo.getCompanyId(), companyInfo.getUserId(), companyInfo.getName(), companyInfo.getSalesOrderId(), companyInfo.getTradingOrderId(), companyInfo.getCustomerName(), companyInfo.getPrice(), companyInfo.getPayTime(), companyInfo.getHasInvoice(), companyInfo.getHasPrint(), companyInfo.getInvoiceFiles(), companyInfo.getRemark())
+                            .compose(RxUtils.<UploadInfoBean>ioToMain(this))
+                            .subscribe(new Consumer<UploadInfoBean>() {
+                                @Override
+                                public void accept(UploadInfoBean uploadInfoBean) throws Exception {
+                                    companyInfo.setId(uploadInfoBean.getId());
+                                    companyInfo.setIsLocal(false);
+                                    companyInfo.setCreateTime(uploadInfoBean.getCreateTime());
+                                    mPayOrderInfoDaoManager.correct(companyInfo);
+                                }
+                            }, new ComConsumer(this)));
+                }
             }
         }
         toastMsg("数据上传成功");

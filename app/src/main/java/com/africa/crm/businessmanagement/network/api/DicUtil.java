@@ -40,5 +40,6 @@ public class DicUtil {
     public static final String INVOICE_STATE = "INVOICESTATE";
     //查询所有销售单
     public static final String QUERY_ALL_SALE_ORDER = "QUERY_ALL_SALE_ORDER";
-
+    //查询所有交易单
+    public static final String QUERY_ALL_TRADING_ORDER = "QUERY_ALL_TRADING_ORDER";
 }

@@ -35,10 +35,16 @@ public class GlideUtil {
     }
 
     public static void showNormalImg(ImageView imageView, String code) {
+        String imgUrl = "";
+        if (code.contains(".jpg")) {
+            imgUrl = code;
+        } else {
+            imgUrl = ApiConfig.IMG_URL + code;
+        }
         GlideApp.with(MyApplication.getInstance())
-                .load(ApiConfig.IMG_URL + code)
+                .load(imgUrl)
                 .centerCrop()
-                .error(R.drawable.iv_upload_img)
+                .placeholder(R.drawable.iv_no_icon)
                 .into(imageView);
     }
 

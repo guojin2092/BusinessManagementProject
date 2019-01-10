@@ -199,7 +199,7 @@ public interface HttpHelper {
 
     Observable<CompanyPayOrderInfo> getCompanyPayOrderDetail(String id);
 
-    Observable<BaseEntity> saveCompanyPayOrder(String id, String companyId, String userId, String name, String salesOrderId, String tradingOrderId, String customerName, String price, String payTime, String hasInvoice, String hasPrint, String invoiceFiles, String remark);
+    Observable<UploadInfoBean> saveCompanyPayOrder(String id, String companyId, String userId, String name, String salesOrderId, String tradingOrderId, String customerName, String price, String payTime, String hasInvoice, String hasPrint, String invoiceFiles, String remark);
 
     Observable<CompanyPurchasingOrderInfoBean> getCompanyPurchasingOrderList(int page, int rows, String companyId, String userId, String name, String code, String createTimes, String createTimee);
 

@@ -318,7 +318,7 @@ public interface MainApi {
 
     @FormUrlEncoded
     @POST("paymentOrder/save")
-    Observable<BaseEntity> saveCompanyPayOrder(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("salesOrderId") String salesOrderId, @Field("tradingOrderId") String tradingOrderId, @Field("customerName") String customerName, @Field("price") String price, @Field("payTime") String payTime, @Field("hasInvoice") String hasInvoice, @Field("hasPrint") String hasPrint, @Field("invoiceFiles") String invoiceFiles, @Field("remark") String remark);
+    Observable<BaseEntity<UploadInfoBean>> saveCompanyPayOrder(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("salesOrderId") String salesOrderId, @Field("tradingOrderId") String tradingOrderId, @Field("customerName") String customerName, @Field("price") String price, @Field("payTime") String payTime, @Field("hasInvoice") String hasInvoice, @Field("hasPrint") String hasPrint, @Field("invoiceFiles") String invoiceFiles, @Field("remark") String remark);
 
     @FormUrlEncoded
     @POST("purchaseOrder/grid")

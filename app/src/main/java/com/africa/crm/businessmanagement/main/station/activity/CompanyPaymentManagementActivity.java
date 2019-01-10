@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyPayOrderEvent;
@@ -20,17 +22,23 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
-import com.africa.crm.businessmanagement.main.bean.UserInfoBean;
-import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
+import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
+import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeletePayOrderInfo;
+import com.africa.crm.businessmanagement.main.dao.CompanyDeletePayOrderInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyPayOrderInfoDao;
+import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.PaymentListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyPayOrderContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyPayOrderPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
+import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.bigkoo.pickerview.TimePickerView;
@@ -44,6 +52,11 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_USERS;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_USERS_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DELETE_PAY_ORDER;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_PAY_ORDER_LIST;
 
 /**
  * Project：BusinessManagementProject
@@ -72,8 +85,8 @@ public class CompanyPaymentManagementActivity extends BaseRefreshMvpActivity<Com
 
     @BindView(R.id.spinner_user)
     MySpinner spinner_user;
-    private List<UserInfoBean> mUserInfoBeanList = new ArrayList<>();
-    private List<DicInfo> mUserInfoList = new ArrayList<>();
+    private List<DicInfo> mSpinnerCompanyUserList = new ArrayList<>();
+    private String mFromUserId = "";
     private String mUserId = "";
 
     @BindView(R.id.recyclerView)
@@ -90,6 +103,13 @@ public class CompanyPaymentManagementActivity extends BaseRefreshMvpActivity<Com
 
     private TimePickerView pvStartTime, pvEndTime;
     private Date mStartDate, mEndDate;
+
+    private GreendaoManager<CompanyPayOrderInfo, CompanyPayOrderInfoDao> mPayOrderInfoDaoManager;
+    private GreendaoManager<CompanyDeletePayOrderInfo, CompanyDeletePayOrderInfoDao> mDeletePayOrderInfoDaoManager;
+    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoManager;
+
+    private List<CompanyPayOrderInfo> mPayOrderLocalist = new ArrayList<>();//本地数据
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
@@ -138,6 +158,14 @@ public class CompanyPaymentManagementActivity extends BaseRefreshMvpActivity<Com
         tv_start_time.setOnClickListener(this);
         tv_end_time.setOnClickListener(this);
         initTimePicker();
+        //得到Dao对象管理器
+        mPayOrderInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyPayOrderInfoDao());
+        //得到Dao对象管理器
+        mDeletePayOrderInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeletePayOrderInfoDao());
+        //得到Dao对象管理器
+        mDicInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getDicInfoDao());
+        //得到本地数据
+        mDicInfoLocalList = mDicInfoDaoManager.queryAll();
     }
 
     private void initTimePicker() {
@@ -182,17 +210,20 @@ public class CompanyPaymentManagementActivity extends BaseRefreshMvpActivity<Com
 
     @Override
     protected void requestData() {
-        mPresenter.getCompanyUserList(page, rows, "", "2", mCompanyId, "1", "");
+        if ("companyRoot".equals(mRoleCode)) {
+            mPresenter.getAllCompanyUsers(mCompanyId);
+        }
         pullDownRefresh(page);
     }
 
     @Override
     public void pullDownRefresh(int page) {
-        if (mRoleCode.equals("companyRoot")) {
-            mPresenter.getCompanyPayOrderList(page, rows, mCompanyId, mUserId, et_pay_order_name.getText().toString().trim(), et_code.getText().toString().trim(), tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
+        if (mRoleCode.equals("companySales")) {
+            mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
         } else {
-            mPresenter.getCompanyPayOrderList(page, rows, mCompanyId, String.valueOf(UserInfoManager.getUserLoginInfo(this).getId()), et_pay_order_name.getText().toString().trim(), et_code.getText().toString().trim(), tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
+            mUserId = mFromUserId;
         }
+        mPresenter.getCompanyPayOrderList(page, rows, mCompanyId, mUserId, et_pay_order_name.getText().toString().trim(), et_code.getText().toString().trim(), tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
     }
 
     @Override
@@ -226,7 +257,7 @@ public class CompanyPaymentManagementActivity extends BaseRefreshMvpActivity<Com
                 }
                 break;
             case R.id.ll_add:
-                CompanyPaymentDetailActivity.startActivity(CompanyPaymentManagementActivity.this, "");
+                CompanyPaymentDetailActivity.startActivity(CompanyPaymentManagementActivity.this, "", 0l);
                 break;
             case R.id.tv_delete:
                 mDeleteList.clear();
@@ -273,24 +304,27 @@ public class CompanyPaymentManagementActivity extends BaseRefreshMvpActivity<Com
         recyclerView.setNestedScrollingEnabled(false);
     }
 
-
     @Override
-    public void getCompanyUserList(UserManagementInfoBean userManagementInfoBean) {
-        mUserInfoBeanList.clear();
-        mUserInfoBeanList.addAll(userManagementInfoBean.getRows());
-        mUserInfoList.clear();
-        if (!ListUtils.isEmpty(mUserInfoBeanList)) {
-            for (int i = 0; i < mUserInfoBeanList.size(); i++) {
-                mUserInfoList.add(new DicInfo(mUserInfoBeanList.get(i).getUserName(), mUserInfoBeanList.get(i).getId()));
+    public void getAllCompanyUsers(List<DicInfo2> dicInfo2List) {
+        mSpinnerCompanyUserList.clear();
+        if (!ListUtils.isEmpty(dicInfo2List)) {
+            for (DicInfo2 dicInfo2 : dicInfo2List) {
+                DicInfo dicInfo = new DicInfo(dicInfo2.getId(), QUERY_ALL_USERS, dicInfo2.getName(), dicInfo2.getCode());
+                mSpinnerCompanyUserList.add(dicInfo);
             }
+            List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerCompanyUserList, mDicInfoLocalList);
+            for (DicInfo dicInfo : addList) {
+                dicInfo.setType(QUERY_ALL_USERS);
+                mDicInfoDaoManager.insertOrReplace(dicInfo);
+            }
+            spinner_user.setListDatas(getBVActivity(), mSpinnerCompanyUserList);
+            spinner_user.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+                @Override
+                public void onItemClick(DicInfo dicInfo, int position) {
+                    mFromUserId = dicInfo.getCode();
+                }
+            });
         }
-        spinner_user.setListDatas(this, mUserInfoList);
-        spinner_user.addOnItemClickListener(new MySpinner.OnItemClickListener() {
-            @Override
-            public void onItemClick(DicInfo dicInfo, int position) {
-                mUserId = dicInfo.getCode();
-            }
-        });
     }
 
     @Override
@@ -308,6 +342,7 @@ public class CompanyPaymentManagementActivity extends BaseRefreshMvpActivity<Com
                     mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
                 }
                 mPaymentInfoBeanList.clear();
+                mPayOrderLocalist = mPayOrderInfoDaoManager.queryAll();
                 recyclerView.smoothScrollToPosition(0);
             }
             if (mRefreshLayout != null) {
@@ -319,6 +354,24 @@ public class CompanyPaymentManagementActivity extends BaseRefreshMvpActivity<Com
             }
             if (!ListUtils.isEmpty(companyPayOrderInfoBean.getRows())) {
                 mPaymentInfoBeanList.addAll(companyPayOrderInfoBean.getRows());
+                List<CompanyPayOrderInfo> addList = DifferentDataUtil.addPayOrderDataToLocal(mPaymentInfoBeanList, mPayOrderLocalist);
+                if (!ListUtils.isEmpty(addList)) {
+                    for (CompanyPayOrderInfo companyInfo : addList) {
+                        mPayOrderInfoDaoManager.insertOrReplace(companyInfo);
+                    }
+                    mPayOrderLocalist = new ArrayList<>();
+                    mPayOrderLocalist = mPayOrderInfoDaoManager.queryAll();
+                }
+                for (CompanyPayOrderInfo info : mPaymentInfoBeanList) {
+                    for (CompanyPayOrderInfo localInfo : mPayOrderLocalist) {
+                        if (!TextUtils.isEmpty(info.getId()) && !TextUtils.isEmpty(localInfo.getId())) {
+                            if (info.getId().equals(localInfo.getId())) {
+                                info.setLocalId(localInfo.getLocalId());
+                                mPayOrderInfoDaoManager.correct(info);
+                            }
+                        }
+                    }
+                }
                 if (mPaymentListAdapter != null) {
                     mPaymentListAdapter.notifyDataSetChanged();
                 }
@@ -332,7 +385,7 @@ public class CompanyPaymentManagementActivity extends BaseRefreshMvpActivity<Com
                             mPaymentInfoBeanList.get(position).setChosen(!cb_choose.isChecked());
                             mPaymentListAdapter.notifyDataSetChanged();
                         } else {
-                            CompanyPaymentDetailActivity.startActivity(CompanyPaymentManagementActivity.this, mPaymentInfoBeanList.get(position).getId());
+                            CompanyPaymentDetailActivity.startActivity(CompanyPaymentManagementActivity.this, mPaymentInfoBeanList.get(position).getId(), mPaymentInfoBeanList.get(position).getLocalId());
                         }
                     }
                 });
@@ -342,12 +395,25 @@ public class CompanyPaymentManagementActivity extends BaseRefreshMvpActivity<Com
     }
 
     @Override
-    public void deleteCompanyPayOrder(BaseEntity baseEntity) {
+    public void deleteCompanyPayOrder(BaseEntity baseEntity, boolean isLocal) {
         if (baseEntity.isSuccess()) {
             for (int i = 0; i < mDeleteList.size(); i++) {
                 if (mPaymentInfoBeanList.contains(mDeleteList.get(i))) {
                     int position = mPaymentInfoBeanList.indexOf(mDeleteList.get(i));
                     mPaymentInfoBeanList.remove(mDeleteList.get(i));
+                    if (isLocal) {
+                        for (CompanyPayOrderInfo companyInfo : mDeleteList) {
+                            CompanyDeletePayOrderInfo deletePayOrderInfo = new CompanyDeletePayOrderInfo(companyInfo.getHasPrint(), companyInfo.getCustomerName(), companyInfo.getCreateTime(), companyInfo.getCreateTimeDate(), companyInfo.getHasInvoice(), companyInfo.getRemark(), companyInfo.getHasInvoiceName(), companyInfo.getHasPrintName(), companyInfo.getSalesOrderId(), companyInfo.getCode(), companyInfo.getCompanyName(), companyInfo.getPayTime(), companyInfo.getUserNickName(), companyInfo.getId(), companyInfo.getPrice(), companyInfo.getEditAble(), companyInfo.getUserId(), companyInfo.getName(), companyInfo.getSalesOrderName(), companyInfo.getInvoiceFiles(), companyInfo.getCompanyId(), companyInfo.getTradingOrderId(), companyInfo.getTradingOrderName(), false, isLocal);
+                            mDeletePayOrderInfoDaoManager.insertOrReplace(deletePayOrderInfo);
+                        }
+                    }
+                    for (CompanyPayOrderInfo companyInfo : mPayOrderLocalist) {
+                        if (mDeleteList.get(i).getLocalId().equals(companyInfo.getLocalId())) {
+                            mPayOrderInfoDaoManager.delete(companyInfo.getLocalId());
+                        }
+                    }
+                    mPayOrderLocalist = new ArrayList<>();
+                    mPayOrderLocalist = mPayOrderInfoDaoManager.queryAll();
                     if (mPaymentListAdapter != null) {
                         mPaymentListAdapter.notifyItemRemoved(position);
                     }
@@ -378,5 +444,42 @@ public class CompanyPaymentManagementActivity extends BaseRefreshMvpActivity<Com
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        mRefreshLayout.setEnableLoadmore(false);
+        switch (port) {
+            case REQUEST_ALL_USERS_LIST:
+                List<DicInfo2> allUserList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(QUERY_ALL_USERS)) {
+                        allUserList.add(new DicInfo2(dicInfo.getId(), dicInfo.getText(), dicInfo.getCode()));
+                    }
+                }
+                getAllCompanyUsers(allUserList);
+                break;
+            case REQUEST_PAY_ORDER_LIST:
+                List<CompanyPayOrderInfo> rows = new ArrayList<>();
+                if (!TextUtils.isEmpty(StringUtil.getText(et_pay_order_name)) || !TextUtils.isEmpty(StringUtil.getText(et_code)) || !TextUtils.isEmpty(mFromUserId) || !TextUtils.isEmpty(StringUtil.getText(tv_start_time)) || !TextUtils.isEmpty(StringUtil.getText(tv_end_time))) {
+                    if (!TextUtils.isEmpty(mFromUserId)) {
+                        rows = mPayOrderInfoDaoManager.queryBuilder().where(CompanyPayOrderInfoDao.Properties.Name.like("%" + StringUtil.getText(et_pay_order_name) + "%"), CompanyPayOrderInfoDao.Properties.Code.like("%" + StringUtil.getText(et_code) + "%"), CompanyPayOrderInfoDao.Properties.UserId.eq(mFromUserId), CompanyPayOrderInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyPayOrderInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+                    } else {
+                        rows = mPayOrderInfoDaoManager.queryBuilder().where(CompanyPayOrderInfoDao.Properties.Name.like("%" + StringUtil.getText(et_pay_order_name) + "%"), CompanyPayOrderInfoDao.Properties.Code.like("%" + StringUtil.getText(et_code) + "%"), CompanyPayOrderInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyPayOrderInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+                    }
+                } else {
+                    rows = mPayOrderInfoDaoManager.queryAll();
+                }
+                CompanyPayOrderInfoBean companyPayOrderInfoBean = new CompanyPayOrderInfoBean();
+                companyPayOrderInfoBean.setRows(rows);
+                getCompanyPayOrderList(companyPayOrderInfoBean);
+                break;
+            case REQUEST_DELETE_PAY_ORDER:
+                BaseEntity baseEntity = new BaseEntity();
+                baseEntity.setSuccess(true);
+                deleteCompanyPayOrder(baseEntity, true);
+                break;
+        }
     }
 }

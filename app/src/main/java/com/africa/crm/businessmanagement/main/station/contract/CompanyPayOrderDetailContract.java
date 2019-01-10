@@ -4,6 +4,7 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.mvp.presenter.IBasePresenter;
 import com.africa.crm.businessmanagement.network.base.BaseView;
 
@@ -31,7 +32,7 @@ public class CompanyPayOrderDetailContract {
 
         void getCompanyPayOrderDetail(CompanyPayOrderInfo companyPayOrderInfo);
 
-        void saveCompanyPayOrder(BaseEntity baseEntity);
+        void saveCompanyPayOrder(UploadInfoBean uploadInfoBean, boolean isLocal);
 
     }
 

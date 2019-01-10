@@ -1,6 +1,5 @@
 package com.africa.crm.businessmanagement.main.station.presenter;
 
-import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
@@ -90,7 +89,7 @@ public class CompanyAccountDetailPresenter extends RxPresenter<CompanyAccountDet
                 .subscribe(new Consumer<UploadInfoBean>() {
                     @Override
                     public void accept(UploadInfoBean uploadInfoBean) throws Exception {
-                        mView.saveCompanyAccount(uploadInfoBean,false);
+                        mView.saveCompanyAccount(uploadInfoBean, false);
                     }
                 }, new ComConsumer(mView, REQUEST_SAVE_COMPANY_ACCOUNT)));
     }

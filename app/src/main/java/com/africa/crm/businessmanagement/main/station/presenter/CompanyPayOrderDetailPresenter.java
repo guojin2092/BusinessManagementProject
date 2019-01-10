@@ -2,9 +2,9 @@ package com.africa.crm.businessmanagement.main.station.presenter;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
-import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyPayOrderDetailContract;
 import com.africa.crm.businessmanagement.mvp.presenter.RxPresenter;
 import com.africa.crm.businessmanagement.network.error.ComConsumer;
@@ -13,6 +13,13 @@ import com.africa.crm.businessmanagement.network.util.RxUtils;
 import java.util.List;
 
 import io.reactivex.functions.Consumer;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_CUSTOMER_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_SALES_ORDER;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_TRADING_ORDER;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_PAY_ORDER_DETAIL;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SAVE_COMPANY_PAY_ORDER;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_UPLOAD_IMAGE;
 
 /**
  * Project：BusinessManagementProject
@@ -34,7 +41,7 @@ public class CompanyPayOrderDetailPresenter extends RxPresenter<CompanyPayOrderD
                     public void accept(FileInfoBean fileInfoBean) throws Exception {
                         mView.uploadImages(fileInfoBean);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_UPLOAD_IMAGE)));
     }
 
     @Override
@@ -46,7 +53,7 @@ public class CompanyPayOrderDetailPresenter extends RxPresenter<CompanyPayOrderD
                     public void accept(List<DicInfo2> dicInfo2List) throws Exception {
                         mView.getAllSaleOrders(dicInfo2List);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_ALL_SALES_ORDER)));
 
     }
 
@@ -59,7 +66,7 @@ public class CompanyPayOrderDetailPresenter extends RxPresenter<CompanyPayOrderD
                     public void accept(List<DicInfo2> dicInfo2List) throws Exception {
                         mView.getAllTradingOrders(dicInfo2List);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_ALL_TRADING_ORDER)));
     }
 
     @Override
@@ -71,7 +78,7 @@ public class CompanyPayOrderDetailPresenter extends RxPresenter<CompanyPayOrderD
                     public void accept(List<DicInfo2> dicInfo2List) throws Exception {
                         mView.getAllCustomers(dicInfo2List);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_ALL_CUSTOMER_LIST)));
 
     }
 
@@ -84,20 +91,20 @@ public class CompanyPayOrderDetailPresenter extends RxPresenter<CompanyPayOrderD
                     public void accept(CompanyPayOrderInfo companyPayOrderInfo) throws Exception {
                         mView.getCompanyPayOrderDetail(companyPayOrderInfo);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_COMPANY_PAY_ORDER_DETAIL)));
 
     }
 
     @Override
     public void saveCompanyPayOrder(String id, String companyId, String userId, String name, String salesOrderId, String tradingOrderId, String customerName, String price, String payTime, String hasInvoice, String hasPrint, String invoiceFiles, String remark) {
         addDisposable(mDataManager.saveCompanyPayOrder(id, companyId, userId, name, salesOrderId, tradingOrderId, customerName, price, payTime, hasInvoice, hasPrint, invoiceFiles, remark)
-                .compose(RxUtils.<BaseEntity>ioToMain(mView))
-                .subscribe(new Consumer<BaseEntity>() {
+                .compose(RxUtils.<UploadInfoBean>ioToMain(mView))
+                .subscribe(new Consumer<UploadInfoBean>() {
                     @Override
-                    public void accept(BaseEntity baseEntity) throws Exception {
-                        mView.saveCompanyPayOrder(baseEntity);
+                    public void accept(UploadInfoBean uploadInfoBean) throws Exception {
+                        mView.saveCompanyPayOrder(uploadInfoBean, false);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_SAVE_COMPANY_PAY_ORDER)));
     }
 
 }
