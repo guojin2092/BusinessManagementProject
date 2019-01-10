@@ -414,7 +414,7 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
     public void getAllProduct(List<DicInfo2> dicInfoList) {
         List<DicInfo> list = new ArrayList<>();
         for (DicInfo2 dicInfo2 : dicInfoList) {
-            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_PRODUCTS, dicInfo2.getName(), dicInfo2.getId()));
+            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_PRODUCTS, dicInfo2.getName(), dicInfo2.getCode()));
         }
         List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
         for (DicInfo dicInfo : addList) {
@@ -428,7 +428,7 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
     public void getAllSaleOrders(List<DicInfo2> dicInfoList) {
         List<DicInfo> list = new ArrayList<>();
         for (DicInfo2 dicInfo2 : dicInfoList) {
-            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_SALE_ORDER, dicInfo2.getName(), dicInfo2.getId()));
+            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_SALE_ORDER, dicInfo2.getName(), dicInfo2.getCode()));
         }
         List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
         for (DicInfo dicInfo : addList) {
@@ -457,6 +457,7 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
             et_deliver_zip_code.setText(companyDeliveryOrderInfo.getSendAddressZipCode());
             et_receiver_address.setText(companyDeliveryOrderInfo.getDestinationAddress());
             et_receiver_zip_code.setText(companyDeliveryOrderInfo.getDestinationAddressZipCode());
+            et_remark.setText(companyDeliveryOrderInfo.getRemark());
             mDeliveryCode = companyDeliveryOrderInfo.getCode();
             mCompanyName = companyDeliveryOrderInfo.getCompanyName();
             mFromName = companyDeliveryOrderInfo.getUserNickName();

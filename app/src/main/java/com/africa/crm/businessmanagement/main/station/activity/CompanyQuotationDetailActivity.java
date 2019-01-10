@@ -413,7 +413,7 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
     public void getAllContact(List<DicInfo2> dicInfoList) {
         List<DicInfo> list = new ArrayList<>();
         for (DicInfo2 dicInfo2 : dicInfoList) {
-            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_CONTACTS, dicInfo2.getName(), dicInfo2.getId()));
+            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_CONTACTS, dicInfo2.getName(), dicInfo2.getCode()));
         }
         List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
         for (DicInfo dicInfo : addList) {
@@ -432,7 +432,7 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
     public void getAllCustomers(List<DicInfo2> dicInfoList) {
         List<DicInfo> list = new ArrayList<>();
         for (DicInfo2 dicInfo2 : dicInfoList) {
-            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_CUSTOMERS, dicInfo2.getName(), dicInfo2.getId()));
+            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_CUSTOMERS, dicInfo2.getName(), dicInfo2.getCode()));
         }
         List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
         for (DicInfo dicInfo : addList) {
@@ -451,7 +451,7 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
     public void getAllProduct(List<DicInfo2> dicInfoList) {
         List<DicInfo> list = new ArrayList<>();
         for (DicInfo2 dicInfo2 : dicInfoList) {
-            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_PRODUCTS, dicInfo2.getName(), dicInfo2.getId()));
+            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_PRODUCTS, dicInfo2.getName(), dicInfo2.getCode()));
         }
         List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
         for (DicInfo dicInfo : addList) {
