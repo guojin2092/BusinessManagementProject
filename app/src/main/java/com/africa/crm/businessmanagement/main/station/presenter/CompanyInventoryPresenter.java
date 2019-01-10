@@ -12,6 +12,10 @@ import java.util.List;
 
 import io.reactivex.functions.Consumer;
 
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_PRODUCTS_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_INVENTORY_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_STOCK_TYPE;
+
 /**
  * Project：BusinessManagementProject
  * Author:  guojin
@@ -32,7 +36,7 @@ public class CompanyInventoryPresenter extends RxPresenter<CompanyInventoryContr
                     public void accept(List<DicInfo2> dicInfo2List) throws Exception {
                         mView.getProductList(dicInfo2List);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_ALL_PRODUCTS_LIST)));
     }
 
     @Override
@@ -44,7 +48,7 @@ public class CompanyInventoryPresenter extends RxPresenter<CompanyInventoryContr
                     public void accept(List<DicInfo> dicInfoList) throws Exception {
                         mView.getType(dicInfoList);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_STOCK_TYPE)));
 
     }
 
@@ -57,7 +61,7 @@ public class CompanyInventoryPresenter extends RxPresenter<CompanyInventoryContr
                     public void accept(CompanyInventoryInfoBean companyInventoryInfoBean) throws Exception {
                         mView.getInventoryList(companyInventoryInfoBean);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_INVENTORY_LIST)));
 
     }
 }

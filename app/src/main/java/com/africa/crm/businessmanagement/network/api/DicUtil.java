@@ -48,4 +48,7 @@ public class DicUtil {
     public static final String SERVICE_TYPE = "SERVICETYPE";
     //服务优先等级
     public static final String SERVICE_LEVEL = "SERVICELEVEL";
+    //库存类型
+    public static final String STOCK_TYPE = "STOCKTYPE";
+
 }

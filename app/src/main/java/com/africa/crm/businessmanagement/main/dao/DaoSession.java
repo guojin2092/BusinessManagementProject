@@ -13,6 +13,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyClientInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
@@ -39,6 +40,7 @@ import com.africa.crm.businessmanagement.main.dao.CompanyClientInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyContactInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeliveryOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyInventoryInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyPayOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyProductInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyQuotationInfoDao;
@@ -74,6 +76,7 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig companyContactInfoDaoConfig;
     private final DaoConfig companyDeliveryOrderInfoDaoConfig;
     private final DaoConfig companyInfoDaoConfig;
+    private final DaoConfig companyInventoryInfoDaoConfig;
     private final DaoConfig companyPayOrderInfoDaoConfig;
     private final DaoConfig companyProductInfoDaoConfig;
     private final DaoConfig companyQuotationInfoDaoConfig;
@@ -100,6 +103,7 @@ public class DaoSession extends AbstractDaoSession {
     private final CompanyContactInfoDao companyContactInfoDao;
     private final CompanyDeliveryOrderInfoDao companyDeliveryOrderInfoDao;
     private final CompanyInfoDao companyInfoDao;
+    private final CompanyInventoryInfoDao companyInventoryInfoDao;
     private final CompanyPayOrderInfoDao companyPayOrderInfoDao;
     private final CompanyProductInfoDao companyProductInfoDao;
     private final CompanyQuotationInfoDao companyQuotationInfoDao;
@@ -139,6 +143,9 @@ public class DaoSession extends AbstractDaoSession {
 
         companyInfoDaoConfig = daoConfigMap.get(CompanyInfoDao.class).clone();
         companyInfoDaoConfig.initIdentityScope(type);
+
+        companyInventoryInfoDaoConfig = daoConfigMap.get(CompanyInventoryInfoDao.class).clone();
+        companyInventoryInfoDaoConfig.initIdentityScope(type);
 
         companyPayOrderInfoDaoConfig = daoConfigMap.get(CompanyPayOrderInfoDao.class).clone();
         companyPayOrderInfoDaoConfig.initIdentityScope(type);
@@ -205,6 +212,7 @@ public class DaoSession extends AbstractDaoSession {
         companyContactInfoDao = new CompanyContactInfoDao(companyContactInfoDaoConfig, this);
         companyDeliveryOrderInfoDao = new CompanyDeliveryOrderInfoDao(companyDeliveryOrderInfoDaoConfig, this);
         companyInfoDao = new CompanyInfoDao(companyInfoDaoConfig, this);
+        companyInventoryInfoDao = new CompanyInventoryInfoDao(companyInventoryInfoDaoConfig, this);
         companyPayOrderInfoDao = new CompanyPayOrderInfoDao(companyPayOrderInfoDaoConfig, this);
         companyProductInfoDao = new CompanyProductInfoDao(companyProductInfoDaoConfig, this);
         companyQuotationInfoDao = new CompanyQuotationInfoDao(companyQuotationInfoDaoConfig, this);
@@ -231,6 +239,7 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(CompanyContactInfo.class, companyContactInfoDao);
         registerDao(CompanyDeliveryOrderInfo.class, companyDeliveryOrderInfoDao);
         registerDao(CompanyInfo.class, companyInfoDao);
+        registerDao(CompanyInventoryInfo.class, companyInventoryInfoDao);
         registerDao(CompanyPayOrderInfo.class, companyPayOrderInfoDao);
         registerDao(CompanyProductInfo.class, companyProductInfoDao);
         registerDao(CompanyQuotationInfo.class, companyQuotationInfoDao);
@@ -259,6 +268,7 @@ public class DaoSession extends AbstractDaoSession {
         companyContactInfoDaoConfig.clearIdentityScope();
         companyDeliveryOrderInfoDaoConfig.clearIdentityScope();
         companyInfoDaoConfig.clearIdentityScope();
+        companyInventoryInfoDaoConfig.clearIdentityScope();
         companyPayOrderInfoDaoConfig.clearIdentityScope();
         companyProductInfoDaoConfig.clearIdentityScope();
         companyQuotationInfoDaoConfig.clearIdentityScope();
@@ -299,6 +309,10 @@ public class DaoSession extends AbstractDaoSession {
 
     public CompanyInfoDao getCompanyInfoDao() {
         return companyInfoDao;
+    }
+
+    public CompanyInventoryInfoDao getCompanyInventoryInfoDao() {
+        return companyInventoryInfoDao;
     }
 
     public CompanyPayOrderInfoDao getCompanyPayOrderInfoDao() {

@@ -157,4 +157,13 @@ public class RequestMethod {
     public static final String REQUEST_COMPANY_SERVICE_RECORD_DETAIL = "request_company_service_record_detail";
     //保存企业服务记录
     public static final String REQUEST_SAVE_COMPANY_SERVICE_RECORD = "request_save_company_service_record";
+
+    //库存类型
+    public static final String REQUEST_STOCK_TYPE = "request_stock_type";
+    //企业库存管理列表
+    public static final String REQUEST_INVENTORY_LIST = "request_inventory_list";
+    //获取企业库存详情
+    public static final String REQUEST_COMPANY_INVENTORY_DETAIL = "request_company_inventory_detail";
+    //保存企业库存
+    public static final String REQUEST_SAVE_COMPANY_INVENTORY = "request_save_company_inventory";
 }

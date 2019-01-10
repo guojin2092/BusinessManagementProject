@@ -233,7 +233,7 @@ public interface HttpHelper {
 
     Observable<CompanyInventoryInfo> getInventoryDetail(String id);
 
-    Observable<BaseEntity> saveInventory(String companyId, String productId, String type, String num, String remark);
+    Observable<UploadInfoBean> saveInventory(String companyId, String productId, String type, String num, String remark);
 
     Observable<CompanyPdfInfoBean> getCompanyPdfList(int page, int rows, String companyId, String userId, String name);
 

@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyInventoryEvent;
@@ -18,14 +20,20 @@ import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
+import com.africa.crm.businessmanagement.main.dao.CompanyInventoryInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyQuotationInfoDao;
+import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.InventoryListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyInventoryContract;
 import com.africa.crm.businessmanagement.main.station.dialog.InventoryDialog;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyInventoryPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
+import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
 import com.bigkoo.pickerview.TimePickerView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -39,6 +47,12 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_PRODUCTS;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.STOCK_TYPE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_PRODUCTS_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_INVENTORY_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_STOCK_TYPE;
 
 /**
  * Project：BusinessManagementProject
@@ -60,7 +74,6 @@ public class CompanyInventoryManagementActivity extends BaseRefreshMvpActivity<C
 
     @BindView(R.id.spinner_type)
     MySpinner spinner_type;
-    private static final String STOCK_TYPE_CODE = "STOCKTYPE";
     private List<DicInfo> mTypeList = new ArrayList<>();
     private String mTypeCode = "";
 
@@ -79,6 +92,12 @@ public class CompanyInventoryManagementActivity extends BaseRefreshMvpActivity<C
     private WorkStationInfo mWorkStationInfo;
     private InventoryDialog mInventoryDialog;
     private String mCompanyId = "";
+
+    private GreendaoManager<CompanyInventoryInfo, CompanyInventoryInfoDao> mInventoryInfoDaoManager;
+    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoManager;
+
+    private List<CompanyInventoryInfo> mInventoryLocalList = new ArrayList<>();//本地数据
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
@@ -115,6 +134,14 @@ public class CompanyInventoryManagementActivity extends BaseRefreshMvpActivity<C
         tv_end_time.setOnClickListener(this);
         mInventoryDialog = InventoryDialog.getInstance(this);
         initTimePicker();
+
+        initTimePicker();
+        //得到Dao对象管理器
+        mInventoryInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyInventoryInfoDao());
+        //得到Dao对象管理器
+        mDicInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getDicInfoDao());
+        //得到本地数据
+        mDicInfoLocalList = mDicInfoDaoManager.queryAll();
     }
 
     private void initTimePicker() {
@@ -158,7 +185,7 @@ public class CompanyInventoryManagementActivity extends BaseRefreshMvpActivity<C
 
     @Override
     protected void requestData() {
-        mPresenter.getType(STOCK_TYPE_CODE);
+        mPresenter.getType(STOCK_TYPE);
         mPresenter.getProductList(mCompanyId);
         pullDownRefresh(page);
     }
@@ -185,7 +212,7 @@ public class CompanyInventoryManagementActivity extends BaseRefreshMvpActivity<C
                 pullDownRefresh(page);
                 break;
             case R.id.ll_add:
-                CompanyInventoryDetailActivity.startActivity(CompanyInventoryManagementActivity.this, "");
+                CompanyInventoryDetailActivity.startActivity(CompanyInventoryManagementActivity.this, "", 0l);
                 break;
         }
     }
@@ -205,7 +232,11 @@ public class CompanyInventoryManagementActivity extends BaseRefreshMvpActivity<C
     public void getProductList(List<DicInfo2> dicInfoList) {
         List<DicInfo> list = new ArrayList<>();
         for (DicInfo2 dicInfo2 : dicInfoList) {
-            list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getId()));
+            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_PRODUCTS, dicInfo2.getName(), dicInfo2.getCode()));
+        }
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
         }
         spinner_product.setListDatas(this, list);
         spinner_product.addOnItemClickListener(new MySpinner.OnItemClickListener() {
@@ -220,6 +251,11 @@ public class CompanyInventoryManagementActivity extends BaseRefreshMvpActivity<C
     public void getType(List<DicInfo> dicInfoList) {
         mTypeList.clear();
         mTypeList.addAll(dicInfoList);
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mTypeList, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            dicInfo.setType(STOCK_TYPE);
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
+        }
         spinner_type.setListDatas(this, mTypeList);
         spinner_type.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
@@ -244,6 +280,7 @@ public class CompanyInventoryManagementActivity extends BaseRefreshMvpActivity<C
                     mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
                 }
                 mInventoryInfoList.clear();
+                mInventoryLocalList = mInventoryInfoDaoManager.queryAll();
                 recyclerView.smoothScrollToPosition(0);
             }
             if (mRefreshLayout != null) {
@@ -255,6 +292,24 @@ public class CompanyInventoryManagementActivity extends BaseRefreshMvpActivity<C
             }
             if (!ListUtils.isEmpty(companyInventoryInfoBean.getRows())) {
                 mInventoryInfoList.addAll(companyInventoryInfoBean.getRows());
+                List<CompanyInventoryInfo> addList = DifferentDataUtil.addInventoryToLocal(mInventoryInfoList, mInventoryLocalList);
+                if (!ListUtils.isEmpty(addList)) {
+                    for (CompanyInventoryInfo companyInfo : addList) {
+                        mInventoryInfoDaoManager.insertOrReplace(companyInfo);
+                    }
+                    mInventoryLocalList = new ArrayList<>();
+                    mInventoryLocalList = mInventoryInfoDaoManager.queryAll();
+                }
+                for (CompanyInventoryInfo info : mInventoryInfoList) {
+                    for (CompanyInventoryInfo localInfo : mInventoryLocalList) {
+                        if (!TextUtils.isEmpty(info.getId()) && !TextUtils.isEmpty(localInfo.getId())) {
+                            if (info.getId().equals(localInfo.getId())) {
+                                info.setLocalId(localInfo.getLocalId());
+                                mInventoryInfoDaoManager.correct(info);
+                            }
+                        }
+                    }
+                }
                 if (mInventoryListAdapter != null) {
                     mInventoryListAdapter.notifyDataSetChanged();
                 }
@@ -263,7 +318,7 @@ public class CompanyInventoryManagementActivity extends BaseRefreshMvpActivity<C
                 mInventoryListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                        CompanyInventoryDetailActivity.startActivity(CompanyInventoryManagementActivity.this, mInventoryInfoList.get(position).getId());
+                        CompanyInventoryDetailActivity.startActivity(CompanyInventoryManagementActivity.this, mInventoryInfoList.get(position).getId(), mInventoryInfoList.get(position).getLocalId());
                     }
                 });
                 mInventoryListAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
@@ -303,5 +358,50 @@ public class CompanyInventoryManagementActivity extends BaseRefreshMvpActivity<C
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        mRefreshLayout.setEnableLoadmore(false);
+        switch (port) {
+            case REQUEST_ALL_PRODUCTS_LIST:
+                List<DicInfo2> allProducts = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(QUERY_ALL_PRODUCTS)) {
+                        allProducts.add(new DicInfo2(dicInfo.getId(), dicInfo.getText(), dicInfo.getCode()));
+                    }
+                }
+                getProductList(allProducts);
+                break;
+            case REQUEST_STOCK_TYPE:
+                List<DicInfo> stateList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(STOCK_TYPE)) {
+                        stateList.add(dicInfo);
+                    }
+                }
+                getType(stateList);
+                break;
+            case REQUEST_INVENTORY_LIST:
+                List<CompanyInventoryInfo> rows = new ArrayList<>();
+                if (!TextUtils.isEmpty(mProductId) || !TextUtils.isEmpty(mTypeCode)) {
+                    if (!TextUtils.isEmpty(mProductId) && !TextUtils.isEmpty(mTypeCode)) {
+                        rows = mInventoryInfoDaoManager.queryBuilder().where(CompanyInventoryInfoDao.Properties.ProductId.eq(mProductId), CompanyInventoryInfoDao.Properties.Type.eq(mTypeCode), CompanyQuotationInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyQuotationInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+
+                    } else if (!TextUtils.isEmpty(mProductId) && TextUtils.isEmpty(mTypeCode)) {
+                        rows = mInventoryInfoDaoManager.queryBuilder().where(CompanyInventoryInfoDao.Properties.ProductId.eq(mProductId), CompanyQuotationInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyQuotationInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+
+                    } else if (TextUtils.isEmpty(mProductId) && !TextUtils.isEmpty(mTypeCode)) {
+                        rows = mInventoryInfoDaoManager.queryBuilder().where(CompanyInventoryInfoDao.Properties.Type.eq(mTypeCode), CompanyQuotationInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyQuotationInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+                    }
+                } else {
+                    rows = mInventoryInfoDaoManager.queryAll();
+                }
+                CompanyInventoryInfoBean companyInventoryInfoBean = new CompanyInventoryInfoBean();
+                companyInventoryInfoBean.setRows(rows);
+                getInventoryList(companyInventoryInfoBean);
+                break;
+        }
     }
 }

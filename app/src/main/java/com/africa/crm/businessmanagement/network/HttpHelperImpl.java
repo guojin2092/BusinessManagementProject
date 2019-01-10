@@ -506,8 +506,8 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
-    public Observable<BaseEntity> saveInventory(String companyId, String productId, String type, String num, String remark) {
-        return mainApi.saveInventory(companyId, productId, type, num, remark);
+    public Observable<UploadInfoBean> saveInventory(String companyId, String productId, String type, String num, String remark) {
+        return mainApi.saveInventory(companyId, productId, type, num, remark).compose(RxUtils.<UploadInfoBean>handleResult());
     }
 
     @Override

@@ -489,7 +489,7 @@ public class DataManager implements HttpHelper {
     }
 
     @Override
-    public Observable<BaseEntity> saveInventory(String companyId, String productId, String type, String num, String remark) {
+    public Observable<UploadInfoBean> saveInventory(String companyId, String productId, String type, String num, String remark) {
         return mHttpHelper.saveInventory(companyId, productId, type, num, remark);
     }
 

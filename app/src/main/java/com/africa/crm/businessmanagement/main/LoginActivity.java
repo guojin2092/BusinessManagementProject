@@ -54,6 +54,7 @@ import static com.africa.crm.businessmanagement.network.api.DicUtil.SERVICE_LEVE
 import static com.africa.crm.businessmanagement.network.api.DicUtil.SERVICE_STATE;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.SERVICE_TYPE;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.STATE_CODE;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.STOCK_TYPE;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.SUPPLIER_TYPE_CODE;
 import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_STATE;
 import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_TYPE;
@@ -434,6 +435,21 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
                         List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerSupplierTypeList, mDicInfoLocalList);
                         for (DicInfo dicInfo : addList) {
                             dicInfo.setType(SERVICE_LEVEL);
+                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
+                        }
+                    }
+                }, new ComConsumer(this)));
+        //库存类型
+        addDisposable(mDataManager.getDicByCode(STOCK_TYPE)
+                .compose(RxUtils.<List<DicInfo>>ioToMain())
+                .subscribe(new Consumer<List<DicInfo>>() {
+                    @Override
+                    public void accept(List<DicInfo> dicInfoList) throws Exception {
+                        List<DicInfo> spinnerSupplierTypeList = new ArrayList<>();
+                        spinnerSupplierTypeList.addAll(dicInfoList);
+                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerSupplierTypeList, mDicInfoLocalList);
+                        for (DicInfo dicInfo : addList) {
+                            dicInfo.setType(STOCK_TYPE);
                             mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
                         }
                     }

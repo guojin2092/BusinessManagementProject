@@ -20,6 +20,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyClientInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
@@ -60,6 +61,7 @@ import com.africa.crm.businessmanagement.main.dao.CompanyDeleteSupplierInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteTradingOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeliveryOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyInventoryInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyPayOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyProductInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyQuotationInfoDao;
@@ -230,6 +232,12 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
     private List<CompanyDeleteServiceRecordInfo> mDeleteServiceRecordLocalList = new ArrayList<>();//本地数据
 
     /**
+     * 企业库存管理本地数据库
+     */
+    private GreendaoManager<CompanyInventoryInfo, CompanyInventoryInfoDao> mInventoryInfoDaoManager;
+    private List<CompanyInventoryInfo> mInventoryLocalList = new ArrayList<>();//本地数据
+
+    /**
      * @param activity
      */
     public static void startActivity(Activity activity, WorkStationInfo workStationInfo) {
@@ -339,6 +347,9 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
         //删除企业服务记录dao
         mDeleteServiceRecordInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeleteServiceRecordInfoDao());
         mDeleteServiceRecordLocalList = mDeleteServiceRecordInfoDaoManager.queryAll();
+        //企业库存dao
+        mInventoryInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyInventoryInfoDao());
+        mInventoryLocalList = mInventoryInfoDaoManager.queryAll();
     }
 
     @Override
@@ -407,6 +418,7 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                 mDeletePayOrderInfoDaoManager.deleteAll();
                                 mServiceRecordInfoDaoManager.deleteAll();
                                 mDeleteServiceRecordInfoDaoManager.deleteAll();
+                                mInventoryInfoDaoManager.deleteAll();
                                 MyApplication.getInstance().finishAllActivities();
                                 LoginActivity.startActivityForResult(SettingActivity.this, 0);
                                 mLoginOutDialog.dismiss();
@@ -1010,6 +1022,25 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                 companyInfo.setIsLocal(false);
                                 companyInfo.setCreateTime(uploadInfoBean.getCreateTime());
                                 mServiceRecordInfoDaoManager.correct(companyInfo);
+                            }
+                        }, new ComConsumer(this)));
+            }
+        }
+
+        /**
+         * 企业库存模块
+         */
+        for (final CompanyInventoryInfo companyInfo : mInventoryLocalList) {
+            if (companyInfo.isLocal()) {
+                addDisposable(mDataManager.saveInventory(companyInfo.getCompanyId(), companyInfo.getProductId(), companyInfo.getType(), companyInfo.getNum(), companyInfo.getRemark())
+                        .compose(RxUtils.<UploadInfoBean>ioToMain(this))
+                        .subscribe(new Consumer<UploadInfoBean>() {
+                            @Override
+                            public void accept(UploadInfoBean uploadInfoBean) throws Exception {
+                                companyInfo.setId(uploadInfoBean.getId());
+                                companyInfo.setIsLocal(false);
+                                companyInfo.setCreateTime(uploadInfoBean.getCreateTime());
+                                mInventoryInfoDaoManager.correct(companyInfo);
                             }
                         }, new ComConsumer(this)));
             }

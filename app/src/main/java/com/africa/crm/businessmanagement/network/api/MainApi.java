@@ -386,7 +386,7 @@ public interface MainApi {
 
     @FormUrlEncoded
     @POST("stockRecord/save")
-    Observable<BaseEntity> saveInventory(@Field("companyId") String companyId, @Field("productId") String productId, @Field("type") String type, @Field("num") String num, @Field("remark") String remark);
+    Observable<BaseEntity<UploadInfoBean>> saveInventory(@Field("companyId") String companyId, @Field("productId") String productId, @Field("type") String type, @Field("num") String num, @Field("remark") String remark);
 
     @FormUrlEncoded
     @POST("pdfFiles/grid")
