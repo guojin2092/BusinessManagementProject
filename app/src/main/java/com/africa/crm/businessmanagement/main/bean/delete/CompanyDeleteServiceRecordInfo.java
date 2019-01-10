@@ -1,4 +1,4 @@
-package com.africa.crm.businessmanagement.main.bean;
+package com.africa.crm.businessmanagement.main.bean.delete;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
@@ -14,7 +14,7 @@ import org.greenrobot.greendao.annotation.Id;
  * Why & What is modified:
  */
 @Entity
-public class CompanyServiceRecordInfo {
+public class CompanyDeleteServiceRecordInfo {
     @Id(autoincrement = true)
     private Long localId;
     private String customerName;//客户名称
@@ -45,15 +45,15 @@ public class CompanyServiceRecordInfo {
     private boolean chosen = false;
     private boolean isLocal = false;
 
-    @Generated(hash = 967788499)
-    public CompanyServiceRecordInfo(Long localId, String customerName,
-                                    String createTime, Long createTimeDate, String phone, String remark,
-                                    String reason, String track, String state, String type,
-                                    String companyName, String solution, String userNickName,
-                                    String productId, String typeName, String id, String level,
-                                    String email, String editAble, String userId, String name,
-                                    String stateName, String levelName, String companyId,
-                                    String productName, boolean chosen, boolean isLocal) {
+    @Generated(hash = 521197234)
+    public CompanyDeleteServiceRecordInfo(Long localId, String customerName,
+                                          String createTime, Long createTimeDate, String phone, String remark,
+                                          String reason, String track, String state, String type,
+                                          String companyName, String solution, String userNickName,
+                                          String productId, String typeName, String id, String level,
+                                          String email, String editAble, String userId, String name,
+                                          String stateName, String levelName, String companyId,
+                                          String productName, boolean chosen, boolean isLocal) {
         this.localId = localId;
         this.customerName = customerName;
         this.createTime = createTime;
@@ -83,14 +83,14 @@ public class CompanyServiceRecordInfo {
         this.isLocal = isLocal;
     }
 
-    public CompanyServiceRecordInfo(String customerName,
-                                    String createTime, Long createTimeDate, String phone, String remark,
-                                    String reason, String track, String state, String type,
-                                    String companyName, String solution, String userNickName,
-                                    String productId, String typeName, String id, String level,
-                                    String email, String editAble, String userId, String name,
-                                    String stateName, String levelName, String companyId,
-                                    String productName, boolean chosen, boolean isLocal) {
+    public CompanyDeleteServiceRecordInfo(String customerName,
+                                          String createTime, Long createTimeDate, String phone, String remark,
+                                          String reason, String track, String state, String type,
+                                          String companyName, String solution, String userNickName,
+                                          String productId, String typeName, String id, String level,
+                                          String email, String editAble, String userId, String name,
+                                          String stateName, String levelName, String companyId,
+                                          String productName, boolean chosen, boolean isLocal) {
         this.customerName = customerName;
         this.createTime = createTime;
         this.createTimeDate = createTimeDate;
@@ -119,8 +119,8 @@ public class CompanyServiceRecordInfo {
         this.isLocal = isLocal;
     }
 
-    @Generated(hash = 101359780)
-    public CompanyServiceRecordInfo() {
+    @Generated(hash = 1684316298)
+    public CompanyDeleteServiceRecordInfo() {
     }
 
     public String getCustomerName() {

@@ -37,7 +37,6 @@ public class CompanyPayOrderPresenter extends RxPresenter<CompanyPayOrderContrac
                         mView.getAllCompanyUsers(dicInfoList);
                     }
                 }, new ComConsumer(mView, REQUEST_ALL_USERS_LIST)));
-
     }
 
     @Override

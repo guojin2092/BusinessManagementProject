@@ -10,6 +10,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyServiceRecordInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySupplierInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
@@ -412,6 +413,39 @@ public class DifferentDataUtil {
             for (String string : mNetList) {
                 if (!mLocalList.contains(string)) {
                     for (CompanyPayOrderInfo companyInfo : netList) {
+                        if (companyInfo.getId().equals(string)) {
+                            mCompanyInfoAddList.add(companyInfo);
+                        }
+                    }
+                }
+            }
+        } else {
+            mCompanyInfoAddList.addAll(netList);
+        }
+        return mCompanyInfoAddList;
+    }
+
+    /**
+     * 添加字典项数据到本地数据库(去重处理)
+     *
+     * @param netList
+     * @param localList
+     * @return
+     */
+    public static List<CompanyServiceRecordInfo> addServiceRecordDataToLocal(List<CompanyServiceRecordInfo> netList, List<CompanyServiceRecordInfo> localList) {
+        List<CompanyServiceRecordInfo> mCompanyInfoAddList = new ArrayList<>();//差异数据
+        List<String> mNetList = new ArrayList<>();
+        List<String> mLocalList = new ArrayList<>();
+        for (CompanyServiceRecordInfo companyInfo : netList) {
+            mNetList.add(companyInfo.getId());
+        }
+        if (!ListUtils.isEmpty(localList)) {
+            for (CompanyServiceRecordInfo companyInfo : localList) {
+                mLocalList.add(companyInfo.getId());
+            }
+            for (String string : mNetList) {
+                if (!mLocalList.contains(string)) {
+                    for (CompanyServiceRecordInfo companyInfo : netList) {
                         if (companyInfo.getId().equals(string)) {
                             mCompanyInfoAddList.add(companyInfo);
                         }

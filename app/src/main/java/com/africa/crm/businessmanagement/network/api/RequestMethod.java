@@ -142,4 +142,19 @@ public class RequestMethod {
     public static final String REQUEST_COMPANY_PAY_ORDER_DETAIL = "request_company_delivery_pay_detail";
     //保存企业付款单
     public static final String REQUEST_SAVE_COMPANY_PAY_ORDER = "request_save_company_pay_order";
+
+    //服务状态
+    public static final String REQUEST_SERVICE_STATE = "request_service_state";
+    //服务类型
+    public static final String REQUEST_SERVICE_TYPE = "request_service_type";
+    //企业服务记录列表
+    public static final String REQUEST_SERVICE_RECORD_LIST = "request_service_record_list";
+    //删除企业服务记录
+    public static final String REQUEST_DELETE_SERVICE_RECORD = "request_delete_service_record";
+    //服务优先等級
+    public static final String REQUEST_SERVICE_LEVEL = "request_service_level";
+    //获取企业服务记录详情
+    public static final String REQUEST_COMPANY_SERVICE_RECORD_DETAIL = "request_company_service_record_detail";
+    //保存企业服务记录
+    public static final String REQUEST_SAVE_COMPANY_SERVICE_RECORD = "request_save_company_service_record";
 }

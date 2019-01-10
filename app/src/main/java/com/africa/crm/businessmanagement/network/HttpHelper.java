@@ -215,7 +215,7 @@ public interface HttpHelper {
 
     Observable<CompanyServiceRecordInfo> getCompanyServiceRecordDetail(String id);
 
-    Observable<BaseEntity> saveCompanyServiceRecord(String id, String companyId, String userId, String name, String state, String type, String productId, String customerName, String level, String phone, String email, String reason, String remark, String solution, String track);
+    Observable<UploadInfoBean> saveCompanyServiceRecord(String id, String companyId, String userId, String name, String state, String type, String productId, String customerName, String level, String phone, String email, String reason, String remark, String solution, String track);
 
     Observable<CompanyTaskInfoBean> getCompanyTaskList(int page, int rows, String companyId, String userId, String name, String customerName, String state, String level, String remindTimes, String remindTimee);
 

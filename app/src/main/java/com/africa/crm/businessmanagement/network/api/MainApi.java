@@ -350,7 +350,7 @@ public interface MainApi {
 
     @FormUrlEncoded
     @POST("serviceRecord/save")
-    Observable<BaseEntity> saveCompanyServiceRecord(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("state") String state, @Field("type") String type, @Field("productId") String productId, @Field("customerName") String customerName, @Field("level") String level, @Field("phone") String phone, @Field("email") String email, @Field("reason") String reason, @Field("remark") String remark, @Field("solution") String solution, @Field("track") String track);
+    Observable<BaseEntity<UploadInfoBean>> saveCompanyServiceRecord(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("state") String state, @Field("type") String type, @Field("productId") String productId, @Field("customerName") String customerName, @Field("level") String level, @Field("phone") String phone, @Field("email") String email, @Field("reason") String reason, @Field("remark") String remark, @Field("solution") String solution, @Field("track") String track);
 
     @FormUrlEncoded
     @POST("taskRecord/grid")

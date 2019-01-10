@@ -50,6 +50,9 @@ import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_SU
 import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_TRADING_ORDER;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_USERS;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.SALE_ORDER_STATE;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.SERVICE_LEVEL;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.SERVICE_STATE;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.SERVICE_TYPE;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.STATE_CODE;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.SUPPLIER_TYPE_CODE;
 import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_STATE;
@@ -386,6 +389,51 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
                         }
                         List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
                         for (DicInfo dicInfo : addList) {
+                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
+                        }
+                    }
+                }, new ComConsumer(this)));
+        //服务状态
+        addDisposable(mDataManager.getDicByCode(SERVICE_STATE)
+                .compose(RxUtils.<List<DicInfo>>ioToMain())
+                .subscribe(new Consumer<List<DicInfo>>() {
+                    @Override
+                    public void accept(List<DicInfo> dicInfoList) throws Exception {
+                        List<DicInfo> spinnerSupplierTypeList = new ArrayList<>();
+                        spinnerSupplierTypeList.addAll(dicInfoList);
+                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerSupplierTypeList, mDicInfoLocalList);
+                        for (DicInfo dicInfo : addList) {
+                            dicInfo.setType(SERVICE_STATE);
+                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
+                        }
+                    }
+                }, new ComConsumer(this)));
+        //服务类型
+        addDisposable(mDataManager.getDicByCode(SERVICE_TYPE)
+                .compose(RxUtils.<List<DicInfo>>ioToMain())
+                .subscribe(new Consumer<List<DicInfo>>() {
+                    @Override
+                    public void accept(List<DicInfo> dicInfoList) throws Exception {
+                        List<DicInfo> spinnerSupplierTypeList = new ArrayList<>();
+                        spinnerSupplierTypeList.addAll(dicInfoList);
+                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerSupplierTypeList, mDicInfoLocalList);
+                        for (DicInfo dicInfo : addList) {
+                            dicInfo.setType(SERVICE_TYPE);
+                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
+                        }
+                    }
+                }, new ComConsumer(this)));
+        //服务优先级
+        addDisposable(mDataManager.getDicByCode(SERVICE_LEVEL)
+                .compose(RxUtils.<List<DicInfo>>ioToMain())
+                .subscribe(new Consumer<List<DicInfo>>() {
+                    @Override
+                    public void accept(List<DicInfo> dicInfoList) throws Exception {
+                        List<DicInfo> spinnerSupplierTypeList = new ArrayList<>();
+                        spinnerSupplierTypeList.addAll(dicInfoList);
+                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerSupplierTypeList, mDicInfoLocalList);
+                        for (DicInfo dicInfo : addList) {
+                            dicInfo.setType(SERVICE_LEVEL);
                             mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
                         }
                     }

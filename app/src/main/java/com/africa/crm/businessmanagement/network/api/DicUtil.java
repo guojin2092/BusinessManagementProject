@@ -42,4 +42,10 @@ public class DicUtil {
     public static final String QUERY_ALL_SALE_ORDER = "QUERY_ALL_SALE_ORDER";
     //查询所有交易单
     public static final String QUERY_ALL_TRADING_ORDER = "QUERY_ALL_TRADING_ORDER";
+    //服务状态
+    public static final String SERVICE_STATE = "SERVICESTATE";
+    //服务类型
+    public static final String SERVICE_TYPE = "SERVICETYPE";
+    //服务优先等级
+    public static final String SERVICE_LEVEL = "SERVICELEVEL";
 }

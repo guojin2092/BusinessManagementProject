@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveServiceRecordEvent;
@@ -20,17 +22,23 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyServiceRecordInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyServiceRecordInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
-import com.africa.crm.businessmanagement.main.bean.UserInfoBean;
-import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
+import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
+import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteServiceRecordInfo;
+import com.africa.crm.businessmanagement.main.dao.CompanyDeleteServiceRecordInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyServiceRecordInfoDao;
+import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.ServiceRecordListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyServiceRecordOrderContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyServiceRecordPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
+import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.bigkoo.pickerview.TimePickerView;
@@ -44,6 +52,15 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_USERS;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.SERVICE_STATE;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.SERVICE_TYPE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_USERS_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DELETE_SERVICE_RECORD;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SERVICE_RECORD_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SERVICE_STATE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SERVICE_TYPE;
 
 /**
  * Project：BusinessManagementProject
@@ -60,19 +77,17 @@ public class CompanyServiceRecordManagementActivity extends BaseRefreshMvpActivi
 
     @BindView(R.id.spinner_user)
     MySpinner spinner_user;
-    private List<UserInfoBean> mUserInfoBeanList = new ArrayList<>();
-    private List<DicInfo> mUserInfoList = new ArrayList<>();
+    private List<DicInfo> mSpinnerCompanyUserList = new ArrayList<>();
+    private String mFromUserId = "";
     private String mUserId = "";
 
     @BindView(R.id.spinner_state)
     MySpinner spinner_state;
-    private static final String STATE_CODE = "SERVICESTATE";
     private List<DicInfo> mServiceRecordStateList = new ArrayList<>();
     private String mStateCode = "";
 
     @BindView(R.id.spinner_type)
     MySpinner spinner_type;
-    private static final String TYPE_CODE = "SERVICETYPE";
     private List<DicInfo> mServiceRecordTypeList = new ArrayList<>();
     private String mTypeCode = "";
 
@@ -101,6 +116,13 @@ public class CompanyServiceRecordManagementActivity extends BaseRefreshMvpActivi
 
     private TimePickerView pvStartTime, pvEndTime;
     private Date mStartDate, mEndDate;
+
+    private GreendaoManager<CompanyServiceRecordInfo, CompanyServiceRecordInfoDao> mServiceRecordInfoDaoManager;
+    private GreendaoManager<CompanyDeleteServiceRecordInfo, CompanyDeleteServiceRecordInfoDao> mDeleteServiceRecordInfoDaoManager;
+    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoManager;
+
+    private List<CompanyServiceRecordInfo> mServiceRecordLocalList = new ArrayList<>();//本地数据
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
@@ -149,6 +171,14 @@ public class CompanyServiceRecordManagementActivity extends BaseRefreshMvpActivi
         tv_start_time.setOnClickListener(this);
         tv_end_time.setOnClickListener(this);
         initTimePicker();
+        //得到Dao对象管理器
+        mServiceRecordInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyServiceRecordInfoDao());
+        //得到Dao对象管理器
+        mDeleteServiceRecordInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeleteServiceRecordInfoDao());
+        //得到Dao对象管理器
+        mDicInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getDicInfoDao());
+        //得到本地数据
+        mDicInfoLocalList = mDicInfoDaoManager.queryAll();
     }
 
     private void initTimePicker() {
@@ -192,19 +222,22 @@ public class CompanyServiceRecordManagementActivity extends BaseRefreshMvpActivi
 
     @Override
     protected void requestData() {
-        mPresenter.getState(STATE_CODE);
-        mPresenter.getType(TYPE_CODE);
-        mPresenter.getCompanyUserList(page, rows, "", "2", mCompanyId, "1", "");
+        mPresenter.getState(SERVICE_STATE);
+        mPresenter.getType(SERVICE_TYPE);
+        if ("companyRoot".equals(mRoleCode)) {
+            mPresenter.getAllCompanyUsers(mCompanyId);
+        }
         pullDownRefresh(page);
     }
 
     @Override
     public void pullDownRefresh(int page) {
-        if (mRoleCode.equals("companyRoot")) {
-            mPresenter.getServiceRecordList(page, rows, mCompanyId, mUserId, et_service_record_name.getText().toString().trim(), mStateCode, mTypeCode, tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
+        if (mRoleCode.equals("companySales")) {
+            mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
         } else {
-            mPresenter.getServiceRecordList(page, rows, mCompanyId, String.valueOf(UserInfoManager.getUserLoginInfo(this).getId()), et_service_record_name.getText().toString().trim(), mStateCode, mTypeCode, tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
+            mUserId = mFromUserId;
         }
+        mPresenter.getServiceRecordList(page, rows, mCompanyId, mUserId, et_service_record_name.getText().toString().trim(), mStateCode, mTypeCode, tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
     }
 
     @Override
@@ -238,7 +271,7 @@ public class CompanyServiceRecordManagementActivity extends BaseRefreshMvpActivi
                 }
                 break;
             case R.id.ll_add:
-                CompanyServiceRecordDetailActivity.startActivity(CompanyServiceRecordManagementActivity.this, "");
+                CompanyServiceRecordDetailActivity.startActivity(CompanyServiceRecordManagementActivity.this, "", 0l);
                 break;
             case R.id.tv_delete:
                 mDeleteList.clear();
@@ -290,6 +323,11 @@ public class CompanyServiceRecordManagementActivity extends BaseRefreshMvpActivi
     public void getState(List<DicInfo> dicInfoList) {
         mServiceRecordStateList.clear();
         mServiceRecordStateList.addAll(dicInfoList);
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mServiceRecordStateList, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            dicInfo.setType(SERVICE_STATE);
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
+        }
         spinner_state.setListDatas(this, mServiceRecordStateList);
         spinner_state.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
@@ -303,6 +341,11 @@ public class CompanyServiceRecordManagementActivity extends BaseRefreshMvpActivi
     public void getType(List<DicInfo> dicInfoList) {
         mServiceRecordTypeList.clear();
         mServiceRecordTypeList.addAll(dicInfoList);
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mServiceRecordTypeList, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            dicInfo.setType(SERVICE_TYPE);
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
+        }
         spinner_type.setListDatas(this, mServiceRecordTypeList);
         spinner_type.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
@@ -313,22 +356,26 @@ public class CompanyServiceRecordManagementActivity extends BaseRefreshMvpActivi
     }
 
     @Override
-    public void getCompanyUserList(UserManagementInfoBean userManagementInfoBean) {
-        mUserInfoBeanList.clear();
-        mUserInfoBeanList.addAll(userManagementInfoBean.getRows());
-        mUserInfoList.clear();
-        if (!ListUtils.isEmpty(mUserInfoBeanList)) {
-            for (int i = 0; i < mUserInfoBeanList.size(); i++) {
-                mUserInfoList.add(new DicInfo(mUserInfoBeanList.get(i).getUserName(), mUserInfoBeanList.get(i).getId()));
+    public void getAllCompanyUsers(List<DicInfo2> dicInfo2List) {
+        mSpinnerCompanyUserList.clear();
+        if (!ListUtils.isEmpty(dicInfo2List)) {
+            for (DicInfo2 dicInfo2 : dicInfo2List) {
+                DicInfo dicInfo = new DicInfo(dicInfo2.getId(), QUERY_ALL_USERS, dicInfo2.getName(), dicInfo2.getCode());
+                mSpinnerCompanyUserList.add(dicInfo);
             }
+            List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerCompanyUserList, mDicInfoLocalList);
+            for (DicInfo dicInfo : addList) {
+                dicInfo.setType(QUERY_ALL_USERS);
+                mDicInfoDaoManager.insertOrReplace(dicInfo);
+            }
+            spinner_user.setListDatas(getBVActivity(), mSpinnerCompanyUserList);
+            spinner_user.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+                @Override
+                public void onItemClick(DicInfo dicInfo, int position) {
+                    mFromUserId = dicInfo.getCode();
+                }
+            });
         }
-        spinner_user.setListDatas(this, mUserInfoList);
-        spinner_user.addOnItemClickListener(new MySpinner.OnItemClickListener() {
-            @Override
-            public void onItemClick(DicInfo dicInfo, int position) {
-                mUserId = dicInfo.getCode();
-            }
-        });
     }
 
     @Override
@@ -346,6 +393,7 @@ public class CompanyServiceRecordManagementActivity extends BaseRefreshMvpActivi
                     mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
                 }
                 mServiceRecordInfoBeanList.clear();
+                mServiceRecordLocalList = mServiceRecordInfoDaoManager.queryAll();
                 recyclerView.smoothScrollToPosition(0);
             }
             if (mRefreshLayout != null) {
@@ -357,6 +405,24 @@ public class CompanyServiceRecordManagementActivity extends BaseRefreshMvpActivi
             }
             if (!ListUtils.isEmpty(companyServiceRecordInfoBean.getRows())) {
                 mServiceRecordInfoBeanList.addAll(companyServiceRecordInfoBean.getRows());
+                List<CompanyServiceRecordInfo> addList = DifferentDataUtil.addServiceRecordDataToLocal(mServiceRecordInfoBeanList, mServiceRecordLocalList);
+                if (!ListUtils.isEmpty(addList)) {
+                    for (CompanyServiceRecordInfo companyInfo : addList) {
+                        mServiceRecordInfoDaoManager.insertOrReplace(companyInfo);
+                    }
+                    mServiceRecordLocalList = new ArrayList<>();
+                    mServiceRecordLocalList = mServiceRecordInfoDaoManager.queryAll();
+                }
+                for (CompanyServiceRecordInfo info : mServiceRecordInfoBeanList) {
+                    for (CompanyServiceRecordInfo localInfo : mServiceRecordLocalList) {
+                        if (!TextUtils.isEmpty(info.getId()) && !TextUtils.isEmpty(localInfo.getId())) {
+                            if (info.getId().equals(localInfo.getId())) {
+                                info.setLocalId(localInfo.getLocalId());
+                                mServiceRecordInfoDaoManager.correct(info);
+                            }
+                        }
+                    }
+                }
                 if (mServiceRecordListAdapter != null) {
                     mServiceRecordListAdapter.notifyDataSetChanged();
                 }
@@ -370,7 +436,7 @@ public class CompanyServiceRecordManagementActivity extends BaseRefreshMvpActivi
                             mServiceRecordInfoBeanList.get(position).setChosen(!cb_choose.isChecked());
                             mServiceRecordListAdapter.notifyDataSetChanged();
                         } else {
-                            CompanyServiceRecordDetailActivity.startActivity(CompanyServiceRecordManagementActivity.this, mServiceRecordInfoBeanList.get(position).getId());
+                            CompanyServiceRecordDetailActivity.startActivity(CompanyServiceRecordManagementActivity.this, mServiceRecordInfoBeanList.get(position).getId(), mServiceRecordInfoBeanList.get(position).getLocalId());
                         }
                     }
                 });
@@ -380,12 +446,25 @@ public class CompanyServiceRecordManagementActivity extends BaseRefreshMvpActivi
     }
 
     @Override
-    public void deleteServiceRecord(BaseEntity baseEntity) {
+    public void deleteServiceRecord(BaseEntity baseEntity, boolean isLocal) {
         if (baseEntity.isSuccess()) {
             for (int i = 0; i < mDeleteList.size(); i++) {
                 if (mServiceRecordInfoBeanList.contains(mDeleteList.get(i))) {
                     int position = mServiceRecordInfoBeanList.indexOf(mDeleteList.get(i));
                     mServiceRecordInfoBeanList.remove(mDeleteList.get(i));
+                    if (isLocal) {
+                        for (CompanyServiceRecordInfo companyInfo : mDeleteList) {
+                            CompanyDeleteServiceRecordInfo deleteServiceRecordInfo = new CompanyDeleteServiceRecordInfo(companyInfo.getCustomerName(), companyInfo.getCreateTime(), companyInfo.getCreateTimeDate(), companyInfo.getPhone(), companyInfo.getRemark(), companyInfo.getReason(), companyInfo.getTrack(), companyInfo.getState(), companyInfo.getType(), companyInfo.getCompanyName(), companyInfo.getSolution(), companyInfo.getUserNickName(), companyInfo.getProductId(), companyInfo.getTypeName(), companyInfo.getId(), companyInfo.getLevel(), companyInfo.getEmail(), companyInfo.getEditAble(), companyInfo.getUserId(), companyInfo.getName(), companyInfo.getStateName(), companyInfo.getLevelName(), companyInfo.getCompanyId(), companyInfo.getProductName(), false, isLocal);
+                            mDeleteServiceRecordInfoDaoManager.insertOrReplace(deleteServiceRecordInfo);
+                        }
+                    }
+                    for (CompanyServiceRecordInfo companyInfo : mServiceRecordLocalList) {
+                        if (mDeleteList.get(i).getLocalId().equals(companyInfo.getLocalId())) {
+                            mServiceRecordInfoDaoManager.delete(companyInfo.getLocalId());
+                        }
+                    }
+                    mServiceRecordLocalList = new ArrayList<>();
+                    mServiceRecordLocalList = mServiceRecordInfoDaoManager.queryAll();
                     if (mServiceRecordListAdapter != null) {
                         mServiceRecordListAdapter.notifyItemRemoved(position);
                     }
@@ -416,5 +495,76 @@ public class CompanyServiceRecordManagementActivity extends BaseRefreshMvpActivi
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        mRefreshLayout.setEnableLoadmore(false);
+        switch (port) {
+            case REQUEST_SERVICE_STATE:
+                List<DicInfo> stateList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(SERVICE_STATE)) {
+                        stateList.add(dicInfo);
+                    }
+                }
+                getState(stateList);
+                break;
+            case REQUEST_SERVICE_TYPE:
+                List<DicInfo> typeList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(SERVICE_TYPE)) {
+                        typeList.add(dicInfo);
+                    }
+                }
+                getType(typeList);
+                break;
+            case REQUEST_ALL_USERS_LIST:
+                List<DicInfo2> allUserList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(QUERY_ALL_USERS)) {
+                        allUserList.add(new DicInfo2(dicInfo.getId(), dicInfo.getText(), dicInfo.getCode()));
+                    }
+                }
+                getAllCompanyUsers(allUserList);
+                break;
+            case REQUEST_SERVICE_RECORD_LIST:
+                List<CompanyServiceRecordInfo> rows = new ArrayList<>();
+                if (!TextUtils.isEmpty(StringUtil.getText(et_service_record_name)) || !TextUtils.isEmpty(mFromUserId) || !TextUtils.isEmpty(mStateCode) || !TextUtils.isEmpty(mTypeCode) || !TextUtils.isEmpty(StringUtil.getText(tv_start_time)) || !TextUtils.isEmpty(StringUtil.getText(tv_end_time))) {
+                    if (!TextUtils.isEmpty(mFromUserId)) {
+                        if (!TextUtils.isEmpty(mStateCode) && !TextUtils.isEmpty(mTypeCode)) {
+                            rows = mServiceRecordInfoDaoManager.queryBuilder().where(CompanyServiceRecordInfoDao.Properties.Name.like("%" + StringUtil.getText(et_service_record_name) + "%"), CompanyServiceRecordInfoDao.Properties.State.eq(mStateCode), CompanyServiceRecordInfoDao.Properties.Type.eq(mTypeCode), CompanyServiceRecordInfoDao.Properties.UserId.eq(mFromUserId), CompanyServiceRecordInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyServiceRecordInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+                        } else if (!TextUtils.isEmpty(mStateCode) && TextUtils.isEmpty(mTypeCode)) {
+                            rows = mServiceRecordInfoDaoManager.queryBuilder().where(CompanyServiceRecordInfoDao.Properties.Name.like("%" + StringUtil.getText(et_service_record_name) + "%"), CompanyServiceRecordInfoDao.Properties.State.eq(mStateCode), CompanyServiceRecordInfoDao.Properties.UserId.eq(mFromUserId), CompanyServiceRecordInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyServiceRecordInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+                        } else if (TextUtils.isEmpty(mStateCode) && !TextUtils.isEmpty(mTypeCode)) {
+                            rows = mServiceRecordInfoDaoManager.queryBuilder().where(CompanyServiceRecordInfoDao.Properties.Name.like("%" + StringUtil.getText(et_service_record_name) + "%"), CompanyServiceRecordInfoDao.Properties.Type.eq(mTypeCode), CompanyServiceRecordInfoDao.Properties.UserId.eq(mFromUserId), CompanyServiceRecordInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyServiceRecordInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+                        } else if (TextUtils.isEmpty(mStateCode) && TextUtils.isEmpty(mTypeCode)) {
+                            rows = mServiceRecordInfoDaoManager.queryBuilder().where(CompanyServiceRecordInfoDao.Properties.Name.like("%" + StringUtil.getText(et_service_record_name) + "%"), CompanyServiceRecordInfoDao.Properties.UserId.eq(mFromUserId), CompanyServiceRecordInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyServiceRecordInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+                        }
+                    } else {
+                        if (!TextUtils.isEmpty(mStateCode) && !TextUtils.isEmpty(mTypeCode)) {
+                            rows = mServiceRecordInfoDaoManager.queryBuilder().where(CompanyServiceRecordInfoDao.Properties.Name.like("%" + StringUtil.getText(et_service_record_name) + "%"), CompanyServiceRecordInfoDao.Properties.State.eq(mStateCode), CompanyServiceRecordInfoDao.Properties.Type.eq(mTypeCode), CompanyServiceRecordInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyServiceRecordInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+                        } else if (!TextUtils.isEmpty(mStateCode) && TextUtils.isEmpty(mTypeCode)) {
+                            rows = mServiceRecordInfoDaoManager.queryBuilder().where(CompanyServiceRecordInfoDao.Properties.Name.like("%" + StringUtil.getText(et_service_record_name) + "%"), CompanyServiceRecordInfoDao.Properties.State.eq(mStateCode), CompanyServiceRecordInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyServiceRecordInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+                        } else if (TextUtils.isEmpty(mStateCode) && !TextUtils.isEmpty(mTypeCode)) {
+                            rows = mServiceRecordInfoDaoManager.queryBuilder().where(CompanyServiceRecordInfoDao.Properties.Name.like("%" + StringUtil.getText(et_service_record_name) + "%"), CompanyServiceRecordInfoDao.Properties.Type.eq(mTypeCode), CompanyServiceRecordInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyServiceRecordInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+                        } else if (TextUtils.isEmpty(mStateCode) && TextUtils.isEmpty(mTypeCode)) {
+                            rows = mServiceRecordInfoDaoManager.queryBuilder().where(CompanyServiceRecordInfoDao.Properties.Name.like("%" + StringUtil.getText(et_service_record_name) + "%"), CompanyServiceRecordInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyServiceRecordInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+                        }
+                    }
+                } else {
+                    rows = mServiceRecordInfoDaoManager.queryAll();
+                }
+                CompanyServiceRecordInfoBean companyServiceRecordInfoBean = new CompanyServiceRecordInfoBean();
+                companyServiceRecordInfoBean.setRows(rows);
+                getServiceRecordList(companyServiceRecordInfoBean);
+                break;
+            case REQUEST_DELETE_SERVICE_RECORD:
+                BaseEntity baseEntity = new BaseEntity();
+                baseEntity.setSuccess(true);
+                deleteServiceRecord(baseEntity, true);
+                break;
+        }
     }
 }

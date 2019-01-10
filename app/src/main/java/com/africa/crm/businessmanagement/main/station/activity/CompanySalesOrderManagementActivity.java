@@ -76,8 +76,6 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
     TextView tv_start_time;
     @BindView(R.id.tv_end_time)
     TextView tv_end_time;
-    @BindView(R.id.ll_right)
-    LinearLayout ll_right;
     @BindView(R.id.ll_add)
     LinearLayout ll_add;
     @BindView(R.id.tv_delete)
@@ -157,11 +155,9 @@ public class CompanySalesOrderManagementActivity extends BaseRefreshMvpActivity<
         if (mRoleCode.equals("companyRoot")) {
             spinner_user.setVisibility(View.VISIBLE);
             titlebar_right.setVisibility(View.GONE);
-            ll_right.setVisibility(View.GONE);
         } else {
             spinner_user.setVisibility(View.GONE);
             titlebar_right.setVisibility(View.VISIBLE);
-            ll_right.setVisibility(View.VISIBLE);
         }
         if (mRoleCode.equals("companySales")) {
             ll_add.setVisibility(View.VISIBLE);
