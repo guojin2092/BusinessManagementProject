@@ -145,7 +145,7 @@ public class CompanyPdfReportDetailActivity extends BaseMvpActivity<CompanyPdfRe
                 break;
             case R.id.tv_file_name:
                 if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
-                    toastMsg("查看PDF文件");
+//                    toastMsg("查看PDF文件");
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -168,6 +168,21 @@ public class CompanyPdfReportDetailActivity extends BaseMvpActivity<CompanyPdfRe
                                     .withFileFilter(new String[]{"pdf"})
                                     .start();
                         }
+                    } else {
+                        new LFilePicker()
+                                .withActivity(this)
+                                .withRequestCode(REQUEST_PICK_FILE)
+                                .withTitle("文件选择")
+                                .withIconStyle(Constant.ICON_STYLE_BLUE)
+                                .withMutilyMode(false)
+                                .withMaxNum(1)
+                                .withStartPath("/storage/emulated/0")//指定初始显示路径
+                                .withNotFoundBooks("请选择一个文件")
+                                .withIsGreater(false)//过滤文件大小 小于指定大小的文件
+                                .withFileSize(500 * 1024)//指定文件大小为500K
+                                .withChooseMode(true)//文件夹选择模式
+                                .withFileFilter(new String[]{"pdf"})
+                                .start();
                     }
                 }
                 break;
