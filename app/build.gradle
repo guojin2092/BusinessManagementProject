@@ -97,10 +97,8 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.2'
     /*基础类库*/
     api project(':baselibrary')
-
     /*基础类库*/
     implementation 'com.android.support:multidex:1.0.3'
-
     /*64k方法数限制原理与解决 http://www.jianshu.com/p/da138bf975f7*/
 
     /*ButterKnife*/
@@ -160,4 +158,5 @@ dependencies {
     /*文件选择器*/
     implementation 'com.leon:lfilepickerlibrary:1.8.0'
     /*文件选择器*/
+    implementation files('libs/tbs_sdk_thirdapp_v3.2.0.1104_43200.jar')
 }

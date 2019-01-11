@@ -21,12 +21,15 @@ import android.support.v7.app.AppCompatDelegate;
 import com.africa.crm.businessmanagement.main.dao.DaoMaster;
 import com.africa.crm.businessmanagement.main.dao.DaoSession;
 import com.africa.crm.businessmanagement.network.DataManager;
+import com.africa.crm.businessmanagement.widget.LogUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreater;
 import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.simplesoft.baselibrary.utils.DynamicTimeFormat;
+import com.tencent.smtt.sdk.QbSdk;
+import com.tencent.smtt.sdk.TbsListener;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -66,6 +69,7 @@ public class MyApplication extends MultiDexApplication {
         mActivitys = new LinkedList<>();
         registerActivityListener();
         setDatabase();
+        initTbs();
     }
 
     public static MyApplication getInstance() {
@@ -77,6 +81,44 @@ public class MyApplication extends MultiDexApplication {
 
     public DataManager getDataManager() {
         return mDataManager;
+    }
+
+    /**
+     * 初始化腾讯TBS
+     */
+    private void initTbs() {
+        //搜集本地tbs内核信息并上报服务器，服务器返回结果决定使用哪个内核。
+        QbSdk.setDownloadWithoutWifi(true);//非wifi条件下允许下载X5内核
+
+        QbSdk.PreInitCallback cb = new QbSdk.PreInitCallback() {
+            @Override
+            public void onCoreInitFinished() {
+
+            }
+
+            @Override
+            public void onViewInitFinished(boolean b) {
+                LogUtil.e("apptbs", " onViewInitFinished is " + b);
+            }
+        };
+
+        QbSdk.setTbsListener(new TbsListener() {
+            @Override
+            public void onDownloadFinish(int i) {
+                LogUtil.d("apptbs", "onDownloadFinish");
+            }
+
+            @Override
+            public void onInstallFinish(int i) {
+                LogUtil.d("apptbs", "onInstallFinish");
+            }
+
+            @Override
+            public void onDownloadProgress(int i) {
+                LogUtil.d("apptbs", "onDownloadProgress:" + i);
+            }
+        });
+        QbSdk.initX5Environment(getApplicationContext(), cb);
     }
 
     /**
