@@ -190,4 +190,18 @@ public class RequestMethod {
     public static final String REQUEST_COMPANY_TASK_DETAIL = "request_company_task_detail";
     //保存企业任务
     public static final String REQUEST_SAVE_COMPANY_TASK = "request_save_company_task";
+
+    //企业PDF文件列表
+    public static final String REQUEST_COMPANY_PDF_LIST = "request_company_pdf_list";
+    //删除企业PDF文件
+    public static final String REQUEST_DELETE_COMPANY_PDF = "request_delete_company_pdf";
+    //上传PDF文件
+    public static final String REQUEST_UPLOAD_PDF_FILE = "request_upload_pdf_file";
+    //下载PDF文件
+    public static final String REQUEST_DOWNLOAD_PDF_FILE = "request_download_pdf_file";
+    //获取企业PDF文件详情
+    public static final String REQUEST_COMPANY_PDF_DETAIL = "request_company_pdf_detail";
+    //保存企业PDF文件
+    public static final String REQUEST_SAVE_COMPANY_PDF = "request_save_company_pdf";
+
 }

@@ -504,7 +504,7 @@ public class DataManager implements HttpHelper {
     }
 
     @Override
-    public Observable<BaseEntity> saveCompanyPdfDetail(String id, String companyId, String userId, String name, String code, String remark) {
+    public Observable<UploadInfoBean> saveCompanyPdfDetail(String id, String companyId, String userId, String name, String code, String remark) {
         return mHttpHelper.saveCompanyPdfDetail(id, companyId, userId, name, code, remark);
     }
 

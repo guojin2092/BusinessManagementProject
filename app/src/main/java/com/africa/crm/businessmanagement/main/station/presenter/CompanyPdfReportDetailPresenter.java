@@ -1,8 +1,8 @@
 package com.africa.crm.businessmanagement.main.station.presenter;
 
-import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfo;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyPdfReportDetailContract;
 import com.africa.crm.businessmanagement.mvp.presenter.RxPresenter;
 import com.africa.crm.businessmanagement.network.error.ComConsumer;
@@ -10,6 +10,11 @@ import com.africa.crm.businessmanagement.network.util.RxUtils;
 
 import io.reactivex.functions.Consumer;
 import okhttp3.ResponseBody;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_PDF_DETAIL;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DOWNLOAD_PDF_FILE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SAVE_COMPANY_PDF;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_UPLOAD_PDF_FILE;
 
 /**
  * Project：BusinessManagementProject
@@ -31,7 +36,7 @@ public class CompanyPdfReportDetailPresenter extends RxPresenter<CompanyPdfRepor
                     public void accept(FileInfoBean fileInfoBean) throws Exception {
                         mView.uploadFile(fileInfoBean);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_UPLOAD_PDF_FILE)));
     }
 
     @Override
@@ -41,9 +46,9 @@ public class CompanyPdfReportDetailPresenter extends RxPresenter<CompanyPdfRepor
                 .subscribe(new Consumer<ResponseBody>() {
                     @Override
                     public void accept(ResponseBody responseBody) throws Exception {
-                        mView.downLoadFile(responseBody);
+                        mView.downLoadFile(responseBody, false);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_DOWNLOAD_PDF_FILE)));
     }
 
     @Override
@@ -55,19 +60,19 @@ public class CompanyPdfReportDetailPresenter extends RxPresenter<CompanyPdfRepor
                     public void accept(CompanyPdfInfo companyPdfInfo) throws Exception {
                         mView.getCompanyPdfDetail(companyPdfInfo);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_COMPANY_PDF_DETAIL)));
     }
 
     @Override
     public void saveCompanyPdfDetail(String id, String companyId, String userId, String name, String code, String remark) {
         addDisposable(mDataManager.saveCompanyPdfDetail(id, companyId, userId, name, code, remark)
-                .compose(RxUtils.<BaseEntity>ioToMain(mView))
-                .subscribe(new Consumer<BaseEntity>() {
+                .compose(RxUtils.<UploadInfoBean>ioToMain(mView))
+                .subscribe(new Consumer<UploadInfoBean>() {
                     @Override
-                    public void accept(BaseEntity baseEntity) throws Exception {
-                        mView.saveCompanyPdfDetail(baseEntity);
+                    public void accept(UploadInfoBean uploadInfoBean) throws Exception {
+                        mView.saveCompanyPdfDetail(uploadInfoBean, false);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_SAVE_COMPANY_PDF)));
     }
 
 }

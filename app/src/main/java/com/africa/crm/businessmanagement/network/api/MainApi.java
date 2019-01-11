@@ -398,7 +398,7 @@ public interface MainApi {
 
     @FormUrlEncoded
     @POST("pdfFiles/save")
-    Observable<BaseEntity> saveCompanyPdfDetail(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("code") String code, @Field("remark") String remark);
+    Observable<BaseEntity<UploadInfoBean>> saveCompanyPdfDetail(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("code") String code, @Field("remark") String remark);
 
     @FormUrlEncoded
     @POST("pdfFiles/getInfo")

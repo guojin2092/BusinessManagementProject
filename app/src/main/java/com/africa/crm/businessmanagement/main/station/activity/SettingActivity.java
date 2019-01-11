@@ -22,6 +22,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPurchasingOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
@@ -40,6 +41,7 @@ import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteContactIn
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteDeliveryOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeletePayOrderInfo;
+import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeletePdfInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteProductInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeletePurchasingOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteQuotationInfo;
@@ -57,6 +59,7 @@ import com.africa.crm.businessmanagement.main.dao.CompanyDeleteContactInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteDeliveryOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeletePayOrderInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyDeletePdfInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteProductInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeletePurchasingOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteQuotationInfoDao;
@@ -69,6 +72,7 @@ import com.africa.crm.businessmanagement.main.dao.CompanyDeliveryOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyInventoryInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyPayOrderInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyPdfInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyProductInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyPurchasingOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyQuotationInfoDao;
@@ -261,6 +265,14 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
     private GreendaoManager<CompanyDeleteTaskInfo, CompanyDeleteTaskInfoDao> mDeleteTaskInfoDaoManager;
     private List<CompanyDeleteTaskInfo> mDeleteTaskInfoLocalList = new ArrayList<>();//本地数据
 
+    /**
+     * 企业PDF文件管理本地数据库
+     */
+    private GreendaoManager<CompanyPdfInfo, CompanyPdfInfoDao> mPdfInfoDaoManager;
+    private List<CompanyPdfInfo> mPdfInfoLocalList = new ArrayList<>();//本地数据
+    private GreendaoManager<CompanyDeletePdfInfo, CompanyDeletePdfInfoDao> mDeletePdfInfoDaoManager;
+    private List<CompanyDeletePdfInfo> mDeletePdfInfoLocalList = new ArrayList<>();//本地数据
+
 
     /**
      * @param activity
@@ -387,6 +399,12 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
         //删除企业任务管理dao
         mDeleteTaskInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeleteTaskInfoDao());
         mDeleteTaskInfoLocalList = mDeleteTaskInfoDaoManager.queryAll();
+        //企业PDF文件管理dao
+        mPdfInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyPdfInfoDao());
+        mPdfInfoLocalList = mPdfInfoDaoManager.queryAll();
+        //删除企业PDF文件管理dao
+        mDeletePdfInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeletePdfInfoDao());
+        mDeletePdfInfoLocalList = mDeletePdfInfoDaoManager.queryAll();
     }
 
     @Override
@@ -460,6 +478,8 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                 mDeletePurchasingOrderInfoDaoManager.deleteAll();
                                 mTaskInfoDaoManager.deleteAll();
                                 mDeleteTaskInfoDaoManager.deleteAll();
+                                mPdfInfoDaoManager.deleteAll();
+                                mDeletePdfInfoDaoManager.deleteAll();
                                 MyApplication.getInstance().finishAllActivities();
                                 LoginActivity.startActivityForResult(SettingActivity.this, 0);
                                 mLoginOutDialog.dismiss();
@@ -1142,6 +1162,61 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                 mTaskInfoDaoManager.correct(companyInfo);
                             }
                         }, new ComConsumer(this)));
+            }
+        }
+
+        /**
+         * 企业PDF文件管理模块
+         */
+        for (final CompanyDeletePdfInfo companyDeleteInfo : mDeletePdfInfoLocalList) {
+            addDisposable(mDataManager.deleteCompanyPdf(companyDeleteInfo.getId())
+                    .compose(RxUtils.<BaseEntity>ioToMain(this))
+                    .subscribe(new Consumer<BaseEntity>() {
+                        @Override
+                        public void accept(BaseEntity baseEntity) throws Exception {
+                            mDeletePdfInfoDaoManager.delete(companyDeleteInfo.getLocalId());
+                        }
+                    }, new ComConsumer(this)));
+        }
+        for (final CompanyPdfInfo companyInfo : mPdfInfoLocalList) {
+            final String[] mHeadCode = {""};
+            if (companyInfo.isLocal()) {
+                if (companyInfo.getCode().contains(".pdf")) {
+                    addDisposable(mDataManager.uploadFiles(companyInfo.getCode())
+                            .flatMap(new Function<FileInfoBean, ObservableSource<UploadInfoBean>>() {
+                                @Override
+                                public ObservableSource<UploadInfoBean> apply(FileInfoBean fileInfoBean) throws Exception {
+                                    if (!TextUtils.isEmpty(fileInfoBean.getCode())) {
+                                        mHeadCode[0] = fileInfoBean.getCode();
+                                        return mDataManager.saveCompanyPdfDetail(companyInfo.getId(), companyInfo.getCompanyId(), companyInfo.getUserId(), companyInfo.getName(), companyInfo.getCode(), companyInfo.getRemark());
+                                    } else {
+                                        return Observable.error(new ComException("上传失败，请重试"));
+                                    }
+                                }
+                            }).compose(RxUtils.<UploadInfoBean>ioToMain(this))
+                            .subscribe(new Consumer<UploadInfoBean>() {
+                                @Override
+                                public void accept(UploadInfoBean uploadInfoBean) throws Exception {
+                                    companyInfo.setId(uploadInfoBean.getId());
+                                    companyInfo.setCode(mHeadCode[0]);
+                                    companyInfo.setIsLocal(false);
+                                    companyInfo.setCreateTime(uploadInfoBean.getCreateTime());
+                                    mPdfInfoDaoManager.correct(companyInfo);
+                                }
+                            }, new ComConsumer(this)));
+                } else {
+                    addDisposable(mDataManager.saveCompanyPdfDetail(companyInfo.getId(),companyInfo.getCompanyId(),companyInfo.getUserId(),companyInfo.getName(),companyInfo.getCode(),companyInfo.getRemark())
+                            .compose(RxUtils.<UploadInfoBean>ioToMain(this))
+                            .subscribe(new Consumer<UploadInfoBean>() {
+                                @Override
+                                public void accept(UploadInfoBean uploadInfoBean) throws Exception {
+                                    companyInfo.setId(uploadInfoBean.getId());
+                                    companyInfo.setIsLocal(false);
+                                    companyInfo.setCreateTime(uploadInfoBean.getCreateTime());
+                                    mPdfInfoDaoManager.correct(companyInfo);
+                                }
+                            }, new ComConsumer(this)));
+                }
             }
         }
         toastMsg("数据上传成功");

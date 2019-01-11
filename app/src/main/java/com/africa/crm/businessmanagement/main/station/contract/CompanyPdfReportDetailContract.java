@@ -3,6 +3,7 @@ package com.africa.crm.businessmanagement.main.station.contract;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfo;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.mvp.presenter.IBasePresenter;
 import com.africa.crm.businessmanagement.network.base.BaseView;
 
@@ -22,11 +23,11 @@ public class CompanyPdfReportDetailContract {
     public interface View extends BaseView {
         void uploadFile(FileInfoBean fileInfoBean);
 
-        void downLoadFile(ResponseBody responseBody);
+        void downLoadFile(ResponseBody responseBody,boolean isLocal);
 
         void getCompanyPdfDetail(CompanyPdfInfo companyPdfInfo);
 
-        void saveCompanyPdfDetail(BaseEntity baseEntity);
+        void saveCompanyPdfDetail(UploadInfoBean uploadInfoBean, boolean isLocal);
 
     }
 

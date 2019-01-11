@@ -521,8 +521,8 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
-    public Observable<BaseEntity> saveCompanyPdfDetail(String id, String companyId, String userId, String name, String code, String remark) {
-        return mainApi.saveCompanyPdfDetail(id, companyId, userId, name, code, remark);
+    public Observable<UploadInfoBean> saveCompanyPdfDetail(String id, String companyId, String userId, String name, String code, String remark) {
+        return mainApi.saveCompanyPdfDetail(id, companyId, userId, name, code, remark).compose(RxUtils.<UploadInfoBean>handleResult());
     }
 
     @Override

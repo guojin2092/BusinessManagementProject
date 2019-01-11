@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyPdfEvent;
@@ -20,17 +22,23 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
-import com.africa.crm.businessmanagement.main.bean.UserInfoBean;
-import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
+import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
+import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeletePdfInfo;
+import com.africa.crm.businessmanagement.main.dao.CompanyDeletePdfInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyPdfInfoDao;
+import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.PdfReportListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyPdfReportManagementContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyPdfManagementPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
+import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
@@ -41,6 +49,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_USERS;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_USERS_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_PDF_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DELETE_COMPANY_PDF;
 
 /**
  * Project：BusinessManagementProject
@@ -69,8 +82,9 @@ public class CompanyPdfReportManagementActivity extends BaseRefreshMvpActivity<C
 
     @BindView(R.id.spinner_user)
     MySpinner spinner_user;
-    private List<UserInfoBean> mUserInfoBeanList = new ArrayList<>();
-    private List<DicInfo> mUserInfoList = new ArrayList<>();
+    private List<DicInfo> mSpinnerCompanyUserList = new ArrayList<>();
+    private String mFromUserId = "";
+    private String mFromName = "";
     private String mUserId = "";
 
     private WorkStationInfo mWorkStationInfo;
@@ -78,6 +92,13 @@ public class CompanyPdfReportManagementActivity extends BaseRefreshMvpActivity<C
     private boolean mShowCheckBox = false;
     private String mCompanyId = "";
     private String mRoleCode = "";
+
+    private GreendaoManager<CompanyPdfInfo, CompanyPdfInfoDao> mPdfInfoDaoManager;
+    private GreendaoManager<CompanyDeletePdfInfo, CompanyDeletePdfInfoDao> mDeletePdfInfoDaoManager;
+    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoManager;
+
+    private List<CompanyPdfInfo> mPdfInfoLocalList = new ArrayList<>();//本地数据
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
@@ -118,6 +139,15 @@ public class CompanyPdfReportManagementActivity extends BaseRefreshMvpActivity<C
         } else {
             spinner_user.setVisibility(View.GONE);
         }
+        //得到Dao对象管理器
+        mPdfInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyPdfInfoDao());
+        //得到Dao对象管理器
+        mDeletePdfInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeletePdfInfoDao());
+        //得到Dao对象管理器
+        mDicInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getDicInfoDao());
+        //得到本地数据
+        mDicInfoLocalList = mDicInfoDaoManager.queryAll();
+
     }
 
     @Override
@@ -127,17 +157,20 @@ public class CompanyPdfReportManagementActivity extends BaseRefreshMvpActivity<C
 
     @Override
     protected void requestData() {
-        mPresenter.getCompanyUserList(page, rows, "", "2", mCompanyId, "1", "");
+        if ("companyRoot".equals(mRoleCode)) {
+            mPresenter.getAllCompanyUsers(mCompanyId);
+        }
         pullDownRefresh(page);
     }
 
     @Override
     public void pullDownRefresh(int page) {
-        if (mRoleCode.equals("companyRoot")) {
-            mPresenter.getCompanyPdfList(page, rows, mCompanyId, mUserId, et_file_name.getText().toString().trim());
+        if (mRoleCode.equals("companySales")) {
+            mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
         } else {
-            mPresenter.getCompanyPdfList(page, rows, mCompanyId, String.valueOf(UserInfoManager.getUserLoginInfo(this).getId()), et_file_name.getText().toString().trim());
+            mUserId = mFromUserId;
         }
+        mPresenter.getCompanyPdfList(page, rows, mCompanyId, mUserId, et_file_name.getText().toString().trim());
     }
 
     @Override
@@ -163,7 +196,7 @@ public class CompanyPdfReportManagementActivity extends BaseRefreshMvpActivity<C
                 }
                 break;
             case R.id.ll_add:
-                CompanyPdfReportDetailActivity.startActivity(CompanyPdfReportManagementActivity.this, "");
+                CompanyPdfReportDetailActivity.startActivity(CompanyPdfReportManagementActivity.this, "", 0l);
                 break;
             case R.id.tv_delete:
                 mDeleteList.clear();
@@ -211,22 +244,27 @@ public class CompanyPdfReportManagementActivity extends BaseRefreshMvpActivity<C
     }
 
     @Override
-    public void getCompanyUserList(UserManagementInfoBean userManagementInfoBean) {
-        mUserInfoBeanList.clear();
-        mUserInfoBeanList.addAll(userManagementInfoBean.getRows());
-        mUserInfoList.clear();
-        if (!ListUtils.isEmpty(mUserInfoBeanList)) {
-            for (int i = 0; i < mUserInfoBeanList.size(); i++) {
-                mUserInfoList.add(new DicInfo(mUserInfoBeanList.get(i).getUserName(), mUserInfoBeanList.get(i).getId()));
+    public void getAllCompanyUsers(List<DicInfo2> dicInfo2List) {
+        mSpinnerCompanyUserList.clear();
+        if (!ListUtils.isEmpty(dicInfo2List)) {
+            for (DicInfo2 dicInfo2 : dicInfo2List) {
+                DicInfo dicInfo = new DicInfo(dicInfo2.getId(), QUERY_ALL_USERS, dicInfo2.getName(), dicInfo2.getCode());
+                mSpinnerCompanyUserList.add(dicInfo);
             }
+            List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerCompanyUserList, mDicInfoLocalList);
+            for (DicInfo dicInfo : addList) {
+                dicInfo.setType(QUERY_ALL_USERS);
+                mDicInfoDaoManager.insertOrReplace(dicInfo);
+            }
+            spinner_user.setListDatas(getBVActivity(), mSpinnerCompanyUserList);
+            spinner_user.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+                @Override
+                public void onItemClick(DicInfo dicInfo, int position) {
+                    mFromUserId = dicInfo.getCode();
+                    mFromName = dicInfo.getText();
+                }
+            });
         }
-        spinner_user.setListDatas(this, mUserInfoList);
-        spinner_user.addOnItemClickListener(new MySpinner.OnItemClickListener() {
-            @Override
-            public void onItemClick(DicInfo dicInfo, int position) {
-                mUserId = dicInfo.getCode();
-            }
-        });
     }
 
     @Override
@@ -244,6 +282,7 @@ public class CompanyPdfReportManagementActivity extends BaseRefreshMvpActivity<C
                     mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
                 }
                 mPdfInfoBeanList.clear();
+                mPdfInfoLocalList = mPdfInfoDaoManager.queryAll();
                 recyclerView.smoothScrollToPosition(0);
             }
             if (mRefreshLayout != null) {
@@ -255,6 +294,24 @@ public class CompanyPdfReportManagementActivity extends BaseRefreshMvpActivity<C
             }
             if (!ListUtils.isEmpty(companyPdfInfoBean.getRows())) {
                 mPdfInfoBeanList.addAll(companyPdfInfoBean.getRows());
+                List<CompanyPdfInfo> addList = DifferentDataUtil.addPdfOrderDataToLocal(mPdfInfoBeanList, mPdfInfoLocalList);
+                if (!ListUtils.isEmpty(addList)) {
+                    for (CompanyPdfInfo companyInfo : addList) {
+                        mPdfInfoDaoManager.insertOrReplace(companyInfo);
+                    }
+                    mPdfInfoLocalList = new ArrayList<>();
+                    mPdfInfoLocalList = mPdfInfoDaoManager.queryAll();
+                }
+                for (CompanyPdfInfo info : mPdfInfoBeanList) {
+                    for (CompanyPdfInfo localInfo : mPdfInfoLocalList) {
+                        if (!TextUtils.isEmpty(info.getId()) && !TextUtils.isEmpty(localInfo.getId())) {
+                            if (info.getId().equals(localInfo.getId())) {
+                                info.setLocalId(localInfo.getLocalId());
+                                mPdfInfoDaoManager.correct(info);
+                            }
+                        }
+                    }
+                }
                 if (mPdfReportListAdapter != null) {
                     mPdfReportListAdapter.notifyDataSetChanged();
                 }
@@ -268,7 +325,7 @@ public class CompanyPdfReportManagementActivity extends BaseRefreshMvpActivity<C
                             mPdfInfoBeanList.get(position).setChosen(!cb_choose.isChecked());
                             mPdfReportListAdapter.notifyDataSetChanged();
                         } else {
-                            CompanyPdfReportDetailActivity.startActivity(CompanyPdfReportManagementActivity.this, mPdfInfoBeanList.get(position).getId());
+                            CompanyPdfReportDetailActivity.startActivity(CompanyPdfReportManagementActivity.this, mPdfInfoBeanList.get(position).getId(), mPdfInfoBeanList.get(position).getLocalId());
                         }
                     }
                 });
@@ -278,12 +335,25 @@ public class CompanyPdfReportManagementActivity extends BaseRefreshMvpActivity<C
     }
 
     @Override
-    public void deleteCompanyPdf(BaseEntity baseEntity) {
+    public void deleteCompanyPdf(BaseEntity baseEntity, boolean isLocal) {
         if (baseEntity.isSuccess()) {
             for (int i = 0; i < mDeleteList.size(); i++) {
                 if (mPdfInfoBeanList.contains(mDeleteList.get(i))) {
                     int position = mPdfInfoBeanList.indexOf(mDeleteList.get(i));
                     mPdfInfoBeanList.remove(mDeleteList.get(i));
+                    if (isLocal) {
+                        for (CompanyPdfInfo companyInfo : mDeleteList) {
+                            CompanyDeletePdfInfo deleteDeliveryOrderInfo = new CompanyDeletePdfInfo(companyInfo.getId(), companyInfo.getCreateTime(), companyInfo.getCreateTimeDate(), companyInfo.getRemark(), companyInfo.getEditAble(), companyInfo.getName(), companyInfo.getUserId(), companyInfo.getCode(), companyInfo.getCompanyId(), companyInfo.getCompanyName(), companyInfo.getUserNickName(), false, isLocal);
+                            mDeletePdfInfoDaoManager.insertOrReplace(deleteDeliveryOrderInfo);
+                        }
+                    }
+                    for (CompanyPdfInfo companyInfo : mPdfInfoLocalList) {
+                        if (mDeleteList.get(i).getLocalId().equals(companyInfo.getLocalId())) {
+                            mPdfInfoDaoManager.delete(companyInfo.getLocalId());
+                        }
+                    }
+                    mPdfInfoLocalList = new ArrayList<>();
+                    mPdfInfoLocalList = mPdfInfoDaoManager.queryAll();
                     if (mPdfReportListAdapter != null) {
                         mPdfReportListAdapter.notifyItemRemoved(position);
                     }
@@ -314,5 +384,42 @@ public class CompanyPdfReportManagementActivity extends BaseRefreshMvpActivity<C
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        mRefreshLayout.setEnableLoadmore(false);
+        switch (port) {
+            case REQUEST_ALL_USERS_LIST:
+                List<DicInfo2> allUserList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(QUERY_ALL_USERS)) {
+                        allUserList.add(new DicInfo2(dicInfo.getId(), dicInfo.getText(), dicInfo.getCode()));
+                    }
+                }
+                getAllCompanyUsers(allUserList);
+                break;
+            case REQUEST_COMPANY_PDF_LIST:
+                List<CompanyPdfInfo> rows = new ArrayList<>();
+                if (!TextUtils.isEmpty(StringUtil.getText(et_file_name)) || !TextUtils.isEmpty(mFromUserId)) {
+                    if (!TextUtils.isEmpty(mFromUserId)) {
+                        rows = mPdfInfoDaoManager.queryBuilder().where(CompanyPdfInfoDao.Properties.Name.like("%" + StringUtil.getText(et_file_name) + "%"), CompanyPdfInfoDao.Properties.UserNickName.eq(mFromName)).list();
+                    } else {
+                        rows = mPdfInfoDaoManager.queryBuilder().where(CompanyPdfInfoDao.Properties.Name.like("%" + StringUtil.getText(et_file_name) + "%")).list();
+                    }
+                } else {
+                    rows = mPdfInfoDaoManager.queryAll();
+                }
+                CompanyPdfInfoBean companyPdfInfoBean = new CompanyPdfInfoBean();
+                companyPdfInfoBean.setRows(rows);
+                getCompanyPdfList(companyPdfInfoBean);
+                break;
+            case REQUEST_DELETE_COMPANY_PDF:
+                BaseEntity baseEntity = new BaseEntity();
+                baseEntity.setSuccess(true);
+                deleteCompanyPdf(baseEntity, true);
+                break;
+        }
     }
 }

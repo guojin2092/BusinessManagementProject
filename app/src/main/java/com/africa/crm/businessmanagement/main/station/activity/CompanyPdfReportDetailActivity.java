@@ -16,17 +16,21 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyPdfEvent;
-import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyPdfInfo;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
+import com.africa.crm.businessmanagement.main.dao.CompanyPdfInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyPdfReportDetailContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyPdfReportDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
-import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.StringUtil;
+import com.africa.crm.businessmanagement.widget.TimeUtils;
 import com.leon.lfilepickerlibrary.LFilePicker;
 import com.leon.lfilepickerlibrary.utils.Constant;
 
@@ -37,10 +41,17 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import okhttp3.ResponseBody;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_PDF_DETAIL;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DOWNLOAD_PDF_FILE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SAVE_COMPANY_PDF;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_UPLOAD_PDF_FILE;
 
 
 public class CompanyPdfReportDetailActivity extends BaseMvpActivity<CompanyPdfReportDetailPresenter> implements CompanyPdfReportDetailContract.View {
@@ -55,19 +66,29 @@ public class CompanyPdfReportDetailActivity extends BaseMvpActivity<CompanyPdfRe
     TextView tv_save;
 
     private String mPdfDetailId = "";
+    private Long mLocalId = 0l;//本地数据库ID
     private String mCompanyId = "";
+    private String mCompanyName = "";
+    private String mFromName = "";
     private String mUserId = "";
 
     private String mFilePath = "";
     private String mFileName = "";
     private String mFileCode = "";
+    private String mLocalPath = "";
+
+    private String mEditAble = "1";
+
+    private GreendaoManager<CompanyPdfInfo, CompanyPdfInfoDao> mPdfInfoDaoManager;
+    private List<CompanyPdfInfo> mCompanyPdfLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
      */
-    public static void startActivity(Activity activity, String id) {
+    public static void startActivity(Activity activity, String id, Long localId) {
         Intent intent = new Intent(activity, CompanyPdfReportDetailActivity.class);
         intent.putExtra("id", id);
+        intent.putExtra("localId", localId);
         activity.startActivity(intent);
     }
 
@@ -81,20 +102,27 @@ public class CompanyPdfReportDetailActivity extends BaseMvpActivity<CompanyPdfRe
     public void initView() {
         super.initView();
         mPdfDetailId = getIntent().getStringExtra("id");
+        mLocalId = getIntent().getLongExtra("localId", 0l);
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
+        mCompanyName = UserInfoManager.getUserLoginInfo(this).getCompanyName();
+        mFromName = UserInfoManager.getUserLoginInfo(this).getName();
         mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
         titlebar_name.setText("PDF文件详情");
         tv_save.setOnClickListener(this);
         tv_file_name.setOnClickListener(this);
-        if (!TextUtils.isEmpty(mPdfDetailId)) {
-            titlebar_right.setText(R.string.edit);
-            tv_save.setText(R.string.save);
-            setEditTextInput(false);
-        } else {
+        if (TextUtils.isEmpty(mPdfDetailId) && mLocalId == 0l) {
             titlebar_right.setVisibility(View.GONE);
             tv_save.setText(R.string.add);
             tv_save.setVisibility(View.VISIBLE);
+        } else if (!TextUtils.isEmpty(mPdfDetailId) || mLocalId != 0l) {
+            titlebar_right.setText(R.string.edit);
+            tv_save.setText(R.string.save);
+            setEditTextInput(false);
         }
+        //得到Dao对象管理器
+        mPdfInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyPdfInfoDao());
+        //得到本地数据
+        mCompanyPdfLocalList = mPdfInfoDaoManager.queryAll();
     }
 
     @Override
@@ -104,7 +132,7 @@ public class CompanyPdfReportDetailActivity extends BaseMvpActivity<CompanyPdfRe
 
     @Override
     protected void requestData() {
-        if (!TextUtils.isEmpty(mPdfDetailId)) {
+        if (!TextUtils.isEmpty(mPdfDetailId) || mLocalId != 0l) {
             mPresenter.getCompanyPdfDetail(mPdfDetailId);
         }
     }
@@ -132,20 +160,18 @@ public class CompanyPdfReportDetailActivity extends BaseMvpActivity<CompanyPdfRe
                 if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
                     titlebar_right.setText(R.string.cancel);
                     tv_save.setVisibility(View.VISIBLE);
-                    tv_file_name.setBackground(ContextCompat.getDrawable(this, R.drawable.iv_upload_img));
-                    tv_file_name.setText("");
                     setEditTextInput(true);
                 } else {
                     titlebar_right.setText(R.string.edit);
                     tv_save.setVisibility(View.GONE);
-                    tv_file_name.setBackground(null);
-                    tv_file_name.setText(mFileName + ".pdf");
                     setEditTextInput(false);
                 }
                 break;
             case R.id.tv_file_name:
                 if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
-//                    toastMsg("查看PDF文件");
+                    if (mLocalPath.contains(".pdf")) {
+                        toastMsg(mLocalPath);
+                    }
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -211,37 +237,67 @@ public class CompanyPdfReportDetailActivity extends BaseMvpActivity<CompanyPdfRe
     }
 
     @Override
-    public void downLoadFile(ResponseBody responseBody) {
-        String fileDir = Environment.getExternalStorageDirectory().getAbsolutePath() + "/CRM";
-        saveFile(responseBody, fileDir, mFileName);
+    public void downLoadFile(ResponseBody responseBody, boolean isLocal) {
+        if (!isLocal) {
+            String fileDir = Environment.getExternalStorageDirectory().getAbsolutePath() + "/CRM";
+            File file = saveFile(responseBody, fileDir, mFileName);
+            if (file != null) {
+                mLocalPath = file.getAbsolutePath();
+            }
+        } else {
+            mLocalPath = mFileCode;
+        }
     }
 
     @Override
     public void getCompanyPdfDetail(CompanyPdfInfo companyPdfInfo) {
-        et_title.setText(companyPdfInfo.getName());
-        et_remark.setText(companyPdfInfo.getRemark());
-        tv_file_name.setBackground(null);
-        mFileName = companyPdfInfo.getName();
-        tv_file_name.setText(mFileName + ".pdf");
-        mPresenter.downLoadFile(companyPdfInfo.getCode());
+        if (companyPdfInfo != null) {
+            et_title.setText(companyPdfInfo.getName());
+            et_remark.setText(companyPdfInfo.getRemark());
+            tv_file_name.setBackground(null);
+            mFileName = companyPdfInfo.getName();
+            tv_file_name.setText(mFileName + ".pdf");
+            mPresenter.downLoadFile(companyPdfInfo.getCode());
+            mEditAble = companyPdfInfo.getEditAble();
+            mCompanyName = companyPdfInfo.getCompanyName();
+            mFileCode = companyPdfInfo.getCode();
+            for (CompanyPdfInfo localInfo : mCompanyPdfLocalList) {
+                if (!TextUtils.isEmpty(localInfo.getId()) && !TextUtils.isEmpty(companyPdfInfo.getId())) {
+                    if (localInfo.getId().equals(companyPdfInfo.getId())) {
+                        companyPdfInfo.setLocalId(localInfo.getLocalId());
+                        mPdfInfoDaoManager.correct(companyPdfInfo);
+                    }
+                }
+            }
+        }
+
     }
 
     @Override
-    public void saveCompanyPdfDetail(BaseEntity baseEntity) {
-        if (baseEntity.isSuccess()) {
-            String toastString = "";
-            if (TextUtils.isEmpty(mPdfDetailId)) {
-                toastString = "PDF文件创建成功";
-            } else {
-                toastString = "PDF文件修改成功";
-            }
-            EventBus.getDefault().post(new AddOrSaveCompanyPdfEvent(toastString));
-            finish();
+    public void saveCompanyPdfDetail(UploadInfoBean uploadInfoBean, boolean isLocal) {
+        String toastString = "";
+        if (TextUtils.isEmpty(mPdfDetailId) && mLocalId == 0l) {
+            toastString = "PDF文件创建成功";
         } else {
-            toastMsg(ErrorMsg.showErrorMsg(baseEntity.getReturnMsg()));
+            toastString = "PDF文件修改成功";
         }
+        if (isLocal) {
+            CompanyPdfInfo companyPdfInfo = null;
+            if (mLocalId == 0l) {
+                companyPdfInfo = new CompanyPdfInfo(mPdfDetailId, TimeUtils.getCurrentTime(new Date()), TimeUtils.getDateByCreateTime(TimeUtils.getTime(new Date())), StringUtil.getText(et_remark), mEditAble, StringUtil.getText(et_title), mUserId, mFileCode, mCompanyId, mCompanyName, mFromName, false, isLocal);
+                mPdfInfoDaoManager.insertOrReplace(companyPdfInfo);
+            } else {
+                for (CompanyPdfInfo info : mCompanyPdfLocalList) {
+                    if (mLocalId == info.getLocalId()) {
+                        companyPdfInfo = new CompanyPdfInfo(info.getLocalId(), mPdfDetailId, TimeUtils.getCurrentTime(new Date()), TimeUtils.getDateByCreateTime(TimeUtils.getTime(new Date())), StringUtil.getText(et_remark), mEditAble, StringUtil.getText(et_title), mUserId, mFileCode, mCompanyId, mCompanyName, mFromName, false, isLocal);
+                        mPdfInfoDaoManager.correct(companyPdfInfo);
+                    }
+                }
+            }
+        }
+        EventBus.getDefault().post(new AddOrSaveCompanyPdfEvent(toastString));
+        finish();
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -260,8 +316,9 @@ public class CompanyPdfReportDetailActivity extends BaseMvpActivity<CompanyPdfRe
         }
     }
 
-    public void saveFile(ResponseBody body, String fileDir, String fileName) {
+    public File saveFile(ResponseBody body, String fileDir, String fileName) {
         InputStream is = null;
+        File file = null;
         byte[] buf = new byte[2048];
         int len;
         FileOutputStream fos = null;
@@ -271,7 +328,7 @@ public class CompanyPdfReportDetailActivity extends BaseMvpActivity<CompanyPdfRe
             if (!dir.exists()) {
                 dir.mkdirs();
             }
-            File file = new File(dir, fileName + ".pdf");
+            file = new File(dir, fileName + ".pdf");
             fos = new FileOutputStream(file);
             while ((len = is.read(buf)) != -1) {
                 fos.write(buf, 0, len);
@@ -289,6 +346,36 @@ public class CompanyPdfReportDetailActivity extends BaseMvpActivity<CompanyPdfRe
                 Log.e("saveFile", e.getMessage());
             }
         }
+        return file;
     }
 
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        switch (port) {
+            case REQUEST_UPLOAD_PDF_FILE:
+                FileInfoBean localInfoBean = new FileInfoBean(mFilePath);
+                uploadFile(localInfoBean);
+                break;
+            case REQUEST_DOWNLOAD_PDF_FILE:
+                downLoadFile(null, true);
+                break;
+            case REQUEST_COMPANY_PDF_DETAIL:
+                CompanyPdfInfo companyPdfInfo = null;
+                for (CompanyPdfInfo info : mCompanyPdfLocalList) {
+                    if (mLocalId == info.getLocalId()) {
+                        companyPdfInfo = info;
+                    }
+                }
+                getCompanyPdfDetail(companyPdfInfo);
+                break;
+            case REQUEST_SAVE_COMPANY_PDF:
+                UploadInfoBean uploadInfoBean = new UploadInfoBean();
+                uploadInfoBean.setId(mPdfDetailId);
+                uploadInfoBean.setCreateTime(TimeUtils.getCurrentTime(new Date()));
+                uploadInfoBean.setUpdateTime(TimeUtils.getCurrentTime(new Date()));
+                saveCompanyPdfDetail(uploadInfoBean, true);
+                break;
+        }
+    }
 }

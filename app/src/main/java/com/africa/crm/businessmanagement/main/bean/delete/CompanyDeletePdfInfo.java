@@ -1,4 +1,4 @@
-package com.africa.crm.businessmanagement.main.bean;
+package com.africa.crm.businessmanagement.main.bean.delete;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
@@ -14,7 +14,7 @@ import org.greenrobot.greendao.annotation.Generated;
  * Why & What is modified:
  */
 @Entity
-public class CompanyPdfInfo {
+public class CompanyDeletePdfInfo {
     @Id(autoincrement = true)
     private Long localId;
     private String id;
@@ -32,8 +32,8 @@ public class CompanyPdfInfo {
     private boolean chosen = false;
     private boolean isLocal = false;
 
-    @Generated(hash = 505012577)
-    public CompanyPdfInfo(Long localId, String id, String createTime,
+    @Generated(hash = 2095402296)
+    public CompanyDeletePdfInfo(Long localId, String id, String createTime,
             Long createTimeDate, String remark, String editAble, String name,
             String userId, String code, String companyId, String companyName,
             String userNickName, boolean chosen, boolean isLocal) {
@@ -53,10 +53,10 @@ public class CompanyPdfInfo {
         this.isLocal = isLocal;
     }
 
-    public CompanyPdfInfo(String id, String createTime,
-                          Long createTimeDate, String remark, String editAble, String name,
-                          String userId, String code, String companyId, String companyName,
-                          String userNickName, boolean chosen, boolean isLocal) {
+    public CompanyDeletePdfInfo(String id, String createTime,
+                                Long createTimeDate, String remark, String editAble, String name,
+                                String userId, String code, String companyId, String companyName,
+                                String userNickName, boolean chosen, boolean isLocal) {
         this.id = id;
         this.createTime = createTime;
         this.createTimeDate = createTimeDate;
@@ -72,8 +72,8 @@ public class CompanyPdfInfo {
         this.isLocal = isLocal;
     }
 
-    @Generated(hash = 1874801002)
-    public CompanyPdfInfo() {
+    @Generated(hash = 1399457939)
+    public CompanyDeletePdfInfo() {
     }
 
     public String getId() {

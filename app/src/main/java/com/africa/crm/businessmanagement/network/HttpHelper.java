@@ -239,7 +239,7 @@ public interface HttpHelper {
 
     Observable<BaseEntity> deleteCompanyPdf(String id);
 
-    Observable<BaseEntity> saveCompanyPdfDetail(String id,String companyId, String userId, String name, String code, String remark);
+    Observable<UploadInfoBean> saveCompanyPdfDetail(String id,String companyId, String userId, String name, String code, String remark);
 
     Observable<CompanyPdfInfo> getCompanyPdfDetail(String id);
 
