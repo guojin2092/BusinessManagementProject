@@ -13,23 +13,28 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyPurchasingOrderEvent;
-import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyPurchasingOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.OrderProductInfo;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
+import com.africa.crm.businessmanagement.main.dao.CompanyPurchasingOrderInfoDao;
+import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.OrderProductListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyPurchasingDetailContract;
 import com.africa.crm.businessmanagement.main.station.dialog.AddProductDialog;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyPurchasingDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
-import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
+import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.bigkoo.pickerview.TimePickerView;
@@ -45,6 +50,15 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.DicUtil.PURCHASE_STATE;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_PRODUCTS;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_SUPPLIERS;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_PRODUCTS_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_SUPPLIER_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_PURCHASING_DETAIL;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_PURCHASING_STATE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SAVE_COMPANY_PURCHASING;
 
 public class CompanyPurchasingDetailActivity extends BaseMvpActivity<CompanyPurchasingDetailPresenter> implements CompanyPurchasingDetailContract.View {
     @BindView(R.id.et_purchasing_order_name)
@@ -72,9 +86,9 @@ public class CompanyPurchasingDetailActivity extends BaseMvpActivity<CompanyPurc
 
     @BindView(R.id.spinner_state)
     MySpinner spinner_state;
-    private static final String STATE_CODE = "PURCHASESTATE";
     private List<DicInfo> mOrderStateList = new ArrayList<>();
     private String mStateCode = "";
+    private String mStateName = "";
 
     @BindView(R.id.tv_delete)
     TextView tv_delete;
@@ -95,15 +109,28 @@ public class CompanyPurchasingDetailActivity extends BaseMvpActivity<CompanyPurc
 
     private boolean mShowCheckBox = false;
     private String mPurchasingOrderId = "";
+    private Long mLocalId = 0l;//本地数据库ID
     private String mCompanyId = "";
+    private String mCompanyName = "";
+    private String mFromName = "";
     private String mUserId = "";
+    private String mSupplierName = "";
+    private String mPurchasingCode = "";
+    private String mEditAble = "1";
+
+    private GreendaoManager<CompanyPurchasingOrderInfo, CompanyPurchasingOrderInfoDao> mPurchasingOrderInfoDaoManager;
+    private List<CompanyPurchasingOrderInfo> mPurchasingOrderLocalList = new ArrayList<>();//本地数据
+
+    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoManager;
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
      */
-    public static void startActivity(Activity activity, String id) {
+    public static void startActivity(Activity activity, String id, Long localId) {
         Intent intent = new Intent(activity, CompanyPurchasingDetailActivity.class);
         intent.putExtra("id", id);
+        intent.putExtra("localId", localId);
         activity.startActivity(intent);
     }
 
@@ -117,7 +144,10 @@ public class CompanyPurchasingDetailActivity extends BaseMvpActivity<CompanyPurc
     public void initView() {
         super.initView();
         mPurchasingOrderId = getIntent().getStringExtra("id");
+        mLocalId = getIntent().getLongExtra("localId", 0l);
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
+        mCompanyName = UserInfoManager.getUserLoginInfo(this).getCompanyName();
+        mFromName = UserInfoManager.getUserLoginInfo(this).getName();
         mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
         titlebar_name.setText("采购单详情");
         tv_delete.setOnClickListener(this);
@@ -129,14 +159,14 @@ public class CompanyPurchasingDetailActivity extends BaseMvpActivity<CompanyPurc
 
         String roleCode = UserInfoManager.getUserLoginInfo(this).getRoleCode();
         if (roleCode.equals("companySales")) {
-            if (!TextUtils.isEmpty(mPurchasingOrderId)) {
-                titlebar_right.setText(R.string.edit);
-                tv_save.setText(R.string.save);
-                setEditTextInput(false);
-            } else {
+            if (TextUtils.isEmpty(mPurchasingOrderId) && mLocalId == 0l) {
                 titlebar_right.setVisibility(View.GONE);
                 tv_save.setText(R.string.add);
                 tv_save.setVisibility(View.VISIBLE);
+            } else if (!TextUtils.isEmpty(mPurchasingOrderId) || mLocalId != 0l) {
+                titlebar_right.setText(R.string.edit);
+                tv_save.setText(R.string.save);
+                setEditTextInput(false);
             }
         } else {
             titlebar_right.setVisibility(View.GONE);
@@ -169,6 +199,14 @@ public class CompanyPurchasingDetailActivity extends BaseMvpActivity<CompanyPurc
         });
         initTimePicker();
         initProductList();
+        //得到Dao对象管理器
+        mPurchasingOrderInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyPurchasingOrderInfoDao());
+        //得到本地数据
+        mPurchasingOrderLocalList = mPurchasingOrderInfoDaoManager.queryAll();
+        //得到Dao对象管理器
+        mDicInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getDicInfoDao());
+        //得到本地数据
+        mDicInfoLocalList = mDicInfoDaoManager.queryAll();
     }
 
     private void initTimePicker() {
@@ -235,9 +273,9 @@ public class CompanyPurchasingDetailActivity extends BaseMvpActivity<CompanyPurc
 
     @Override
     protected void requestData() {
-        mPresenter.getStateType(STATE_CODE);
+        mPresenter.getStateType(PURCHASE_STATE);
         mPresenter.getAllSuppliers(mCompanyId);
-        if (!TextUtils.isEmpty(mPurchasingOrderId)) {
+        if (!TextUtils.isEmpty(mPurchasingOrderId) || mLocalId != 0l) {
             mPresenter.getCompanyPurchasingDetail(mPurchasingOrderId);
         }
     }
@@ -363,21 +401,37 @@ public class CompanyPurchasingDetailActivity extends BaseMvpActivity<CompanyPurc
     public void getAllSuppliers(List<DicInfo2> dicInfoList) {
         List<DicInfo> list = new ArrayList<>();
         for (DicInfo2 dicInfo2 : dicInfoList) {
-            list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getCode()));
+            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_SUPPLIERS, dicInfo2.getName(), dicInfo2.getCode()));
+        }
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
         }
         spinner_supplier_name.setListDatas(this, list);
+        spinner_supplier_name.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+            @Override
+            public void onItemClick(DicInfo dicInfo, int position) {
+                mSupplierName = dicInfo.getText();
+            }
+        });
     }
 
     @Override
     public void getStateType(List<DicInfo> dicInfoList) {
         mOrderStateList.clear();
         mOrderStateList.addAll(dicInfoList);
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mOrderStateList, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            dicInfo.setType(PURCHASE_STATE);
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
+        }
         spinner_state.setListDatas(this, mOrderStateList);
 
         spinner_state.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
                 mStateCode = dicInfo.getCode();
+                mStateName = dicInfo.getText();
             }
         });
     }
@@ -387,7 +441,11 @@ public class CompanyPurchasingDetailActivity extends BaseMvpActivity<CompanyPurc
         mProductTypeList.addAll(dicInfoList);
         List<DicInfo> list = new ArrayList<>();
         for (DicInfo2 dicInfo2 : dicInfoList) {
-            list.add(new DicInfo(dicInfo2.getName(), dicInfo2.getId()));
+            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_PRODUCTS, dicInfo2.getName(), dicInfo2.getCode()));
+        }
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
         }
         mAddProductDialog.show();
         mAddProductDialog.setListDatas(this, list);
@@ -395,41 +453,115 @@ public class CompanyPurchasingDetailActivity extends BaseMvpActivity<CompanyPurc
 
     @Override
     public void getCompanyPurchasingDetail(CompanyPurchasingOrderInfo companyPurchasingOrderInfo) {
-        et_purchasing_order_name.setText(companyPurchasingOrderInfo.getName());
-        spinner_supplier_name.setText(companyPurchasingOrderInfo.getSupplierName());
-        spinner_state.setText(companyPurchasingOrderInfo.getStateName());
-        mStateCode = companyPurchasingOrderInfo.getState();
-        tv_order_date.setText(companyPurchasingOrderInfo.getOrderDate());
-        mOrderDate = TimeUtils.getDataByString(companyPurchasingOrderInfo.getOrderDate());
-        tv_arrive_date.setText(companyPurchasingOrderInfo.getArriveDate());
-        mArriveDate = TimeUtils.getDataByString(companyPurchasingOrderInfo.getArriveDate());
-        et_deliver_address.setText(companyPurchasingOrderInfo.getSendAddress());
-        et_deliver_zip_code.setText(companyPurchasingOrderInfo.getSendAddressZipCode());
-        et_receiver_address.setText(companyPurchasingOrderInfo.getDestinationAddress());
-        et_receiver_zip_code.setText(companyPurchasingOrderInfo.getDestinationAddressZipCode());
-        et_clause.setText(companyPurchasingOrderInfo.getClause());
-        et_remark.setText(companyPurchasingOrderInfo.getRemark());
-        List<OrderProductInfo> list = new Gson().fromJson(companyPurchasingOrderInfo.getProducts(), new TypeToken<List<OrderProductInfo>>() {
-        }.getType());
-        mOrderProductInfoList.addAll(list);
-        if (mOrderProductListAdapter != null) {
-            mOrderProductListAdapter.notifyDataSetChanged();
+        if (companyPurchasingOrderInfo != null) {
+            et_purchasing_order_name.setText(companyPurchasingOrderInfo.getName());
+            spinner_supplier_name.setText(companyPurchasingOrderInfo.getSupplierName());
+            spinner_state.setText(companyPurchasingOrderInfo.getStateName());
+            mStateName = companyPurchasingOrderInfo.getStateName();
+            mStateCode = companyPurchasingOrderInfo.getState();
+            tv_order_date.setText(companyPurchasingOrderInfo.getOrderDate());
+            mOrderDate = TimeUtils.getDataByString(companyPurchasingOrderInfo.getOrderDate());
+            tv_arrive_date.setText(companyPurchasingOrderInfo.getArriveDate());
+            mArriveDate = TimeUtils.getDataByString(companyPurchasingOrderInfo.getArriveDate());
+            et_deliver_address.setText(companyPurchasingOrderInfo.getSendAddress());
+            et_deliver_zip_code.setText(companyPurchasingOrderInfo.getSendAddressZipCode());
+            et_receiver_address.setText(companyPurchasingOrderInfo.getDestinationAddress());
+            et_receiver_zip_code.setText(companyPurchasingOrderInfo.getDestinationAddressZipCode());
+            et_clause.setText(companyPurchasingOrderInfo.getClause());
+            et_remark.setText(companyPurchasingOrderInfo.getRemark());
+            mPurchasingCode = companyPurchasingOrderInfo.getCode();
+            mEditAble = companyPurchasingOrderInfo.getEditAble();
+            List<OrderProductInfo> list = new Gson().fromJson(companyPurchasingOrderInfo.getProducts(), new TypeToken<List<OrderProductInfo>>() {
+            }.getType());
+            mOrderProductInfoList.addAll(list);
+            if (mOrderProductListAdapter != null) {
+                mOrderProductListAdapter.notifyDataSetChanged();
+            }
+            for (CompanyPurchasingOrderInfo localInfo : mPurchasingOrderLocalList) {
+                if (!TextUtils.isEmpty(localInfo.getId()) && !TextUtils.isEmpty(companyPurchasingOrderInfo.getId())) {
+                    if (localInfo.getId().equals(companyPurchasingOrderInfo.getId())) {
+                        companyPurchasingOrderInfo.setLocalId(localInfo.getLocalId());
+                        mPurchasingOrderInfoDaoManager.correct(companyPurchasingOrderInfo);
+                    }
+                }
+            }
         }
+
     }
 
     @Override
-    public void saveCompanyPurchasing(BaseEntity baseEntity) {
-        if (baseEntity.isSuccess()) {
-            String toastString = "";
-            if (TextUtils.isEmpty(mPurchasingOrderId)) {
-                toastString = "采购单创建成功";
-            } else {
-                toastString = "采购单修改成功";
-            }
-            EventBus.getDefault().post(new AddOrSaveCompanyPurchasingOrderEvent(toastString));
-            finish();
+    public void saveCompanyPurchasing(UploadInfoBean uploadInfoBean, boolean isLocal) {
+        String toastString = "";
+        if (TextUtils.isEmpty(mPurchasingOrderId)) {
+            toastString = "采购单创建成功";
         } else {
-            toastMsg(ErrorMsg.showErrorMsg(baseEntity.getReturnMsg()));
+            toastString = "采购单修改成功";
+        }
+        if (isLocal) {
+            CompanyPurchasingOrderInfo companyPayOrderInfo = null;
+            if (mLocalId == 0l) {
+                companyPayOrderInfo = new CompanyPurchasingOrderInfo(TimeUtils.getCurrentTime(new Date()), TimeUtils.getDateByCreateTime(TimeUtils.getTime(new Date())), mSupplierName, StringUtil.getText(et_deliver_address), StringUtil.getText(et_remark), StringUtil.getText(tv_order_date), mStateCode, mPurchasingCode, mCompanyName, mFromName, mPurchasingOrderId, StringUtil.getText(tv_arrive_date), mEditAble, StringUtil.getText(et_receiver_address), StringUtil.getText(et_deliver_zip_code), mUserId, StringUtil.getText(et_purchasing_order_name), mStateName, mCompanyId, new Gson().toJson(mOrderProductInfoList), StringUtil.getText(et_clause), StringUtil.getText(et_receiver_zip_code), false, isLocal);
+                mPurchasingOrderInfoDaoManager.insertOrReplace(companyPayOrderInfo);
+            } else {
+                for (CompanyPurchasingOrderInfo info : mPurchasingOrderLocalList) {
+                    if (mLocalId == info.getLocalId()) {
+                        companyPayOrderInfo = new CompanyPurchasingOrderInfo(info.getLocalId(), TimeUtils.getCurrentTime(new Date()), TimeUtils.getDateByCreateTime(TimeUtils.getTime(new Date())), mSupplierName, StringUtil.getText(et_deliver_address), StringUtil.getText(et_remark), StringUtil.getText(tv_order_date), mStateCode, mPurchasingCode, mCompanyName, mFromName, mPurchasingOrderId, StringUtil.getText(tv_arrive_date), mEditAble, StringUtil.getText(et_receiver_address), StringUtil.getText(et_deliver_zip_code), mUserId, StringUtil.getText(et_purchasing_order_name), mStateName, mCompanyId, new Gson().toJson(mOrderProductInfoList), StringUtil.getText(et_clause), StringUtil.getText(et_receiver_zip_code), false, isLocal);
+                        mPurchasingOrderInfoDaoManager.correct(companyPayOrderInfo);
+                    }
+                }
+            }
+        }
+        EventBus.getDefault().post(new AddOrSaveCompanyPurchasingOrderEvent(toastString));
+        finish();
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        switch (port) {
+            case REQUEST_ALL_SUPPLIER_LIST:
+                List<DicInfo2> allSuppliers = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(QUERY_ALL_SUPPLIERS)) {
+                        allSuppliers.add(new DicInfo2(dicInfo.getId(), dicInfo.getText(), dicInfo.getCode()));
+                    }
+                }
+                getAllSuppliers(allSuppliers);
+                break;
+            case REQUEST_PURCHASING_STATE:
+                List<DicInfo> typeList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(PURCHASE_STATE)) {
+                        typeList.add(dicInfo);
+                    }
+                }
+                getStateType(typeList);
+                break;
+            case REQUEST_ALL_PRODUCTS_LIST:
+                List<DicInfo2> allProduts = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(QUERY_ALL_PRODUCTS)) {
+                        allProduts.add(new DicInfo2(dicInfo.getId(), dicInfo.getText(), dicInfo.getCode()));
+                    }
+                }
+                getAllProduct(allProduts);
+                break;
+            case REQUEST_COMPANY_PURCHASING_DETAIL:
+                CompanyPurchasingOrderInfo companyPurchasingOrderInfo = null;
+                for (CompanyPurchasingOrderInfo info : mPurchasingOrderLocalList) {
+                    if (mLocalId == info.getLocalId()) {
+                        companyPurchasingOrderInfo = info;
+                    }
+                }
+                getCompanyPurchasingDetail(companyPurchasingOrderInfo);
+                break;
+            case REQUEST_SAVE_COMPANY_PURCHASING:
+                UploadInfoBean uploadInfoBean = new UploadInfoBean();
+                uploadInfoBean.setId(mPurchasingOrderId);
+                uploadInfoBean.setCreateTime(TimeUtils.getCurrentTime(new Date()));
+                uploadInfoBean.setUpdateTime(TimeUtils.getCurrentTime(new Date()));
+                saveCompanyPurchasing(uploadInfoBean, true);
+                break;
         }
     }
 }

@@ -207,7 +207,7 @@ public interface HttpHelper {
 
     Observable<CompanyPurchasingOrderInfo> getCompanyPurchasingDetail(String id);
 
-    Observable<BaseEntity> saveCompanyPurchasingOrder(String id, String companyId, String userId, String name, String supplierName, String state, String orderDate, String arriveDate, String sendAddress, String sendAddressZipCode, String destinationAddress, String destinationAddressZipCode, String products, String clause, String remark);
+    Observable<UploadInfoBean> saveCompanyPurchasingOrder(String id, String companyId, String userId, String name, String supplierName, String state, String orderDate, String arriveDate, String sendAddress, String sendAddressZipCode, String destinationAddress, String destinationAddressZipCode, String products, String clause, String remark);
 
     Observable<CompanyServiceRecordInfoBean> getServiceRecordList(int page, int rows, String companyId, String userId, String name, String state, String type, String createTimes, String createTimee);
 

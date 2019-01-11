@@ -334,7 +334,7 @@ public interface MainApi {
 
     @FormUrlEncoded
     @POST("purchaseOrder/save")
-    Observable<BaseEntity> saveCompanyPurchasingOrder(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("supplierName") String supplierName, @Field("state") String state, @Field("orderDate") String orderDate, @Field("arriveDate") String arriveDate, @Field("sendAddress") String sendAddress, @Field("sendAddressZipCode") String sendAddressZipCode, @Field("destinationAddress") String destinationAddress, @Field("destinationAddressZipCode") String destinationAddressZipCode, @Field("products") String products, @Field("clause") String clause, @Field("remark") String remark);
+    Observable<BaseEntity<UploadInfoBean>> saveCompanyPurchasingOrder(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("supplierName") String supplierName, @Field("state") String state, @Field("orderDate") String orderDate, @Field("arriveDate") String arriveDate, @Field("sendAddress") String sendAddress, @Field("sendAddressZipCode") String sendAddressZipCode, @Field("destinationAddress") String destinationAddress, @Field("destinationAddressZipCode") String destinationAddressZipCode, @Field("products") String products, @Field("clause") String clause, @Field("remark") String remark);
 
     @FormUrlEncoded
     @POST("serviceRecord/grid")

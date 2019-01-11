@@ -166,4 +166,15 @@ public class RequestMethod {
     public static final String REQUEST_COMPANY_INVENTORY_DETAIL = "request_company_inventory_detail";
     //保存企业库存
     public static final String REQUEST_SAVE_COMPANY_INVENTORY = "request_save_company_inventory";
+
+    //企业采购管理列表
+    public static final String REQUEST_COMPANY_PURCHASING_LIST = "request_company_purchasing_list";
+    //删除企业采购管理
+    public static final String REQUEST_DELETE_COMPANY_PURCHASING = "request_delete_company_purchasing";
+    //采购单状态
+    public static final String REQUEST_PURCHASING_STATE = "request_purchasing_state";
+    //获取企业采购单详情
+    public static final String REQUEST_COMPANY_PURCHASING_DETAIL = "request_company_purchasing_detail";
+    //保存企业采购单
+    public static final String REQUEST_SAVE_COMPANY_PURCHASING = "request_save_company_purchasing";
 }

@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyPurchasingOrderEvent;
@@ -20,17 +22,23 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyPurchasingOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPurchasingOrderInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
-import com.africa.crm.businessmanagement.main.bean.UserInfoBean;
-import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
+import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
+import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeletePurchasingOrderInfo;
+import com.africa.crm.businessmanagement.main.dao.CompanyDeletePurchasingOrderInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyPurchasingOrderInfoDao;
+import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.PurchasingListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyPurchasingOrderContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyPurchasingOrderPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
+import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.bigkoo.pickerview.TimePickerView;
@@ -44,6 +52,11 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_USERS;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_USERS_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_PURCHASING_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DELETE_COMPANY_PURCHASING;
 
 /**
  * Project：BusinessManagementProject
@@ -72,8 +85,8 @@ public class CompanyPurchasingManagementActivity extends BaseRefreshMvpActivity<
 
     @BindView(R.id.spinner_user)
     MySpinner spinner_user;
-    private List<UserInfoBean> mUserInfoBeanList = new ArrayList<>();
-    private List<DicInfo> mUserInfoList = new ArrayList<>();
+    private List<DicInfo> mSpinnerCompanyUserList = new ArrayList<>();
+    private String mFromUserId = "";
     private String mUserId = "";
 
     @BindView(R.id.recyclerView)
@@ -90,6 +103,13 @@ public class CompanyPurchasingManagementActivity extends BaseRefreshMvpActivity<
 
     private TimePickerView pvStartTime, pvEndTime;
     private Date mStartDate, mEndDate;
+
+    private GreendaoManager<CompanyPurchasingOrderInfo, CompanyPurchasingOrderInfoDao> mPurchasingOrderInfoDaoManager;
+    private GreendaoManager<CompanyDeletePurchasingOrderInfo, CompanyDeletePurchasingOrderInfoDao> mDeletePurchasingOrderInfoDaoManager;
+    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoManager;
+
+    private List<CompanyPurchasingOrderInfo> mPurchasingOrderLocalList = new ArrayList<>();//本地数据
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
@@ -127,7 +147,7 @@ public class CompanyPurchasingManagementActivity extends BaseRefreshMvpActivity<
             spinner_user.setVisibility(View.VISIBLE);
         } else {
             titlebar_right.setVisibility(View.VISIBLE);
-            spinner_user.setVisibility(View.INVISIBLE);
+            spinner_user.setVisibility(View.GONE);
         }
         if (mRoleCode.equals("companySales")) {
             ll_add.setVisibility(View.VISIBLE);
@@ -140,6 +160,14 @@ public class CompanyPurchasingManagementActivity extends BaseRefreshMvpActivity<
         tv_start_time.setOnClickListener(this);
         tv_end_time.setOnClickListener(this);
         initTimePicker();
+        //得到Dao对象管理器
+        mPurchasingOrderInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyPurchasingOrderInfoDao());
+        //得到Dao对象管理器
+        mDeletePurchasingOrderInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeletePurchasingOrderInfoDao());
+        //得到Dao对象管理器
+        mDicInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getDicInfoDao());
+        //得到本地数据
+        mDicInfoLocalList = mDicInfoDaoManager.queryAll();
     }
 
     private void initTimePicker() {
@@ -184,17 +212,20 @@ public class CompanyPurchasingManagementActivity extends BaseRefreshMvpActivity<
 
     @Override
     protected void requestData() {
-        mPresenter.getCompanyUserList(page, rows, "", "2", mCompanyId, "1", "");
+        if ("companyRoot".equals(mRoleCode)) {
+            mPresenter.getAllCompanyUsers(mCompanyId);
+        }
         pullDownRefresh(page);
     }
 
     @Override
     public void pullDownRefresh(int page) {
-        if (mRoleCode.equals("companyRoot")) {
-            mPresenter.getCompanyPurchasingOrderList(page, rows, mCompanyId, mUserId, et_purchasing_name.getText().toString().trim(), et_code.getText().toString().trim(), tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
+        if (mRoleCode.equals("companySales")) {
+            mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
         } else {
-            mPresenter.getCompanyPurchasingOrderList(page, rows, mCompanyId, String.valueOf(UserInfoManager.getUserLoginInfo(this).getId()), et_purchasing_name.getText().toString().trim(), et_code.getText().toString().trim(), tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
+            mUserId = mFromUserId;
         }
+        mPresenter.getCompanyPurchasingOrderList(page, rows, mCompanyId, mUserId, et_purchasing_name.getText().toString().trim(), et_code.getText().toString().trim(), tv_start_time.getText().toString().trim(), tv_end_time.getText().toString().trim());
     }
 
     @Override
@@ -239,7 +270,7 @@ public class CompanyPurchasingManagementActivity extends BaseRefreshMvpActivity<
                 }
                 break;
             case R.id.ll_add:
-                CompanyPurchasingDetailActivity.startActivity(CompanyPurchasingManagementActivity.this, "");
+                CompanyPurchasingDetailActivity.startActivity(CompanyPurchasingManagementActivity.this, "",0l);
                 break;
             case R.id.tv_delete:
                 mDeleteList.clear();
@@ -275,22 +306,26 @@ public class CompanyPurchasingManagementActivity extends BaseRefreshMvpActivity<
     }
 
     @Override
-    public void getCompanyUserList(UserManagementInfoBean userManagementInfoBean) {
-        mUserInfoBeanList.clear();
-        mUserInfoBeanList.addAll(userManagementInfoBean.getRows());
-        mUserInfoList.clear();
-        if (!ListUtils.isEmpty(mUserInfoBeanList)) {
-            for (int i = 0; i < mUserInfoBeanList.size(); i++) {
-                mUserInfoList.add(new DicInfo(mUserInfoBeanList.get(i).getUserName(), mUserInfoBeanList.get(i).getId()));
+    public void getAllCompanyUsers(List<DicInfo2> dicInfo2List) {
+        mSpinnerCompanyUserList.clear();
+        if (!ListUtils.isEmpty(dicInfo2List)) {
+            for (DicInfo2 dicInfo2 : dicInfo2List) {
+                DicInfo dicInfo = new DicInfo(dicInfo2.getId(), QUERY_ALL_USERS, dicInfo2.getName(), dicInfo2.getCode());
+                mSpinnerCompanyUserList.add(dicInfo);
             }
+            List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerCompanyUserList, mDicInfoLocalList);
+            for (DicInfo dicInfo : addList) {
+                dicInfo.setType(QUERY_ALL_USERS);
+                mDicInfoDaoManager.insertOrReplace(dicInfo);
+            }
+            spinner_user.setListDatas(getBVActivity(), mSpinnerCompanyUserList);
+            spinner_user.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+                @Override
+                public void onItemClick(DicInfo dicInfo, int position) {
+                    mFromUserId = dicInfo.getCode();
+                }
+            });
         }
-        spinner_user.setListDatas(this, mUserInfoList);
-        spinner_user.addOnItemClickListener(new MySpinner.OnItemClickListener() {
-            @Override
-            public void onItemClick(DicInfo dicInfo, int position) {
-                mUserId = dicInfo.getCode();
-            }
-        });
     }
 
     @Override
@@ -308,6 +343,7 @@ public class CompanyPurchasingManagementActivity extends BaseRefreshMvpActivity<
                     mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
                 }
                 mPurchasingInfoBeanList.clear();
+                mPurchasingOrderLocalList = mPurchasingOrderInfoDaoManager.queryAll();
                 recyclerView.smoothScrollToPosition(0);
             }
             if (mRefreshLayout != null) {
@@ -319,6 +355,24 @@ public class CompanyPurchasingManagementActivity extends BaseRefreshMvpActivity<
             }
             if (!ListUtils.isEmpty(companyPurchasingOrderInfoBean.getRows())) {
                 mPurchasingInfoBeanList.addAll(companyPurchasingOrderInfoBean.getRows());
+                List<CompanyPurchasingOrderInfo> addList = DifferentDataUtil.addPurchasingDataToLocal(mPurchasingInfoBeanList, mPurchasingOrderLocalList);
+                if (!ListUtils.isEmpty(addList)) {
+                    for (CompanyPurchasingOrderInfo companyInfo : addList) {
+                        mPurchasingOrderInfoDaoManager.insertOrReplace(companyInfo);
+                    }
+                    mPurchasingOrderLocalList = new ArrayList<>();
+                    mPurchasingOrderLocalList = mPurchasingOrderInfoDaoManager.queryAll();
+                }
+                for (CompanyPurchasingOrderInfo info : mPurchasingInfoBeanList) {
+                    for (CompanyPurchasingOrderInfo localInfo : mPurchasingOrderLocalList) {
+                        if (!TextUtils.isEmpty(info.getId()) && !TextUtils.isEmpty(localInfo.getId())) {
+                            if (info.getId().equals(localInfo.getId())) {
+                                info.setLocalId(localInfo.getLocalId());
+                                mPurchasingOrderInfoDaoManager.correct(info);
+                            }
+                        }
+                    }
+                }
                 if (mPurchasingListAdapter != null) {
                     mPurchasingListAdapter.notifyDataSetChanged();
                 }
@@ -332,7 +386,7 @@ public class CompanyPurchasingManagementActivity extends BaseRefreshMvpActivity<
                             mPurchasingInfoBeanList.get(position).setChosen(!cb_choose.isChecked());
                             mPurchasingListAdapter.notifyDataSetChanged();
                         } else {
-                            CompanyPurchasingDetailActivity.startActivity(CompanyPurchasingManagementActivity.this, mPurchasingInfoBeanList.get(position).getId());
+                            CompanyPurchasingDetailActivity.startActivity(CompanyPurchasingManagementActivity.this, mPurchasingInfoBeanList.get(position).getId(),mPurchasingInfoBeanList.get(position).getLocalId());
                         }
                     }
                 });
@@ -341,12 +395,25 @@ public class CompanyPurchasingManagementActivity extends BaseRefreshMvpActivity<
     }
 
     @Override
-    public void deleteCompanyPurchasingOrder(BaseEntity baseEntity) {
+    public void deleteCompanyPurchasingOrder(BaseEntity baseEntity, boolean isLocal) {
         if (baseEntity.isSuccess()) {
             for (int i = 0; i < mDeleteList.size(); i++) {
                 if (mPurchasingInfoBeanList.contains(mDeleteList.get(i))) {
                     int position = mPurchasingInfoBeanList.indexOf(mDeleteList.get(i));
                     mPurchasingInfoBeanList.remove(mDeleteList.get(i));
+                    if (isLocal) {
+                        for (CompanyPurchasingOrderInfo companyInfo : mDeleteList) {
+                            CompanyDeletePurchasingOrderInfo deletePurchasingOrderInfo = new CompanyDeletePurchasingOrderInfo(companyInfo.getCreateTime(), companyInfo.getCreateTimeDate(), companyInfo.getSupplierName(), companyInfo.getSendAddress(), companyInfo.getRemark(), companyInfo.getOrderDate(), companyInfo.getState(), companyInfo.getCode(), companyInfo.getCompanyName(), companyInfo.getUserNickName(), companyInfo.getId(), companyInfo.getArriveDate(), companyInfo.getEditAble(), companyInfo.getDestinationAddress(), companyInfo.getSendAddressZipCode(), companyInfo.getUserId(), companyInfo.getName(), companyInfo.getStateName(), companyInfo.getCompanyId(), companyInfo.getProducts(), companyInfo.getClause(), companyInfo.getDestinationAddressZipCode(), false, isLocal);
+                            mDeletePurchasingOrderInfoDaoManager.insertOrReplace(deletePurchasingOrderInfo);
+                        }
+                    }
+                    for (CompanyPurchasingOrderInfo companyInfo : mPurchasingOrderLocalList) {
+                        if (mDeleteList.get(i).getLocalId().equals(companyInfo.getLocalId())) {
+                            mPurchasingOrderInfoDaoManager.delete(companyInfo.getLocalId());
+                        }
+                    }
+                    mPurchasingOrderLocalList = new ArrayList<>();
+                    mPurchasingOrderLocalList = mPurchasingOrderInfoDaoManager.queryAll();
                     if (mPurchasingListAdapter != null) {
                         mPurchasingListAdapter.notifyItemRemoved(position);
                     }
@@ -366,7 +433,6 @@ public class CompanyPurchasingManagementActivity extends BaseRefreshMvpActivity<
         }
     }
 
-
     @Subscribe
     public void Event(AddOrSaveCompanyPurchasingOrderEvent addOrSaveCompanyPurchasingOrderEvent) {
         toastMsg(addOrSaveCompanyPurchasingOrderEvent.getMsg());
@@ -378,5 +444,42 @@ public class CompanyPurchasingManagementActivity extends BaseRefreshMvpActivity<
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        mRefreshLayout.setEnableLoadmore(false);
+        switch (port) {
+            case REQUEST_ALL_USERS_LIST:
+                List<DicInfo2> allUserList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(QUERY_ALL_USERS)) {
+                        allUserList.add(new DicInfo2(dicInfo.getId(), dicInfo.getText(), dicInfo.getCode()));
+                    }
+                }
+                getAllCompanyUsers(allUserList);
+                break;
+            case REQUEST_COMPANY_PURCHASING_LIST:
+                List<CompanyPurchasingOrderInfo> rows = new ArrayList<>();
+                if (!TextUtils.isEmpty(StringUtil.getText(et_purchasing_name)) || !TextUtils.isEmpty(StringUtil.getText(et_code)) || !TextUtils.isEmpty(mFromUserId) || !TextUtils.isEmpty(StringUtil.getText(tv_start_time)) || !TextUtils.isEmpty(StringUtil.getText(tv_end_time))) {
+                    if (!TextUtils.isEmpty(mFromUserId)) {
+                        rows = mPurchasingOrderInfoDaoManager.queryBuilder().where(CompanyPurchasingOrderInfoDao.Properties.Name.like("%" + StringUtil.getText(et_purchasing_name) + "%"), CompanyPurchasingOrderInfoDao.Properties.Code.like("%" + StringUtil.getText(et_code) + "%"), CompanyPurchasingOrderInfoDao.Properties.UserId.eq(mFromUserId), CompanyPurchasingOrderInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyPurchasingOrderInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+                    } else {
+                        rows = mPurchasingOrderInfoDaoManager.queryBuilder().where(CompanyPurchasingOrderInfoDao.Properties.Name.like("%" + StringUtil.getText(et_purchasing_name) + "%"), CompanyPurchasingOrderInfoDao.Properties.Code.like("%" + StringUtil.getText(et_code) + "%"), CompanyPurchasingOrderInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyPurchasingOrderInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+                    }
+                } else {
+                    rows = mPurchasingOrderInfoDaoManager.queryAll();
+                }
+                CompanyPurchasingOrderInfoBean companyPurchasingOrderInfoBean = new CompanyPurchasingOrderInfoBean();
+                companyPurchasingOrderInfoBean.setRows(rows);
+                getCompanyPurchasingOrderList(companyPurchasingOrderInfoBean);
+                break;
+            case REQUEST_DELETE_COMPANY_PURCHASING:
+                BaseEntity baseEntity = new BaseEntity();
+                baseEntity.setSuccess(true);
+                deleteCompanyPurchasingOrder(baseEntity, true);
+                break;
+        }
     }
 }

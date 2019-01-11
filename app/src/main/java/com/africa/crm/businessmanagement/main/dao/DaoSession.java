@@ -16,6 +16,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyProductInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyPurchasingOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanySalesOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyServiceRecordInfo;
@@ -28,6 +29,7 @@ import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteDeliveryO
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeletePayOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteProductInfo;
+import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeletePurchasingOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteQuotationInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteSalesOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteServiceRecordInfo;
@@ -43,6 +45,7 @@ import com.africa.crm.businessmanagement.main.dao.CompanyInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyInventoryInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyPayOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyProductInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyPurchasingOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyQuotationInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanySalesOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyServiceRecordInfoDao;
@@ -55,6 +58,7 @@ import com.africa.crm.businessmanagement.main.dao.CompanyDeleteDeliveryOrderInfo
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeletePayOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteProductInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyDeletePurchasingOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteQuotationInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteSalesOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteServiceRecordInfoDao;
@@ -79,6 +83,7 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig companyInventoryInfoDaoConfig;
     private final DaoConfig companyPayOrderInfoDaoConfig;
     private final DaoConfig companyProductInfoDaoConfig;
+    private final DaoConfig companyPurchasingOrderInfoDaoConfig;
     private final DaoConfig companyQuotationInfoDaoConfig;
     private final DaoConfig companySalesOrderInfoDaoConfig;
     private final DaoConfig companyServiceRecordInfoDaoConfig;
@@ -91,6 +96,7 @@ public class DaoSession extends AbstractDaoSession {
     private final DaoConfig companyDeleteInfoDaoConfig;
     private final DaoConfig companyDeletePayOrderInfoDaoConfig;
     private final DaoConfig companyDeleteProductInfoDaoConfig;
+    private final DaoConfig companyDeletePurchasingOrderInfoDaoConfig;
     private final DaoConfig companyDeleteQuotationInfoDaoConfig;
     private final DaoConfig companyDeleteSalesOrderInfoDaoConfig;
     private final DaoConfig companyDeleteServiceRecordInfoDaoConfig;
@@ -106,6 +112,7 @@ public class DaoSession extends AbstractDaoSession {
     private final CompanyInventoryInfoDao companyInventoryInfoDao;
     private final CompanyPayOrderInfoDao companyPayOrderInfoDao;
     private final CompanyProductInfoDao companyProductInfoDao;
+    private final CompanyPurchasingOrderInfoDao companyPurchasingOrderInfoDao;
     private final CompanyQuotationInfoDao companyQuotationInfoDao;
     private final CompanySalesOrderInfoDao companySalesOrderInfoDao;
     private final CompanyServiceRecordInfoDao companyServiceRecordInfoDao;
@@ -118,6 +125,7 @@ public class DaoSession extends AbstractDaoSession {
     private final CompanyDeleteInfoDao companyDeleteInfoDao;
     private final CompanyDeletePayOrderInfoDao companyDeletePayOrderInfoDao;
     private final CompanyDeleteProductInfoDao companyDeleteProductInfoDao;
+    private final CompanyDeletePurchasingOrderInfoDao companyDeletePurchasingOrderInfoDao;
     private final CompanyDeleteQuotationInfoDao companyDeleteQuotationInfoDao;
     private final CompanyDeleteSalesOrderInfoDao companyDeleteSalesOrderInfoDao;
     private final CompanyDeleteServiceRecordInfoDao companyDeleteServiceRecordInfoDao;
@@ -152,6 +160,9 @@ public class DaoSession extends AbstractDaoSession {
 
         companyProductInfoDaoConfig = daoConfigMap.get(CompanyProductInfoDao.class).clone();
         companyProductInfoDaoConfig.initIdentityScope(type);
+
+        companyPurchasingOrderInfoDaoConfig = daoConfigMap.get(CompanyPurchasingOrderInfoDao.class).clone();
+        companyPurchasingOrderInfoDaoConfig.initIdentityScope(type);
 
         companyQuotationInfoDaoConfig = daoConfigMap.get(CompanyQuotationInfoDao.class).clone();
         companyQuotationInfoDaoConfig.initIdentityScope(type);
@@ -189,6 +200,9 @@ public class DaoSession extends AbstractDaoSession {
         companyDeleteProductInfoDaoConfig = daoConfigMap.get(CompanyDeleteProductInfoDao.class).clone();
         companyDeleteProductInfoDaoConfig.initIdentityScope(type);
 
+        companyDeletePurchasingOrderInfoDaoConfig = daoConfigMap.get(CompanyDeletePurchasingOrderInfoDao.class).clone();
+        companyDeletePurchasingOrderInfoDaoConfig.initIdentityScope(type);
+
         companyDeleteQuotationInfoDaoConfig = daoConfigMap.get(CompanyDeleteQuotationInfoDao.class).clone();
         companyDeleteQuotationInfoDaoConfig.initIdentityScope(type);
 
@@ -215,6 +229,7 @@ public class DaoSession extends AbstractDaoSession {
         companyInventoryInfoDao = new CompanyInventoryInfoDao(companyInventoryInfoDaoConfig, this);
         companyPayOrderInfoDao = new CompanyPayOrderInfoDao(companyPayOrderInfoDaoConfig, this);
         companyProductInfoDao = new CompanyProductInfoDao(companyProductInfoDaoConfig, this);
+        companyPurchasingOrderInfoDao = new CompanyPurchasingOrderInfoDao(companyPurchasingOrderInfoDaoConfig, this);
         companyQuotationInfoDao = new CompanyQuotationInfoDao(companyQuotationInfoDaoConfig, this);
         companySalesOrderInfoDao = new CompanySalesOrderInfoDao(companySalesOrderInfoDaoConfig, this);
         companyServiceRecordInfoDao = new CompanyServiceRecordInfoDao(companyServiceRecordInfoDaoConfig, this);
@@ -227,6 +242,7 @@ public class DaoSession extends AbstractDaoSession {
         companyDeleteInfoDao = new CompanyDeleteInfoDao(companyDeleteInfoDaoConfig, this);
         companyDeletePayOrderInfoDao = new CompanyDeletePayOrderInfoDao(companyDeletePayOrderInfoDaoConfig, this);
         companyDeleteProductInfoDao = new CompanyDeleteProductInfoDao(companyDeleteProductInfoDaoConfig, this);
+        companyDeletePurchasingOrderInfoDao = new CompanyDeletePurchasingOrderInfoDao(companyDeletePurchasingOrderInfoDaoConfig, this);
         companyDeleteQuotationInfoDao = new CompanyDeleteQuotationInfoDao(companyDeleteQuotationInfoDaoConfig, this);
         companyDeleteSalesOrderInfoDao = new CompanyDeleteSalesOrderInfoDao(companyDeleteSalesOrderInfoDaoConfig, this);
         companyDeleteServiceRecordInfoDao = new CompanyDeleteServiceRecordInfoDao(companyDeleteServiceRecordInfoDaoConfig, this);
@@ -242,6 +258,7 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(CompanyInventoryInfo.class, companyInventoryInfoDao);
         registerDao(CompanyPayOrderInfo.class, companyPayOrderInfoDao);
         registerDao(CompanyProductInfo.class, companyProductInfoDao);
+        registerDao(CompanyPurchasingOrderInfo.class, companyPurchasingOrderInfoDao);
         registerDao(CompanyQuotationInfo.class, companyQuotationInfoDao);
         registerDao(CompanySalesOrderInfo.class, companySalesOrderInfoDao);
         registerDao(CompanyServiceRecordInfo.class, companyServiceRecordInfoDao);
@@ -254,6 +271,7 @@ public class DaoSession extends AbstractDaoSession {
         registerDao(CompanyDeleteInfo.class, companyDeleteInfoDao);
         registerDao(CompanyDeletePayOrderInfo.class, companyDeletePayOrderInfoDao);
         registerDao(CompanyDeleteProductInfo.class, companyDeleteProductInfoDao);
+        registerDao(CompanyDeletePurchasingOrderInfo.class, companyDeletePurchasingOrderInfoDao);
         registerDao(CompanyDeleteQuotationInfo.class, companyDeleteQuotationInfoDao);
         registerDao(CompanyDeleteSalesOrderInfo.class, companyDeleteSalesOrderInfoDao);
         registerDao(CompanyDeleteServiceRecordInfo.class, companyDeleteServiceRecordInfoDao);
@@ -271,6 +289,7 @@ public class DaoSession extends AbstractDaoSession {
         companyInventoryInfoDaoConfig.clearIdentityScope();
         companyPayOrderInfoDaoConfig.clearIdentityScope();
         companyProductInfoDaoConfig.clearIdentityScope();
+        companyPurchasingOrderInfoDaoConfig.clearIdentityScope();
         companyQuotationInfoDaoConfig.clearIdentityScope();
         companySalesOrderInfoDaoConfig.clearIdentityScope();
         companyServiceRecordInfoDaoConfig.clearIdentityScope();
@@ -283,6 +302,7 @@ public class DaoSession extends AbstractDaoSession {
         companyDeleteInfoDaoConfig.clearIdentityScope();
         companyDeletePayOrderInfoDaoConfig.clearIdentityScope();
         companyDeleteProductInfoDaoConfig.clearIdentityScope();
+        companyDeletePurchasingOrderInfoDaoConfig.clearIdentityScope();
         companyDeleteQuotationInfoDaoConfig.clearIdentityScope();
         companyDeleteSalesOrderInfoDaoConfig.clearIdentityScope();
         companyDeleteServiceRecordInfoDaoConfig.clearIdentityScope();
@@ -321,6 +341,10 @@ public class DaoSession extends AbstractDaoSession {
 
     public CompanyProductInfoDao getCompanyProductInfoDao() {
         return companyProductInfoDao;
+    }
+
+    public CompanyPurchasingOrderInfoDao getCompanyPurchasingOrderInfoDao() {
+        return companyPurchasingOrderInfoDao;
     }
 
     public CompanyQuotationInfoDao getCompanyQuotationInfoDao() {
@@ -369,6 +393,10 @@ public class DaoSession extends AbstractDaoSession {
 
     public CompanyDeleteProductInfoDao getCompanyDeleteProductInfoDao() {
         return companyDeleteProductInfoDao;
+    }
+
+    public CompanyDeletePurchasingOrderInfoDao getCompanyDeletePurchasingOrderInfoDao() {
+        return companyDeletePurchasingOrderInfoDao;
     }
 
     public CompanyDeleteQuotationInfoDao getCompanyDeleteQuotationInfoDao() {
