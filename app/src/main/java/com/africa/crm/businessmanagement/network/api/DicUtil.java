@@ -52,6 +52,8 @@ public class DicUtil {
     public static final String STOCK_TYPE = "STOCKTYPE";
     //采购单状态
     public static final String PURCHASE_STATE = "PURCHASESTATE";
-
-
+    //任务状态
+    public static final String TASK_STATE = "TASKSTATE";
+    //任务等级
+    public static final String TASK_LEVEL = "TASKLEVEL";
 }

@@ -1,8 +1,8 @@
-package com.africa.crm.businessmanagement.main.bean;
+package com.africa.crm.businessmanagement.main.bean.delete;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * Project：BusinessManagementProject
@@ -14,7 +14,7 @@ import org.greenrobot.greendao.annotation.Id;
  * Why & What is modified:
  */
 @Entity
-public class CompanyTaskInfo {
+public class CompanyDeleteTaskInfo {
     @Id(autoincrement = true)
     private Long localId;
     private String customerName;//客户名称
@@ -29,7 +29,7 @@ public class CompanyTaskInfo {
     private String remindTime;//提醒时间  yyyy-MM-dd HH:mm格式
     private String contactName;//联系人名称
     private String userId;//所属用户ID
-    private String name;//任务名称
+    private String name;//销售单名称
     private String stateName;//状态名称
     private String levelName;//优先等级名称
     private String companyId;//所属企业ID
@@ -38,13 +38,13 @@ public class CompanyTaskInfo {
     private boolean chosen = false;
     private boolean isLocal = false;
 
-    @Generated(hash = 1297572676)
-    public CompanyTaskInfo(Long localId, String customerName, String createTime,
-                           Long createTimeDate, String remark, String state, String companyName,
-                           String userNickName, String id, String level, String remindTime,
-                           String contactName, String userId, String name, String stateName,
-                           String levelName, String companyId, String hasRemind, boolean chosen,
-                           boolean isLocal) {
+    @Generated(hash = 2117526426)
+    public CompanyDeleteTaskInfo(Long localId, String customerName,
+            String createTime, Long createTimeDate, String remark, String state,
+            String companyName, String userNickName, String id, String level,
+            String remindTime, String contactName, String userId, String name,
+            String stateName, String levelName, String companyId, String hasRemind,
+            boolean chosen, boolean isLocal) {
         this.localId = localId;
         this.customerName = customerName;
         this.createTime = createTime;
@@ -67,12 +67,12 @@ public class CompanyTaskInfo {
         this.isLocal = isLocal;
     }
 
-    public CompanyTaskInfo(String customerName, String createTime,
-                           Long createTimeDate, String remark, String state, String companyName,
-                           String userNickName, String id, String level, String remindTime,
-                           String contactName, String userId, String name, String stateName,
-                           String levelName, String companyId, String hasRemind, boolean chosen,
-                           boolean isLocal) {
+    public CompanyDeleteTaskInfo(String customerName,
+                                 String createTime, Long createTimeDate, String remark, String state,
+                                 String companyName, String userNickName, String id, String level,
+                                 String remindTime, String contactName, String userId, String name,
+                                 String stateName, String levelName, String companyId, String hasRemind,
+                                 boolean chosen, boolean isLocal) {
         this.customerName = customerName;
         this.createTime = createTime;
         this.createTimeDate = createTimeDate;
@@ -94,8 +94,8 @@ public class CompanyTaskInfo {
         this.isLocal = isLocal;
     }
 
-    @Generated(hash = 1965698231)
-    public CompanyTaskInfo() {
+    @Generated(hash = 2012487316)
+    public CompanyDeleteTaskInfo() {
     }
 
     public String getCustomerName() {

@@ -177,4 +177,17 @@ public class RequestMethod {
     public static final String REQUEST_COMPANY_PURCHASING_DETAIL = "request_company_purchasing_detail";
     //保存企业采购单
     public static final String REQUEST_SAVE_COMPANY_PURCHASING = "request_save_company_purchasing";
+
+    //任务状态
+    public static final String REQUEST_TASK_STATE = "request_task_state";
+    //任务优先等級
+    public static final String REQUEST_TASK_LEVEL = "request_task_level";
+    //企业任务管理列表
+    public static final String REQUEST_COMPANY_TASK_LIST = "request_company_task_list";
+    //删除企业任务管理
+    public static final String REQUEST_DELETE_COMPANY_TASK = "request_delete_company_task";
+    //获取企业任务详情
+    public static final String REQUEST_COMPANY_TASK_DETAIL = "request_company_task_detail";
+    //保存企业任务
+    public static final String REQUEST_SAVE_COMPANY_TASK = "request_save_company_task";
 }

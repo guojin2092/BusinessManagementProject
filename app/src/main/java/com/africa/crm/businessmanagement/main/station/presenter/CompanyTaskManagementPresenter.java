@@ -3,7 +3,6 @@ package com.africa.crm.businessmanagement.main.station.presenter;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
-import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyTaskManagementContract;
 import com.africa.crm.businessmanagement.mvp.presenter.RxPresenter;
 import com.africa.crm.businessmanagement.network.error.ComConsumer;
@@ -12,6 +11,11 @@ import com.africa.crm.businessmanagement.network.util.RxUtils;
 import java.util.List;
 
 import io.reactivex.functions.Consumer;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_TASK_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DELETE_COMPANY_TASK;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_TASK_LEVEL;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_TASK_STATE;
 
 /**
  * Project：BusinessManagementProject
@@ -33,7 +37,7 @@ public class CompanyTaskManagementPresenter extends RxPresenter<CompanyTaskManag
                     public void accept(List<DicInfo> dicInfoList) throws Exception {
                         mView.getStates(dicInfoList);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_TASK_STATE)));
     }
 
     @Override
@@ -45,7 +49,7 @@ public class CompanyTaskManagementPresenter extends RxPresenter<CompanyTaskManag
                     public void accept(List<DicInfo> dicInfoList) throws Exception {
                         mView.getLevels(dicInfoList);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_TASK_LEVEL)));
     }
 
     @Override
@@ -57,7 +61,7 @@ public class CompanyTaskManagementPresenter extends RxPresenter<CompanyTaskManag
                     public void accept(CompanyTaskInfoBean companyTaskInfoBean) throws Exception {
                         mView.getCompanyTaskList(companyTaskInfoBean);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_COMPANY_TASK_LIST)));
 
     }
 
@@ -68,9 +72,9 @@ public class CompanyTaskManagementPresenter extends RxPresenter<CompanyTaskManag
                 .subscribe(new Consumer<BaseEntity>() {
                     @Override
                     public void accept(BaseEntity baseEntity) throws Exception {
-                        mView.deleteCompanyTask(baseEntity);
+                        mView.deleteCompanyTask(baseEntity, false);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_DELETE_COMPANY_TASK)));
     }
 
 }

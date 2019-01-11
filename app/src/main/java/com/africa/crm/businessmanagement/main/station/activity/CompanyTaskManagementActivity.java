@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveTaskEvent;
@@ -21,14 +23,21 @@ import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
+import com.africa.crm.businessmanagement.main.bean.delete.CompanyDeleteTaskInfo;
+import com.africa.crm.businessmanagement.main.dao.CompanyDeleteTaskInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyTaskInfoDao;
+import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.TaskListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyTaskManagementContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyTaskManagementPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
+import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.bigkoo.pickerview.TimePickerView;
@@ -42,6 +51,13 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.DicUtil.TASK_LEVEL;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.TASK_STATE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_TASK_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DELETE_COMPANY_TASK;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_TASK_LEVEL;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_TASK_STATE;
 
 /**
  * Project：BusinessManagementProject
@@ -60,13 +76,11 @@ public class CompanyTaskManagementActivity extends BaseRefreshMvpActivity<Compan
 
     @BindView(R.id.spinner_state)
     MySpinner spinner_state;
-    private static final String STATE_CODE = "TASKSTATE";
     private List<DicInfo> mSpinnerStateList = new ArrayList<>();
     private String mStateCode = "";
 
     @BindView(R.id.spinner_level)
     MySpinner spinner_level;
-    private static final String LEVEL_CODE = "TASKLEVEL";
     private List<DicInfo> mSpinnerLevelList = new ArrayList<>();
     private String mLevelCode = "";
 
@@ -96,6 +110,13 @@ public class CompanyTaskManagementActivity extends BaseRefreshMvpActivity<Compan
 
     private TimePickerView pvStartTime, pvEndTime;
     private Date mStartDate, mEndDate;
+
+    private GreendaoManager<CompanyTaskInfo, CompanyTaskInfoDao> mTaskInfoDaoManager;
+    private GreendaoManager<CompanyDeleteTaskInfo, CompanyDeleteTaskInfoDao> mDeleteTaskInfoDaoManager;
+    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoManager;
+
+    private List<CompanyTaskInfo> mTaskInfoLocalList = new ArrayList<>();//本地数据
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
@@ -132,6 +153,14 @@ public class CompanyTaskManagementActivity extends BaseRefreshMvpActivity<Compan
         tv_start_time.setOnClickListener(this);
         tv_end_time.setOnClickListener(this);
         initTimePicker();
+        //得到Dao对象管理器
+        mTaskInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyTaskInfoDao());
+        //得到Dao对象管理器
+        mDeleteTaskInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeleteTaskInfoDao());
+        //得到Dao对象管理器
+        mDicInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getDicInfoDao());
+        //得到本地数据
+        mDicInfoLocalList = mDicInfoDaoManager.queryAll();
     }
 
     private void initTimePicker() {
@@ -176,8 +205,8 @@ public class CompanyTaskManagementActivity extends BaseRefreshMvpActivity<Compan
 
     @Override
     protected void requestData() {
-        mPresenter.getStates(STATE_CODE);
-        mPresenter.getLevels(LEVEL_CODE);
+        mPresenter.getStates(TASK_STATE);
+        mPresenter.getLevels(TASK_LEVEL);
         pullDownRefresh(page);
     }
 
@@ -217,7 +246,7 @@ public class CompanyTaskManagementActivity extends BaseRefreshMvpActivity<Compan
                 }
                 break;
             case R.id.ll_add:
-                CompanyTaskDetailActivity.startActivity(CompanyTaskManagementActivity.this, "");
+                CompanyTaskDetailActivity.startActivity(CompanyTaskManagementActivity.this, "", 0l);
                 break;
             case R.id.tv_delete:
                 mDeleteList.clear();
@@ -268,6 +297,11 @@ public class CompanyTaskManagementActivity extends BaseRefreshMvpActivity<Compan
     public void getStates(List<DicInfo> dicInfoList) {
         mSpinnerStateList.clear();
         mSpinnerStateList.addAll(dicInfoList);
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerStateList, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            dicInfo.setType(TASK_STATE);
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
+        }
         spinner_state.setListDatas(this, mSpinnerStateList);
         spinner_state.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
@@ -281,6 +315,11 @@ public class CompanyTaskManagementActivity extends BaseRefreshMvpActivity<Compan
     public void getLevels(List<DicInfo> dicInfoList) {
         mSpinnerLevelList.clear();
         mSpinnerLevelList.addAll(dicInfoList);
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerLevelList, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            dicInfo.setType(TASK_LEVEL);
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
+        }
         spinner_level.setListDatas(this, mSpinnerLevelList);
         spinner_level.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
@@ -305,6 +344,7 @@ public class CompanyTaskManagementActivity extends BaseRefreshMvpActivity<Compan
                     mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
                 }
                 mTaskInfoBeanList.clear();
+                mTaskInfoLocalList = mTaskInfoDaoManager.queryAll();
                 recyclerView.smoothScrollToPosition(0);
             }
             if (mRefreshLayout != null) {
@@ -316,6 +356,24 @@ public class CompanyTaskManagementActivity extends BaseRefreshMvpActivity<Compan
             }
             if (!ListUtils.isEmpty(companyTaskInfoBean.getRows())) {
                 mTaskInfoBeanList.addAll(companyTaskInfoBean.getRows());
+                List<CompanyTaskInfo> addList = DifferentDataUtil.addTaskDataToLocal(mTaskInfoBeanList, mTaskInfoLocalList);
+                if (!ListUtils.isEmpty(addList)) {
+                    for (CompanyTaskInfo companyInfo : addList) {
+                        mTaskInfoDaoManager.insertOrReplace(companyInfo);
+                    }
+                    mTaskInfoLocalList = new ArrayList<>();
+                    mTaskInfoLocalList = mTaskInfoDaoManager.queryAll();
+                }
+                for (CompanyTaskInfo info : mTaskInfoBeanList) {
+                    for (CompanyTaskInfo localInfo : mTaskInfoLocalList) {
+                        if (!TextUtils.isEmpty(info.getId()) && !TextUtils.isEmpty(localInfo.getId())) {
+                            if (info.getId().equals(localInfo.getId())) {
+                                info.setLocalId(localInfo.getLocalId());
+                                mTaskInfoDaoManager.correct(info);
+                            }
+                        }
+                    }
+                }
                 if (mTaskListAdapter != null) {
                     mTaskListAdapter.notifyDataSetChanged();
                 }
@@ -329,7 +387,7 @@ public class CompanyTaskManagementActivity extends BaseRefreshMvpActivity<Compan
                             mTaskInfoBeanList.get(position).setChosen(!cb_choose.isChecked());
                             mTaskListAdapter.notifyDataSetChanged();
                         } else {
-                            CompanyTaskDetailActivity.startActivity(CompanyTaskManagementActivity.this, mTaskInfoBeanList.get(position).getId());
+                            CompanyTaskDetailActivity.startActivity(CompanyTaskManagementActivity.this, mTaskInfoBeanList.get(position).getId(), mTaskInfoBeanList.get(position).getLocalId());
                         }
                     }
                 });
@@ -339,12 +397,25 @@ public class CompanyTaskManagementActivity extends BaseRefreshMvpActivity<Compan
     }
 
     @Override
-    public void deleteCompanyTask(BaseEntity baseEntity) {
+    public void deleteCompanyTask(BaseEntity baseEntity, boolean isLocal) {
         if (baseEntity.isSuccess()) {
             for (int i = 0; i < mDeleteList.size(); i++) {
                 if (mTaskInfoBeanList.contains(mDeleteList.get(i))) {
                     int position = mTaskInfoBeanList.indexOf(mDeleteList.get(i));
                     mTaskInfoBeanList.remove(mDeleteList.get(i));
+                    if (isLocal) {
+                        for (CompanyTaskInfo companyInfo : mDeleteList) {
+                            CompanyDeleteTaskInfo deleteTaskInfo = new CompanyDeleteTaskInfo(companyInfo.getCustomerName(), companyInfo.getCreateTime(), companyInfo.getCreateTimeDate(), companyInfo.getRemark(), companyInfo.getState(), companyInfo.getCompanyName(), companyInfo.getUserNickName(), companyInfo.getId(), companyInfo.getLevel(), companyInfo.getRemindTime(), companyInfo.getContactName(), companyInfo.getUserId(), companyInfo.getName(), companyInfo.getStateName(), companyInfo.getLevelName(), companyInfo.getCompanyId(), companyInfo.getHasRemind(), false, isLocal);
+                            mDeleteTaskInfoDaoManager.insertOrReplace(deleteTaskInfo);
+                        }
+                    }
+                    for (CompanyTaskInfo companyInfo : mTaskInfoLocalList) {
+                        if (mDeleteList.get(i).getLocalId().equals(companyInfo.getLocalId())) {
+                            mTaskInfoDaoManager.delete(companyInfo.getLocalId());
+                        }
+                    }
+                    mTaskInfoLocalList = new ArrayList<>();
+                    mTaskInfoLocalList = mTaskInfoDaoManager.queryAll();
                     if (mTaskListAdapter != null) {
                         mTaskListAdapter.notifyItemRemoved(position);
                     }
@@ -364,7 +435,6 @@ public class CompanyTaskManagementActivity extends BaseRefreshMvpActivity<Compan
         }
     }
 
-
     @Subscribe
     public void Event(AddOrSaveTaskEvent addOrSaveTaskEvent) {
         toastMsg(addOrSaveTaskEvent.getMsg());
@@ -376,5 +446,55 @@ public class CompanyTaskManagementActivity extends BaseRefreshMvpActivity<Compan
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        mRefreshLayout.setEnableLoadmore(false);
+        switch (port) {
+            case REQUEST_TASK_STATE:
+                List<DicInfo> stateList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(TASK_STATE)) {
+                        stateList.add(dicInfo);
+                    }
+                }
+                getStates(stateList);
+                break;
+            case REQUEST_TASK_LEVEL:
+                List<DicInfo> levelList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(TASK_LEVEL)) {
+                        levelList.add(dicInfo);
+                    }
+                }
+                getLevels(levelList);
+                break;
+            case REQUEST_COMPANY_TASK_LIST:
+                List<CompanyTaskInfo> rows = new ArrayList<>();
+                if (!TextUtils.isEmpty(StringUtil.getText(et_task_name)) || !TextUtils.isEmpty(StringUtil.getText(et_customer_name)) || !TextUtils.isEmpty(mStateCode) || !TextUtils.isEmpty(mLevelCode) || !TextUtils.isEmpty(StringUtil.getText(tv_start_time)) || !TextUtils.isEmpty(StringUtil.getText(tv_end_time))) {
+                    if (!TextUtils.isEmpty(mStateCode) && !TextUtils.isEmpty(mLevelCode)) {
+                        rows = mTaskInfoDaoManager.queryBuilder().where(CompanyTaskInfoDao.Properties.Name.like("%" + StringUtil.getText(et_task_name) + "%"), CompanyTaskInfoDao.Properties.CustomerName.like("%" + StringUtil.getText(et_customer_name) + "%"), CompanyTaskInfoDao.Properties.State.eq(mStateCode), CompanyTaskInfoDao.Properties.Level.eq(mLevelCode), CompanyTaskInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyTaskInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+                    } else if (!TextUtils.isEmpty(mStateCode) && TextUtils.isEmpty(mLevelCode)) {
+                        rows = mTaskInfoDaoManager.queryBuilder().where(CompanyTaskInfoDao.Properties.Name.like("%" + StringUtil.getText(et_task_name) + "%"), CompanyTaskInfoDao.Properties.CustomerName.like("%" + StringUtil.getText(et_customer_name) + "%"), CompanyTaskInfoDao.Properties.State.eq(mStateCode), CompanyTaskInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyTaskInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+                    } else if (TextUtils.isEmpty(mStateCode) && !TextUtils.isEmpty(mLevelCode)) {
+                        rows = mTaskInfoDaoManager.queryBuilder().where(CompanyTaskInfoDao.Properties.Name.like("%" + StringUtil.getText(et_task_name) + "%"), CompanyTaskInfoDao.Properties.CustomerName.like("%" + StringUtil.getText(et_customer_name) + "%"), CompanyTaskInfoDao.Properties.Level.eq(mLevelCode), CompanyTaskInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyTaskInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+                    } else if (TextUtils.isEmpty(mStateCode) && TextUtils.isEmpty(mLevelCode)) {
+                        rows = mTaskInfoDaoManager.queryBuilder().where(CompanyTaskInfoDao.Properties.Name.like("%" + StringUtil.getText(et_task_name) + "%"), CompanyTaskInfoDao.Properties.CustomerName.like("%" + StringUtil.getText(et_customer_name) + "%"), CompanyTaskInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyTaskInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+                    }
+                } else {
+                    rows = mTaskInfoDaoManager.queryAll();
+                }
+                CompanyTaskInfoBean companyTaskInfoBean = new CompanyTaskInfoBean();
+                companyTaskInfoBean.setRows(rows);
+                getCompanyTaskList(companyTaskInfoBean);
+                break;
+            case REQUEST_DELETE_COMPANY_TASK:
+                BaseEntity baseEntity = new BaseEntity();
+                baseEntity.setSuccess(true);
+                deleteCompanyTask(baseEntity, true);
+                break;
+        }
     }
 }

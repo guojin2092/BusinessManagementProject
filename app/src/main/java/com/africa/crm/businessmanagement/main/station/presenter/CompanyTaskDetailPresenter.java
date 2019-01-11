@@ -1,9 +1,9 @@
 package com.africa.crm.businessmanagement.main.station.presenter;
 
-import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyTaskDetailContract;
 import com.africa.crm.businessmanagement.mvp.presenter.RxPresenter;
 import com.africa.crm.businessmanagement.network.error.ComConsumer;
@@ -12,6 +12,13 @@ import com.africa.crm.businessmanagement.network.util.RxUtils;
 import java.util.List;
 
 import io.reactivex.functions.Consumer;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_CONTACT_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_ALL_CUSTOMER_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_TASK_DETAIL;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SAVE_COMPANY_TASK;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_TASK_LEVEL;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_TASK_STATE;
 
 /**
  * Project：BusinessManagementProject
@@ -32,7 +39,7 @@ public class CompanyTaskDetailPresenter extends RxPresenter<CompanyTaskDetailCon
                     public void accept(List<DicInfo2> dicInfo2List) throws Exception {
                         mView.getAllCustomers(dicInfo2List);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_ALL_CUSTOMER_LIST)));
     }
 
     @Override
@@ -44,7 +51,7 @@ public class CompanyTaskDetailPresenter extends RxPresenter<CompanyTaskDetailCon
                     public void accept(List<DicInfo2> dicInfo2List) throws Exception {
                         mView.getAllContact(dicInfo2List);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_ALL_CONTACT_LIST)));
     }
 
     @Override
@@ -56,7 +63,7 @@ public class CompanyTaskDetailPresenter extends RxPresenter<CompanyTaskDetailCon
                     public void accept(List<DicInfo> dicInfoList) throws Exception {
                         mView.getLevels(dicInfoList);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_TASK_LEVEL)));
 
     }
 
@@ -69,7 +76,7 @@ public class CompanyTaskDetailPresenter extends RxPresenter<CompanyTaskDetailCon
                     public void accept(List<DicInfo> dicInfoList) throws Exception {
                         mView.getStates(dicInfoList);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_TASK_STATE)));
     }
 
     @Override
@@ -81,19 +88,19 @@ public class CompanyTaskDetailPresenter extends RxPresenter<CompanyTaskDetailCon
                     public void accept(CompanyTaskInfo companyTaskInfo) throws Exception {
                         mView.getCompanyTaskDetail(companyTaskInfo);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_COMPANY_TASK_DETAIL)));
     }
 
     @Override
     public void saveCompanyTask(String id, String companyId, String userId, String name, String remindTime, String customerName, String contactName, String level, String state, String remark) {
         addDisposable(mDataManager.saveCompanyTask(id, companyId, userId, name, remindTime, customerName, contactName, level, state, remark)
-                .compose(RxUtils.<BaseEntity>ioToMain(mView))
-                .subscribe(new Consumer<BaseEntity>() {
+                .compose(RxUtils.<UploadInfoBean>ioToMain(mView))
+                .subscribe(new Consumer<UploadInfoBean>() {
                     @Override
-                    public void accept(BaseEntity baseEntity) throws Exception {
-                        mView.saveCompanyTask(baseEntity);
+                    public void accept(UploadInfoBean uploadInfoBean) throws Exception {
+                        mView.saveCompanyTask(uploadInfoBean, false);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_SAVE_COMPANY_TASK)));
     }
 
 }

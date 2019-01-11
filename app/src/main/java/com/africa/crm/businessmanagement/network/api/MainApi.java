@@ -366,7 +366,7 @@ public interface MainApi {
 
     @FormUrlEncoded
     @POST("taskRecord/save")
-    Observable<BaseEntity> saveCompanyTask(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("remindTime") String remindTime, @Field("customerName") String customerName, @Field("contactName") String contactName, @Field("level") String level, @Field("state") String state, @Field("remark") String remark);
+    Observable<BaseEntity<UploadInfoBean>> saveCompanyTask(@Field("id") String id, @Field("companyId") String companyId, @Field("userId") String userId, @Field("name") String name, @Field("remindTime") String remindTime, @Field("customerName") String customerName, @Field("contactName") String contactName, @Field("level") String level, @Field("state") String state, @Field("remark") String remark);
 
     @FormUrlEncoded
     @POST("taskRecord/selectFirstNoRemind")

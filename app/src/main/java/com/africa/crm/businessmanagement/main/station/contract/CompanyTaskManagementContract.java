@@ -28,7 +28,7 @@ public class CompanyTaskManagementContract {
 
         void getCompanyTaskList(CompanyTaskInfoBean companyTaskInfoBean);
 
-        void deleteCompanyTask(BaseEntity baseEntity);
+        void deleteCompanyTask(BaseEntity baseEntity, boolean isLocal);
     }
 
     public interface Presenter extends IBasePresenter<CompanyTaskManagementContract.View> {

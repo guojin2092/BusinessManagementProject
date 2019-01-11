@@ -4,6 +4,7 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.mvp.presenter.IBasePresenter;
 import com.africa.crm.businessmanagement.network.base.BaseView;
 
@@ -32,7 +33,7 @@ public class CompanyTaskDetailContract {
 
         void getCompanyTaskDetail(CompanyTaskInfo companyTaskInfo);
 
-        void saveCompanyTask(BaseEntity baseEntity);
+        void saveCompanyTask(UploadInfoBean uploadInfoBean, boolean isLocal);
 
     }
 
