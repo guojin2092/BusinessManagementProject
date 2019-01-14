@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.main.bean.UserInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyUserInfoBean;
 import com.africa.crm.businessmanagement.main.glide.GlideUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -24,10 +24,10 @@ import java.util.List;
  * Modification  History:
  * Why & What is modified:
  */
-public class UserListAdapter extends BaseQuickAdapter<UserInfoBean, BaseViewHolder> {
+public class UserListAdapter extends BaseQuickAdapter<CompanyUserInfoBean, BaseViewHolder> {
     private boolean mIsDeleted = false;
 
-    public UserListAdapter(@Nullable List<UserInfoBean> data) {
+    public UserListAdapter(@Nullable List<CompanyUserInfoBean> data) {
         super(R.layout.item_user_list, data);
     }
 
@@ -41,7 +41,7 @@ public class UserListAdapter extends BaseQuickAdapter<UserInfoBean, BaseViewHold
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, UserInfoBean item) {
+    protected void convert(BaseViewHolder helper, CompanyUserInfoBean item) {
         ImageView iv_icon = helper.getView(R.id.iv_icon);
         TextView tv_company = helper.getView(R.id.tv_company);
         TextView tv_role_name = helper.getView(R.id.tv_role_name);

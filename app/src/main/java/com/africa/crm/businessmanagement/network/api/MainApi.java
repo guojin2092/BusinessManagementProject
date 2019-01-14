@@ -37,6 +37,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyUserInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyeExpenditureInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyeExpenditureInfoBeanB;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
@@ -82,11 +83,11 @@ public interface MainApi {
 
     @FormUrlEncoded
     @POST("user/getInfo")
-    Observable<BaseEntity<UserInfo>> getUserInfo(@Field("id") String id);
+    Observable<BaseEntity<CompanyUserInfoBean>> getUserInfo(@Field("id") String id);
 
     @FormUrlEncoded
     @POST("user/save")
-    Observable<BaseEntity> saveOrcreateUser(@Field("id") String id, @Field("userName") String userName, @Field("type") String type, @Field("roleIds") String roleIds, @Field("passWord") String passWord, @Field("name") String name, @Field("phone") String phone, @Field("address") String address, @Field("email") String email, @Field("state") String state, @Field("companyId") String companyId, @Field("head") String head);
+    Observable<BaseEntity<UploadInfoBean>> saveOrcreateUser(@Field("id") String id, @Field("userName") String userName, @Field("type") String type, @Field("roleIds") String roleIds, @Field("passWord") String passWord, @Field("name") String name, @Field("phone") String phone, @Field("address") String address, @Field("email") String email, @Field("state") String state, @Field("companyId") String companyId, @Field("head") String head);
 
     @FormUrlEncoded
     @POST("company/queryAll")

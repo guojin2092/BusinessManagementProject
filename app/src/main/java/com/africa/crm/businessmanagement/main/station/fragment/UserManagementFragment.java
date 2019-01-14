@@ -7,9 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,22 +16,29 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveUserEvent;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
+import com.africa.crm.businessmanagement.main.bean.CompanyUserInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
-import com.africa.crm.businessmanagement.main.bean.UserInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
+import com.africa.crm.businessmanagement.main.bean.delete.CompanyUserDeleteInfoBean;
+import com.africa.crm.businessmanagement.main.dao.CompanyUserDeleteInfoBeanDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyUserInfoBeanDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
-import com.africa.crm.businessmanagement.main.station.activity.UserDetailActivity;
+import com.africa.crm.businessmanagement.main.station.activity.CompanyUserDetailActivity;
 import com.africa.crm.businessmanagement.main.station.adapter.UserListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.UserManagementContract;
 import com.africa.crm.businessmanagement.main.station.presenter.UserManagementPresenter;
 import com.africa.crm.businessmanagement.mvp.fragment.BaseRefreshMvpFragment;
 import com.africa.crm.businessmanagement.network.error.ComException;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.MySpinner;
+import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.dialog.AlertDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 
@@ -44,6 +49,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_SYSTEM_USER_LIST;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DELETE_COMPANY_SYSTEM_USER;
 
 /**
  * Project：BusinessManagementProject
@@ -73,8 +81,8 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     private UserListAdapter mUserListAdapter;
-    private List<UserInfoBean> mDeleteList = new ArrayList<>();
-    private List<UserInfoBean> mUserInfoBeanList = new ArrayList<>();
+    private List<CompanyUserInfoBean> mDeleteList = new ArrayList<>();
+    private List<CompanyUserInfoBean> mUserInfoBeanList = new ArrayList<>();
 
     private boolean mShowCheckBox = false;
 
@@ -98,6 +106,11 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
     private String mState = "";
 
     private AlertDialog mDeleteDialog;
+
+    private GreendaoManager<CompanyUserInfoBean, CompanyUserInfoBeanDao> mUserInfoBeanDaoManager;
+    private GreendaoManager<CompanyUserDeleteInfoBean, CompanyUserDeleteInfoBeanDao> mDeleteInfoBeanDaoManager;
+
+    private List<CompanyUserInfoBean> mUserInfoLocalList = new ArrayList<>();//本地数据
 
     public static UserManagementFragment newInstance() {
         UserManagementFragment userManagementFragment = new UserManagementFragment();
@@ -140,6 +153,10 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
         tv_search.setOnClickListener(this);
         titlebar_right.setText(R.string.delete);
 
+        //得到Dao对象管理器
+        mUserInfoBeanDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyUserInfoBeanDao());
+        //得到Dao对象管理器
+        mDeleteInfoBeanDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyUserDeleteInfoBeanDao());
 /*
         et_search_username.addTextChangedListener(new TextWatcher() {
             @Override
@@ -262,7 +279,7 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
                 }
                 break;
             case R.id.ll_add:
-                UserDetailActivity.startActivity(getBVActivity(), "");
+                CompanyUserDetailActivity.startActivity(getBVActivity(), "", 0l);
                 break;
             case R.id.tv_search:
                 /*if (TextUtils.isEmpty(et_search_username.getText().toString().trim()) && TextUtils.isEmpty(et_search_nickname.getText().toString().trim()) && TextUtils.isEmpty(spinner_type.getText()) && TextUtils.isEmpty(spinner_state.getText())) {
@@ -279,7 +296,7 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
                 break;
             case R.id.tv_delete:
                 mDeleteList.clear();
-                for (UserInfoBean userInfoBean : mUserInfoBeanList) {
+                for (CompanyUserInfoBean userInfoBean : mUserInfoBeanList) {
                     if (userInfoBean.isChosen()) {
                         mDeleteList.add(userInfoBean);
                     }
@@ -289,7 +306,7 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
                     return;
                 }
                 String userId = String.valueOf(UserInfoManager.getUserLoginInfo(getBVActivity()).getId());
-                for (UserInfoBean userInfoBean : mDeleteList) {
+                for (CompanyUserInfoBean userInfoBean : mDeleteList) {
                     if (userInfoBean.getId().equals(userId)) {
                         toastMsg("个人账号不能删除");
                         return;
@@ -338,6 +355,7 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
                 mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
             }
             mUserInfoBeanList.clear();
+            mUserInfoLocalList = mUserInfoBeanDaoManager.queryAll();
             recyclerView.smoothScrollToPosition(0);
         }
         if (mRefreshLayout != null) {
@@ -349,6 +367,24 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
         }
         if (!ListUtils.isEmpty(userManagementInfoBean.getRows())) {
             mUserInfoBeanList.addAll(userManagementInfoBean.getRows());
+            List<CompanyUserInfoBean> addList = DifferentDataUtil.addUserDataToLocal(mUserInfoBeanList, mUserInfoLocalList);
+            if (!ListUtils.isEmpty(addList)) {
+                for (CompanyUserInfoBean companyInfo : addList) {
+                    mUserInfoBeanDaoManager.insertOrReplace(companyInfo);
+                }
+                mUserInfoLocalList = new ArrayList<>();
+                mUserInfoLocalList = mUserInfoBeanDaoManager.queryAll();
+            }
+            for (CompanyUserInfoBean info : mUserInfoBeanList) {
+                for (CompanyUserInfoBean localInfo : mUserInfoLocalList) {
+                    if (!TextUtils.isEmpty(info.getId()) && !TextUtils.isEmpty(localInfo.getId())) {
+                        if (info.getId().equals(localInfo.getId())) {
+                            info.setLocalId(localInfo.getLocalId());
+                            mUserInfoBeanDaoManager.correct(info);
+                        }
+                    }
+                }
+            }
             if (mUserListAdapter != null) {
                 mUserListAdapter.notifyDataSetChanged();
             }
@@ -362,7 +398,7 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
                         mUserInfoBeanList.get(position).setChosen(!cb_choose.isChecked());
                         mUserListAdapter.notifyDataSetChanged();
                     } else {
-                        UserDetailActivity.startActivity(getBVActivity(), mUserInfoBeanList.get(position).getId());
+                        CompanyUserDetailActivity.startActivity(getBVActivity(), mUserInfoBeanList.get(position).getId(), mUserInfoBeanList.get(position).getLocalId());
                     }
                 }
             });
@@ -371,12 +407,25 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
     }
 
     @Override
-    public void deleteUser(BaseEntity baseEntity) {
+    public void deleteUser(BaseEntity baseEntity, boolean isLocal) {
         if (baseEntity.isSuccess()) {
             for (int i = 0; i < mDeleteList.size(); i++) {
                 if (mUserInfoBeanList.contains(mDeleteList.get(i))) {
                     int position = mUserInfoBeanList.indexOf(mDeleteList.get(i));
                     mUserInfoBeanList.remove(mDeleteList.get(i));
+                    if (isLocal) {
+                        for (CompanyUserInfoBean companyInfo : mDeleteList) {
+                            CompanyUserDeleteInfoBean companyUserDeleteInfoBean = new CompanyUserDeleteInfoBean(companyInfo.getId(), companyInfo.getHead(), companyInfo.getCompanyId(), companyInfo.getCreateTime(), companyInfo.getCreateTimeDate(), companyInfo.getCompanyName(), companyInfo.getName(), companyInfo.getRoleName(), companyInfo.getState(), companyInfo.getStateName(), companyInfo.getUserName(), companyInfo.getType(), companyInfo.getTypeName(), companyInfo.getPassword(), companyInfo.getAddress(), companyInfo.getPhone(), companyInfo.getEmail(), companyInfo.getRoleId(), companyInfo.getRoleTypeName(), companyInfo.getRoleCode(), false, isLocal);
+                            mDeleteInfoBeanDaoManager.insertOrReplace(companyUserDeleteInfoBean);
+                        }
+                    }
+                    for (CompanyUserInfoBean companyInfo : mUserInfoLocalList) {
+                        if (mDeleteList.get(i).getLocalId().equals(companyInfo.getLocalId())) {
+                            mUserInfoBeanDaoManager.delete(companyInfo.getLocalId());
+                        }
+                    }
+                    mUserInfoLocalList = new ArrayList<>();
+                    mUserInfoLocalList = mUserInfoBeanDaoManager.queryAll();
                     if (mUserListAdapter != null) {
                         mUserListAdapter.notifyItemRemoved(position);
                     }
@@ -413,4 +462,35 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        mRefreshLayout.setEnableLoadmore(false);
+        switch (port) {
+            case REQUEST_COMPANY_SYSTEM_USER_LIST:
+                List<CompanyUserInfoBean> rows = new ArrayList<>();
+                if (!TextUtils.isEmpty(StringUtil.getText(et_search_username)) || !TextUtils.isEmpty(StringUtil.getText(et_search_nickname)) || !TextUtils.isEmpty(mType) || !TextUtils.isEmpty(mState)) {
+                    if (!TextUtils.isEmpty(mType) && !TextUtils.isEmpty(mState)) {
+                        rows = mUserInfoBeanDaoManager.queryBuilder().where(CompanyUserInfoBeanDao.Properties.UserName.like("%" + StringUtil.getText(et_search_username) + "%"), CompanyUserInfoBeanDao.Properties.Name.like("%" + StringUtil.getText(et_search_nickname) + "%"), CompanyUserInfoBeanDao.Properties.Type.eq(mType), CompanyUserInfoBeanDao.Properties.State.eq(mState)).list();
+                    } else if (!TextUtils.isEmpty(mType) && TextUtils.isEmpty(mState)) {
+                        rows = mUserInfoBeanDaoManager.queryBuilder().where(CompanyUserInfoBeanDao.Properties.UserName.like("%" + StringUtil.getText(et_search_username) + "%"), CompanyUserInfoBeanDao.Properties.Name.like("%" + StringUtil.getText(et_search_nickname) + "%"), CompanyUserInfoBeanDao.Properties.Type.eq(mType)).list();
+                    } else if (TextUtils.isEmpty(mType) && !TextUtils.isEmpty(mState)) {
+                        rows = mUserInfoBeanDaoManager.queryBuilder().where(CompanyUserInfoBeanDao.Properties.UserName.like("%" + StringUtil.getText(et_search_username) + "%"), CompanyUserInfoBeanDao.Properties.Name.like("%" + StringUtil.getText(et_search_nickname) + "%"), CompanyUserInfoBeanDao.Properties.State.eq(mState)).list();
+                    } else if (TextUtils.isEmpty(mType) && TextUtils.isEmpty(mState)) {
+                        rows = mUserInfoBeanDaoManager.queryBuilder().where(CompanyUserInfoBeanDao.Properties.UserName.like("%" + StringUtil.getText(et_search_username) + "%"), CompanyUserInfoBeanDao.Properties.Name.like("%" + StringUtil.getText(et_search_nickname) + "%")).list();
+                    }
+                } else {
+                    rows = mUserInfoBeanDaoManager.queryAll();
+                }
+                UserManagementInfoBean userManagementInfoBean = new UserManagementInfoBean();
+                userManagementInfoBean.setRows(rows);
+                getUserList(userManagementInfoBean);
+                break;
+            case REQUEST_DELETE_COMPANY_SYSTEM_USER:
+                BaseEntity baseEntity = new BaseEntity();
+                baseEntity.setSuccess(true);
+                deleteUser(baseEntity, true);
+                break;
+        }
+    }
 }

@@ -42,6 +42,7 @@ import static com.africa.crm.businessmanagement.network.api.DicUtil.INDUSTRY_COD
 import static com.africa.crm.businessmanagement.network.api.DicUtil.INVOICE_STATE;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.PRODUCT_TYPE;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.PURCHASE_STATE;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_COMPANY;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_CONTACTS;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_CUSTOMERS;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_PRODUCTS;
@@ -59,6 +60,7 @@ import static com.africa.crm.businessmanagement.network.api.DicUtil.STOCK_TYPE;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.SUPPLIER_TYPE_CODE;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.TASK_LEVEL;
 import static com.africa.crm.businessmanagement.network.api.DicUtil.TASK_STATE;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.USER_TYPE;
 import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_STATE;
 import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_TYPE;
 
@@ -498,6 +500,37 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
                         List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerSupplierTypeList, mDicInfoLocalList);
                         for (DicInfo dicInfo : addList) {
                             dicInfo.setType(TASK_STATE);
+                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
+                        }
+                    }
+                }, new ComConsumer(this)));
+        //用户类型
+        addDisposable(mDataManager.getDicByCode(USER_TYPE)
+                .compose(RxUtils.<List<DicInfo>>ioToMain())
+                .subscribe(new Consumer<List<DicInfo>>() {
+                    @Override
+                    public void accept(List<DicInfo> dicInfoList) throws Exception {
+                        List<DicInfo> spinnerSupplierTypeList = new ArrayList<>();
+                        spinnerSupplierTypeList.addAll(dicInfoList);
+                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerSupplierTypeList, mDicInfoLocalList);
+                        for (DicInfo dicInfo : addList) {
+                            dicInfo.setType(USER_TYPE);
+                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
+                        }
+                    }
+                }, new ComConsumer(this)));
+        //所有公司
+        addDisposable(mDataManager.getAllCompany("")
+                .compose(RxUtils.<List<DicInfo2>>ioToMain())
+                .subscribe(new Consumer<List<DicInfo2>>() {
+                    @Override
+                    public void accept(List<DicInfo2> dicInfoList) throws Exception {
+                        List<DicInfo> list = new ArrayList<>();
+                        for (DicInfo2 dicInfo2 : dicInfoList) {
+                            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_COMPANY, dicInfo2.getName(), dicInfo2.getCode()));
+                        }
+                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
+                        for (DicInfo dicInfo : addList) {
                             mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
                         }
                     }

@@ -1,10 +1,12 @@
 package com.africa.crm.businessmanagement.main.station.contract;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
+import com.africa.crm.businessmanagement.main.bean.CompanyUserInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.mvp.presenter.IBasePresenter;
 import com.africa.crm.businessmanagement.network.base.BaseView;
@@ -28,13 +30,13 @@ public class UserDetailContract {
 
         void getStateType(List<DicInfo> dicInfoList);
 
-        void getUserInfo(UserInfo userInfo);
-
-        void saveOrcreateUser(BaseEntity baseEntity);
+        void getUserInfo(CompanyUserInfoBean companyUserInfoBean);
 
         void getAllCompany(List<DicInfo2> dicInfoList);
 
         void getAllRoles(List<RoleInfoBean> roleInfoBeanList);
+
+        void saveOrcreateUser(UploadInfoBean uploadInfoBean,boolean isLocal);
     }
 
     public interface Presenter extends IBasePresenter<UserDetailContract.View> {
@@ -46,10 +48,11 @@ public class UserDetailContract {
 
         void getUserInfo(String id);
 
-        void saveOrcreateUser(String id, String userName, String type, String roleIds, String passWord, String name, String phone, String address, String email, String state, String companyId, String head);
-
         void getAllCompany(String name);
 
         void getAllRoles();
+
+        void saveOrcreateUser(String id, String userName, String type, String roleIds, String passWord, String name, String phone, String address, String email, String state, String companyId, String head);
+
     }
 }

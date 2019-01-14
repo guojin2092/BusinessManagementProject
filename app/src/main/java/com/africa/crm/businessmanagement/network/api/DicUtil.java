@@ -56,4 +56,9 @@ public class DicUtil {
     public static final String TASK_STATE = "TASKSTATE";
     //任务等级
     public static final String TASK_LEVEL = "TASKLEVEL";
+
+    //用户分类
+    public static final String USER_TYPE = "USERTYPE";
+    //查询所有公司
+    public static final String QUERY_ALL_COMPANY = "QUERY_ALL_COMPANY";
 }

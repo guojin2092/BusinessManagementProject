@@ -231,4 +231,16 @@ public class RequestMethod {
     public static final String REQUEST_COMPANY_SYSTEM_ROLE_LIST = "request_company_system_role_list";
     //获取企业角色详情
     public static final String REQUEST_COMPANY_SYSTEM_ROLE_DETAIL = "request_company_system_role_detail";
+    //企业用户管理列表
+    public static final String REQUEST_COMPANY_SYSTEM_USER_LIST = "request_company_system_user_list";
+    //删除企业用户
+    public static final String REQUEST_DELETE_COMPANY_SYSTEM_USER = "request_delete_company_system_user";
+    //用户类型
+    public static final String REQUEST_USER_TYPE = "request_user_type";
+    //获取用户信息
+    public static final String REQUEST_GET_USER_INFO = "request_get_user_info";
+    //获取所有公司
+    public static final String REQUEST_GET_ALL_COMPANY = "request_get_all_company";
+    //保存企业用户信息
+    public static final String REQUEST_SAVE_COMPANY_USER = "request_save_company_user";
 }

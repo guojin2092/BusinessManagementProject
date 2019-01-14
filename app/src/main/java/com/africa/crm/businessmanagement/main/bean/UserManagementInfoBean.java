@@ -15,7 +15,7 @@ import java.util.List;
 public class UserManagementInfoBean implements Serializable {
     private int total;
     private int totalPage;
-    private List<UserInfoBean> rows;
+    private List<CompanyUserInfoBean> rows;
     private int count;
 
     public int getTotal() {
@@ -34,11 +34,11 @@ public class UserManagementInfoBean implements Serializable {
         this.totalPage = totalPage;
     }
 
-    public List<UserInfoBean> getRows() {
+    public List<CompanyUserInfoBean> getRows() {
         return rows;
     }
 
-    public void setRows(List<UserInfoBean> rows) {
+    public void setRows(List<CompanyUserInfoBean> rows) {
         this.rows = rows;
     }
 

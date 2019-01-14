@@ -1,7 +1,9 @@
 package com.africa.crm.businessmanagement.main.station.presenter;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
+import com.africa.crm.businessmanagement.main.bean.CompanyUserInfoBean;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.main.station.contract.UploadPictureContract;
 import com.africa.crm.businessmanagement.mvp.presenter.RxPresenter;
@@ -30,10 +32,10 @@ public class UploadPicturePresenter extends RxPresenter<UploadPictureContract.Vi
     @Override
     public void getUserInfo(String userId) {
         addDisposable(mDataManager.getUserInfo(userId)
-                .compose(RxUtils.<UserInfo>ioToMain(mView))
-                .subscribe(new Consumer<UserInfo>() {
+                .compose(RxUtils.<CompanyUserInfoBean>ioToMain(mView))
+                .subscribe(new Consumer<CompanyUserInfoBean>() {
                     @Override
-                    public void accept(UserInfo userInfo) throws Exception {
+                    public void accept(CompanyUserInfoBean userInfo) throws Exception {
                         mView.getUserInfo(userInfo);
                     }
                 }, new ComConsumer(mView)));
@@ -54,11 +56,11 @@ public class UploadPicturePresenter extends RxPresenter<UploadPictureContract.Vi
     @Override
     public void saveUserInfo(String id, String userName, String type, String roleIds, String passWord, String name, String phone, String address, String email, String state, String companyId, String head) {
         addDisposable(mDataManager.saveOrcreateUser(id, userName, type, roleIds, passWord, name, phone, address, email, state, companyId, head)
-                .compose(RxUtils.<BaseEntity>ioToMain(mView))
-                .subscribe(new Consumer<BaseEntity>() {
+                .compose(RxUtils.<UploadInfoBean>ioToMain(mView))
+                .subscribe(new Consumer<UploadInfoBean>() {
                     @Override
-                    public void accept(BaseEntity baseEntity) throws Exception {
-                        mView.saveUserInfo(baseEntity);
+                    public void accept(UploadInfoBean uploadInfoBean) throws Exception {
+                        mView.saveUserInfo(uploadInfoBean);
                     }
                 }, new ComConsumer(mView)));
     }

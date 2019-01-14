@@ -37,6 +37,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyUserInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyeExpenditureInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyeExpenditureInfoBeanB;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
@@ -81,9 +82,9 @@ public interface HttpHelper {
 
     Observable<BaseEntity> deleteUser(String id);
 
-    Observable<UserInfo> getUserInfo(String id);
+    Observable<CompanyUserInfoBean> getUserInfo(String id);
 
-    Observable<BaseEntity> saveOrcreateUser(String id, String userName, String type, String roleIds, String passWord, String name, String phone, String address, String email, String state, String companyId, String head);
+    Observable<UploadInfoBean> saveOrcreateUser(String id, String userName, String type, String roleIds, String passWord, String name, String phone, String address, String email, String state, String companyId, String head);
 
     Observable<List<DicInfo2>> getAllCompanyUser(String companyId);
 

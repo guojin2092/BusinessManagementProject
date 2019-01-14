@@ -1,6 +1,7 @@
 package com.africa.crm.businessmanagement.main.station.contract;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
+import com.africa.crm.businessmanagement.main.bean.CompanyUserInfoBean;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserInfo;
@@ -21,11 +22,11 @@ import okhttp3.ResponseBody;
 public class UploadPictureContract {
 
     public interface View extends BaseView {
-        void getUserInfo(UserInfo userInfo);
+        void getUserInfo(CompanyUserInfoBean userInfo);
 
         void uploadImages(FileInfoBean fileInfoBean);
 
-        void saveUserInfo(BaseEntity baseEntity);
+        void saveUserInfo(UploadInfoBean uploadInfoBean);
 
     }
 

@@ -37,6 +37,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfoBean;
+import com.africa.crm.businessmanagement.main.bean.CompanyUserInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyeExpenditureInfoBean;
 import com.africa.crm.businessmanagement.main.bean.CompanyeExpenditureInfoBeanB;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
@@ -125,13 +126,13 @@ public class HttpHelperImpl implements HttpHelper {
     }
 
     @Override
-    public Observable<UserInfo> getUserInfo(String id) {
-        return mainApi.getUserInfo(id).compose(RxUtils.<UserInfo>handleResult());
+    public Observable<CompanyUserInfoBean> getUserInfo(String id) {
+        return mainApi.getUserInfo(id).compose(RxUtils.<CompanyUserInfoBean>handleResult());
     }
 
     @Override
-    public Observable<BaseEntity> saveOrcreateUser(String id, String userName, String type, String roleIds, String passWord, String name, String phone, String address, String email, String state, String companyId, String head) {
-        return mainApi.saveOrcreateUser(id, userName, type, roleIds, passWord, name, phone, address, email, state, companyId, head);
+    public Observable<UploadInfoBean> saveOrcreateUser(String id, String userName, String type, String roleIds, String passWord, String name, String phone, String address, String email, String state, String companyId, String head) {
+        return mainApi.saveOrcreateUser(id, userName, type, roleIds, passWord, name, phone, address, email, state, companyId, head).compose(RxUtils.<UploadInfoBean>handleResult());
     }
 
     @Override

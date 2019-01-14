@@ -20,7 +20,7 @@ public class UserManagementContract {
 
         void getUserList(UserManagementInfoBean userManagementInfoBean);
 
-        void deleteUser(BaseEntity baseEntity);
+        void deleteUser(BaseEntity baseEntity, boolean isLocal);
 
     }
 
