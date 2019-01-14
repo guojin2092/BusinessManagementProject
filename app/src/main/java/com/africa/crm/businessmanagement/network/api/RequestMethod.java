@@ -226,4 +226,9 @@ public class RequestMethod {
     public static final String REQUEST_COMPANY_EXPENDITURE_B_DETAIL = "request_company_expenditure_b_detail";
     //保存企业支出
     public static final String REQUEST_SAVE_COMPANY_EXPENDITURE_B = "request_save_company_expenditure_b";
+
+    //企业角色管理列表
+    public static final String REQUEST_COMPANY_SYSTEM_ROLE_LIST = "request_company_system_role_list";
+    //获取企业角色详情
+    public static final String REQUEST_COMPANY_SYSTEM_ROLE_DETAIL = "request_company_system_role_detail";
 }

@@ -13,6 +13,9 @@ import java.util.List;
 
 import io.reactivex.functions.Consumer;
 
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_SYSTEM_ROLE_DETAIL;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_SYSTEM_ROLE_LIST;
+
 /**
  * Project：BusinessManagementProject
  * Author:  guojin
@@ -32,7 +35,7 @@ public class RoleManagementPresenter extends RxPresenter<RoleManagementContract.
                     public void accept(RoleManagementInfoBean userManagementInfoBean) throws Exception {
                         mView.getRoleList(userManagementInfoBean);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_COMPANY_SYSTEM_ROLE_LIST)));
 
     }
 
@@ -45,7 +48,7 @@ public class RoleManagementPresenter extends RxPresenter<RoleManagementContract.
                     public void accept(RoleInfoBean roleInfoBean) throws Exception {
                         mView.getRoleInfo(roleInfoBean);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_COMPANY_SYSTEM_ROLE_DETAIL)));
 
     }
 

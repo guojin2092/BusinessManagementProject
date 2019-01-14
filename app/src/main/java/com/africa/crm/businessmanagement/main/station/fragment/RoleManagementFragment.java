@@ -6,9 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +15,16 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
+import com.africa.crm.businessmanagement.baseutil.library.util.NetUtil;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleLimitInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleManagementInfoBean;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
+import com.africa.crm.businessmanagement.main.dao.RoleInfoBeanDao;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.RoleListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.RoleManagementContract;
@@ -32,7 +34,9 @@ import com.africa.crm.businessmanagement.main.station.presenter.RoleManagementPr
 import com.africa.crm.businessmanagement.mvp.fragment.BaseRefreshMvpFragment;
 import com.africa.crm.businessmanagement.network.error.ComException;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
+import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 
@@ -40,6 +44,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_SYSTEM_ROLE_DETAIL;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_SYSTEM_ROLE_LIST;
 
 
 /**
@@ -66,6 +73,7 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
     RecyclerView recyclerView;
     private RoleListAdapter mRoleListAdapter;
     private List<RoleInfoBean> mRoleList = new ArrayList<>();
+    private Long mRoleDetailLocalId = 0l;
 
     private RoleDetailDialog mRoleDetailDialog;
     private RoleDetailDialog mAddRoleDialog;
@@ -78,6 +86,9 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
     private String mLimitRoleId = "";
     private String mResourceIds = "";
     private String mBtnIds = "";
+
+    private GreendaoManager<RoleInfoBean, RoleInfoBeanDao> mRoleInfoBeanDaoManager;
+    private List<RoleInfoBean> mRoleInfoBeanLocalList = new ArrayList<>();//本地数据
 
     public static RoleManagementFragment newInstance() {
         RoleManagementFragment roleManagementFragment = new RoleManagementFragment();
@@ -104,6 +115,8 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
 //        ll_add.setOnClickListener(this);
         ll_add.setVisibility(View.GONE);
 
+        //得到Dao对象管理器
+        mRoleInfoBeanDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getRoleInfoBeanDao());
 /*
         et_search_roleName.addTextChangedListener(new TextWatcher() {
             @Override
@@ -246,6 +259,7 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
                 mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
             }
             mRoleList.clear();
+            mRoleInfoBeanLocalList = mRoleInfoBeanDaoManager.queryAll();
             recyclerView.smoothScrollToPosition(0);
         }
         if (mRefreshLayout != null) {
@@ -257,6 +271,24 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
         }
         if (!ListUtils.isEmpty(roleManagementInfoBean.getRows())) {
             mRoleList.addAll(roleManagementInfoBean.getRows());
+            List<RoleInfoBean> addList = DifferentDataUtil.addRoleDataToLocal(mRoleList, mRoleInfoBeanLocalList);
+            if (!ListUtils.isEmpty(addList)) {
+                for (RoleInfoBean companyInfo : addList) {
+                    mRoleInfoBeanDaoManager.insertOrReplace(companyInfo);
+                }
+                mRoleInfoBeanLocalList = new ArrayList<>();
+                mRoleInfoBeanLocalList = mRoleInfoBeanDaoManager.queryAll();
+            }
+            for (RoleInfoBean info : mRoleList) {
+                for (RoleInfoBean localInfo : mRoleInfoBeanLocalList) {
+                    if (!TextUtils.isEmpty(info.getId()) && !TextUtils.isEmpty(localInfo.getId())) {
+                        if (info.getId().equals(localInfo.getId())) {
+                            info.setLocalId(localInfo.getLocalId());
+                            mRoleInfoBeanDaoManager.correct(info);
+                        }
+                    }
+                }
+            }
             if (mRoleListAdapter != null) {
                 mRoleListAdapter.notifyDataSetChanged();
             }
@@ -267,11 +299,16 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
                 switch (view.getId()) {
                     case R.id.tv_see_detail:
                         mType = "2";
+                        mRoleDetailLocalId = mRoleList.get(position).getLocalId();
                         mPresenter.getRoleInfo(mRoleList.get(position).getId());
                         break;
                     case R.id.tv_auth_allocation:
-                        mLimitRoleId = mRoleList.get(position).getId();
-                        mPresenter.getRoleLimit(mLimitRoleId);
+                        if (NetUtil.isNetAvailable(getBVActivity())) {
+                            mLimitRoleId = mRoleList.get(position).getId();
+                            mPresenter.getRoleLimit(mLimitRoleId);
+                        } else {
+                            toastMsg("网络连接失败，请重试");
+                        }
                         break;
                 }
             }
@@ -302,6 +339,14 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
                     }
                 }
             });
+            for (RoleInfoBean localInfo : mRoleInfoBeanLocalList) {
+                if (!TextUtils.isEmpty(localInfo.getId()) && !TextUtils.isEmpty(roleInfoBean.getId())) {
+                    if (localInfo.getId().equals(roleInfoBean.getId())) {
+                        roleInfoBean.setLocalId(localInfo.getLocalId());
+                        mRoleInfoBeanDaoManager.correct(roleInfoBean);
+                    }
+                }
+            }
         }
     }
 
@@ -421,4 +466,31 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
 
     }
 
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        mRefreshLayout.setEnableLoadmore(false);
+        switch (port) {
+            case REQUEST_COMPANY_SYSTEM_ROLE_LIST:
+                List<RoleInfoBean> rows = new ArrayList<>();
+                if (!TextUtils.isEmpty(StringUtil.getText(et_search_roleName)) || !TextUtils.isEmpty(StringUtil.getText(et_search_roleCode))) {
+                    rows = mRoleInfoBeanDaoManager.queryBuilder().where(RoleInfoBeanDao.Properties.RoleName.like("%" + StringUtil.getText(et_search_roleName) + "%"), RoleInfoBeanDao.Properties.RoleCode.like("%" + StringUtil.getText(et_search_roleCode) + "%")).list();
+                } else {
+                    rows = mRoleInfoBeanDaoManager.queryAll();
+                }
+                RoleManagementInfoBean companyClientInfoBean = new RoleManagementInfoBean();
+                companyClientInfoBean.setRows(rows);
+                getRoleList(companyClientInfoBean);
+                break;
+            case REQUEST_COMPANY_SYSTEM_ROLE_DETAIL:
+                RoleInfoBean roleInfoBean = null;
+                for (RoleInfoBean info : mRoleInfoBeanLocalList) {
+                    if (mRoleDetailLocalId == info.getLocalId()) {
+                        roleInfoBean = info;
+                    }
+                }
+                getRoleInfo(roleInfoBean);
+                break;
+        }
+    }
 }

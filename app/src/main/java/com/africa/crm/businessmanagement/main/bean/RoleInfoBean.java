@@ -1,6 +1,8 @@
 package com.africa.crm.businessmanagement.main.bean;
 
-import java.io.Serializable;
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 /**
  * Project：BusinessManagementProject
@@ -11,7 +13,10 @@ import java.io.Serializable;
  * Modification  History:
  * Why & What is modified:
  */
-public class RoleInfoBean implements Serializable {
+@Entity
+public class RoleInfoBean {
+    @Id(autoincrement = true)
+    private Long localId;
     private String typeName;//分类
     private String id;
     private String orderNum;//排序号
@@ -25,6 +30,17 @@ public class RoleInfoBean implements Serializable {
         this.id = id;
         this.roleName = roleName;
         this.roleCode = roleCode;
+    }
+
+    @Generated(hash = 1043232268)
+    public RoleInfoBean(Long localId, String typeName, String id, String orderNum,
+                        String roleCode, String roleName) {
+        this.localId = localId;
+        this.typeName = typeName;
+        this.id = id;
+        this.orderNum = orderNum;
+        this.roleCode = roleCode;
+        this.roleName = roleName;
     }
 
     public String getTypeName() {
@@ -65,5 +81,13 @@ public class RoleInfoBean implements Serializable {
 
     public void setRoleName(String roleName) {
         this.roleName = roleName;
+    }
+
+    public Long getLocalId() {
+        return localId;
+    }
+
+    public void setLocalId(Long localId) {
+        this.localId = localId;
     }
 }

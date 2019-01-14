@@ -22,6 +22,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyTaskInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyTradingOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.PayRecordInfo;
+import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -718,6 +719,39 @@ public class DifferentDataUtil {
             for (String string : mNetList) {
                 if (!mLocalList.contains(string)) {
                     for (CompanyExpenditureInfoB companyInfo : netList) {
+                        if (companyInfo.getId().equals(string)) {
+                            mCompanyInfoAddList.add(companyInfo);
+                        }
+                    }
+                }
+            }
+        } else {
+            mCompanyInfoAddList.addAll(netList);
+        }
+        return mCompanyInfoAddList;
+    }
+
+    /**
+     * 添加字典项数据到本地数据库(去重处理)
+     *
+     * @param netList
+     * @param localList
+     * @return
+     */
+    public static List<RoleInfoBean> addRoleDataToLocal(List<RoleInfoBean> netList, List<RoleInfoBean> localList) {
+        List<RoleInfoBean> mCompanyInfoAddList = new ArrayList<>();//差异数据
+        List<String> mNetList = new ArrayList<>();
+        List<String> mLocalList = new ArrayList<>();
+        for (RoleInfoBean companyInfo : netList) {
+            mNetList.add(companyInfo.getId());
+        }
+        if (!ListUtils.isEmpty(localList)) {
+            for (RoleInfoBean companyInfo : localList) {
+                mLocalList.add(companyInfo.getId());
+            }
+            for (String string : mNetList) {
+                if (!mLocalList.contains(string)) {
+                    for (RoleInfoBean companyInfo : netList) {
                         if (companyInfo.getId().equals(string)) {
                             mCompanyInfoAddList.add(companyInfo);
                         }
