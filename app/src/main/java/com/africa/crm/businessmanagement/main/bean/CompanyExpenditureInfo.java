@@ -1,6 +1,8 @@
 package com.africa.crm.businessmanagement.main.bean;
 
-import java.io.Serializable;
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * Project：BusinessManagementProject
@@ -11,10 +13,14 @@ import java.io.Serializable;
  * Modification  History:
  * Why & What is modified:
  */
-public class CompanyExpenditureInfo implements Serializable {
+@Entity
+public class CompanyExpenditureInfo {
+    @Id(autoincrement = true)
+    private Long localId;
     private String id;
     private String startDate;//开始日期（2.列表显示）
     private String createTime;
+    private Long createTimeDate;
     private String actualPrice;//实际金额（3.列表显示）
     private String title;//标题
     private String remark;//备注
@@ -24,6 +30,32 @@ public class CompanyExpenditureInfo implements Serializable {
     private String companyId;//所属企业ID
     private String companyName;//所属企业名称
     private String userNickName;//操作人名称（1.列表显示，替换UI上的备注和时间类型）
+
+    @Generated(hash = 474900949)
+    public CompanyExpenditureInfo(Long localId, String id, String startDate,
+            String createTime, Long createTimeDate, String actualPrice,
+            String title, String remark, String userId, String estimatePrice,
+            String endDate, String companyId, String companyName,
+            String userNickName) {
+        this.localId = localId;
+        this.id = id;
+        this.startDate = startDate;
+        this.createTime = createTime;
+        this.createTimeDate = createTimeDate;
+        this.actualPrice = actualPrice;
+        this.title = title;
+        this.remark = remark;
+        this.userId = userId;
+        this.estimatePrice = estimatePrice;
+        this.endDate = endDate;
+        this.companyId = companyId;
+        this.companyName = companyName;
+        this.userNickName = userNickName;
+    }
+
+    @Generated(hash = 1767452927)
+    public CompanyExpenditureInfo() {
+    }
 
     public String getId() {
         return id;
@@ -119,5 +151,21 @@ public class CompanyExpenditureInfo implements Serializable {
 
     public void setUserNickName(String userNickName) {
         this.userNickName = userNickName;
+    }
+
+    public Long getLocalId() {
+        return localId;
+    }
+
+    public void setLocalId(Long localId) {
+        this.localId = localId;
+    }
+
+    public Long getCreateTimeDate() {
+        return createTimeDate;
+    }
+
+    public void setCreateTimeDate(Long createTimeDate) {
+        this.createTimeDate = createTimeDate;
     }
 }

@@ -16,6 +16,10 @@ import io.reactivex.ObservableSource;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_CHECK_YS_DATE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_EXPENDITURE_A_DETAIL;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_PAY_RECORD;
+
 /**
  * Project：BusinessManagementProject
  * Author:  guojin
@@ -36,7 +40,7 @@ public class CompanyExpenditureDetailPresenterA extends RxPresenter<CompanyExpen
                     public void accept(CompanyExpenditureInfo companyExpenditureInfo) throws Exception {
                         mView.getExpenditureDetail(companyExpenditureInfo);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_COMPANY_EXPENDITURE_A_DETAIL)));
     }
 
     @Override
@@ -48,7 +52,7 @@ public class CompanyExpenditureDetailPresenterA extends RxPresenter<CompanyExpen
                     public void accept(List<PayRecordInfo> payRecordInfoList) throws Exception {
                         mView.getPayRecord(payRecordInfoList);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_COMPANY_PAY_RECORD)));
     }
 
 
@@ -71,7 +75,7 @@ public class CompanyExpenditureDetailPresenterA extends RxPresenter<CompanyExpen
                     public void accept(BaseEntity baseEntity) throws Exception {
                         mView.saveExpenditureA(baseEntity);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_CHECK_YS_DATE)));
     }
 
 }

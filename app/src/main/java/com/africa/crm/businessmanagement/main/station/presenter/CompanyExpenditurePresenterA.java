@@ -1,6 +1,5 @@
 package com.africa.crm.businessmanagement.main.station.presenter;
 
-import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyeExpenditureInfoBean;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyExpenditureManagementContractA;
 import com.africa.crm.businessmanagement.mvp.presenter.RxPresenter;
@@ -8,6 +7,8 @@ import com.africa.crm.businessmanagement.network.error.ComConsumer;
 import com.africa.crm.businessmanagement.network.util.RxUtils;
 
 import io.reactivex.functions.Consumer;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_EXPENDITURE_A_LIST;
 
 /**
  * Project：BusinessManagementProject
@@ -29,7 +30,7 @@ public class CompanyExpenditurePresenterA extends RxPresenter<CompanyExpenditure
                     public void accept(CompanyeExpenditureInfoBean companyeExpenditureInfoBean) throws Exception {
                         mView.getExpenditureList(companyeExpenditureInfoBean);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_COMPANY_EXPENDITURE_A_LIST)));
     }
 
 }

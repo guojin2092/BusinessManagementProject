@@ -12,18 +12,23 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyExpanditureEventA;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyExpenditureInfo;
 import com.africa.crm.businessmanagement.main.bean.PayRecordInfo;
+import com.africa.crm.businessmanagement.main.dao.CompanyExpenditureInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
+import com.africa.crm.businessmanagement.main.dao.PayRecordInfoDao;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.ExpenditureDetailListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyExpenditureDetailContractA;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyExpenditureDetailPresenterA;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ErrorMsg;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.EditTextUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
@@ -36,6 +41,10 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_CHECK_YS_DATE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_EXPENDITURE_A_DETAIL;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_PAY_RECORD;
 
 public class CompanyExpenditureDetailActivityA extends BaseMvpActivity<CompanyExpenditureDetailPresenterA> implements CompanyExpenditureDetailContractA.View {
     @BindView(R.id.et_title)
@@ -62,16 +71,23 @@ public class CompanyExpenditureDetailActivityA extends BaseMvpActivity<CompanyEx
     private Date mStartDate, mEndDate;
 
     private String mExpenditureId = "";
+    private Long mLocalId = 0l;//本地数据库ID
     private String mCompanyId = "";
     private String mUserId = "";
 
+    private GreendaoManager<CompanyExpenditureInfo, CompanyExpenditureInfoDao> mExpenditureInfoDaoManager;
+    private List<CompanyExpenditureInfo> mExpenditureLocalList = new ArrayList<>();//本地数据
+
+    private GreendaoManager<PayRecordInfo, PayRecordInfoDao> mPayRecordInfoDaoManager;
+    private List<PayRecordInfo> mPayRecordInfoLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
      */
-    public static void startActivity(Activity activity, String id) {
+    public static void startActivity(Activity activity, String id, Long localId) {
         Intent intent = new Intent(activity, CompanyExpenditureDetailActivityA.class);
         intent.putExtra("id", id);
+        intent.putExtra("localId", localId);
         activity.startActivity(intent);
     }
 
@@ -85,6 +101,7 @@ public class CompanyExpenditureDetailActivityA extends BaseMvpActivity<CompanyEx
     public void initView() {
         super.initView();
         mExpenditureId = getIntent().getStringExtra("id");
+        mLocalId = getIntent().getLongExtra("localId", 0l);
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
         mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
         titlebar_right.setVisibility(View.GONE);
@@ -94,15 +111,19 @@ public class CompanyExpenditureDetailActivityA extends BaseMvpActivity<CompanyEx
         tv_start_date.setOnClickListener(this);
         tv_end_date.setOnClickListener(this);
         EditTextUtil.setPricePoint(et_price);
-        if (!TextUtils.isEmpty(mExpenditureId)) {
-            tv_save.setVisibility(View.GONE);
-            setEditTextInput(false);
-        } else {
+        if (TextUtils.isEmpty(mExpenditureId) && mLocalId == 0l) {
             tv_save.setVisibility(View.VISIBLE);
             ll_zc.setVisibility(View.GONE);
+        } else if (!TextUtils.isEmpty(mExpenditureId) || mLocalId != 0l) {
+            tv_save.setVisibility(View.GONE);
+            setEditTextInput(false);
         }
         initTimePicker();
         initProductList();
+        mExpenditureInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyExpenditureInfoDao());
+        mExpenditureLocalList = mExpenditureInfoDaoManager.queryAll();
+        mPayRecordInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getPayRecordInfoDao());
+        mPayRecordInfoLocalList = mPayRecordInfoDaoManager.queryAll();
     }
 
     private void initTimePicker() {
@@ -156,7 +177,7 @@ public class CompanyExpenditureDetailActivityA extends BaseMvpActivity<CompanyEx
 
     @Override
     protected void requestData() {
-        if (!TextUtils.isEmpty(mExpenditureId)) {
+        if (!TextUtils.isEmpty(mExpenditureId) || mLocalId != 0l) {
             mPresenter.getPayRecord(mExpenditureId);
             mPresenter.getExpenditureDetail(mExpenditureId);
         }
@@ -219,27 +240,57 @@ public class CompanyExpenditureDetailActivityA extends BaseMvpActivity<CompanyEx
 
     @Override
     public void getPayRecord(List<PayRecordInfo> payRecordInfoList) {
-        mPayRecordInfoList.clear();
-        if (!ListUtils.isEmpty(payRecordInfoList)) {
-            ll_zc.setVisibility(View.VISIBLE);
-            mPayRecordInfoList.addAll(payRecordInfoList);
-            if (mExpenditureDetailListAdapter != null) {
-                mExpenditureDetailListAdapter.notifyDataSetChanged();
+        if (payRecordInfoList != null) {
+            mPayRecordInfoList.clear();
+            if (!ListUtils.isEmpty(payRecordInfoList)) {
+                ll_zc.setVisibility(View.VISIBLE);
+                mPayRecordInfoList.addAll(payRecordInfoList);
+                List<PayRecordInfo> addList = DifferentDataUtil.addPayRecordDataToLocal(payRecordInfoList, mPayRecordInfoLocalList);
+                if (!ListUtils.isEmpty(addList)) {
+                    for (PayRecordInfo payRecordInfo : addList) {
+                        mPayRecordInfoDaoManager.insertOrReplace(payRecordInfo);
+                    }
+                    mPayRecordInfoLocalList = new ArrayList<>();
+                    mPayRecordInfoLocalList = mPayRecordInfoDaoManager.queryAll();
+                }
+                for (PayRecordInfo info : payRecordInfoList) {
+                    for (PayRecordInfo localInfo : mPayRecordInfoLocalList) {
+                        if (!TextUtils.isEmpty(info.getId()) && !TextUtils.isEmpty(localInfo.getId())) {
+                            if (info.getId().equals(localInfo.getId())) {
+                                info.setLocalId(localInfo.getLocalId());
+                                mPayRecordInfoDaoManager.correct(info);
+                            }
+                        }
+                    }
+                }
+                if (mExpenditureDetailListAdapter != null) {
+                    mExpenditureDetailListAdapter.notifyDataSetChanged();
+                }
+            } else {
+                ll_zc.setVisibility(View.GONE);
             }
-        } else {
-            ll_zc.setVisibility(View.GONE);
         }
     }
 
     @Override
     public void getExpenditureDetail(CompanyExpenditureInfo companyExpenditureInfo) {
-        et_title.setText(companyExpenditureInfo.getTitle());
-        et_price.setText(companyExpenditureInfo.getEstimatePrice());
-        tv_start_date.setText(companyExpenditureInfo.getStartDate());
-        mStartDate = TimeUtils.getDataByString(companyExpenditureInfo.getStartDate());
-        tv_end_date.setText(companyExpenditureInfo.getEndDate());
-        mEndDate = TimeUtils.getDataByString(companyExpenditureInfo.getEndDate());
-        et_remark.setText(companyExpenditureInfo.getRemark());
+        if (companyExpenditureInfo != null) {
+            et_title.setText(companyExpenditureInfo.getTitle());
+            et_price.setText(companyExpenditureInfo.getEstimatePrice());
+            tv_start_date.setText(companyExpenditureInfo.getStartDate());
+            mStartDate = TimeUtils.getDataByString(companyExpenditureInfo.getStartDate());
+            tv_end_date.setText(companyExpenditureInfo.getEndDate());
+            mEndDate = TimeUtils.getDataByString(companyExpenditureInfo.getEndDate());
+            et_remark.setText(companyExpenditureInfo.getRemark());
+            for (CompanyExpenditureInfo localInfo : mExpenditureLocalList) {
+                if (!TextUtils.isEmpty(localInfo.getId()) && !TextUtils.isEmpty(companyExpenditureInfo.getId())) {
+                    if (localInfo.getId().equals(companyExpenditureInfo.getId())) {
+                        companyExpenditureInfo.setLocalId(localInfo.getLocalId());
+                        mExpenditureInfoDaoManager.correct(companyExpenditureInfo);
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -253,6 +304,34 @@ public class CompanyExpenditureDetailActivityA extends BaseMvpActivity<CompanyEx
             finish();
         } else {
             toastMsg(ErrorMsg.showErrorMsg(baseEntity.getReturnMsg()));
+        }
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        switch (port) {
+            case REQUEST_COMPANY_EXPENDITURE_A_DETAIL:
+                CompanyExpenditureInfo companyExpenditureInfo = null;
+                for (CompanyExpenditureInfo info : mExpenditureLocalList) {
+                    if (mLocalId == info.getLocalId()) {
+                        companyExpenditureInfo = info;
+                    }
+                }
+                getExpenditureDetail(companyExpenditureInfo);
+                break;
+            case REQUEST_COMPANY_PAY_RECORD:
+                List<PayRecordInfo> payRecordInfoList = new ArrayList<>();
+                for (PayRecordInfo payRecordInfo : mPayRecordInfoLocalList) {
+                    if (mExpenditureId.equals(payRecordInfo.getEstimateId())) {
+                        payRecordInfoList.add(payRecordInfo);
+                    }
+                }
+                getPayRecord(payRecordInfoList);
+                break;
+            case REQUEST_CHECK_YS_DATE:
+                toastMsg("网络连接失败，请重试");
+                break;
         }
     }
 }

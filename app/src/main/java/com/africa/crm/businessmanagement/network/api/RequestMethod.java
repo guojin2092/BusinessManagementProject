@@ -210,4 +210,13 @@ public class RequestMethod {
     public static final String REQUEST_COMPANY_PACKAGING_DATA_DETAIL = "request_company_packaging_data_detail";
     //校验日期
     public static final String REQUEST_CHECK_DATE = "request_check_date";
+
+    //企业预算管理列表
+    public static final String REQUEST_COMPANY_EXPENDITURE_A_LIST = "request_company_expenditure_a_list";
+    //获取企业预算详情
+    public static final String REQUEST_COMPANY_EXPENDITURE_A_DETAIL = "request_company_expenditure_a_detail";
+    //获取企业支出记录
+    public static final String REQUEST_COMPANY_PAY_RECORD = "request_company_pay_record";
+    //校验企业预算日期
+    public static final String REQUEST_CHECK_YS_DATE = "request_check_ys_date";
 }

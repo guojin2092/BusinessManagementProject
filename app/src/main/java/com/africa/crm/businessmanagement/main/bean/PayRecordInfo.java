@@ -1,6 +1,8 @@
 package com.africa.crm.businessmanagement.main.bean;
 
-import java.io.Serializable;
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * Project：BusinessManagementProject
@@ -11,9 +13,13 @@ import java.io.Serializable;
  * Modification  History:
  * Why & What is modified:
  */
-public class PayRecordInfo implements Serializable {
+@Entity
+public class PayRecordInfo {
+    @Id(autoincrement = true)
+    private Long localId;
     private String id;
     private String createTime;
+    private Long createTimeDate;
     private String estimateId;//预算ID
     private String price;//金额
     private String remark;//备注
@@ -23,6 +29,30 @@ public class PayRecordInfo implements Serializable {
     private String companyName;//所属企业名称
     private String estimateTitle;//预算标题
     private String userNickName;//所属用户名称
+
+    @Generated(hash = 1923409246)
+    public PayRecordInfo(Long localId, String id, String createTime,
+            Long createTimeDate, String estimateId, String price, String remark,
+            String userId, String payDate, String companyId, String companyName,
+            String estimateTitle, String userNickName) {
+        this.localId = localId;
+        this.id = id;
+        this.createTime = createTime;
+        this.createTimeDate = createTimeDate;
+        this.estimateId = estimateId;
+        this.price = price;
+        this.remark = remark;
+        this.userId = userId;
+        this.payDate = payDate;
+        this.companyId = companyId;
+        this.companyName = companyName;
+        this.estimateTitle = estimateTitle;
+        this.userNickName = userNickName;
+    }
+
+    @Generated(hash = 985634959)
+    public PayRecordInfo() {
+    }
 
     public String getId() {
         return id;
@@ -110,5 +140,21 @@ public class PayRecordInfo implements Serializable {
 
     public void setUserNickName(String userNickName) {
         this.userNickName = userNickName;
+    }
+
+    public Long getLocalId() {
+        return localId;
+    }
+
+    public void setLocalId(Long localId) {
+        this.localId = localId;
+    }
+
+    public Long getCreateTimeDate() {
+        return createTimeDate;
+    }
+
+    public void setCreateTimeDate(Long createTimeDate) {
+        this.createTimeDate = createTimeDate;
     }
 }
