@@ -19,6 +19,7 @@ import com.africa.crm.businessmanagement.main.bean.CompanyAccountInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyClientInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyContactInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfo;
+import com.africa.crm.businessmanagement.main.bean.CompanyExpenditureInfoB;
 import com.africa.crm.businessmanagement.main.bean.CompanyInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyInventoryInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPayOrderInfo;
@@ -69,6 +70,7 @@ import com.africa.crm.businessmanagement.main.dao.CompanyDeleteSupplierInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteTaskInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeleteTradingOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeliveryOrderInfoDao;
+import com.africa.crm.businessmanagement.main.dao.CompanyExpenditureInfoBDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyInventoryInfoDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyPayOrderInfoDao;
@@ -273,6 +275,12 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
     private GreendaoManager<CompanyDeletePdfInfo, CompanyDeletePdfInfoDao> mDeletePdfInfoDaoManager;
     private List<CompanyDeletePdfInfo> mDeletePdfInfoLocalList = new ArrayList<>();//本地数据
 
+    /**
+     * 企业支出管理本地数据库
+     */
+    private GreendaoManager<CompanyExpenditureInfoB, CompanyExpenditureInfoBDao> mExpenditureInfoBDaoManager;
+    private List<CompanyExpenditureInfoB> mExpenditureLocalBList = new ArrayList<>();//本地数据
+
 
     /**
      * @param activity
@@ -405,6 +413,9 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
         //删除企业PDF文件管理dao
         mDeletePdfInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyDeletePdfInfoDao());
         mDeletePdfInfoLocalList = mDeletePdfInfoDaoManager.queryAll();
+        //企业支出管理dao
+        mExpenditureInfoBDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyExpenditureInfoBDao());
+        mExpenditureLocalBList = mExpenditureInfoBDaoManager.queryAll();
     }
 
     @Override
@@ -480,6 +491,7 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                 mDeleteTaskInfoDaoManager.deleteAll();
                                 mPdfInfoDaoManager.deleteAll();
                                 mDeletePdfInfoDaoManager.deleteAll();
+                                mExpenditureInfoBDaoManager.deleteAll();
                                 MyApplication.getInstance().finishAllActivities();
                                 LoginActivity.startActivityForResult(SettingActivity.this, 0);
                                 mLoginOutDialog.dismiss();
@@ -1205,7 +1217,7 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                 }
                             }, new ComConsumer(this)));
                 } else {
-                    addDisposable(mDataManager.saveCompanyPdfDetail(companyInfo.getId(),companyInfo.getCompanyId(),companyInfo.getUserId(),companyInfo.getName(),companyInfo.getCode(),companyInfo.getRemark())
+                    addDisposable(mDataManager.saveCompanyPdfDetail(companyInfo.getId(), companyInfo.getCompanyId(), companyInfo.getUserId(), companyInfo.getName(), companyInfo.getCode(), companyInfo.getRemark())
                             .compose(RxUtils.<UploadInfoBean>ioToMain(this))
                             .subscribe(new Consumer<UploadInfoBean>() {
                                 @Override
@@ -1219,6 +1231,26 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                 }
             }
         }
+
+        /**
+         * 企业支出管理模块
+         */
+        for (final CompanyExpenditureInfoB companyInfo : mExpenditureLocalBList) {
+            if (companyInfo.isLocal()) {
+                addDisposable(mDataManager.saveExpenditureB(companyInfo.getCompanyId(), companyInfo.getUserId(), companyInfo.getPayDate(), companyInfo.getPrice(), companyInfo.getRemark())
+                        .compose(RxUtils.<UploadInfoBean>ioToMain(this))
+                        .subscribe(new Consumer<UploadInfoBean>() {
+                            @Override
+                            public void accept(UploadInfoBean uploadInfoBean) throws Exception {
+                                companyInfo.setId(uploadInfoBean.getId());
+                                companyInfo.setIsLocal(false);
+                                companyInfo.setCreateTime(uploadInfoBean.getCreateTime());
+                                mExpenditureInfoBDaoManager.correct(companyInfo);
+                            }
+                        }, new ComConsumer(this)));
+            }
+        }
+
         toastMsg("数据上传成功");
     }
 }

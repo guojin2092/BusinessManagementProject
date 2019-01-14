@@ -589,7 +589,7 @@ public class DataManager implements HttpHelper {
     }
 
     @Override
-    public Observable<BaseEntity> saveExpenditureB(String companyId, String userId, String payDate, String price, String remark) {
+    public Observable<UploadInfoBean> saveExpenditureB(String companyId, String userId, String payDate, String price, String remark) {
         return mHttpHelper.saveExpenditureB(companyId, userId, payDate, price, remark);
     }
 

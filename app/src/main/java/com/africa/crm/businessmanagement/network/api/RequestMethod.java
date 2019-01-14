@@ -219,4 +219,11 @@ public class RequestMethod {
     public static final String REQUEST_COMPANY_PAY_RECORD = "request_company_pay_record";
     //校验企业预算日期
     public static final String REQUEST_CHECK_YS_DATE = "request_check_ys_date";
+
+    //企业支出管理列表
+    public static final String REQUEST_COMPANY_EXPENDITURE_B_LIST = "request_company_expenditure_b_list";
+    //获取企业支出详情
+    public static final String REQUEST_COMPANY_EXPENDITURE_B_DETAIL = "request_company_expenditure_b_detail";
+    //保存企业支出
+    public static final String REQUEST_SAVE_COMPANY_EXPENDITURE_B = "request_save_company_expenditure_b";
 }

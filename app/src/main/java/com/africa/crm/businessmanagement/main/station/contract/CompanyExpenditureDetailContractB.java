@@ -4,6 +4,7 @@ import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyExpenditureInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyExpenditureInfoB;
 import com.africa.crm.businessmanagement.main.bean.PayRecordInfo;
+import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.mvp.presenter.IBasePresenter;
 import com.africa.crm.businessmanagement.network.base.BaseView;
 
@@ -24,7 +25,7 @@ public class CompanyExpenditureDetailContractB {
 
         void getExpenditureDetailB(CompanyExpenditureInfoB companyExpenditureInfoB);
 
-        void saveExpenditureB(BaseEntity baseEntity);
+        void saveExpenditureB(UploadInfoBean uploadInfoBean, boolean isLocal);
 
     }
 

@@ -6,22 +6,28 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyExpanditureEventB;
 import com.africa.crm.businessmanagement.main.bean.CompanyExpenditureInfoB;
 import com.africa.crm.businessmanagement.main.bean.CompanyeExpenditureInfoBeanB;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
+import com.africa.crm.businessmanagement.main.dao.CompanyExpenditureInfoBDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.ExpenditureListAdapterB;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyExpenditureManagementContractB;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyExpenditurePresenterB;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
+import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
 import com.bigkoo.pickerview.TimePickerView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -34,6 +40,8 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_EXPENDITURE_B_LIST;
 
 /**
  * Project：BusinessManagementProject
@@ -65,6 +73,9 @@ public class CompanyExpenditureManagementActivityB extends BaseRefreshMvpActivit
     private WorkStationInfo mWorkStationInfo;
     private String mCompanyId = "";
     private String mUserId = "";
+
+    private GreendaoManager<CompanyExpenditureInfoB, CompanyExpenditureInfoBDao> mExpenditureInfoBDaoManager;
+    private List<CompanyExpenditureInfoB> mExpenditureInfoBList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
@@ -101,6 +112,7 @@ public class CompanyExpenditureManagementActivityB extends BaseRefreshMvpActivit
         tv_start_time.setOnClickListener(this);
         tv_end_time.setOnClickListener(this);
         initTimePicker();
+        mExpenditureInfoBDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyExpenditureInfoBDao());
     }
 
     private void initTimePicker() {
@@ -169,7 +181,7 @@ public class CompanyExpenditureManagementActivityB extends BaseRefreshMvpActivit
                 pullDownRefresh(page);
                 break;
             case R.id.ll_add:
-                CompanyExpenditureDetailActivityB.startActivity(CompanyExpenditureManagementActivityB.this, "");
+                CompanyExpenditureDetailActivityB.startActivity(CompanyExpenditureManagementActivityB.this, "", 0l, "", "");
                 break;
         }
     }
@@ -201,6 +213,7 @@ public class CompanyExpenditureManagementActivityB extends BaseRefreshMvpActivit
                     mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
                 }
                 mExpenditureInfoList.clear();
+                mExpenditureInfoBList = mExpenditureInfoBDaoManager.queryAll();
                 recyclerView.smoothScrollToPosition(0);
             }
             if (mRefreshLayout != null) {
@@ -212,6 +225,24 @@ public class CompanyExpenditureManagementActivityB extends BaseRefreshMvpActivit
             }
             if (!ListUtils.isEmpty(companyeExpenditureInfoBeanB.getRows())) {
                 mExpenditureInfoList.addAll(companyeExpenditureInfoBeanB.getRows());
+                List<CompanyExpenditureInfoB> addList = DifferentDataUtil.addExpenditureBDataToLocal(mExpenditureInfoList, mExpenditureInfoBList);
+                if (!ListUtils.isEmpty(addList)) {
+                    for (CompanyExpenditureInfoB companyInfo : addList) {
+                        mExpenditureInfoBDaoManager.insertOrReplace(companyInfo);
+                    }
+                    mExpenditureInfoBList = new ArrayList<>();
+                    mExpenditureInfoBList = mExpenditureInfoBDaoManager.queryAll();
+                }
+                for (CompanyExpenditureInfoB info : mExpenditureInfoList) {
+                    for (CompanyExpenditureInfoB localInfo : mExpenditureInfoBList) {
+                        if (!TextUtils.isEmpty(info.getId()) && !TextUtils.isEmpty(localInfo.getId())) {
+                            if (info.getId().equals(localInfo.getId())) {
+                                info.setLocalId(localInfo.getLocalId());
+                                mExpenditureInfoBDaoManager.correct(info);
+                            }
+                        }
+                    }
+                }
                 if (mExpenditureListAdapter != null) {
                     mExpenditureListAdapter.notifyDataSetChanged();
                 }
@@ -220,7 +251,7 @@ public class CompanyExpenditureManagementActivityB extends BaseRefreshMvpActivit
                 mExpenditureListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                        CompanyExpenditureDetailActivityB.startActivity(CompanyExpenditureManagementActivityB.this, mExpenditureInfoList.get(position).getId());
+                        CompanyExpenditureDetailActivityB.startActivity(CompanyExpenditureManagementActivityB.this, mExpenditureInfoList.get(position).getId(), mExpenditureInfoList.get(position).getLocalId(), mExpenditureInfoList.get(position).getEstimateId(), mExpenditureInfoList.get(position).getEstimateTitle());
                     }
                 });
             }
@@ -241,4 +272,20 @@ public class CompanyExpenditureManagementActivityB extends BaseRefreshMvpActivit
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        mRefreshLayout.setEnableLoadmore(false);
+        if (port.equals(REQUEST_COMPANY_EXPENDITURE_B_LIST)) {
+            List<CompanyExpenditureInfoB> rows = new ArrayList<>();
+            if (!TextUtils.isEmpty(StringUtil.getText(tv_start_time)) || !TextUtils.isEmpty(StringUtil.getText(tv_end_time))) {
+                rows = mExpenditureInfoBDaoManager.queryBuilder().where(CompanyExpenditureInfoBDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyExpenditureInfoBDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+            } else {
+                rows = mExpenditureInfoBDaoManager.queryAll();
+            }
+            CompanyeExpenditureInfoBeanB companyeExpenditureInfoBeanB = new CompanyeExpenditureInfoBeanB();
+            companyeExpenditureInfoBeanB.setRows(rows);
+            getExpenditureListB(companyeExpenditureInfoBeanB);
+        }
+    }
 }

@@ -454,7 +454,7 @@ public interface MainApi {
 
     @FormUrlEncoded
     @POST("payRecord/save")
-    Observable<BaseEntity> saveExpenditureB(@Field("companyId") String companyId, @Field("userId") String userId, @Field("payDate") String payDate, @Field("price") String price, @Field("remark") String remark);
+    Observable<BaseEntity<UploadInfoBean>> saveExpenditureB(@Field("companyId") String companyId, @Field("userId") String userId, @Field("payDate") String payDate, @Field("price") String price, @Field("remark") String remark);
 
     @FormUrlEncoded
     @POST("defile/file/code")

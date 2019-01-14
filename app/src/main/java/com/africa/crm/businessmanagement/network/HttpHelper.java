@@ -273,7 +273,7 @@ public interface HttpHelper {
 
     Observable<CompanyExpenditureInfoB> getExpenditureDetailB(String id);
 
-    Observable<BaseEntity> saveExpenditureB(String companyId, String userId, String payDate, String price, String remark);
+    Observable<UploadInfoBean> saveExpenditureB(String companyId, String userId, String payDate, String price, String remark);
 
 }
 

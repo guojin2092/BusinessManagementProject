@@ -8,6 +8,8 @@ import com.africa.crm.businessmanagement.network.util.RxUtils;
 
 import io.reactivex.functions.Consumer;
 
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_EXPENDITURE_B_LIST;
+
 /**
  * Project：BusinessManagementProject
  * Author:  guojin
@@ -27,6 +29,6 @@ public class CompanyExpenditurePresenterB extends RxPresenter<CompanyExpenditure
                     public void accept(CompanyeExpenditureInfoBeanB companyeExpenditureInfoBeanB) throws Exception {
                         mView.getExpenditureListB(companyeExpenditureInfoBeanB);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView,REQUEST_COMPANY_EXPENDITURE_B_LIST)));
     }
 }
