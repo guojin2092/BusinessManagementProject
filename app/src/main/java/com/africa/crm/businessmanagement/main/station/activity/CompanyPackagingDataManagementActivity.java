@@ -6,23 +6,29 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyPackagingDataEvent;
 import com.africa.crm.businessmanagement.main.bean.CompanyPackagingDataInfo;
 import com.africa.crm.businessmanagement.main.bean.CompanyPackagingDataInfoBean;
-import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
+import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.WorkStationInfo;
+import com.africa.crm.businessmanagement.main.dao.CompanyPackagingDataInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.PackagingDataListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyPackagingDataContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyPackagingDataPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseRefreshMvpActivity;
+import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
 import com.africa.crm.businessmanagement.widget.LineItemDecoration;
+import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
 import com.bigkoo.pickerview.TimePickerView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -35,6 +41,8 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_PACKAGING_DATA_LIST;
 
 /**
  * Project：BusinessManagementProject
@@ -67,11 +75,14 @@ public class CompanyPackagingDataManagementActivity extends BaseRefreshMvpActivi
 
     /*    @BindView(R.id.spinner_user)
         MySpinner spinner_user;
-        private List<UserInfoBean> mUserInfoBeanList = new ArrayList<>();
-        private List<DicInfo> mUserInfoList = new ArrayList<>();*/
+        private List<DicInfo> mSpinnerCompanyUserList = new ArrayList<>();
+        private String mFromUserId = "";*/
     private String mUserId = "";
     private String mCompanyId = "";
     private String mRoleCode = "";
+
+    private GreendaoManager<CompanyPackagingDataInfo, CompanyPackagingDataInfoDao> mPackagingDataInfoDaoManager;
+    private List<CompanyPackagingDataInfo> mPackagingDataLocalList = new ArrayList<>();//本地数据
 
     /**
      * @param activity
@@ -114,6 +125,8 @@ public class CompanyPackagingDataManagementActivity extends BaseRefreshMvpActivi
         tv_start_time.setOnClickListener(this);
         tv_end_time.setOnClickListener(this);
         initTimePicker();
+        //得到Dao对象管理器
+        mPackagingDataInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyPackagingDataInfoDao());
     }
 
     private void initTimePicker() {
@@ -157,7 +170,9 @@ public class CompanyPackagingDataManagementActivity extends BaseRefreshMvpActivi
 
     @Override
     protected void requestData() {
-        mPresenter.getCompanyUserList(page, rows, "", "2", mCompanyId, "1", "");
+   /*     if ("companyRoot".equals(mRoleCode)) {
+            mPresenter.getAllCompanyUsers(mCompanyId);
+        }*/
         pullDownRefresh(page);
     }
 
@@ -188,7 +203,7 @@ public class CompanyPackagingDataManagementActivity extends BaseRefreshMvpActivi
                 pullDownRefresh(page);
                 break;
             case R.id.ll_add:
-                CompanyPackagingDataDetailActivity.startActivity(this, "");
+                CompanyPackagingDataDetailActivity.startActivity(this, "", 0l);
                 break;
         }
     }
@@ -206,23 +221,28 @@ public class CompanyPackagingDataManagementActivity extends BaseRefreshMvpActivi
     }
 
     @Override
-    public void getCompanyUserList(UserManagementInfoBean userManagementInfoBean) {
-       /* mUserInfoBeanList.clear();
-        mUserInfoBeanList.addAll(userManagementInfoBean.getRows());
-        mUserInfoList.clear();
-        if (!ListUtils.isEmpty(mUserInfoBeanList)) {
-            for (int i = 0; i < mUserInfoBeanList.size(); i++) {
-                mUserInfoList.add(new DicInfo(mUserInfoBeanList.get(i).getUserName(), mUserInfoBeanList.get(i).getId()));
+    public void getAllCompanyUsers(List<DicInfo2> dicInfo2List) {
+      /*  mSpinnerCompanyUserList.clear();
+        if (!ListUtils.isEmpty(dicInfo2List)) {
+            for (DicInfo2 dicInfo2 : dicInfo2List) {
+                DicInfo dicInfo = new DicInfo(dicInfo2.getId(), QUERY_ALL_USERS, dicInfo2.getName(), dicInfo2.getCode());
+                mSpinnerCompanyUserList.add(dicInfo);
             }
-        }
-        spinner_user.setListDatas(this, mUserInfoList);
-        spinner_user.addOnItemClickListener(new MySpinner.OnItemClickListener() {
-            @Override
-            public void onItemClick(DicInfo dicInfo, int position) {
-                mUserId = dicInfo.getCode();
+            List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerCompanyUserList, mDicInfoLocalList);
+            for (DicInfo dicInfo : addList) {
+                dicInfo.setType(QUERY_ALL_USERS);
+                mDicInfoDaoManager.insertOrReplace(dicInfo);
             }
-        });*/
+            spinner_user.setListDatas(getBVActivity(), mSpinnerCompanyUserList);
+            spinner_user.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+                @Override
+                public void onItemClick(DicInfo dicInfo, int position) {
+                    mFromUserId = dicInfo.getCode();
+                }
+            });
+        }*/
     }
+
 
     @Override
     public void getCompanyPackagingDataList(CompanyPackagingDataInfoBean companyPackagingDataInfoBean) {
@@ -239,6 +259,7 @@ public class CompanyPackagingDataManagementActivity extends BaseRefreshMvpActivi
                     mRefreshLayout.getLayout().setVisibility(View.VISIBLE);
                 }
                 mPackingDataInfoBeanList.clear();
+                mPackagingDataLocalList = mPackagingDataInfoDaoManager.queryAll();
                 recyclerView.smoothScrollToPosition(0);
             }
             if (mRefreshLayout != null) {
@@ -250,6 +271,24 @@ public class CompanyPackagingDataManagementActivity extends BaseRefreshMvpActivi
             }
             if (!ListUtils.isEmpty(companyPackagingDataInfoBean.getRows())) {
                 mPackingDataInfoBeanList.addAll(companyPackagingDataInfoBean.getRows());
+                List<CompanyPackagingDataInfo> addList = DifferentDataUtil.addPackagingDataToLocal(mPackingDataInfoBeanList, mPackagingDataLocalList);
+                if (!ListUtils.isEmpty(addList)) {
+                    for (CompanyPackagingDataInfo companyInfo : addList) {
+                        mPackagingDataInfoDaoManager.insertOrReplace(companyInfo);
+                    }
+                    mPackagingDataLocalList = new ArrayList<>();
+                    mPackagingDataLocalList = mPackagingDataInfoDaoManager.queryAll();
+                }
+                for (CompanyPackagingDataInfo info : mPackingDataInfoBeanList) {
+                    for (CompanyPackagingDataInfo localInfo : mPackagingDataLocalList) {
+                        if (!TextUtils.isEmpty(info.getId()) && !TextUtils.isEmpty(localInfo.getId())) {
+                            if (info.getId().equals(localInfo.getId())) {
+                                info.setLocalId(localInfo.getLocalId());
+                                mPackagingDataInfoDaoManager.correct(info);
+                            }
+                        }
+                    }
+                }
                 if (mPackagingDataListAdapter != null) {
                     mPackagingDataListAdapter.notifyDataSetChanged();
                 }
@@ -258,7 +297,7 @@ public class CompanyPackagingDataManagementActivity extends BaseRefreshMvpActivi
                 mPackagingDataListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                        CompanyPackagingDataDetailActivity.startActivity(CompanyPackagingDataManagementActivity.this, mPackingDataInfoBeanList.get(position).getId());
+                        CompanyPackagingDataDetailActivity.startActivity(CompanyPackagingDataManagementActivity.this, mPackingDataInfoBeanList.get(position).getId(), mPackingDataInfoBeanList.get(position).getLocalId());
                     }
                 });
             }
@@ -276,5 +315,22 @@ public class CompanyPackagingDataManagementActivity extends BaseRefreshMvpActivi
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        mRefreshLayout.setEnableLoadmore(false);
+        if (port.equals(REQUEST_COMPANY_PACKAGING_DATA_LIST)) {
+            List<CompanyPackagingDataInfo> rows = new ArrayList<>();
+            if (!TextUtils.isEmpty(StringUtil.getText(tv_start_time)) || !TextUtils.isEmpty(StringUtil.getText(tv_end_time))) {
+                rows = mPackagingDataInfoDaoManager.queryBuilder().where(CompanyPackagingDataInfoDao.Properties.CreateTimeDate.gt(TimeUtils.getDateByStartTime(StringUtil.getText(tv_start_time))), CompanyPackagingDataInfoDao.Properties.CreateTimeDate.lt(TimeUtils.getDateByEndTime(StringUtil.getText(tv_end_time)))).list();
+            } else {
+                rows = mPackagingDataInfoDaoManager.queryAll();
+            }
+            CompanyPackagingDataInfoBean companyPackagingDataInfoBean = new CompanyPackagingDataInfoBean();
+            companyPackagingDataInfoBean.setRows(rows);
+            getCompanyPackagingDataList(companyPackagingDataInfoBean);
+        }
     }
 }

@@ -8,11 +8,14 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyPackagingDataEvent;
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyPackagingDataInfo;
 import com.africa.crm.businessmanagement.main.bean.PreviewInfo;
+import com.africa.crm.businessmanagement.main.dao.CompanyPackagingDataInfoDao;
+import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyPackagingDataDetailContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyPackagingDataDetailPresenter;
@@ -25,9 +28,14 @@ import com.google.gson.reflect.TypeToken;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_CHECK_DATE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_PACKAGING_DATA_DETAIL;
 
 public class CompanyPackagingDataDetailActivity extends BaseMvpActivity<CompanyPackagingDataDetailPresenter> implements CompanyPackagingDataDetailContract.View {
     @BindView(R.id.tv_num)
@@ -56,6 +64,7 @@ public class CompanyPackagingDataDetailActivity extends BaseMvpActivity<CompanyP
     TextView tv_save;
 
     private String mPackageDataId = "";
+    private Long mLocalId = 0l;//本地数据库ID
     private String mCompanyId = "";
     private String mUserId = "";
 
@@ -64,12 +73,16 @@ public class CompanyPackagingDataDetailActivity extends BaseMvpActivity<CompanyP
 
     private String mPreviewInfo = "";
 
+    private GreendaoManager<CompanyPackagingDataInfo, CompanyPackagingDataInfoDao> mPackagingDataInfoDaoManager;
+    private List<CompanyPackagingDataInfo> mPackagingDataLocalList = new ArrayList<>();//本地数据
+
     /**
      * @param activity
      */
-    public static void startActivity(Activity activity, String id) {
+    public static void startActivity(Activity activity, String id, Long localId) {
         Intent intent = new Intent(activity, CompanyPackagingDataDetailActivity.class);
         intent.putExtra("id", id);
+        intent.putExtra("localId", localId);
         activity.startActivity(intent);
     }
 
@@ -82,6 +95,7 @@ public class CompanyPackagingDataDetailActivity extends BaseMvpActivity<CompanyP
     public void initView() {
         super.initView();
         mPackageDataId = getIntent().getStringExtra("id");
+        mLocalId = getIntent().getLongExtra("localId", 0l);
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
         mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
         titlebar_right.setVisibility(View.GONE);
@@ -91,15 +105,18 @@ public class CompanyPackagingDataDetailActivity extends BaseMvpActivity<CompanyP
         tv_start_date.setOnClickListener(this);
         tv_end_date.setOnClickListener(this);
         tv_get_preview_info.setOnClickListener(this);
-        if (!TextUtils.isEmpty(mPackageDataId)) {
+        if (TextUtils.isEmpty(mPackageDataId) && mLocalId == 0l) {
+            tv_get_preview_info.setVisibility(View.VISIBLE);
+            tv_save.setVisibility(View.VISIBLE);
+        } else if (!TextUtils.isEmpty(mPackageDataId) || mLocalId != 0l) {
             tv_get_preview_info.setVisibility(View.GONE);
             tv_save.setVisibility(View.GONE);
             setEditTextInput(false);
-        } else {
-            tv_get_preview_info.setVisibility(View.VISIBLE);
-            tv_save.setVisibility(View.VISIBLE);
         }
         initTimePicker();
+        //得到Dao对象管理器
+        mPackagingDataInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyPackagingDataInfoDao());        //得到本地数据
+        mPackagingDataLocalList = mPackagingDataInfoDaoManager.queryAll();
     }
 
     private void initTimePicker() {
@@ -144,7 +161,7 @@ public class CompanyPackagingDataDetailActivity extends BaseMvpActivity<CompanyP
 
     @Override
     protected void requestData() {
-        if (!TextUtils.isEmpty(mPackageDataId)) {
+        if (!TextUtils.isEmpty(mPackageDataId) || mLocalId != 0l) {
             mPresenter.getPackagingDataDetail(mPackageDataId);
         }
     }
@@ -224,12 +241,23 @@ public class CompanyPackagingDataDetailActivity extends BaseMvpActivity<CompanyP
 
     @Override
     public void getPackagingDataDetail(CompanyPackagingDataInfo companyPackagingDataInfo) {
-        tv_start_date.setText(companyPackagingDataInfo.getStartDate());
-        mStartDate = TimeUtils.getDataByString(companyPackagingDataInfo.getStartDate());
-        tv_end_date.setText(companyPackagingDataInfo.getEndDate());
-        mEndDate = TimeUtils.getDataByString(companyPackagingDataInfo.getEndDate());
-        et_remark.setText(companyPackagingDataInfo.getRemark());
-        mPresenter.getPreviewInfo(mCompanyId, tv_start_date.getText().toString().trim(), tv_end_date.getText().toString().trim());
+        if (companyPackagingDataInfo != null) {
+            tv_start_date.setText(companyPackagingDataInfo.getStartDate());
+            mStartDate = TimeUtils.getDataByString(companyPackagingDataInfo.getStartDate());
+            tv_end_date.setText(companyPackagingDataInfo.getEndDate());
+            mEndDate = TimeUtils.getDataByString(companyPackagingDataInfo.getEndDate());
+            et_remark.setText(companyPackagingDataInfo.getRemark());
+            mPresenter.getPreviewInfo(mCompanyId, tv_start_date.getText().toString().trim(), tv_end_date.getText().toString().trim());
+
+            for (CompanyPackagingDataInfo localInfo : mPackagingDataLocalList) {
+                if (!TextUtils.isEmpty(localInfo.getId()) && !TextUtils.isEmpty(companyPackagingDataInfo.getId())) {
+                    if (localInfo.getId().equals(companyPackagingDataInfo.getId())) {
+                        companyPackagingDataInfo.setLocalId(localInfo.getLocalId());
+                        mPackagingDataInfoDaoManager.correct(companyPackagingDataInfo);
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -245,6 +273,22 @@ public class CompanyPackagingDataDetailActivity extends BaseMvpActivity<CompanyP
             finish();
         } else {
             toastMsg(ErrorMsg.showErrorMsg(baseEntity.getReturnMsg()));
+        }
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        if (port.equals(REQUEST_COMPANY_PACKAGING_DATA_DETAIL)) {
+            CompanyPackagingDataInfo companyPackagingDataInfo = null;
+            for (CompanyPackagingDataInfo info : mPackagingDataLocalList) {
+                if (mLocalId == info.getLocalId()) {
+                    companyPackagingDataInfo = info;
+                }
+            }
+            getPackagingDataDetail(companyPackagingDataInfo);
+        } else if (port.equals(REQUEST_CHECK_DATE)) {
+            toastMsg("网络连接失败，请重试");
         }
     }
 }

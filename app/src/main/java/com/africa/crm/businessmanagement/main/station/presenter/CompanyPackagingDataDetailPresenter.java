@@ -2,7 +2,6 @@ package com.africa.crm.businessmanagement.main.station.presenter;
 
 import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyPackagingDataInfo;
-import com.africa.crm.businessmanagement.main.bean.PreviewInfo;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyPackagingDataDetailContract;
 import com.africa.crm.businessmanagement.mvp.presenter.RxPresenter;
 import com.africa.crm.businessmanagement.network.error.ComConsumer;
@@ -13,6 +12,9 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_CHECK_DATE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_PACKAGING_DATA_DETAIL;
 
 /**
  * Project：BusinessManagementProject
@@ -44,7 +46,7 @@ public class CompanyPackagingDataDetailPresenter extends RxPresenter<CompanyPack
                     public void accept(String previewInfo) throws Exception {
                         mView.getPreviewInfo(previewInfo);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_CHECK_DATE)));
     }
 
     @Override
@@ -56,7 +58,7 @@ public class CompanyPackagingDataDetailPresenter extends RxPresenter<CompanyPack
                     public void accept(CompanyPackagingDataInfo companyPackagingDataInfo) throws Exception {
                         mView.getPackagingDataDetail(companyPackagingDataInfo);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_COMPANY_PACKAGING_DATA_DETAIL)));
     }
 
     @Override

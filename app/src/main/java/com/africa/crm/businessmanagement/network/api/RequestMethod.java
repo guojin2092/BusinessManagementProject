@@ -204,4 +204,10 @@ public class RequestMethod {
     //保存企业PDF文件
     public static final String REQUEST_SAVE_COMPANY_PDF = "request_save_company_pdf";
 
+    //企业包装数据管理列表
+    public static final String REQUEST_COMPANY_PACKAGING_DATA_LIST = "request_company_packaging_data_list";
+    //获取企业包装数据详情
+    public static final String REQUEST_COMPANY_PACKAGING_DATA_DETAIL = "request_company_packaging_data_detail";
+    //校验日期
+    public static final String REQUEST_CHECK_DATE = "request_check_date";
 }
