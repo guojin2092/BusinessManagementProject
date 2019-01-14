@@ -20,11 +20,15 @@ public class LoginInfoBean implements Serializable {
     private String companyName;//所属企业名称
     private String name;
     private String type;//用户类型，1：系统管理员，2：企业用户
+    private String typeName;
     private String passWord;//密码
     private int version;//版本号
     private String createTime;//创建时间
     private String phone;//电话号
     private String email;//电子邮件
+    private String head;//头像
+    private String state;
+    private String stateName;
 
     private String roleId;//角色Id
     private String roleTypeName;//角色类型
@@ -165,5 +169,37 @@ public class LoginInfoBean implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getHead() {
+        return head;
+    }
+
+    public void setHead(String head) {
+        this.head = head;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getStateName() {
+        return stateName;
+    }
+
+    public void setStateName(String stateName) {
+        this.stateName = stateName;
     }
 }

@@ -26,7 +26,7 @@ public class UploadPictureContract {
 
         void uploadImages(FileInfoBean fileInfoBean);
 
-        void saveUserInfo(UploadInfoBean uploadInfoBean);
+        void saveUserInfo(UploadInfoBean uploadInfoBean, boolean isLocal);
 
     }
 

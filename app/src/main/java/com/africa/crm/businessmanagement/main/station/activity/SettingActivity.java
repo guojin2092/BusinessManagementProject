@@ -97,10 +97,12 @@ import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ComConsumer;
 import com.africa.crm.businessmanagement.network.error.ComException;
 import com.africa.crm.businessmanagement.network.util.RxUtils;
+import com.africa.crm.businessmanagement.widget.TimeUtils;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.gitonway.lee.niftymodaldialogeffects.lib.LoginOutDialog;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -108,6 +110,10 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_GET_USER_INFO;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SAVE_COMPANY_USER;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_UPLOAD_IMAGE;
 
 /**
  * Project：BusinessManagementProject
@@ -150,7 +156,8 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
     private String mEmail = "";//电子邮箱
     private String mState = "";//状态
     private String mCompanyId = "";//企业ID
-    private String mHead = "";//头像ID
+    private String mHeadCode = "";//头像ID
+    private String mLocalPath = "";
 
     /**
      * 企业信息本地数据库
@@ -543,8 +550,16 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
             tv_username.setText(userInfo.getName());
             tv_company_name.setText(userInfo.getCompanyName());
             tv_user_role.setText(userInfo.getRoleName());
-            mHead = userInfo.getHead();
-            GlideUtil.showImg(iv_head_icon, mHead);
+            mHeadCode = userInfo.getHead();
+            GlideUtil.showImg(iv_head_icon, mHeadCode);
+            for (CompanyUserInfoBean localInfo : mUserInfoBeanLocalList) {
+                if (!TextUtils.isEmpty(localInfo.getId()) && !TextUtils.isEmpty(userInfo.getId())) {
+                    if (localInfo.getId().equals(userInfo.getId())) {
+                        userInfo.setLocalId(localInfo.getLocalId());
+                        mUserInfoBeanDaoManager.correct(userInfo);
+                    }
+                }
+            }
         }
     }
 
@@ -563,7 +578,8 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
     @Override
     public void success(String path) {
         if (!TextUtils.isEmpty(path)) {
-            mPresenter.uploadImages(path);
+            mLocalPath = path;
+            mPresenter.uploadImages(mLocalPath);
         }
     }
 
@@ -574,15 +590,24 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
 
     @Override
     public void uploadImages(FileInfoBean fileInfoBean) {
+        mHeadCode = fileInfoBean.getCode();
         if (!TextUtils.isEmpty(fileInfoBean.getCode())) {
-            mHead = fileInfoBean.getCode();
-            mPresenter.saveUserInfo(mUserId, mUserName, mType, mRoleIds, "", mName, mPhone, mAddress, mEmail, mState, mCompanyId, mHead);
+            mPresenter.saveUserInfo(mUserId, mUserName, mType, mRoleIds, "", mName, mPhone, mAddress, mEmail, mState, mCompanyId, mHeadCode);
         }
     }
 
     @Override
-    public void saveUserInfo(UploadInfoBean uploadInfoBean) {
-        GlideUtil.showImg(iv_head_icon, mHead);
+    public void saveUserInfo(UploadInfoBean uploadInfoBean, boolean isLocal) {
+        GlideUtil.showImg(iv_head_icon, mHeadCode);
+        if (isLocal) {
+            CompanyUserInfoBean companyUserInfoBean = null;
+            for (CompanyUserInfoBean info : mUserInfoBeanLocalList) {
+                if (mUserId.equals(info.getId())) {
+                    companyUserInfoBean = new CompanyUserInfoBean(info.getLocalId(), info.getId(), mHeadCode, info.getCompanyId(), TimeUtils.getCurrentTime(new Date()), TimeUtils.getDateByCreateTime(TimeUtils.getTime(new Date())), info.getCompanyName(), info.getName(), info.getRoleName(), info.getState(), info.getStateName(), info.getUserName(), info.getType(), info.getTypeName(), info.getPassword(), info.getAddress(), info.getPhone(), info.getEmail(), info.getRoleId(), info.getRoleTypeName(), info.getRoleCode(), false, isLocal);
+                    mUserInfoBeanDaoManager.correct(companyUserInfoBean);
+                }
+            }
+        }
     }
 
     @Override
@@ -1282,6 +1307,8 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                         }
                     }, new ComConsumer(this)));
         }
+        mUserInfoBeanLocalList = new ArrayList<>();
+        mUserInfoBeanLocalList = mUserInfoBeanDaoManager.queryAll();
         for (final CompanyUserInfoBean companyInfo : mUserInfoBeanLocalList) {
             final String[] mHeadCode = {""};
             if (companyInfo.isLocal()) {
@@ -1292,7 +1319,7 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                 public ObservableSource<UploadInfoBean> apply(FileInfoBean fileInfoBean) throws Exception {
                                     if (!TextUtils.isEmpty(fileInfoBean.getCode())) {
                                         mHeadCode[0] = fileInfoBean.getCode();
-                                        return mDataManager.saveOrcreateUser(companyInfo.getId(),companyInfo.getUserName(),companyInfo.getType(),companyInfo.getRoleId(),companyInfo.getPassword(),companyInfo.getName(),companyInfo.getPhone(),companyInfo.getAddress(),companyInfo.getEmail(),companyInfo.getState(),companyInfo.getCompanyId(),companyInfo.getHead());
+                                        return mDataManager.saveOrcreateUser(companyInfo.getId(), companyInfo.getUserName(), companyInfo.getType(), companyInfo.getRoleId(), companyInfo.getPassword(), companyInfo.getName(), companyInfo.getPhone(), companyInfo.getAddress(), companyInfo.getEmail(), companyInfo.getState(), companyInfo.getCompanyId(), companyInfo.getHead());
                                     } else {
                                         return Observable.error(new ComException("上传失败，请重试"));
                                     }
@@ -1309,7 +1336,7 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                 }
                             }, new ComConsumer(this)));
                 } else {
-                    addDisposable(mDataManager.saveOrcreateUser(companyInfo.getId(),companyInfo.getUserName(),companyInfo.getType(),companyInfo.getRoleId(),companyInfo.getPassword(),companyInfo.getName(),companyInfo.getPhone(),companyInfo.getAddress(),companyInfo.getEmail(),companyInfo.getState(),companyInfo.getCompanyId(),companyInfo.getHead())
+                    addDisposable(mDataManager.saveOrcreateUser(companyInfo.getId(), companyInfo.getUserName(), companyInfo.getType(), companyInfo.getRoleId(), companyInfo.getPassword(), companyInfo.getName(), companyInfo.getPhone(), companyInfo.getAddress(), companyInfo.getEmail(), companyInfo.getState(), companyInfo.getCompanyId(), companyInfo.getHead())
                             .compose(RxUtils.<UploadInfoBean>ioToMain(this))
                             .subscribe(new Consumer<UploadInfoBean>() {
                                 @Override
@@ -1324,5 +1351,32 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
             }
         }
         toastMsg("数据上传成功");
+    }
+
+    @Override
+    public void loadLocalData(String port) {
+        super.loadLocalData(port);
+        switch (port) {
+            case REQUEST_GET_USER_INFO:
+                CompanyUserInfoBean companyInfo = null;
+                for (CompanyUserInfoBean info : mUserInfoBeanLocalList) {
+                    if (mUserId.equals(info.getId())) {
+                        companyInfo = info;
+                    }
+                }
+                getUserInfo(companyInfo);
+                break;
+            case REQUEST_UPLOAD_IMAGE:
+                FileInfoBean localInfoBean = new FileInfoBean(mLocalPath);
+                uploadImages(localInfoBean);
+                break;
+            case REQUEST_SAVE_COMPANY_USER:
+                UploadInfoBean uploadInfoBean = new UploadInfoBean();
+                uploadInfoBean.setId(mUserId);
+                uploadInfoBean.setCreateTime(TimeUtils.getCurrentTime(new Date()));
+                uploadInfoBean.setUpdateTime(TimeUtils.getCurrentTime(new Date()));
+                saveUserInfo(uploadInfoBean, true);
+                break;
+        }
     }
 }

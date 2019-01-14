@@ -15,11 +15,13 @@ import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.baseutil.library.base.progress.BaseFragmentProgress;
+import com.africa.crm.businessmanagement.main.bean.CompanyUserInfoBean;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
 import com.africa.crm.businessmanagement.main.contract.LoginContract;
+import com.africa.crm.businessmanagement.main.dao.CompanyUserInfoBeanDao;
 import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
 import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
@@ -88,6 +90,8 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
     //登陆成功
     public final static int LOGIN_SUCCESS = 1002;
 
+    private GreendaoManager<CompanyUserInfoBean, CompanyUserInfoBeanDao> mUserInfoBeanDaoManager;
+    private List<CompanyUserInfoBean> mUserInfoBeanLocalList = new ArrayList<>();//本地数据
     private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoGreendaoManager;
     private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
     private DicInfoDao mDicInfoDao;
@@ -127,6 +131,8 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
 
     @Override
     public void initData() {
+        //企业用户管理dao
+        mUserInfoBeanDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyUserInfoBeanDao());
         //得到Dao对象
         mDicInfoDao = MyApplication.getInstance().getDaoSession().getDicInfoDao();
         //得到Dao对象管理器
@@ -578,6 +584,27 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
     public void getLoginInfo(LoginInfoBean loginInfoBean) {
         if (loginInfoBean != null) {
             UserInfoManager.saveUserLoginInfo(this, loginInfoBean);
+            CompanyUserInfoBean companyUserInfoBean = new CompanyUserInfoBean();
+            companyUserInfoBean.setId(String.valueOf(loginInfoBean.getId()));
+            companyUserInfoBean.setCreateTime(String.valueOf(loginInfoBean.getCreateTime()));
+            companyUserInfoBean.setUserName(loginInfoBean.getUserName());
+            companyUserInfoBean.setCompanyId(loginInfoBean.getCompanyId());
+            companyUserInfoBean.setCompanyName(loginInfoBean.getCompanyName());
+            companyUserInfoBean.setName(loginInfoBean.getName());
+            companyUserInfoBean.setUserName(loginInfoBean.getUserName());
+            companyUserInfoBean.setType(loginInfoBean.getType());
+            companyUserInfoBean.setPassword(loginInfoBean.getPassWord());
+            companyUserInfoBean.setPhone(loginInfoBean.getPhone());
+            companyUserInfoBean.setEmail(loginInfoBean.getEmail());
+            companyUserInfoBean.setRoleId(loginInfoBean.getRoleId());
+            companyUserInfoBean.setRoleTypeName(loginInfoBean.getRoleTypeName());
+            companyUserInfoBean.setRoleCode(loginInfoBean.getRoleCode());
+            companyUserInfoBean.setRoleName(loginInfoBean.getRoleName());
+            companyUserInfoBean.setHead(loginInfoBean.getHead());
+            companyUserInfoBean.setTypeName(loginInfoBean.getTypeName());
+            companyUserInfoBean.setState(loginInfoBean.getState());
+            companyUserInfoBean.setStateName(loginInfoBean.getStateName());
+            mUserInfoBeanDaoManager.insertOrReplace(companyUserInfoBean);
             MainActivity.startActivity(this);
             finish();
         }

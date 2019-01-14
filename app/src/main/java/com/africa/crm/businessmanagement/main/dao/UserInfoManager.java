@@ -30,6 +30,11 @@ public class UserInfoManager {
     public static final String CREATE_TIME = "createTime";
     public static final String PHONE = "phone";
     public static final String EMAIL = "email";
+    public static final String HEAD = "head";
+    public static final String TYPE_NAME = "typeName";
+    public static final String STATE = "state";
+    public static final String STATE_NAME = "stateName";
+
 
     public static final String ROLE_ID = "roleId";
     public static final String ROLE_TYPE_NAME = "roleTypeName";
@@ -56,6 +61,10 @@ public class UserInfoManager {
         editor.putString(CREATE_TIME, userInfoBean.getCreateTime());
         editor.putString(PHONE, userInfoBean.getPhone());
         editor.putString(EMAIL, userInfoBean.getEmail());
+        editor.putString(TYPE_NAME, userInfoBean.getTypeName());
+        editor.putString(STATE, userInfoBean.getState());
+        editor.putString(STATE_NAME, userInfoBean.getStateName());
+        editor.putString(HEAD, userInfoBean.getHead());
         editor.putString(ROLE_ID, userInfoBean.getRoleId());
         editor.putString(ROLE_CODE, userInfoBean.getRoleCode());
         editor.putString(ROLE_TYPE_NAME, userInfoBean.getRoleTypeName());
@@ -82,6 +91,10 @@ public class UserInfoManager {
         loginInfoBean.setCreateTime(sharedPreferences.getString(CREATE_TIME, ""));
         loginInfoBean.setPhone(sharedPreferences.getString(PHONE, ""));
         loginInfoBean.setEmail(sharedPreferences.getString(EMAIL, ""));
+        loginInfoBean.setTypeName(sharedPreferences.getString(TYPE_NAME, ""));
+        loginInfoBean.setState(sharedPreferences.getString(STATE, ""));
+        loginInfoBean.setStateName(sharedPreferences.getString(STATE_NAME, ""));
+        loginInfoBean.setHead(sharedPreferences.getString(HEAD, ""));
         loginInfoBean.setRoleId(sharedPreferences.getString(ROLE_ID, ""));
         loginInfoBean.setRoleCode(sharedPreferences.getString(ROLE_CODE, ""));
         loginInfoBean.setRoleTypeName(sharedPreferences.getString(ROLE_TYPE_NAME, ""));

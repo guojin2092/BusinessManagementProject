@@ -1,22 +1,18 @@
 package com.africa.crm.businessmanagement.main.station.presenter;
 
-import com.africa.crm.businessmanagement.main.bean.BaseEntity;
 import com.africa.crm.businessmanagement.main.bean.CompanyUserInfoBean;
 import com.africa.crm.businessmanagement.main.bean.FileInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
-import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.main.station.contract.UploadPictureContract;
 import com.africa.crm.businessmanagement.mvp.presenter.RxPresenter;
 import com.africa.crm.businessmanagement.network.error.ComConsumer;
-import com.africa.crm.businessmanagement.network.error.ComException;
 import com.africa.crm.businessmanagement.network.util.RxUtils;
 
-import java.util.List;
-
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
+
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_GET_USER_INFO;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_SAVE_COMPANY_USER;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_UPLOAD_IMAGE;
 
 /**
  * Project：BusinessManagementProject
@@ -38,7 +34,7 @@ public class UploadPicturePresenter extends RxPresenter<UploadPictureContract.Vi
                     public void accept(CompanyUserInfoBean userInfo) throws Exception {
                         mView.getUserInfo(userInfo);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_GET_USER_INFO)));
     }
 
     @Override
@@ -50,7 +46,7 @@ public class UploadPicturePresenter extends RxPresenter<UploadPictureContract.Vi
                     public void accept(FileInfoBean fileInfoBean) throws Exception {
                         mView.uploadImages(fileInfoBean);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_UPLOAD_IMAGE)));
     }
 
     @Override
@@ -60,9 +56,9 @@ public class UploadPicturePresenter extends RxPresenter<UploadPictureContract.Vi
                 .subscribe(new Consumer<UploadInfoBean>() {
                     @Override
                     public void accept(UploadInfoBean uploadInfoBean) throws Exception {
-                        mView.saveUserInfo(uploadInfoBean);
+                        mView.saveUserInfo(uploadInfoBean, false);
                     }
-                }, new ComConsumer(mView)));
+                }, new ComConsumer(mView, REQUEST_SAVE_COMPANY_USER)));
     }
 
 }
