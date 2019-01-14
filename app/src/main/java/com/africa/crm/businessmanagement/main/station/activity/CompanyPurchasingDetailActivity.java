@@ -471,6 +471,11 @@ public class CompanyPurchasingDetailActivity extends BaseMvpActivity<CompanyPurc
             et_remark.setText(companyPurchasingOrderInfo.getRemark());
             mPurchasingCode = companyPurchasingOrderInfo.getCode();
             mEditAble = companyPurchasingOrderInfo.getEditAble();
+            if (mEditAble.equals("2")) {
+                titlebar_right.setVisibility(View.GONE);
+                tv_save.setVisibility(View.GONE);
+                setEditTextInput(false);
+            }
             List<OrderProductInfo> list = new Gson().fromJson(companyPurchasingOrderInfo.getProducts(), new TypeToken<List<OrderProductInfo>>() {
             }.getType());
             mOrderProductInfoList.addAll(list);

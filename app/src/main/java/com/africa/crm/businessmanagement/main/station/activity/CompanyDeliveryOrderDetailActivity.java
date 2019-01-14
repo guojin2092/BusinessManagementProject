@@ -462,6 +462,11 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
             mCompanyName = companyDeliveryOrderInfo.getCompanyName();
             mFromName = companyDeliveryOrderInfo.getUserNickName();
             mEditAble = companyDeliveryOrderInfo.getEditAble();
+            if (mEditAble.equals("2")) {
+                titlebar_right.setVisibility(View.GONE);
+                tv_save.setVisibility(View.GONE);
+                setEditTextInput(false);
+            }
             List<OrderProductInfo> list = new Gson().fromJson(companyDeliveryOrderInfo.getProducts(), new TypeToken<List<OrderProductInfo>>() {
             }.getType());
             mOrderProductInfoList.addAll(list);

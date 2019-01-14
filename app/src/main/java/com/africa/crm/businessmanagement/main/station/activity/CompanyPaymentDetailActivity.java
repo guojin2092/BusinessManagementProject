@@ -402,6 +402,11 @@ public class CompanyPaymentDetailActivity extends BaseMvpActivity<CompanyPayOrde
             mEditAble = companyPayOrderInfo.getEditAble();
             mFromName = companyPayOrderInfo.getUserNickName();
             mPayCode = companyPayOrderInfo.getCode();
+            if (mEditAble.equals("2")) {
+                titlebar_right.setVisibility(View.GONE);
+                tv_save.setVisibility(View.GONE);
+                setEditTextInput(false);
+            }
             if (mInvoiceCode.equals("1")) {
                 cb_sf_invoice.setChecked(true);
             } else {

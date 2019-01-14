@@ -478,6 +478,11 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
             et_clause.setText(companyQuotationInfo.getClause());
             et_remark.setText(companyQuotationInfo.getRemark());
             mEditAble = companyQuotationInfo.getEditAble();
+            if (mEditAble.equals("2")) {
+                titlebar_right.setVisibility(View.GONE);
+                tv_save.setVisibility(View.GONE);
+                setEditTextInput(false);
+            }
             List<ProductInfo> list = new Gson().fromJson(companyQuotationInfo.getProducts(), new TypeToken<List<ProductInfo>>() {
             }.getType());
             mOrderProductInfoList.addAll(list);

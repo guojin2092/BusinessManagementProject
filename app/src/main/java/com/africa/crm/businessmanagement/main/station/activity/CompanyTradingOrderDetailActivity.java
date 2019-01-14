@@ -253,6 +253,11 @@ public class CompanyTradingOrderDetailActivity extends BaseMvpActivity<CompanyTr
             mEditAble = companyTradingOrderInfo.getEditAble();
             mCustomerName = companyTradingOrderInfo.getCustomerName();
             mContactName = companyTradingOrderInfo.getContactName();
+            if (mEditAble.equals("2")) {
+                titlebar_right.setVisibility(View.GONE);
+                tv_save.setVisibility(View.GONE);
+                setEditTextInput(false);
+            }
             for (CompanyTradingOrderInfo localInfo : mTradingOrderLocalList) {
                 if (!TextUtils.isEmpty(localInfo.getId()) && !TextUtils.isEmpty(companyTradingOrderInfo.getId())) {
                     if (localInfo.getId().equals(companyTradingOrderInfo.getId())) {
