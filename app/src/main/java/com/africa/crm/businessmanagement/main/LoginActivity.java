@@ -13,58 +13,18 @@ import android.widget.Toast;
 
 import com.africa.crm.businessmanagement.MyApplication;
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.baseutil.common.util.ListUtils;
 import com.africa.crm.businessmanagement.baseutil.library.base.progress.BaseFragmentProgress;
 import com.africa.crm.businessmanagement.main.bean.CompanyUserInfoBean;
-import com.africa.crm.businessmanagement.main.bean.DicInfo;
-import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.LoginInfoBean;
-import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
 import com.africa.crm.businessmanagement.main.contract.LoginContract;
 import com.africa.crm.businessmanagement.main.dao.CompanyUserInfoBeanDao;
-import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
 import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.presenter.LoginPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseEasyMvpActivity;
-import com.africa.crm.businessmanagement.network.error.ComConsumer;
 import com.africa.crm.businessmanagement.network.error.ComException;
-import com.africa.crm.businessmanagement.network.util.RxUtils;
-import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
-import io.reactivex.functions.Consumer;
-
-import static com.africa.crm.businessmanagement.network.api.DicUtil.COMPANY_TYPE_CODE;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.FROM_TYPE_CODE;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.INDUSTRY_CODE;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.INVOICE_STATE;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.PRODUCT_TYPE;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.PURCHASE_STATE;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_COMPANY;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_CONTACTS;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_CUSTOMERS;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_PRODUCTS;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_ROLES;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_SALE_ORDER;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_SUPPLIERS;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_TRADING_ORDER;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.QUERY_ALL_USERS;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.SALE_ORDER_STATE;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.SERVICE_LEVEL;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.SERVICE_STATE;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.SERVICE_TYPE;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.STATE_CODE;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.STOCK_TYPE;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.SUPPLIER_TYPE_CODE;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.TASK_LEVEL;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.TASK_STATE;
-import static com.africa.crm.businessmanagement.network.api.DicUtil.USER_TYPE;
-import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_STATE;
-import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_TYPE;
 
 /**
  * Project：BusinessManagementProject
@@ -78,6 +38,8 @@ import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUES
 public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implements LoginContract.View {
     @BindView(R.id.tv_login)
     TextView tv_login;
+    @BindView(R.id.et_servers_address)
+    EditText et_servers_address;
     @BindView(R.id.et_username)
     EditText et_username;
     @BindView(R.id.et_password)
@@ -91,10 +53,6 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
     public final static int LOGIN_SUCCESS = 1002;
 
     private GreendaoManager<CompanyUserInfoBean, CompanyUserInfoBeanDao> mUserInfoBeanDaoManager;
-    private List<CompanyUserInfoBean> mUserInfoBeanLocalList = new ArrayList<>();//本地数据
-    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoGreendaoManager;
-    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
-    private DicInfoDao mDicInfoDao;
 
     /**
      * 在activity中请求回调,显示登录界面
@@ -133,12 +91,6 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
     public void initData() {
         //企业用户管理dao
         mUserInfoBeanDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyUserInfoBeanDao());
-        //得到Dao对象
-        mDicInfoDao = MyApplication.getInstance().getDaoSession().getDicInfoDao();
-        //得到Dao对象管理器
-        mDicInfoDaoGreendaoManager = new GreendaoManager<>(mDicInfoDao);
-        //得到本地数据
-        mDicInfoLocalList = mDicInfoDaoGreendaoManager.queryAll();
     }
 
 
@@ -149,398 +101,6 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
 
     @Override
     protected void requestData() {
-        //企业类型
-        addDisposable(mDataManager.getDicByCode(COMPANY_TYPE_CODE)
-                .compose(RxUtils.<List<DicInfo>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo>>() {
-                    @Override
-                    public void accept(List<DicInfo> dicInfoList) throws Exception {
-                        List<DicInfo> spinnerCompanyTypeList = new ArrayList<>();
-                        spinnerCompanyTypeList.addAll(dicInfoList);
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerCompanyTypeList, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            dicInfo.setType(COMPANY_TYPE_CODE);
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this, REQUEST_COMPANY_TYPE)));
-        //企业状态
-        addDisposable(mDataManager.getDicByCode(STATE_CODE)
-                .compose(RxUtils.<List<DicInfo>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo>>() {
-                    @Override
-                    public void accept(List<DicInfo> dicInfoList) throws Exception {
-                        List<DicInfo> spinnerStateList = new ArrayList<>();
-                        spinnerStateList.addAll(dicInfoList);
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerStateList, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            dicInfo.setType(STATE_CODE);
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this, REQUEST_COMPANY_STATE)));
-        //所有用户角色
-        addDisposable(mDataManager.getAllRoles()
-                .compose(RxUtils.<List<RoleInfoBean>>ioToMain(this))
-                .subscribe(new Consumer<List<RoleInfoBean>>() {
-                    @Override
-                    public void accept(List<RoleInfoBean> roleInfoBeanList) throws Exception {
-                        List<DicInfo> spinnerRoleList = new ArrayList<>();
-                        if (roleInfoBeanList.size() == 3) {
-                            spinnerRoleList.add(new DicInfo(roleInfoBeanList.get(0).getId(), QUERY_ALL_ROLES, roleInfoBeanList.get(0).getRoleName(), roleInfoBeanList.get(0).getRoleCode()));
-                            spinnerRoleList.add(new DicInfo(roleInfoBeanList.get(1).getId(), QUERY_ALL_ROLES, roleInfoBeanList.get(1).getRoleName(), roleInfoBeanList.get(1).getRoleCode()));
-                        } else {
-                            if (!ListUtils.isEmpty(roleInfoBeanList)) {
-                                for (RoleInfoBean roleInfoBean : roleInfoBeanList) {
-                                    DicInfo dicInfo = new DicInfo(roleInfoBean.getId(), QUERY_ALL_ROLES, roleInfoBean.getRoleName(), roleInfoBean.getRoleCode());
-                                    spinnerRoleList.add(dicInfo);
-                                }
-                            }
-                        }
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerRoleList, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this)));
-        //供应商分类
-        addDisposable(mDataManager.getDicByCode(SUPPLIER_TYPE_CODE)
-                .compose(RxUtils.<List<DicInfo>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo>>() {
-                    @Override
-                    public void accept(List<DicInfo> dicInfoList) throws Exception {
-                        List<DicInfo> spinnerSupplierTypeList = new ArrayList<>();
-                        spinnerSupplierTypeList.addAll(dicInfoList);
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerSupplierTypeList, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            dicInfo.setType(SUPPLIER_TYPE_CODE);
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this)));
-        //所有供应商列表
-        addDisposable(mDataManager.getAllSuppliers("")
-                .compose(RxUtils.<List<DicInfo2>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo2>>() {
-                    @Override
-                    public void accept(List<DicInfo2> dicInfoList) throws Exception {
-                        List<DicInfo> list = new ArrayList<>();
-                        for (DicInfo2 dicInfo2 : dicInfoList) {
-                            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_SUPPLIERS, dicInfo2.getName(), dicInfo2.getCode()));
-                        }
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this)));
-        //产品分类
-        addDisposable(mDataManager.getDicByCode(PRODUCT_TYPE)
-                .compose(RxUtils.<List<DicInfo>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo>>() {
-                    @Override
-                    public void accept(List<DicInfo> dicInfoList) throws Exception {
-                        List<DicInfo> productList = new ArrayList<>();
-                        productList.addAll(dicInfoList);
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(productList, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            dicInfo.setType(PRODUCT_TYPE);
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this)));
-        //所有所属用户
-        addDisposable(mDataManager.getAllCompanyUser("")
-                .compose(RxUtils.<List<DicInfo2>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo2>>() {
-                    @Override
-                    public void accept(List<DicInfo2> dicInfoList) throws Exception {
-                        List<DicInfo> list = new ArrayList<>();
-                        for (DicInfo2 dicInfo2 : dicInfoList) {
-                            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_USERS, dicInfo2.getName(), dicInfo2.getCode()));
-                        }
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this)));
-        //行业分类
-        addDisposable(mDataManager.getDicByCode(INDUSTRY_CODE)
-                .compose(RxUtils.<List<DicInfo>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo>>() {
-                    @Override
-                    public void accept(List<DicInfo> dicInfoList) throws Exception {
-                        List<DicInfo> spinnerSupplierTypeList = new ArrayList<>();
-                        spinnerSupplierTypeList.addAll(dicInfoList);
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerSupplierTypeList, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            dicInfo.setType(INDUSTRY_CODE);
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this)));
-        //联系人来源分类
-        addDisposable(mDataManager.getDicByCode(FROM_TYPE_CODE)
-                .compose(RxUtils.<List<DicInfo>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo>>() {
-                    @Override
-                    public void accept(List<DicInfo> dicInfoList) throws Exception {
-                        List<DicInfo> spinnerSupplierTypeList = new ArrayList<>();
-                        spinnerSupplierTypeList.addAll(dicInfoList);
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerSupplierTypeList, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            dicInfo.setType(FROM_TYPE_CODE);
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this)));
-        //所有联系人
-        addDisposable(mDataManager.getAllContact("")
-                .compose(RxUtils.<List<DicInfo2>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo2>>() {
-                    @Override
-                    public void accept(List<DicInfo2> dicInfoList) throws Exception {
-                        List<DicInfo> list = new ArrayList<>();
-                        for (DicInfo2 dicInfo2 : dicInfoList) {
-                            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_CONTACTS, dicInfo2.getName(), dicInfo2.getCode()));
-                        }
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this)));
-        //所有客户
-        addDisposable(mDataManager.getAllCustomers("")
-                .compose(RxUtils.<List<DicInfo2>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo2>>() {
-                    @Override
-                    public void accept(List<DicInfo2> dicInfoList) throws Exception {
-                        List<DicInfo> list = new ArrayList<>();
-                        for (DicInfo2 dicInfo2 : dicInfoList) {
-                            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_CUSTOMERS, dicInfo2.getName(), dicInfo2.getCode()));
-                        }
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this)));
-        //所有产品
-        addDisposable(mDataManager.getAllProducts("")
-                .compose(RxUtils.<List<DicInfo2>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo2>>() {
-                    @Override
-                    public void accept(List<DicInfo2> dicInfoList) throws Exception {
-                        List<DicInfo> list = new ArrayList<>();
-                        for (DicInfo2 dicInfo2 : dicInfoList) {
-                            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_PRODUCTS, dicInfo2.getName(), dicInfo2.getCode()));
-                        }
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this)));
-        //销售单状态
-        addDisposable(mDataManager.getDicByCode(SALE_ORDER_STATE)
-                .compose(RxUtils.<List<DicInfo>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo>>() {
-                    @Override
-                    public void accept(List<DicInfo> dicInfoList) throws Exception {
-                        List<DicInfo> spinnerSupplierTypeList = new ArrayList<>();
-                        spinnerSupplierTypeList.addAll(dicInfoList);
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerSupplierTypeList, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            dicInfo.setType(SALE_ORDER_STATE);
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this)));
-        //发货单状态
-        addDisposable(mDataManager.getDicByCode(INVOICE_STATE)
-                .compose(RxUtils.<List<DicInfo>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo>>() {
-                    @Override
-                    public void accept(List<DicInfo> dicInfoList) throws Exception {
-                        List<DicInfo> spinnerSupplierTypeList = new ArrayList<>();
-                        spinnerSupplierTypeList.addAll(dicInfoList);
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerSupplierTypeList, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            dicInfo.setType(INVOICE_STATE);
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this)));
-        //所有销售单
-        addDisposable(mDataManager.getAllSaleOrders("", "")
-                .compose(RxUtils.<List<DicInfo2>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo2>>() {
-                    @Override
-                    public void accept(List<DicInfo2> dicInfoList) throws Exception {
-                        List<DicInfo> list = new ArrayList<>();
-                        for (DicInfo2 dicInfo2 : dicInfoList) {
-                            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_SALE_ORDER, dicInfo2.getName(), dicInfo2.getCode()));
-                        }
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this)));
-        //所有交易单
-        addDisposable(mDataManager.getAllTradingOrders("", "")
-                .compose(RxUtils.<List<DicInfo2>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo2>>() {
-                    @Override
-                    public void accept(List<DicInfo2> dicInfoList) throws Exception {
-                        List<DicInfo> list = new ArrayList<>();
-                        for (DicInfo2 dicInfo2 : dicInfoList) {
-                            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_TRADING_ORDER, dicInfo2.getName(), dicInfo2.getCode()));
-                        }
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this)));
-        //服务状态
-        addDisposable(mDataManager.getDicByCode(SERVICE_STATE)
-                .compose(RxUtils.<List<DicInfo>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo>>() {
-                    @Override
-                    public void accept(List<DicInfo> dicInfoList) throws Exception {
-                        List<DicInfo> spinnerSupplierTypeList = new ArrayList<>();
-                        spinnerSupplierTypeList.addAll(dicInfoList);
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerSupplierTypeList, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            dicInfo.setType(SERVICE_STATE);
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this)));
-        //服务类型
-        addDisposable(mDataManager.getDicByCode(SERVICE_TYPE)
-                .compose(RxUtils.<List<DicInfo>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo>>() {
-                    @Override
-                    public void accept(List<DicInfo> dicInfoList) throws Exception {
-                        List<DicInfo> spinnerSupplierTypeList = new ArrayList<>();
-                        spinnerSupplierTypeList.addAll(dicInfoList);
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerSupplierTypeList, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            dicInfo.setType(SERVICE_TYPE);
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this)));
-        //服务优先级
-        addDisposable(mDataManager.getDicByCode(SERVICE_LEVEL)
-                .compose(RxUtils.<List<DicInfo>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo>>() {
-                    @Override
-                    public void accept(List<DicInfo> dicInfoList) throws Exception {
-                        List<DicInfo> spinnerSupplierTypeList = new ArrayList<>();
-                        spinnerSupplierTypeList.addAll(dicInfoList);
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerSupplierTypeList, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            dicInfo.setType(SERVICE_LEVEL);
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this)));
-        //库存类型
-        addDisposable(mDataManager.getDicByCode(STOCK_TYPE)
-                .compose(RxUtils.<List<DicInfo>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo>>() {
-                    @Override
-                    public void accept(List<DicInfo> dicInfoList) throws Exception {
-                        List<DicInfo> spinnerSupplierTypeList = new ArrayList<>();
-                        spinnerSupplierTypeList.addAll(dicInfoList);
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerSupplierTypeList, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            dicInfo.setType(STOCK_TYPE);
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this)));
-        //采购单状态
-        addDisposable(mDataManager.getDicByCode(PURCHASE_STATE)
-                .compose(RxUtils.<List<DicInfo>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo>>() {
-                    @Override
-                    public void accept(List<DicInfo> dicInfoList) throws Exception {
-                        List<DicInfo> spinnerSupplierTypeList = new ArrayList<>();
-                        spinnerSupplierTypeList.addAll(dicInfoList);
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerSupplierTypeList, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            dicInfo.setType(PURCHASE_STATE);
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this)));
-        //任务等级
-        addDisposable(mDataManager.getDicByCode(TASK_LEVEL)
-                .compose(RxUtils.<List<DicInfo>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo>>() {
-                    @Override
-                    public void accept(List<DicInfo> dicInfoList) throws Exception {
-                        List<DicInfo> spinnerSupplierTypeList = new ArrayList<>();
-                        spinnerSupplierTypeList.addAll(dicInfoList);
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerSupplierTypeList, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            dicInfo.setType(TASK_LEVEL);
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this)));
-        //任务状态
-        addDisposable(mDataManager.getDicByCode(TASK_STATE)
-                .compose(RxUtils.<List<DicInfo>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo>>() {
-                    @Override
-                    public void accept(List<DicInfo> dicInfoList) throws Exception {
-                        List<DicInfo> spinnerSupplierTypeList = new ArrayList<>();
-                        spinnerSupplierTypeList.addAll(dicInfoList);
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerSupplierTypeList, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            dicInfo.setType(TASK_STATE);
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this)));
-        //用户类型
-        addDisposable(mDataManager.getDicByCode(USER_TYPE)
-                .compose(RxUtils.<List<DicInfo>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo>>() {
-                    @Override
-                    public void accept(List<DicInfo> dicInfoList) throws Exception {
-                        List<DicInfo> spinnerSupplierTypeList = new ArrayList<>();
-                        spinnerSupplierTypeList.addAll(dicInfoList);
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(spinnerSupplierTypeList, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            dicInfo.setType(USER_TYPE);
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this)));
-        //所有公司
-        addDisposable(mDataManager.getAllCompany("")
-                .compose(RxUtils.<List<DicInfo2>>ioToMain())
-                .subscribe(new Consumer<List<DicInfo2>>() {
-                    @Override
-                    public void accept(List<DicInfo2> dicInfoList) throws Exception {
-                        List<DicInfo> list = new ArrayList<>();
-                        for (DicInfo2 dicInfo2 : dicInfoList) {
-                            list.add(new DicInfo(dicInfo2.getId(), QUERY_ALL_COMPANY, dicInfo2.getName(), dicInfo2.getCode()));
-                        }
-                        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(list, mDicInfoLocalList);
-                        for (DicInfo dicInfo : addList) {
-                            mDicInfoDaoGreendaoManager.insertOrReplace(dicInfo);
-                        }
-                    }
-                }, new ComConsumer(this)));
     }
 
 
@@ -549,6 +109,10 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
         super.onClick(v);
         switch (v.getId()) {
             case R.id.tv_login:
+                if (TextUtils.isEmpty(et_servers_address.getText().toString().trim())) {
+                    toastMsg("尚未填写服务器地址");
+                    return;
+                }
                 if (TextUtils.isEmpty(et_username.getText().toString().trim())) {
                     toastMsg("用户名不能为空");
                     return;
