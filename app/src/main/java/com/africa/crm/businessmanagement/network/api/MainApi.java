@@ -47,8 +47,8 @@ import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleLimitInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleManagementInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
-import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
+import com.africa.crm.businessmanagement.main.bean.delete.WebInfoBean;
 
 import java.util.List;
 
@@ -460,4 +460,44 @@ public interface MainApi {
     @FormUrlEncoded
     @POST("defile/file/code")
     Observable<ResponseBody> downloadFiles(@Field("code") String code);
+
+    @FormUrlEncoded
+    @POST("orderAmountStatistics/queryReport")
+    Observable<BaseEntity<WebInfoBean>> getOrderAmountStatisticsReport(@Field("startDate") String startDate, @Field("endDate") String endDate, @Field("sfxsysc") String sfxsysc, @Field("userId") String userId, @Field("companyId") String companyId);
+
+    @FormUrlEncoded
+    @POST("orderAmountStatistics/export")
+    Observable<ResponseBody> getOrderAmountStatisticsExport(@Field("startDate") String startDate, @Field("endDate") String endDate, @Field("sfxsysc") String sfxsysc, @Field("userId") String userId, @Field("companyId") String companyId);
+
+    @FormUrlEncoded
+    @POST("orderNumStatistics/queryReport")
+    Observable<BaseEntity<WebInfoBean>> getOrderNumStatisticsReport(@Field("startDate") String startDate, @Field("endDate") String endDate, @Field("sfxsysc") String sfxsysc, @Field("userId") String userId, @Field("companyId") String companyId);
+
+    @FormUrlEncoded
+    @POST("orderNumStatistics/export")
+    Observable<ResponseBody> getOrderNumStatisticsExport(@Field("startDate") String startDate, @Field("endDate") String endDate, @Field("sfxsysc") String sfxsysc, @Field("userId") String userId, @Field("companyId") String companyId);
+
+    @FormUrlEncoded
+    @POST("payRecordStatistics/queryReport")
+    Observable<BaseEntity<WebInfoBean>> getPayRecordStatisticsReport(@Field("startDate") String startDate, @Field("endDate") String endDate, @Field("sfxsysc") String sfxsysc, @Field("userId") String userId, @Field("companyId") String companyId);
+
+    @FormUrlEncoded
+    @POST("payRecordStatistics/export")
+    Observable<ResponseBody> getPayRecordStatisticsExport(@Field("startDate") String startDate, @Field("endDate") String endDate, @Field("sfxsysc") String sfxsysc, @Field("userId") String userId, @Field("companyId") String companyId);
+
+    @FormUrlEncoded
+    @POST("serviceStatistics/queryReport")
+    Observable<BaseEntity<WebInfoBean>> getServiceStatisticsReport(@Field("startDate") String startDate, @Field("endDate") String endDate, @Field("sfxsysc") String sfxsysc, @Field("userId") String userId, @Field("companyId") String companyId);
+
+    @FormUrlEncoded
+    @POST("serviceStatistics/export")
+    Observable<ResponseBody> getServiceStatisticsExport(@Field("startDate") String startDate, @Field("endDate") String endDate, @Field("sfxsysc") String sfxsysc, @Field("userId") String userId, @Field("companyId") String companyId);
+
+    @FormUrlEncoded
+    @POST("stockStatistics/queryReport")
+    Observable<BaseEntity<WebInfoBean>> getStockStatisticsReport(@Field("startDate") String startDate, @Field("endDate") String endDate, @Field("sfxsysc") String sfxsysc, @Field("userId") String userId, @Field("companyId") String companyId);
+
+    @FormUrlEncoded
+    @POST("stockStatistics/export")
+    Observable<ResponseBody> getStockStatisticsExport(@Field("startDate") String startDate, @Field("endDate") String endDate, @Field("sfxsysc") String sfxsysc, @Field("userId") String userId, @Field("companyId") String companyId);
 }

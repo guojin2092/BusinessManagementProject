@@ -16,6 +16,11 @@ public class DicInfo2 implements Serializable {
     private String name;
     private String code;
 
+    public DicInfo2(String name, String code) {
+        this.name = name;
+        this.code = code;
+    }
+
     public DicInfo2(String id,String name, String code) {
         this.id = id;
         this.name = name;

@@ -50,8 +50,8 @@ import com.africa.crm.businessmanagement.main.bean.RoleInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleLimitInfoBean;
 import com.africa.crm.businessmanagement.main.bean.RoleManagementInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
-import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
+import com.africa.crm.businessmanagement.main.bean.delete.WebInfoBean;
 import com.africa.crm.businessmanagement.network.api.FileApi;
 import com.africa.crm.businessmanagement.network.api.LoginApi;
 import com.africa.crm.businessmanagement.network.api.MainApi;
@@ -615,6 +615,56 @@ public class HttpHelperImpl implements HttpHelper {
     @Override
     public Observable<UploadInfoBean> saveExpenditureB(String companyId, String userId, String payDate, String price, String remark) {
         return mainApi.saveExpenditureB(companyId, userId, payDate, price, remark).compose(RxUtils.<UploadInfoBean>handleResult());
+    }
+
+    @Override
+    public Observable<WebInfoBean> getOrderAmountStatisticsReport(String startDate, String endDate, String sfxsysc, String userId, String companyId) {
+        return mainApi.getOrderAmountStatisticsReport(startDate, endDate, sfxsysc, userId, companyId).compose(RxUtils.<WebInfoBean>handleResult());
+    }
+
+    @Override
+    public Observable<ResponseBody> getOrderAmountStatisticsExport(String startDate, String endDate, String sfxsysc, String userId, String companyId) {
+        return mainApi.getOrderAmountStatisticsExport(startDate, endDate, sfxsysc, userId, companyId);
+    }
+
+    @Override
+    public Observable<WebInfoBean> getOrderNumStatisticsReport(String startDate, String endDate, String sfxsysc, String userId, String companyId) {
+        return mainApi.getOrderNumStatisticsReport(startDate, endDate, sfxsysc, userId, companyId).compose(RxUtils.<WebInfoBean>handleResult());
+    }
+
+    @Override
+    public Observable<ResponseBody> getOrderNumStatisticsExport(String startDate, String endDate, String sfxsysc, String userId, String companyId) {
+        return mainApi.getOrderNumStatisticsExport(startDate, endDate, sfxsysc, userId, companyId);
+    }
+
+    @Override
+    public Observable<WebInfoBean> getPayRecordStatisticsReport(String startDate, String endDate, String sfxsysc, String userId, String companyId) {
+        return mainApi.getPayRecordStatisticsReport(startDate, endDate, sfxsysc, userId, companyId).compose(RxUtils.<WebInfoBean>handleResult());
+    }
+
+    @Override
+    public Observable<ResponseBody> getPayRecordStatisticsExport(String startDate, String endDate, String sfxsysc, String userId, String companyId) {
+        return mainApi.getPayRecordStatisticsExport(startDate, endDate, sfxsysc, userId, companyId);
+    }
+
+    @Override
+    public Observable<WebInfoBean> getServiceStatisticsReport(String startDate, String endDate, String sfxsysc, String userId, String companyId) {
+        return mainApi.getServiceStatisticsReport(startDate, endDate, sfxsysc, userId, companyId).compose(RxUtils.<WebInfoBean>handleResult());
+    }
+
+    @Override
+    public Observable<ResponseBody> getServiceStatisticsExport(String startDate, String endDate, String sfxsysc, String userId, String companyId) {
+        return mainApi.getServiceStatisticsExport(startDate, endDate, sfxsysc, userId, companyId);
+    }
+
+    @Override
+    public Observable<WebInfoBean> getStockStatisticsReport(String startDate, String endDate, String sfxsysc, String userId, String companyId) {
+        return mainApi.getStockStatisticsReport(startDate, endDate, sfxsysc, userId, companyId).compose(RxUtils.<WebInfoBean>handleResult());
+    }
+
+    @Override
+    public Observable<ResponseBody> getStockStatisticsExport(String startDate, String endDate, String sfxsysc, String userId, String companyId) {
+        return mainApi.getStockStatisticsExport(startDate, endDate, sfxsysc, userId, companyId);
     }
 
 }

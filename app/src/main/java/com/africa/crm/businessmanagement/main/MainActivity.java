@@ -41,6 +41,7 @@ import com.africa.crm.businessmanagement.main.station.activity.CompanyPurchasing
 import com.africa.crm.businessmanagement.main.station.activity.CompanyQuotationManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanySalesOrderManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyServiceRecordManagementActivity;
+import com.africa.crm.businessmanagement.main.station.activity.CompanyStatisticalFormActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanySupplierManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyTaskManagementActivity;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyTradingOrderManagementActivity;
@@ -122,7 +123,7 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
 
     @Override
     public void initData() {
-        WorkStationInfo workStationInfo = new WorkStationInfo();
+     /*   WorkStationInfo workStationInfo = new WorkStationInfo();
         workStationInfo.setWork_type("1");
         workStationInfo.setWork_name(getString(R.string.enterprise_information_management));
         mWorkStationInfoList.add(workStationInfo);
@@ -206,7 +207,7 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
         workStationInfo21.setWork_type("21");
         workStationInfo21.setWork_name(getString(R.string.setting));
         mWorkStationInfoList.add(workStationInfo21);
-        setWorkStationDatas(mWorkStationInfoList);
+        setWorkStationDatas(mWorkStationInfoList);*/
     }
 
     @Override
@@ -234,7 +235,6 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
 
     @Override
     public void getMainStationInfo(List<MainStationInfoBean> mainStationInfoBeanList) {
-/*
         if (!ListUtils.isEmpty(mainStationInfoBeanList)) {
             for (MainStationInfoBean mainStationInfoBean : mainStationInfoBeanList) {
                 mCodeList.add(mainStationInfoBean.getResCode());
@@ -248,7 +248,6 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
             mWorkStationInfoList.add(workStationInfo21);
             setWorkStationDatas(mWorkStationInfoList);
         }
-*/
     }
 
     /**
@@ -459,7 +458,7 @@ public class MainActivity extends BaseEasyMvpActivity<MainPresenter> implements 
                             CompanyPackagingDataManagementActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "18":
-                            showShortToast(getString(R.string.statistical_report_forms));
+                            CompanyStatisticalFormActivity.startActivity(MainActivity.this, workStationInfo);
                             break;
                         case "19":
                             String roleCode = UserInfoManager.getUserLoginInfo(MainActivity.this).getRoleCode();

@@ -218,7 +218,14 @@
             android:name=".main.photo.crop.CropActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-
+        <activity
+            android:name=".main.station.activity.CompanyStatisticalFormActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".main.station.activity.CompanyStatisticalFormWebActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
     </application>
 
 </manifest>

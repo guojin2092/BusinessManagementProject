@@ -52,6 +52,7 @@ import com.africa.crm.businessmanagement.main.bean.RoleManagementInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.main.bean.UserInfo;
 import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
+import com.africa.crm.businessmanagement.main.bean.delete.WebInfoBean;
 
 import java.util.List;
 
@@ -276,5 +277,24 @@ public interface HttpHelper {
 
     Observable<UploadInfoBean> saveExpenditureB(String companyId, String userId, String payDate, String price, String remark);
 
+    Observable<WebInfoBean> getOrderAmountStatisticsReport(String startDate, String endDate, String sfxsysc, String userId, String companyId);
+
+    Observable<ResponseBody> getOrderAmountStatisticsExport(String startDate, String endDate, String sfxsysc, String userId, String companyId);
+
+    Observable<WebInfoBean> getOrderNumStatisticsReport(String startDate, String endDate, String sfxsysc, String userId, String companyId);
+
+    Observable<ResponseBody> getOrderNumStatisticsExport(String startDate, String endDate, String sfxsysc, String userId, String companyId);
+
+    Observable<WebInfoBean> getPayRecordStatisticsReport(String startDate, String endDate, String sfxsysc, String userId, String companyId);
+
+    Observable<ResponseBody> getPayRecordStatisticsExport(String startDate, String endDate, String sfxsysc, String userId, String companyId);
+
+    Observable<WebInfoBean> getServiceStatisticsReport(String startDate, String endDate, String sfxsysc, String userId, String companyId);
+
+    Observable<ResponseBody> getServiceStatisticsExport(String startDate, String endDate, String sfxsysc, String userId, String companyId);
+
+    Observable<WebInfoBean> getStockStatisticsReport(String startDate, String endDate, String sfxsysc, String userId, String companyId);
+
+    Observable<ResponseBody> getStockStatisticsExport(String startDate, String endDate, String sfxsysc, String userId, String companyId);
 }
 

@@ -243,7 +243,16 @@ public class CompanyPdfReportDetailActivity extends BaseMvpActivity<CompanyPdfRe
     public void downLoadFile(ResponseBody responseBody, boolean isLocal) {
         if (!isLocal) {
             String fileDir = Environment.getExternalStorageDirectory().getAbsolutePath() + "/CRM";
-            File file = saveFile(responseBody, fileDir, mFileName);
+            File file = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+                } else {
+                    file = saveFile(responseBody, fileDir, mFileName);
+                }
+            } else {
+                file = saveFile(responseBody, fileDir, mFileName);
+            }
             if (file != null) {
                 mLocalPath = file.getAbsolutePath();
             }
