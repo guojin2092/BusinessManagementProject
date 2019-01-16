@@ -23,8 +23,12 @@ import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.presenter.LoginPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseEasyMvpActivity;
 import com.africa.crm.businessmanagement.network.error.ComException;
+import com.africa.crm.businessmanagement.network.retrofit.RetrofitUrlManager;
+import com.africa.crm.businessmanagement.widget.StringUtil;
+import com.infrastructure.utils.Log;
 
 import butterknife.BindView;
+import okhttp3.HttpUrl;
 
 /**
  * Project：BusinessManagementProject
@@ -112,6 +116,10 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
                 if (TextUtils.isEmpty(et_servers_address.getText().toString().trim())) {
                     toastMsg("尚未填写服务器地址");
                     return;
+                }
+                HttpUrl httpUrl = RetrofitUrlManager.getInstance().getGlobalDomain();
+                if (null == httpUrl || !httpUrl.toString().equals(StringUtil.getText(et_servers_address))) {
+                    RetrofitUrlManager.getInstance().setGlobalDomain(StringUtil.getText(et_servers_address));
                 }
                 if (TextUtils.isEmpty(et_username.getText().toString().trim())) {
                     toastMsg("用户名不能为空");
