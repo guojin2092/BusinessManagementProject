@@ -24,7 +24,7 @@ import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyStatisticalFormWebContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyStatisticalFormWebPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
-import com.africa.crm.businessmanagement.network.api.ApiConfig;
+import com.africa.crm.businessmanagement.network.retrofit.RetrofitUrlManager;
 import com.africa.crm.businessmanagement.widget.MySpinner;
 import com.africa.crm.businessmanagement.widget.StringUtil;
 import com.africa.crm.businessmanagement.widget.TimeUtils;
@@ -91,6 +91,7 @@ public class CompanyStatisticalFormWebActivity extends BaseMvpActivity<CompanySt
 
     private String fileDir = Environment.getExternalStorageDirectory().getAbsolutePath() + "/CRM";
 
+    private final static String BASE_URL = RetrofitUrlManager.getInstance().getGlobalDomain().toString();
 
     /**
      * @param activity
@@ -330,7 +331,7 @@ public class CompanyStatisticalFormWebActivity extends BaseMvpActivity<CompanySt
     @Override
     public void getOrderAmountStatisticsReport(WebInfoBean webInfoBean) {
         if (!TextUtils.isEmpty(webInfoBean.getWebviewurl())) {
-            mWebview.loadUrl(ApiConfig.BASE_URL + webInfoBean.getWebviewurl());
+            mWebview.loadUrl(BASE_URL + webInfoBean.getWebviewurl());
         }
     }
 
@@ -340,11 +341,10 @@ public class CompanyStatisticalFormWebActivity extends BaseMvpActivity<CompanySt
     }
 
 
-
     @Override
     public void getOrderNumStatisticsReport(WebInfoBean webInfoBean) {
         if (!TextUtils.isEmpty(webInfoBean.getWebviewurl())) {
-            mWebview.loadUrl(ApiConfig.BASE_URL + webInfoBean.getWebviewurl());
+            mWebview.loadUrl(BASE_URL + webInfoBean.getWebviewurl());
         }
     }
 
@@ -356,7 +356,7 @@ public class CompanyStatisticalFormWebActivity extends BaseMvpActivity<CompanySt
     @Override
     public void getPayRecordStatisticsReport(WebInfoBean webInfoBean) {
         if (!TextUtils.isEmpty(webInfoBean.getWebviewurl())) {
-            mWebview.loadUrl(ApiConfig.BASE_URL + webInfoBean.getWebviewurl());
+            mWebview.loadUrl(BASE_URL + webInfoBean.getWebviewurl());
         }
     }
 
@@ -368,7 +368,7 @@ public class CompanyStatisticalFormWebActivity extends BaseMvpActivity<CompanySt
     @Override
     public void getServiceStatisticsReport(WebInfoBean webInfoBean) {
         if (!TextUtils.isEmpty(webInfoBean.getWebviewurl())) {
-            mWebview.loadUrl(ApiConfig.BASE_URL + webInfoBean.getWebviewurl());
+            mWebview.loadUrl(BASE_URL + webInfoBean.getWebviewurl());
         }
     }
 
@@ -380,7 +380,7 @@ public class CompanyStatisticalFormWebActivity extends BaseMvpActivity<CompanySt
     @Override
     public void getStockStatisticsReport(WebInfoBean webInfoBean) {
         if (!TextUtils.isEmpty(webInfoBean.getWebviewurl())) {
-            mWebview.loadUrl(ApiConfig.BASE_URL + webInfoBean.getWebviewurl());
+            mWebview.loadUrl(BASE_URL + webInfoBean.getWebviewurl());
         }
     }
 
@@ -391,6 +391,7 @@ public class CompanyStatisticalFormWebActivity extends BaseMvpActivity<CompanySt
 
     /**
      * 权限申请
+     *
      * @param responseBody
      */
     private void saveFileToLocal(ResponseBody responseBody) {

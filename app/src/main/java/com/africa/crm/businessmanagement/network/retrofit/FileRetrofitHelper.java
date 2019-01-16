@@ -56,7 +56,7 @@ public class FileRetrofitHelper {
         //设置Http缓存
         Cache cache = new Cache(FileUtils.createFileDir(FileUtils.CACHE_HTTP), 1024 * 1024 * 10);
 
-        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+        OkHttpClient.Builder builder = RetrofitUrlManager.getInstance().with(new OkHttpClient.Builder())
                 .cache(cache)
                 .retryOnConnectionFailure(true)
                 .addInterceptor(new HeaderInterceptor())
