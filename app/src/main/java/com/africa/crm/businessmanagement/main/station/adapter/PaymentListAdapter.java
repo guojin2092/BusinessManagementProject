@@ -1,6 +1,7 @@
 package com.africa.crm.businessmanagement.main.station.adapter;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -43,15 +44,18 @@ public class PaymentListAdapter extends BaseQuickAdapter<CompanyPayOrderInfo, Ba
         TextView tv_pay_code = helper.getView(R.id.tv_pay_code);
         TextView tv_pay_money = helper.getView(R.id.tv_pay_money);
 
-        TextView tv_pay_time = helper.getView(R.id.tv_pay_time);
+        TextView tv_create_time = helper.getView(R.id.tv_create_time);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
         tv_pay_order_name.setText(item.getName());
         tv_pay_code.setText("付款单编号：" + item.getCode());
         tv_pay_money.setText("金额：" + item.getPrice());
-        tv_pay_time.setText("付款时间：" + item.getPayTime());
+        if (!TextUtils.isEmpty(item.getCreateTime())) {
+            tv_create_time.setText(item.getCreateTime());
+        } else {
+            tv_create_time.setText("");
+        }
         cb_choose.setChecked(item.isChosen());
-
         if (mIsDeleted) {
             cb_choose.setVisibility(View.VISIBLE);
         } else {

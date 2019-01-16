@@ -13,7 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginRight="32dp"
-        android:button="@drawable/cb_delete_style" />
+        android:button="@drawable/cb_delete_style"
+        android:enabled="false" />
 
     <FrameLayout
         android:layout_width="0dp"
@@ -65,12 +66,11 @@
         android:layout_weight="1">
 
         <TextView
-            android:id="@+id/tv_customer_name"
+            android:id="@+id/tv_create_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical"
             android:drawablePadding="10dp"
-            android:text="客户名称"
             android:textColor="@color/B2B2B2"
             android:textSize="20sp" />
 

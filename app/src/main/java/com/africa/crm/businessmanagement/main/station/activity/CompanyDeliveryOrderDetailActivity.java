@@ -21,14 +21,17 @@ import com.africa.crm.businessmanagement.main.bean.CompanyDeliveryOrderInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
 import com.africa.crm.businessmanagement.main.bean.OrderProductInfo;
+import com.africa.crm.businessmanagement.main.bean.ProductInfo;
 import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.main.dao.CompanyDeliveryOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
 import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.adapter.OrderProductListAdapter;
+import com.africa.crm.businessmanagement.main.station.adapter.QuotationProductListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyDeliveryOrderDetailContract;
 import com.africa.crm.businessmanagement.main.station.dialog.AddProductDialog;
+import com.africa.crm.businessmanagement.main.station.dialog.AddQuotationProductDialog;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyDeliveryOrderDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
 import com.africa.crm.businessmanagement.widget.DifferentDataUtil;
@@ -99,10 +102,10 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
     TextView tv_add_product;
     @BindView(R.id.rv_product)
     RecyclerView rv_product;
-    private AddProductDialog mAddProductDialog;
-    private OrderProductListAdapter mOrderProductListAdapter;
-    private List<OrderProductInfo> mDeleteList = new ArrayList<>();
-    private List<OrderProductInfo> mOrderProductInfoList = new ArrayList<>();
+    private QuotationProductListAdapter mOrderProductListAdapter;
+    private AddQuotationProductDialog mAddProductDialog;
+    private List<ProductInfo> mDeleteList = new ArrayList<>();
+    private List<ProductInfo> mOrderProductInfoList = new ArrayList<>();
     private boolean mShowCheckBox = false;
 
 
@@ -177,7 +180,7 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
             tv_save.setVisibility(View.GONE);
             setEditTextInput(false);
         }
-        mAddProductDialog = AddProductDialog.getInstance(this);
+        mAddProductDialog = AddQuotationProductDialog.getInstance(this);
         mAddProductDialog.isCancelableOnTouchOutside(false)
                 .withDuration(300)
                 .withEffect(Effectstype.Fadein)
@@ -187,14 +190,14 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
                         mAddProductDialog.dismiss();
                     }
                 });
-        mAddProductDialog.addOnSaveClickListener(new AddProductDialog.OnSaveClickListener() {
+        mAddProductDialog.addOnSaveClickListener(new AddQuotationProductDialog.OnSaveClickListener() {
             @Override
-            public void onSaveClick(OrderProductInfo orderProductInfo) {
+            public void onSaveClick(ProductInfo orderProductInfo) {
                 if (TextUtils.isEmpty(orderProductInfo.getName())) {
                     toastMsg("尚未选择产品");
                     return;
                 }
-                mOrderProductInfoList.add(new OrderProductInfo(orderProductInfo.getName(), orderProductInfo.getNum()));
+                mOrderProductInfoList.add(new ProductInfo(orderProductInfo.getName(), orderProductInfo.getPrice(), orderProductInfo.getNum()));
                 if (mOrderProductListAdapter != null) {
                     mOrderProductListAdapter.notifyDataSetChanged();
                 }
@@ -226,7 +229,7 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
 
     private void initProductList() {
         tv_delete_product.setOnClickListener(this);
-        mOrderProductListAdapter = new OrderProductListAdapter(mOrderProductInfoList);
+        mOrderProductListAdapter = new QuotationProductListAdapter(mOrderProductInfoList);
         rv_product.setAdapter(mOrderProductListAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         rv_product.setLayoutManager(layoutManager);
@@ -287,9 +290,9 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
                 break;
             case R.id.tv_delete:
                 mDeleteList.clear();
-                for (OrderProductInfo orderProductInfo : mOrderProductInfoList) {
-                    if (orderProductInfo.isChosen()) {
-                        mDeleteList.add(orderProductInfo);
+                for (ProductInfo productInfo : mOrderProductInfoList) {
+                    if (productInfo.isChosen()) {
+                        mDeleteList.add(productInfo);
                     }
                 }
                 if (ListUtils.isEmpty(mDeleteList)) {
@@ -467,7 +470,7 @@ public class CompanyDeliveryOrderDetailActivity extends BaseMvpActivity<CompanyD
                 tv_save.setVisibility(View.GONE);
                 setEditTextInput(false);
             }
-            List<OrderProductInfo> list = new Gson().fromJson(companyDeliveryOrderInfo.getProducts(), new TypeToken<List<OrderProductInfo>>() {
+            List<ProductInfo> list = new Gson().fromJson(companyDeliveryOrderInfo.getProducts(), new TypeToken<List<ProductInfo>>() {
             }.getType());
             mOrderProductInfoList.addAll(list);
             if (mOrderProductListAdapter != null) {

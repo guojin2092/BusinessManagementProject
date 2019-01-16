@@ -1,6 +1,7 @@
 package com.africa.crm.businessmanagement.main.station.adapter;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -42,14 +43,17 @@ public class DeliveryOrderListAdapter extends BaseQuickAdapter<CompanyDeliveryOr
         TextView tv_delivery_order_name = helper.getView(R.id.tv_delivery_order_name);
         TextView tv_sale_code = helper.getView(R.id.tv_sale_code);
         TextView tv_logistics_code = helper.getView(R.id.tv_logistics_code);
-        TextView tv_arrive_date = helper.getView(R.id.tv_arrive_date);
+        TextView tv_create_time = helper.getView(R.id.tv_create_time);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
         tv_delivery_order_name.setText(item.getName());
         tv_sale_code.setText("发货单编号："+item.getCode());
         tv_logistics_code.setText("物流单号：" + item.getLogisticsCode());
-        tv_arrive_date.setText("到达日期：" + item.getArriveDate());
-        cb_choose.setChecked(item.isChosen());
+        if (!TextUtils.isEmpty(item.getCreateTime())) {
+            tv_create_time.setText(item.getCreateTime());
+        } else {
+            tv_create_time.setText("");
+        }        cb_choose.setChecked(item.isChosen());
 
         if (mIsDeleted) {
             cb_choose.setVisibility(View.VISIBLE);

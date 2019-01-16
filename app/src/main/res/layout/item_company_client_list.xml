@@ -13,7 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginRight="32dp"
-        android:button="@drawable/cb_delete_style" />
+        android:button="@drawable/cb_delete_style"
+        android:enabled="false" />
 
     <ImageView
         android:id="@+id/iv_icon"

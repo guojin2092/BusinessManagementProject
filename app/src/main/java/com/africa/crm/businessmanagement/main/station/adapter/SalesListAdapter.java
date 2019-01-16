@@ -1,6 +1,7 @@
 package com.africa.crm.businessmanagement.main.station.adapter;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -41,13 +42,16 @@ public class SalesListAdapter extends BaseQuickAdapter<CompanySalesOrderInfo, Ba
     protected void convert(BaseViewHolder helper, CompanySalesOrderInfo item) {
         TextView tv_sales_name = helper.getView(R.id.tv_sales_name);
         TextView tv_money = helper.getView(R.id.tv_money);
-        TextView tv_customer_name = helper.getView(R.id.tv_customer_name);
+        TextView tv_create_time = helper.getView(R.id.tv_create_time);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
         tv_sales_name.setText(item.getName());
         tv_money.setText(item.getSaleCommission());
-        tv_customer_name.setText(item.getCustomerName());
-        cb_choose.setChecked(item.isChosen());
+        if (!TextUtils.isEmpty(item.getCreateTime())) {
+            tv_create_time.setText(item.getCreateTime());
+        } else {
+            tv_create_time.setText("");
+        }        cb_choose.setChecked(item.isChosen());
 
         if (mIsDeleted) {
             cb_choose.setVisibility(View.VISIBLE);

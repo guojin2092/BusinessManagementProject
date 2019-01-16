@@ -276,15 +276,23 @@ public class CompanyPaymentDetailActivity extends BaseMvpActivity<CompanyPayOrde
                     toastMsg("尚未输入付款金额");
                     return;
                 }
-                if (TextUtils.isEmpty(mHeadCode1)) {
+                /*if (TextUtils.isEmpty(mHeadCode1)) {
                     toastMsg("尚未上传第一张发票照片");
                     return;
                 }
                 if (TextUtils.isEmpty(mHeadCode2)) {
                     toastMsg("尚未上传第二张发票照片");
                     return;
+                }*/
+                if (TextUtils.isEmpty(mHeadCode1) && TextUtils.isEmpty(mHeadCode2)) {
+                    mHeadCodeTotal = "";
+                } else if (!TextUtils.isEmpty(mHeadCode1) && TextUtils.isEmpty(mHeadCode2)) {
+                    mHeadCodeTotal = mHeadCode1;
+                } else if (TextUtils.isEmpty(mHeadCode1) && !TextUtils.isEmpty(mHeadCode2)) {
+                    mHeadCodeTotal = mHeadCode2;
+                } else if (!TextUtils.isEmpty(mHeadCode1) && !TextUtils.isEmpty(mHeadCode2)) {
+                    mHeadCodeTotal = mHeadCode1 + "," + mHeadCode2;
                 }
-                mHeadCodeTotal = mHeadCode1 + "," + mHeadCode2;
                 mPresenter.saveCompanyPayOrder(mPayOrderId, mCompanyId, mUserId, et_pay_name.getText().toString().trim(), mSalesId, mTragdingOrderId, spinner_customer_name.getText(), et_pay_price.getText().toString().trim(), tv_pay_time.getText().toString().trim(), "1", "1", mHeadCodeTotal, et_remark.getText().toString().trim());
                 break;
         }

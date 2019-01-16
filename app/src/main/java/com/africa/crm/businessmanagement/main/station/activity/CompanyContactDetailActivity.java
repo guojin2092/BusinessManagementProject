@@ -92,8 +92,8 @@ public class CompanyContactDetailActivity extends BaseMvpActivity<CompanyContact
     private List<DicInfo> mSpinnerFromTypeList = new ArrayList<>();
     private String mFromType = "";
 
-    @BindView(R.id.ll_from_user)
-    LinearLayout ll_from_user;
+ /*   @BindView(R.id.ll_from_user)
+    LinearLayout ll_from_user;*/
     @BindView(R.id.spinner_from_user)
     MySpinner spinner_from_user;
     private List<DicInfo> mSpinnerCompanyUserList = new ArrayList<>();
@@ -146,13 +146,19 @@ public class CompanyContactDetailActivity extends BaseMvpActivity<CompanyContact
         titlebar_name.setText("联系人详情");
         tv_add_icon.setOnClickListener(this);
         tv_save.setOnClickListener(this);
-        if (TextUtils.isEmpty(mContactId) && mLocalId == 0l) {
+        if (mRoleCode.equals("companySales")) {
+            if (TextUtils.isEmpty(mContactId) && mLocalId == 0l) {
+                titlebar_right.setVisibility(View.GONE);
+                tv_save.setText(R.string.add);
+                tv_save.setVisibility(View.VISIBLE);
+            } else if (!TextUtils.isEmpty(mContactId) || mLocalId != 0l) {
+                titlebar_right.setText(R.string.edit);
+                tv_save.setText(R.string.save);
+                setEditTextInput(false);
+            }
+        } else {
             titlebar_right.setVisibility(View.GONE);
-            tv_save.setText(R.string.add);
-            tv_save.setVisibility(View.VISIBLE);
-        } else if (!TextUtils.isEmpty(mContactId) || mLocalId != 0l) {
-            titlebar_right.setText(R.string.edit);
-            tv_save.setText(R.string.save);
+            tv_save.setVisibility(View.GONE);
             setEditTextInput(false);
         }
         cameraCore = new CameraCore.Builder(this)
@@ -177,10 +183,10 @@ public class CompanyContactDetailActivity extends BaseMvpActivity<CompanyContact
     @Override
     protected void requestData() {
         if ("companyRoot".equals(mRoleCode)) {
-            ll_from_user.setVisibility(View.VISIBLE);
+//            ll_from_user.setVisibility(View.VISIBLE);
             mPresenter.getAllCompanyUsers(mCompanyId);
         } else {
-            ll_from_user.setVisibility(View.GONE);
+//            ll_from_user.setVisibility(View.GONE);
         }
         mPresenter.getFromType(FROM_TYPE_CODE);
         if (!TextUtils.isEmpty(mContactId) || mLocalId != 0l) {

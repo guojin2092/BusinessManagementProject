@@ -74,6 +74,8 @@ public class CompanyStatisticalFormWebActivity extends BaseMvpActivity<CompanySt
 
     @BindView(R.id.spinner_show_delete_data)
     MySpinner spinner_show_delete_data;
+    @BindView(R.id.spinner_show_delete_data2)
+    MySpinner spinner_show_delete_data2;
     private List<DicInfo> mSpinnerSfList = new ArrayList<>();
     private String mShowDeleteCode = "2";
 
@@ -125,6 +127,8 @@ public class CompanyStatisticalFormWebActivity extends BaseMvpActivity<CompanySt
         }
         if (mRoleCode.equals("root")) {
             spinner_from_company.setVisibility(View.VISIBLE);
+            spinner_show_delete_data.setVisibility(View.VISIBLE);
+            spinner_show_delete_data2.setVisibility(View.GONE);
             if (!mDicInfo.getCode().equals("5")) {
                 spinner_from_user.setVisibility(View.VISIBLE);
             } else {
@@ -132,6 +136,8 @@ public class CompanyStatisticalFormWebActivity extends BaseMvpActivity<CompanySt
             }
         } else if (mRoleCode.equals("companyRoot")) {
             spinner_from_company.setVisibility(View.GONE);
+            spinner_show_delete_data.setVisibility(View.VISIBLE);
+            spinner_show_delete_data2.setVisibility(View.GONE);
             if (!mDicInfo.getCode().equals("5")) {
                 spinner_from_user.setVisibility(View.VISIBLE);
             } else {
@@ -140,18 +146,30 @@ public class CompanyStatisticalFormWebActivity extends BaseMvpActivity<CompanySt
         } else if (mRoleCode.equals("companySales")) {
             spinner_from_company.setVisibility(View.GONE);
             spinner_from_user.setVisibility(View.GONE);
+            spinner_show_delete_data.setVisibility(View.GONE);
+            spinner_show_delete_data2.setVisibility(View.VISIBLE);
         }
         initTimePicker();
         mSpinnerSfList.clear();
         mSpinnerSfList.add(new DicInfo("是", "1"));
         mSpinnerSfList.add(new DicInfo("否", "2"));
-        spinner_show_delete_data.setListDatas(getBVActivity(), mSpinnerSfList);
-        spinner_show_delete_data.addOnItemClickListener(new MySpinner.OnItemClickListener() {
-            @Override
-            public void onItemClick(DicInfo dicInfo, int position) {
-                mShowDeleteCode = dicInfo.getCode();
-            }
-        });
+        if (mRoleCode.equals("companySales")) {
+            spinner_show_delete_data2.setListDatas(getBVActivity(), mSpinnerSfList);
+            spinner_show_delete_data2.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+                @Override
+                public void onItemClick(DicInfo dicInfo, int position) {
+                    mShowDeleteCode = dicInfo.getCode();
+                }
+            });
+        } else {
+            spinner_show_delete_data.setListDatas(getBVActivity(), mSpinnerSfList);
+            spinner_show_delete_data.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+                @Override
+                public void onItemClick(DicInfo dicInfo, int position) {
+                    mShowDeleteCode = dicInfo.getCode();
+                }
+            });
+        }
     }
 
     private void initTimePicker() {

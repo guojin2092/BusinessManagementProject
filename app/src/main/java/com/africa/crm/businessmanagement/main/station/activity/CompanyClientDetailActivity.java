@@ -89,8 +89,8 @@ public class CompanyClientDetailActivity extends BaseMvpActivity<CompanyClientDe
     private List<DicInfo> mSpinnerIndustryList = new ArrayList<>();
     private String mIndustryType = "";
 
-    @BindView(R.id.ll_from_user)
-    LinearLayout ll_from_user;
+/*    @BindView(R.id.ll_from_user)
+    LinearLayout ll_from_user;*/
     @BindView(R.id.spinner_from_user)
     MySpinner spinner_from_user;
     private List<DicInfo> mSpinnerCompanyUserList = new ArrayList<>();
@@ -144,13 +144,20 @@ public class CompanyClientDetailActivity extends BaseMvpActivity<CompanyClientDe
         tv_add_icon.setOnClickListener(this);
         tv_save.setOnClickListener(this);
         EditTextUtil.setPricePoint(et_income);
-        if (TextUtils.isEmpty(mClientId) && mLocalId == 0l) {
+
+        if (mRoleCode.equals("companySales")) {
+            if (TextUtils.isEmpty(mClientId) && mLocalId == 0l) {
+                titlebar_right.setVisibility(View.GONE);
+                tv_save.setText(R.string.add);
+                tv_save.setVisibility(View.VISIBLE);
+            } else if (!TextUtils.isEmpty(mClientId) || mLocalId != 0l) {
+                titlebar_right.setText(R.string.edit);
+                tv_save.setText(R.string.save);
+                setEditTextInput(false);
+            }
+        } else {
             titlebar_right.setVisibility(View.GONE);
-            tv_save.setText(R.string.add);
-            tv_save.setVisibility(View.VISIBLE);
-        } else if (!TextUtils.isEmpty(mClientId) || mLocalId != 0l) {
-            titlebar_right.setText(R.string.edit);
-            tv_save.setText(R.string.save);
+            tv_save.setVisibility(View.GONE);
             setEditTextInput(false);
         }
         cameraCore = new CameraCore.Builder(this)
@@ -210,10 +217,10 @@ public class CompanyClientDetailActivity extends BaseMvpActivity<CompanyClientDe
     @Override
     protected void requestData() {
         if ("companyRoot".equals(mRoleCode)) {
-            ll_from_user.setVisibility(View.VISIBLE);
+//            ll_from_user.setVisibility(View.VISIBLE);
             mPresenter.getAllCompanyUsers(mCompanyId);
         } else {
-            ll_from_user.setVisibility(View.GONE);
+//            ll_from_user.setVisibility(View.GONE);
         }
         mPresenter.getIndustry(INDUSTRY_CODE);
         if (!TextUtils.isEmpty(mClientId) || mLocalId != 0l) {

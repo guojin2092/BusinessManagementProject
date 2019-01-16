@@ -1,6 +1,7 @@
 package com.africa.crm.businessmanagement.main.station.adapter;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -41,12 +42,16 @@ public class TradingOrderListAdapter extends BaseQuickAdapter<CompanyTradingOrde
     protected void convert(BaseViewHolder helper, CompanyTradingOrderInfo item) {
         TextView tv_order_name = helper.getView(R.id.tv_order_name);
         TextView tv_money = helper.getView(R.id.tv_money);
-        TextView tv_clue_source = helper.getView(R.id.tv_clue_source);
+        TextView tv_create_time = helper.getView(R.id.tv_create_time);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
         tv_order_name.setText(item.getName());
         tv_money.setText(item.getPrice());
-        tv_clue_source.setText(item.getClueSource());
+        if (!TextUtils.isEmpty(item.getCreateTime())) {
+            tv_create_time.setText(item.getCreateTime());
+        } else {
+            tv_create_time.setText("");
+        }
         cb_choose.setChecked(item.isChosen());
         if (mIsDeleted) {
             cb_choose.setVisibility(View.VISIBLE);

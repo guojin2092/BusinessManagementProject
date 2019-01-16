@@ -20,14 +20,17 @@ import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyQuotationEvent
 import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
+import com.africa.crm.businessmanagement.main.bean.OrderProductInfo;
 import com.africa.crm.businessmanagement.main.bean.ProductInfo;
 import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.main.dao.CompanyQuotationInfoDao;
 import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
 import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
+import com.africa.crm.businessmanagement.main.station.adapter.OrderProductListAdapter;
 import com.africa.crm.businessmanagement.main.station.adapter.QuotationProductListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyQuotationDetailContract;
+import com.africa.crm.businessmanagement.main.station.dialog.AddProductDialog;
 import com.africa.crm.businessmanagement.main.station.dialog.AddQuotationProductDialog;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyQuotationDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
@@ -365,22 +368,6 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
             case R.id.tv_save:
                 if (TextUtils.isEmpty(et_quotation_name.getText().toString().trim())) {
                     toastMsg("尚未填写报价单名称");
-                    return;
-                }
-                if (TextUtils.isEmpty(et_deliver_address.getText().toString().trim())) {
-                    toastMsg("尚未填写发货地址");
-                    return;
-                }
-                if (TextUtils.isEmpty(et_deliver_zip_code.getText().toString().trim())) {
-                    toastMsg("尚未填写发货地址邮编");
-                    return;
-                }
-                if (TextUtils.isEmpty(et_receiver_address.getText().toString().trim())) {
-                    toastMsg("尚未填写收货地址");
-                    return;
-                }
-                if (TextUtils.isEmpty(et_receiver_zip_code.getText().toString().trim())) {
-                    toastMsg("尚未填写收货地址邮编");
                     return;
                 }
                 mPresenter.saveCompanyQuotation(mQuotationId, mCompanyId, mUserId, et_quotation_name.getText().toString().trim(), spinner_customer_name.getText(), spinner_contact_name.getText(), tv_validity_date.getText().toString().trim(), et_price.getText().toString().trim(), et_deliver_address.getText().toString().trim(), et_deliver_zip_code.getText().toString().trim(), et_receiver_address.getText().toString().trim(), et_receiver_zip_code.getText().toString().trim(), new Gson().toJson(mOrderProductInfoList), et_clause.getText().toString().trim(), et_remark.getText().toString().trim());

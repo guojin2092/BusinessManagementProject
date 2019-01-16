@@ -1,6 +1,7 @@
 package com.africa.crm.businessmanagement.main.station.adapter;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -41,14 +42,17 @@ public class PurchasingListAdapter extends BaseQuickAdapter<CompanyPurchasingOrd
     protected void convert(BaseViewHolder helper, CompanyPurchasingOrderInfo item) {
         TextView tv_name = helper.getView(R.id.tv_name);
         TextView tv_code = helper.getView(R.id.tv_code);
-        TextView tv_arrive_date = helper.getView(R.id.tv_arrive_date);
+        TextView tv_create_time = helper.getView(R.id.tv_create_time);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
         tv_name.setText(item.getName());
         tv_code.setText(item.getCode());
-        tv_arrive_date.setText("送达时间：" + item.getArriveDate());
+        if (!TextUtils.isEmpty(item.getCreateTime())) {
+            tv_create_time.setText(item.getCreateTime());
+        } else {
+            tv_create_time.setText("");
+        }
         cb_choose.setChecked(item.isChosen());
-
         if (mIsDeleted) {
             cb_choose.setVisibility(View.VISIBLE);
         } else {

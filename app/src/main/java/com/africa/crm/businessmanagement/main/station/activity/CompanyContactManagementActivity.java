@@ -97,6 +97,8 @@ public class CompanyContactManagementActivity extends BaseRefreshMvpActivity<Con
     private List<CompanyContactInfo> mCompanyContactLocalList = new ArrayList<>();//本地数据
     private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
 
+    private String mRoleCode = "";//角色code
+
     /**
      * @param activity
      */
@@ -122,6 +124,14 @@ public class CompanyContactManagementActivity extends BaseRefreshMvpActivity<Con
         super.initView();
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
         mWorkStationInfo = (WorkStationInfo) getIntent().getSerializableExtra("info");
+        mRoleCode = UserInfoManager.getUserLoginInfo(this).getRoleCode();
+        if (mRoleCode.equals("companySales")) {
+            ll_add.setVisibility(View.VISIBLE);
+            titlebar_right.setVisibility(View.VISIBLE);
+        } else {
+            ll_add.setVisibility(View.GONE);
+            titlebar_right.setVisibility(View.GONE);
+        }
         if (mWorkStationInfo != null) {
             titlebar_name.setText(mWorkStationInfo.getWork_name());
         }
@@ -137,6 +147,8 @@ public class CompanyContactManagementActivity extends BaseRefreshMvpActivity<Con
         mDicInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getDicInfoDao());
         //得到本地数据
         mDicInfoLocalList = mDicInfoDaoManager.queryAll();
+
+
 
 /*
         et_name.addTextChangedListener(new TextWatcher() {

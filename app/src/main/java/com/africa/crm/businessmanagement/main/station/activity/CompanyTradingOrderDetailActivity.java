@@ -3,7 +3,9 @@ package com.africa.crm.businessmanagement.main.station.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -33,6 +35,8 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 
@@ -111,6 +115,7 @@ public class CompanyTradingOrderDetailActivity extends BaseMvpActivity<CompanyTr
         tv_save.setOnClickListener(this);
         EditTextUtil.setPricePoint(et_money);
         EditTextUtil.setPricePoint(et_income);
+        et_possibility.addTextChangedListener(inputWatch(et_possibility));
 
         String roleCode = UserInfoManager.getUserLoginInfo(this).getRoleCode();
         if (roleCode.equals("companySales")) {
@@ -336,4 +341,61 @@ public class CompanyTradingOrderDetailActivity extends BaseMvpActivity<CompanyTr
                 break;
         }
     }
+
+    /**
+     * 百分比校验
+     *
+     * @param input
+     * @return
+     */
+    public TextWatcher inputWatch(final EditText input) {
+        return new TextWatcher() {
+
+            private String outStr = ""; //这个值存储输入超过两位数时候显示的内容
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                String edit = s.toString();
+                if (edit.length() == 2 && Integer.parseInt(edit) >= 10) {
+                    outStr = edit;
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String words = s.toString();
+                //首先内容进行非空判断，空内容（""和null）不处理
+                if (!TextUtils.isEmpty(words)) {
+                    //1-100的正则验证
+                    Pattern p = Pattern.compile("^(100|[1-9]\\d|\\d)$");
+                    Matcher m = p.matcher(words);
+                    if (m.find() || ("").equals(words)) {
+                        //这个时候输入的是合法范围内的值
+                    } else {
+                        if (words.length() > 2) {
+                            //若输入不合规，且长度超过2位，继续输入只显示之前存储的outStr
+                            input.setText(outStr);
+                            //重置输入框内容后默认光标位置会回到索引0的地方，要改变光标位置
+                            input.setSelection(2);
+                        }
+                        toastMsg("请输入范围在1-100之间的整数");
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //这里的处理是不让输入0开头的值
+                String words = s.toString();
+                //首先内容进行非空判断，空内容（""和null）不处理
+                if (!TextUtils.isEmpty(words)) {
+                    if (Integer.parseInt(s.toString()) <= 0) {
+                        input.setText("");
+                        toastMsg("请输入范围在1-100之间的整数");
+                    }
+                }
+            }
+        };
+    }
+
 }

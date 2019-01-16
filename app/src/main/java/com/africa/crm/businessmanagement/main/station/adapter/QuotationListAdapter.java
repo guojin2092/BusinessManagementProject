@@ -1,6 +1,7 @@
 package com.africa.crm.businessmanagement.main.station.adapter;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -42,13 +43,17 @@ public class QuotationListAdapter extends BaseQuickAdapter<CompanyQuotationInfo,
         TextView tv_quotation_name = helper.getView(R.id.tv_quotation_name);
         TextView tv_price = helper.getView(R.id.tv_price);
         TextView tv_customer_name = helper.getView(R.id.tv_customer_name);
-        TextView tv_validity_date = helper.getView(R.id.tv_validity_date);
+        TextView tv_create_time = helper.getView(R.id.tv_create_time);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
         tv_quotation_name.setText(item.getName());
         tv_price.setText(item.getPrice());
         tv_customer_name.setText(item.getCustomerName());
-        tv_validity_date.setText(item.getTermOfValidity());
+        if (!TextUtils.isEmpty(item.getCreateTime())) {
+            tv_create_time.setText(item.getCreateTime());
+        } else {
+            tv_create_time.setText("");
+        }
         cb_choose.setChecked(item.isChosen());
         if (mIsDeleted) {
             cb_choose.setVisibility(View.VISIBLE);

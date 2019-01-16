@@ -99,6 +99,9 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
     private List<CompanyClientInfo> mCompanyClientLocalList = new ArrayList<>();//本地数据
     private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
 
+    private String mRoleCode = "";//角色code
+
+
     /**
      * @param activity
      */
@@ -127,9 +130,14 @@ public class CompanyClientManagementActivity extends BaseRefreshMvpActivity<Comp
         if (mWorkStationInfo != null) {
             titlebar_name.setText(mWorkStationInfo.getWork_name());
         }
-        String roleCode = UserInfoManager.getUserLoginInfo(this).getRoleCode();
-        if (roleCode.equals("companySales")) {
+        mRoleCode = UserInfoManager.getUserLoginInfo(this).getRoleCode();
+        if (mRoleCode.equals("companySales")) {
             mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
+            ll_add.setVisibility(View.VISIBLE);
+            titlebar_right.setVisibility(View.VISIBLE);
+        } else {
+            ll_add.setVisibility(View.GONE);
+            titlebar_right.setVisibility(View.GONE);
         }
         ll_add.setOnClickListener(this);
         tv_delete.setOnClickListener(this);

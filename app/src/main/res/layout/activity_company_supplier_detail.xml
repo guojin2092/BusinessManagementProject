@@ -68,7 +68,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <TextView
                             style="@style/costumer_title_style"
@@ -98,6 +99,23 @@
                             android:paddingTop="0dp"
                             android:paddingBottom="0dp"
                             app:backgroundSelector="@drawable/background_selector2" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/costumer_title_style"
+                            android:text="电话：" />
+
+                        <EditText
+                            android:id="@+id/et_phone"
+                            style="@style/product_et_blue"
+                            android:inputType="phone" />
+
                     </LinearLayout>
 
                 </LinearLayout>
@@ -134,13 +152,12 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="电话：" />
+                            android:text="邮编:" />
 
                         <EditText
-                            android:id="@+id/et_phone"
+                            android:id="@+id/et_zip_code"
                             style="@style/product_et_blue"
-                            android:inputType="phone" />
-
+                            android:inputType="number" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -183,22 +200,6 @@
                         <EditText
                             android:id="@+id/et_address"
                             style="@style/product_et_blue" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            style="@style/costumer_title_style"
-                            android:text="邮编:" />
-
-                        <EditText
-                            android:id="@+id/et_zip_code"
-                            style="@style/product_et_blue"
-                            android:inputType="number" />
                     </LinearLayout>
 
                 </LinearLayout>

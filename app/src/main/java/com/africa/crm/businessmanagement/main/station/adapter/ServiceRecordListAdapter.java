@@ -1,6 +1,7 @@
 package com.africa.crm.businessmanagement.main.station.adapter;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -41,12 +42,16 @@ public class ServiceRecordListAdapter extends BaseQuickAdapter<CompanyServiceRec
     protected void convert(BaseViewHolder helper, CompanyServiceRecordInfo item) {
         TextView tv_name = helper.getView(R.id.tv_name);
         TextView tv_reason = helper.getView(R.id.tv_reason);
-        TextView tv_solution = helper.getView(R.id.tv_solution);
+        TextView tv_create_time = helper.getView(R.id.tv_create_time);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
         tv_name.setText(item.getName());
         tv_reason.setText(item.getReason());
-        tv_solution.setText(item.getSolution());
+        if (!TextUtils.isEmpty(item.getCreateTime())) {
+            tv_create_time.setText(item.getCreateTime());
+        } else {
+            tv_create_time.setText("");
+        }
         cb_choose.setChecked(item.isChosen());
 
         if (mIsDeleted) {

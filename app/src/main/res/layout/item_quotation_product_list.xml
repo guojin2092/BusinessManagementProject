@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="20dp"
-        android:button="@drawable/cb_delete_style" />
+        android:button="@drawable/cb_delete_style"
+        android:enabled="false" />
 
     <LinearLayout
         android:layout_width="match_parent"
