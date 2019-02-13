@@ -1,6 +1,7 @@
 package com.africa.crm.businessmanagement.main.station.adapter;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
@@ -45,8 +46,16 @@ public class ProductListAdapter extends BaseQuickAdapter<CompanyProductInfo, Bas
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
         tv_product_name.setText(item.getName());
-        tv_type.setText(mContext.getString(R.string.Company_Classification) + item.getTypeName());
-        tv_supplier_name.setText(mContext.getString(R.string.Supplier) + item.getSupplierName());
+        if (!TextUtils.isEmpty(item.getTypeName())) {
+            tv_type.setText(mContext.getString(R.string.Company_Classification) + item.getTypeName());
+        } else {
+            tv_type.setText("");
+        }
+        if (!TextUtils.isEmpty(item.getSupplierName())) {
+            tv_supplier_name.setText(mContext.getString(R.string.Supplier) + item.getSupplierName());
+        } else {
+            tv_supplier_name.setText("");
+        }
         cb_choose.setChecked(item.isChosen());
         if (mIsDeleted) {
             cb_choose.setVisibility(View.VISIBLE);
