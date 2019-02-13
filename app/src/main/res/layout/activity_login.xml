@@ -57,8 +57,7 @@
                     <EditText
                         android:id="@+id/et_servers_address"
                         style="@style/MyEditText"
-                        android:hint="请先配置服务器地址"
-                        android:text="http://c.sushimt.com/SYCRMPC/api/" />
+                        android:hint="@string/Please_configure_the_server_address_first" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -76,8 +75,7 @@
                     <EditText
                         android:id="@+id/et_username"
                         style="@style/MyEditText"
-                        android:hint="@string/username_hint"
-                        android:text="yaox" />
+                        android:hint="@string/username_hint" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -96,8 +94,7 @@
                         android:id="@+id/et_password"
                         style="@style/MyEditText"
                         android:hint="@string/password_hint"
-                        android:inputType="textPassword"
-                        android:text="123456" />
+                        android:inputType="textPassword" />
                 </LinearLayout>
 
                 <TextView

@@ -24,7 +24,7 @@
 
                 <TextView
                     style="@style/product_title_blue"
-                    android:text="交易单信息：" />
+                    android:text="@string/Trading_order_information" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -40,7 +40,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="交易单名称：" />
+                            android:text="@string/Company_Name" />
 
                         <EditText
                             android:id="@+id/et_order_name"
@@ -55,7 +55,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="客户名称：" />
+                            android:text="@string/Client_Name" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
                             android:id="@+id/spinner_customer_name"
@@ -77,7 +77,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="联系人名称：" />
+                            android:text="@string/Contact_Name" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
                             android:id="@+id/spinner_contact_name"
@@ -108,7 +108,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="金额：" />
+                            android:text="@string/Amount" />
 
                         <EditText
                             android:id="@+id/et_money"
@@ -125,7 +125,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="预计收益：" />
+                            android:text="@string/Anticipated_Income" />
 
                         <EditText
                             android:id="@+id/et_income"
@@ -150,7 +150,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="线索来源：" />
+                            android:text="@string/Source_Of_Clue" />
 
                         <EditText
                             android:id="@+id/et_thread_from"
@@ -166,7 +166,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="可能性(%)：" />
+                            android:text="@string/Possibility_of_trading" />
 
                         <EditText
                             android:id="@+id/et_possibility"
@@ -179,7 +179,7 @@
 
                 <TextView
                     style="@style/product_title_blue"
-                    android:text="描述：" />
+                    android:text="@string/Description" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -193,7 +193,7 @@
                         style="@style/product_et_blue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="添加描述"
+                        android:hint="@string/Add_a_description"
                         android:textColorHint="@color/D5D5D5" />
 
                 </LinearLayout>
@@ -209,7 +209,7 @@
                     android:paddingTop="8dp"
                     android:paddingRight="38dp"
                     android:paddingBottom="8dp"
-                    android:text="@string/save"
+                    android:text="@string/Save"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:visibility="invisible" />
@@ -228,7 +228,7 @@
             android:paddingTop="8dp"
             android:paddingRight="38dp"
             android:paddingBottom="8dp"
-            android:text="@string/save"
+            android:text="@string/Save"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:visibility="gone" />

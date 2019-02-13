@@ -164,7 +164,7 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
         mCompanyName = UserInfoManager.getUserLoginInfo(this).getCompanyName();
         mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
-        titlebar_name.setText("销售单详情");
+        titlebar_name.setText(R.string.Sales_Order_Details);
         tv_delete.setOnClickListener(this);
         tv_delete_product.setOnClickListener(this);
         tv_add_product.setOnClickListener(this);
@@ -175,11 +175,11 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
         if (roleCode.equals("companySales")) {
             if (TextUtils.isEmpty(mSalesOrderId) && mLocalId == 0l) {
                 titlebar_right.setVisibility(View.GONE);
-                tv_save.setText(R.string.add);
+                tv_save.setText(R.string.Add);
                 tv_save.setVisibility(View.VISIBLE);
             } else if (!TextUtils.isEmpty(mSalesOrderId) || mLocalId != 0l) {
-                titlebar_right.setText(R.string.edit);
-                tv_save.setText(R.string.save);
+                titlebar_right.setText(R.string.Edit);
+                tv_save.setText(R.string.Save);
                 setEditTextInput(false);
             }
         } else {
@@ -201,7 +201,7 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
             @Override
             public void onSaveClick(ProductInfo orderProductInfo) {
                 if (TextUtils.isEmpty(orderProductInfo.getName())) {
-                    toastMsg("尚未选择产品");
+                    toastMsg(getString(R.string.Please_select_a_product));
                     return;
                 }
                 mOrderProductInfoList.add(new ProductInfo(orderProductInfo.getName(), orderProductInfo.getPrice(), orderProductInfo.getNum()));
@@ -251,12 +251,12 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
         super.onClick(v);
         switch (v.getId()) {
             case R.id.tv_delete_product:
-                if (tv_delete_product.getText().toString().equals(getString(R.string.delete))) {
+                if (tv_delete_product.getText().toString().equals(getString(R.string.Delete))) {
                     tv_delete_product.setText(R.string.cancel);
                     tv_delete.setVisibility(View.VISIBLE);
                     mShowCheckBox = true;
                 } else {
-                    tv_delete_product.setText(R.string.delete);
+                    tv_delete_product.setText(R.string.Delete);
                     tv_delete.setVisibility(View.GONE);
                     mShowCheckBox = false;
                 }
@@ -275,7 +275,7 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
                     }
                 }
                 if (ListUtils.isEmpty(mDeleteList)) {
-                    toastMsg("尚未选择删除项");
+                    toastMsg(getString(R.string.no_choose_delete));
                     return;
                 }
                 new AlertDialog.Builder(this)
@@ -299,7 +299,7 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
                                         }
                                     }
                                 }
-                                toastMsg("删除成功");
+                                toastMsg(getString(R.string.Delete_Success));
                                 dialogInterface.dismiss();
                             }
                         })
@@ -337,19 +337,19 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
                 });
                 break;*/
             case R.id.titlebar_right:
-                if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
+                if (titlebar_right.getText().toString().equals(getString(R.string.Edit))) {
                     titlebar_right.setText(R.string.cancel);
                     tv_save.setVisibility(View.VISIBLE);
                     setEditTextInput(true);
                 } else {
-                    titlebar_right.setText(R.string.edit);
+                    titlebar_right.setText(R.string.Edit);
                     tv_save.setVisibility(View.GONE);
                     setEditTextInput(false);
                 }
                 break;
             case R.id.tv_save:
                 if (TextUtils.isEmpty(et_sale_order_name.getText().toString().trim())) {
-                    toastMsg("尚未填写销售单名称");
+                    toastMsg(getString(R.string.Please_fill_in_the_name));
                     return;
                 }
                 mPresenter.saveCompanySalesOrder(mSalesOrderId, mCompanyId, mUserId, et_sale_order_name.getText().toString().trim(), spinner_customer_name.getText(), spinner_contact_name.getText(), et_money.getText().toString().trim(), mStateCode, et_deliver_address.getText().toString().trim(), et_deliver_zip_code.getText().toString().trim(), et_receiver_address.getText().toString().trim(), et_receiver_zip_code.getText().toString().trim(), new Gson().toJson(mOrderProductInfoList), et_clause.getText().toString().trim(), et_remark.getText().toString().trim());
@@ -498,9 +498,9 @@ public class CompanySaleOrdersDetailActivity extends BaseMvpActivity<CompanySale
     public void saveCompanySalesOrder(UploadInfoBean uploadInfoBean, boolean isLocal) {
         String toastString = "";
         if (TextUtils.isEmpty(mSalesOrderId) && mLocalId == 0l) {
-            toastString = "销售单创建成功";
+            toastString = getString(R.string.Added_Successfully);
         } else {
-            toastString = "销售单修改成功";
+            toastString = getString(R.string.Successfully_Modified);
         }
         if (isLocal) {
             CompanySalesOrderInfo companySalesOrderInfo = null;

@@ -7,7 +7,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
-import com.africa.crm.businessmanagement.baseutil.common.util.ToastUtils;
 import com.africa.crm.businessmanagement.baseutil.library.base.BaseActivity;
 import com.africa.crm.businessmanagement.baseutil.library.http.MyNetworkUtil;
 import com.africa.crm.businessmanagement.mvp.presenter.BasePresenter;
@@ -74,7 +73,7 @@ public abstract class BaseMvpActivity<P extends BasePresenter> extends BaseActiv
                 if (MyNetworkUtil.isNetworkConnected(getBVActivity())) {
                     requestData();
                 } else {
-                    ToastUtils.show(getBVActivity(), "网络连接异常，请检查网络");
+                    toastMsg("网络连接失败，请检查网络是否可用");
                 }
                 break;
             case R.id.tv_load_local:

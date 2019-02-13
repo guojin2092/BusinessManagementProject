@@ -19,7 +19,7 @@
             android:layout_gravity="left|center_vertical"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
-            android:text="所属用户"
+            android:text="@string/fromUser"
             android:textColor="@color/A606060"
             android:textSize="22sp"
             android:textStyle="bold" />
@@ -37,7 +37,7 @@
             android:id="@+id/tv_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="日期"
+            android:text="@string/date"
             android:textColor="@color/A586683"
             android:textSize="20sp" />
 

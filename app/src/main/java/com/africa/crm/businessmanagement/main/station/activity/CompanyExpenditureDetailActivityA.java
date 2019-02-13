@@ -105,8 +105,8 @@ public class CompanyExpenditureDetailActivityA extends BaseMvpActivity<CompanyEx
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
         mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
         titlebar_right.setVisibility(View.GONE);
-        titlebar_name.setText("企业预算");
-        tv_save.setText(R.string.add);
+        titlebar_name.setText(R.string.Business_budget);
+        tv_save.setText(R.string.Add);
         tv_save.setOnClickListener(this);
         tv_start_date.setOnClickListener(this);
         tv_end_date.setOnClickListener(this);
@@ -133,7 +133,7 @@ public class CompanyExpenditureDetailActivityA extends BaseMvpActivity<CompanyEx
                 mStartDate = date;
                 if (mEndDate != null) {
                     if (mEndDate.getTime() < mStartDate.getTime()) {
-                        toastMsg("结束日期不得小于开始日期");
+                        toastMsg(getString(R.string.The_end_date_cannot_be_earlier_than_the_start_date));
                         return;
                     }
                 }
@@ -148,7 +148,7 @@ public class CompanyExpenditureDetailActivityA extends BaseMvpActivity<CompanyEx
                 mEndDate = date;
                 if (mStartDate != null) {
                     if (mEndDate.getTime() < mStartDate.getTime()) {
-                        toastMsg("结束日期不得小于开始日期");
+                        toastMsg(getString(R.string.The_end_date_cannot_be_earlier_than_the_start_date));
                         return;
                     }
                 }
@@ -217,19 +217,19 @@ public class CompanyExpenditureDetailActivityA extends BaseMvpActivity<CompanyEx
                 break;
             case R.id.tv_save:
                 if (TextUtils.isEmpty(et_title.getText().toString().trim())) {
-                    toastMsg("尚未填写标题");
+                    toastMsg(getString(R.string.Please_fill_in_the_title));
                     return;
                 }
                 if (TextUtils.isEmpty(tv_start_date.getText().toString().trim())) {
-                    toastMsg("尚未选择开始日期");
+                    toastMsg(getString(R.string.Please_select_the_start_date));
                     return;
                 }
                 if (TextUtils.isEmpty(tv_end_date.getText().toString().trim())) {
-                    toastMsg("尚未选择结束日期");
+                    toastMsg(getString(R.string.Please_select_the_end_date));
                     return;
                 }
                 if (TextUtils.isEmpty(et_price.getText().toString().trim())) {
-                    toastMsg("尚未填写预算金额");
+                    toastMsg(getString(R.string.Please_fill_in_the_budget_amount));
                     return;
                 }
                 mPresenter.saveExpenditureA(mCompanyId, mUserId, et_title.getText().toString().trim(), tv_start_date.getText().toString().trim(), tv_end_date.getText().toString().trim(), et_price.getText().toString().trim(), et_remark.getText().toString().trim());
@@ -298,7 +298,7 @@ public class CompanyExpenditureDetailActivityA extends BaseMvpActivity<CompanyEx
         if (baseEntity.isSuccess()) {
             String toastString = "";
             if (TextUtils.isEmpty(mExpenditureId)) {
-                toastString = "企业预算单创建成功";
+                toastString = getString(R.string.Added_Successfully);
             }
             EventBus.getDefault().post(new AddOrSaveCompanyExpanditureEventA(toastString));
             finish();
@@ -330,7 +330,7 @@ public class CompanyExpenditureDetailActivityA extends BaseMvpActivity<CompanyEx
                 getPayRecord(payRecordInfoList);
                 break;
             case REQUEST_CHECK_YS_DATE:
-                toastMsg("网络连接失败，请重试");
+                toastMsg("网络连接失败，请检查网络是否可用");
                 break;
         }
     }

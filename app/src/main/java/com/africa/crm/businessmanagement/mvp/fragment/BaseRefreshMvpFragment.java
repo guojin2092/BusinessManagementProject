@@ -119,7 +119,7 @@ public abstract class BaseRefreshMvpFragment<P extends IBasePresenter> extends B
                     page = 1;
                     pullDownRefresh(page);
                 } else {
-                    ToastUtils.show(getActivity(), "网络连接异常，请检查网络");
+                    toastMsg("网络连接失败，请检查网络是否可用");
                 }
                 break;
             case R.id.tv_load_local:

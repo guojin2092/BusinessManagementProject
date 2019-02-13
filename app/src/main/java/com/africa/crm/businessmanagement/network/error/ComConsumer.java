@@ -1,5 +1,6 @@
 package com.africa.crm.businessmanagement.network.error;
 
+import com.africa.crm.businessmanagement.R;
 import com.africa.crm.businessmanagement.network.base.BaseView;
 import com.africa.crm.businessmanagement.widget.JumpPermissionManagement;
 import com.africa.crm.businessmanagement.widget.LogUtil;
@@ -55,18 +56,18 @@ public class ComConsumer implements Consumer<Throwable> {
                 }));
 */
             } else if (throwable instanceof PermissionsException) {
-                handle(new ComException(ComException.NO_PERMISSIONS, throwable.getMessage(), "去设置", new ComException.OnErrorListener() {
+                handle(new ComException(ComException.NO_PERMISSIONS, throwable.getMessage(), getView().getBVActivity().getString(R.string.Go_to_setting), new ComException.OnErrorListener() {
                     @Override
                     public void errorAction() {
                         JumpPermissionManagement.GoToSetting(mView.getBVActivity());
                     }
                 }));
             } else if (throwable instanceof HttpException) {
-                handle(new ComException(ComException.HTTP_ERROR, "网络出错，重新加载试试"));
+                handle(new ComException(ComException.HTTP_ERROR, getView().getBVActivity().getString(R.string.check_net)));
             } else if (throwable instanceof ConnectException) {
-                handle(new ComException(ComException.HTTP_ERROR, "网络出错，请检查网络是否可用"));
+                handle(new ComException(ComException.HTTP_ERROR, getView().getBVActivity().getString(R.string.check_net)));
             } else {
-                handle(new ComException(ComException.UNKONW, "未知错误，重新加载试试"));
+                handle(new ComException(ComException.UNKONW, getView().getBVActivity().getString(R.string.Unknown_error)));
             }
         }
     }

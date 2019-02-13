@@ -109,8 +109,8 @@ public class CompanyInventoryDetailActivity extends BaseMvpActivity<CompanyInven
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
         mCompanyName = UserInfoManager.getUserLoginInfo(this).getCompanyName();
         titlebar_right.setVisibility(View.GONE);
-        titlebar_name.setText("库存详情");
-        tv_save.setText(R.string.add);
+        titlebar_name.setText(R.string.Inventory_Details);
+        tv_save.setText(R.string.Add);
         tv_save.setOnClickListener(this);
         if (TextUtils.isEmpty(mInventoryId) && mLocalId == 0l) {
             tv_save.setVisibility(View.VISIBLE);
@@ -176,25 +176,25 @@ public class CompanyInventoryDetailActivity extends BaseMvpActivity<CompanyInven
         super.onClick(v);
         switch (v.getId()) {
             case R.id.titlebar_right:
-                if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
+                if (titlebar_right.getText().toString().equals(getString(R.string.Edit))) {
                     titlebar_right.setText(R.string.cancel);
                     tv_save.setVisibility(View.VISIBLE);
                 } else {
-                    titlebar_right.setText(R.string.edit);
+                    titlebar_right.setText(R.string.Edit);
                     tv_save.setVisibility(View.GONE);
                 }
                 break;
             case R.id.tv_save:
                 if (TextUtils.isEmpty(mProductId) && mLocalId == 0l) {
-                    toastMsg("尚未选择产品");
+                    toastMsg(getString(R.string.Please_select_a_product));
                     return;
                 }
                 if (TextUtils.isEmpty(mTypeCode)) {
-                    toastMsg("尚未选择操作类型");
+                    toastMsg(getString(R.string.Please_select_the_type_of_operation));
                     return;
                 }
                 if (TextUtils.isEmpty(et_num.getText().toString().trim())) {
-                    toastMsg("尚未填写数量");
+                    toastMsg(getString(R.string.Please_fill_in_the_quantity));
                     return;
                 }
                 mPresenter.saveInventory(mCompanyId, mProductId, mTypeCode, et_num.getText().toString().trim(), et_remark.getText().toString().trim());
@@ -269,9 +269,9 @@ public class CompanyInventoryDetailActivity extends BaseMvpActivity<CompanyInven
     public void saveInventory(UploadInfoBean uploadInfoBean, boolean isLocal) {
         String toastString = "";
         if (TextUtils.isEmpty(mInventoryId) && mLocalId == 0l) {
-            toastString = "库存单创建成功";
+            toastString = getString(R.string.Added_Successfully);
         } else {
-            toastString = "库存单修改成功";
+            toastString = getString(R.string.Successfully_Modified);
         }
         if (isLocal) {
             CompanyInventoryInfo companyInventoryInfo = null;

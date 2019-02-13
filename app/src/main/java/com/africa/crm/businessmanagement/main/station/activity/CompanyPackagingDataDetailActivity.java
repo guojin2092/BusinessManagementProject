@@ -99,8 +99,8 @@ public class CompanyPackagingDataDetailActivity extends BaseMvpActivity<CompanyP
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
         mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
         titlebar_right.setVisibility(View.GONE);
-        titlebar_name.setText("包装数据详情");
-        tv_save.setText(R.string.add);
+        titlebar_name.setText(R.string.Package_data_details);
+        tv_save.setText(R.string.Add);
         tv_save.setOnClickListener(this);
         tv_start_date.setOnClickListener(this);
         tv_end_date.setOnClickListener(this);
@@ -126,7 +126,7 @@ public class CompanyPackagingDataDetailActivity extends BaseMvpActivity<CompanyP
                 mStartDate = date;
                 if (mEndDate != null) {
                     if (mEndDate.getTime() < mStartDate.getTime()) {
-                        toastMsg("起止时间不得小于起始时间");
+                        toastMsg(getString(R.string.The_end_time_cannot_be_earlier_than_the_start_time));
                         return;
                     }
                 }
@@ -142,7 +142,7 @@ public class CompanyPackagingDataDetailActivity extends BaseMvpActivity<CompanyP
                 mEndDate = date;
                 if (mStartDate != null) {
                     if (mEndDate.getTime() < mStartDate.getTime()) {
-                        toastMsg("起止时间不得小于起始时间");
+                        toastMsg(getString(R.string.The_end_time_cannot_be_earlier_than_the_start_time));
                         return;
                     }
                 }
@@ -199,26 +199,25 @@ public class CompanyPackagingDataDetailActivity extends BaseMvpActivity<CompanyP
                 break;
             case R.id.tv_get_preview_info:
                 if (TextUtils.isEmpty(tv_start_date.getText().toString().trim())) {
-                    toastMsg("尚未选择包装开始时间");
+                    toastMsg(getString(R.string.Please_select_the_package_start_time));
                     return;
                 }
                 if (TextUtils.isEmpty(tv_end_date.getText().toString().trim())) {
-                    toastMsg("尚未选择包装结束时间");
+                    toastMsg(getString(R.string.Please_select_the_package_end_time));
                     return;
                 }
                 mPresenter.getPreviewInfo(mCompanyId, tv_start_date.getText().toString().trim(), tv_end_date.getText().toString().trim());
                 break;
             case R.id.tv_save:
                 if (TextUtils.isEmpty(tv_start_date.getText().toString().trim())) {
-                    toastMsg("尚未选择包装开始时间");
+                    toastMsg(getString(R.string.Please_select_the_package_start_time));
                     return;
                 }
                 if (TextUtils.isEmpty(tv_end_date.getText().toString().trim())) {
-                    toastMsg("尚未选择包装结束时间");
+                    toastMsg(getString(R.string.Please_select_the_package_end_time));
                     return;
                 }
-                mPresenter.savePackagingData(mCompanyId, mUserId, tv_start_date.getText().toString().trim(), tv_end_date.getText().toString().trim(), tv_num.getText().toString().trim(), mPreviewInfo
-                        , et_remark.getText().toString().trim());
+                mPresenter.savePackagingData(mCompanyId, mUserId, tv_start_date.getText().toString().trim(), tv_end_date.getText().toString().trim(), tv_num.getText().toString().trim(), mPreviewInfo, et_remark.getText().toString().trim());
                 break;
         }
     }
@@ -265,9 +264,9 @@ public class CompanyPackagingDataDetailActivity extends BaseMvpActivity<CompanyP
         if (baseEntity.isSuccess()) {
             String toastString = "";
             if (TextUtils.isEmpty(mPackageDataId)) {
-                toastString = "包装数据创建成功";
+                toastString = getString(R.string.Added_Successfully);
             } else {
-                toastString = "包装数据修改成功";
+                toastString = getString(R.string.Successfully_Modified);
             }
             EventBus.getDefault().post(new AddOrSaveCompanyPackagingDataEvent(toastString));
             finish();
@@ -288,7 +287,7 @@ public class CompanyPackagingDataDetailActivity extends BaseMvpActivity<CompanyP
             }
             getPackagingDataDetail(companyPackagingDataInfo);
         } else if (port.equals(REQUEST_CHECK_DATE)) {
-            toastMsg("网络连接失败，请重试");
+            toastMsg("网络连接失败，请检查网络是否可用");
         }
     }
 }

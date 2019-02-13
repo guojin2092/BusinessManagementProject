@@ -1,0 +1,5 @@
+<resources>
+    <string name="Confirm_sign_out">Confirm sign out?</string>
+    <string name="Cancel">Cancel</string>
+    <string name="Confirm">Confirm</string>
+</resources>

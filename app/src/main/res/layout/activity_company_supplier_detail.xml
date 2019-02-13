@@ -88,7 +88,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="供应商类型:" />
+                            android:text="@string/Company_Type" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
                             android:id="@+id/spinner_type"
@@ -109,7 +109,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="电话：" />
+                            android:text="@string/Phone_Number" />
 
                         <EditText
                             android:id="@+id/et_phone"
@@ -137,7 +137,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="邮箱:" />
+                            android:text="@string/Mailbox" />
 
                         <EditText
                             android:id="@+id/et_email"
@@ -152,7 +152,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="邮编:" />
+                            android:text="@string/Zip_Code" />
 
                         <EditText
                             android:id="@+id/et_zip_code"
@@ -179,7 +179,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="地区：" />
+                            android:text="@string/Area" />
 
                         <EditText
                             android:id="@+id/et_area"
@@ -195,7 +195,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="地址：" />
+                            android:text="@string/Address" />
 
                         <EditText
                             android:id="@+id/et_address"
@@ -206,7 +206,7 @@
 
                 <TextView
                     style="@style/product_title_blue"
-                    android:text="备注：" />
+                    android:text="@string/Remarks" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -220,7 +220,7 @@
                         style="@style/product_et_blue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="添加备注"
+                        android:hint="@string/Add_remarks"
                         android:textColorHint="@color/D5D5D5" />
 
                 </LinearLayout>
@@ -235,7 +235,7 @@
                     android:paddingTop="8dp"
                     android:paddingRight="38dp"
                     android:paddingBottom="8dp"
-                    android:text="@string/save"
+                    android:text="@string/Save"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:visibility="invisible" />
@@ -254,7 +254,7 @@
             android:paddingTop="8dp"
             android:paddingRight="38dp"
             android:paddingBottom="8dp"
-            android:text="@string/save"
+            android:text="@string/Save"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:visibility="gone" />

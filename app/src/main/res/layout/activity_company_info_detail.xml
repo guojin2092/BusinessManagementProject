@@ -53,7 +53,7 @@
                             android:layout_height="match_parent"
                             android:layout_gravity="center_vertical"
                             android:gravity="center_vertical"
-                            android:text="上传头像"
+                            android:text="@string/Upload_Avatar"
                             android:textColor="@color/A768DBD"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -77,7 +77,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="企业名称：" />
+                            android:text="@string/Company_Name" />
 
                         <EditText
                             android:id="@+id/et_company_name"
@@ -93,7 +93,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="企业代码：" />
+                            android:text="@string/Company_Code" />
 
                         <EditText
                             android:id="@+id/et_company_code"
@@ -108,7 +108,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="联系电话:" />
+                            android:text="@string/Phone_Number" />
 
                         <EditText
                             android:id="@+id/et_phone_number"
@@ -135,7 +135,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="地区：" />
+                            android:text="@string/Area" />
 
                         <EditText
                             android:id="@+id/et_area"
@@ -151,7 +151,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="地址:" />
+                            android:text="@string/Address" />
 
                         <EditText
                             android:id="@+id/et_address"
@@ -166,7 +166,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="邮箱：" />
+                            android:text="@string/Mailbox" />
 
                         <EditText
                             android:id="@+id/et_email"
@@ -192,7 +192,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="行业：" />
+                            android:text="@string/Company_Industry" />
 
                         <EditText
                             android:id="@+id/et_profession"
@@ -208,7 +208,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="编号：" />
+                            android:text="@string/Number" />
 
                         <EditText
                             android:id="@+id/et_code"
@@ -223,7 +223,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="可开账号数量:" />
+                            android:text="@string/Number_of_open_accounts" />
 
                         <EditText
                             android:id="@+id/et_numA"
@@ -249,7 +249,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="企业类型：" />
+                            android:text="@string/Company_Type" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
                             android:id="@+id/spinner_type"
@@ -271,7 +271,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="状态：" />
+                            android:text="@string/Company_Status" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
                             android:id="@+id/spinner_state"
@@ -297,7 +297,7 @@
                     android:paddingTop="8dp"
                     android:paddingRight="38dp"
                     android:paddingBottom="8dp"
-                    android:text="@string/save"
+                    android:text="@string/Save"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:visibility="invisible" />
@@ -316,7 +316,7 @@
             android:paddingTop="8dp"
             android:paddingRight="38dp"
             android:paddingBottom="8dp"
-            android:text="@string/save"
+            android:text="@string/Save"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:visibility="gone" />

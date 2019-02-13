@@ -114,7 +114,7 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
         switch (v.getId()) {
             case R.id.tv_login:
                 if (TextUtils.isEmpty(et_servers_address.getText().toString().trim())) {
-                    toastMsg("尚未填写服务器地址");
+                    toastMsg(getString(R.string.The_server_address_has_not_been_filled_in));
                     return;
                 }
                 HttpUrl httpUrl = RetrofitUrlManager.getInstance().getGlobalDomain();
@@ -122,11 +122,11 @@ public class LoginActivity extends BaseEasyMvpActivity<LoginPresenter> implement
                     RetrofitUrlManager.getInstance().setGlobalDomain(StringUtil.getText(et_servers_address));
                 }
                 if (TextUtils.isEmpty(et_username.getText().toString().trim())) {
-                    toastMsg("用户名不能为空");
+                    toastMsg(getString(R.string.The_username_cannot_be_empty));
                     return;
                 }
                 if (TextUtils.isEmpty(et_password.getText().toString().trim())) {
-                    toastMsg("密码不能为空");
+                    toastMsg(getString(R.string.The_password_cannot_be_empty));
                     return;
                 }
                 mPresenter.getLoginInfo(et_username.getText().toString().trim(), et_password.getText().toString().trim());

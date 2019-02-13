@@ -74,12 +74,12 @@ public class CompanyStatisticalFormActivity extends BaseActivity {
     @Override
     public void initData() {
         mDicInfoList.clear();
-        mDicInfoList.add(new DicInfo2("账单金额", "1"));
-        mDicInfoList.add(new DicInfo2("账单数量", "2"));
-        mDicInfoList.add(new DicInfo2("支付记录", "3"));
-        mDicInfoList.add(new DicInfo2("服务记录", "4"));
+        mDicInfoList.add(new DicInfo2(getString(R.string.Bill_Amount), "1"));
+        mDicInfoList.add(new DicInfo2(getString(R.string.Number_of_bills), "2"));
+        mDicInfoList.add(new DicInfo2(getString(R.string.Business_expenditure), "3"));
+        mDicInfoList.add(new DicInfo2(getString(R.string.Service_statistics), "4"));
         if (!mRoleCode.equals("companySales")) {
-            mDicInfoList.add(new DicInfo2("库存统计", "5"));
+            mDicInfoList.add(new DicInfo2(getString(R.string.Inventory_Statistics), "5"));
         }
         mStatisticalListAdapter = new StatisticalListAdapter(mDicInfoList);
         recyclerView.setAdapter(mStatisticalListAdapter);

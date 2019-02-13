@@ -44,6 +44,7 @@ public class SalesListAdapter extends BaseQuickAdapter<CompanySalesOrderInfo, Ba
         TextView tv_money = helper.getView(R.id.tv_money);
         TextView tv_create_time = helper.getView(R.id.tv_create_time);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
+        helper.addOnClickListener(R.id.tv_print);
 
         tv_sales_name.setText(item.getName());
         tv_money.setText(item.getSaleCommission());
@@ -51,7 +52,8 @@ public class SalesListAdapter extends BaseQuickAdapter<CompanySalesOrderInfo, Ba
             tv_create_time.setText(item.getCreateTime());
         } else {
             tv_create_time.setText("");
-        }        cb_choose.setChecked(item.isChosen());
+        }
+        cb_choose.setChecked(item.isChosen());
 
         if (mIsDeleted) {
             cb_choose.setVisibility(View.VISIBLE);

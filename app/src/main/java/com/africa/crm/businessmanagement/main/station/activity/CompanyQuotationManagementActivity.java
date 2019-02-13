@@ -227,7 +227,7 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
                 mStartDate = date;
                 if (mEndDate != null) {
                     if (mEndDate.getTime() < mStartDate.getTime()) {
-                        toastMsg("起止时间不得小于起始时间");
+                        toastMsg(getString(R.string.The_end_time_cannot_be_earlier_than_the_start_time));
                         return;
                     }
                 }
@@ -243,7 +243,7 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
                 mEndDate = date;
                 if (mStartDate != null) {
                     if (mEndDate.getTime() < mStartDate.getTime()) {
-                        toastMsg("起止时间不得小于起始时间");
+                        toastMsg(getString(R.string.The_end_time_cannot_be_earlier_than_the_start_time));
                         return;
                     }
                 }
@@ -296,12 +296,12 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
                 pullDownRefresh(page);
                 break;
             case R.id.titlebar_right:
-                if (titlebar_right.getText().toString().equals(getString(R.string.delete))) {
+                if (titlebar_right.getText().toString().equals(getString(R.string.Delete))) {
                     titlebar_right.setText(R.string.cancel);
                     tv_delete.setVisibility(View.VISIBLE);
                     mShowCheckBox = true;
                 } else {
-                    titlebar_right.setText(R.string.delete);
+                    titlebar_right.setText(R.string.Delete);
                     tv_delete.setVisibility(View.GONE);
                     mShowCheckBox = false;
                 }
@@ -320,7 +320,7 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
                     }
                 }
                 if (ListUtils.isEmpty(mDeleteList)) {
-                    toastMsg("尚未选择删除项");
+                    toastMsg(getString(R.string.no_choose_delete));
                     return;
                 }
                 mDeleteDialog = new AlertDialog.Builder(CompanyQuotationManagementActivity.this)
@@ -478,7 +478,7 @@ public class CompanyQuotationManagementActivity extends BaseRefreshMvpActivity<C
                 }
             }
             if (ListUtils.isEmpty(mCompanyQuotationInfoList)) {
-                titlebar_right.setText(R.string.delete);
+                titlebar_right.setText(R.string.Delete);
                 tv_delete.setVisibility(View.GONE);
                 mShowCheckBox = false;
                 layout_network_error.setVisibility(View.GONE);

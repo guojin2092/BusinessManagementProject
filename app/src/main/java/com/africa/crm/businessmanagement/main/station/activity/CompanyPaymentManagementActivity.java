@@ -1,6 +1,7 @@
 package com.africa.crm.businessmanagement.main.station.activity;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import com.africa.crm.businessmanagement.main.dao.CompanyPayOrderInfoDao;
 import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
 import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
+import com.africa.crm.businessmanagement.main.print.PrintUtils;
 import com.africa.crm.businessmanagement.main.station.adapter.PaymentListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyPayOrderContract;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyPayOrderPresenter;
@@ -174,7 +176,7 @@ public class CompanyPaymentManagementActivity extends BaseRefreshMvpActivity<Com
             public void onTimeSelect(Date date, View v) {
                 if (mEndDate != null) {
                     if (mEndDate.getTime() < date.getTime()) {
-                        toastMsg("起止时间不得小于起始时间");
+                        toastMsg(getString(R.string.The_end_time_cannot_be_earlier_than_the_start_time));
                         return;
                     }
                 }
@@ -190,7 +192,7 @@ public class CompanyPaymentManagementActivity extends BaseRefreshMvpActivity<Com
             public void onTimeSelect(Date date, View v) {
                 if (mStartDate != null) {
                     if (date.getTime() < mStartDate.getTime()) {
-                        toastMsg("起止时间不得小于起始时间");
+                        toastMsg(getString(R.string.The_end_time_cannot_be_earlier_than_the_start_time));
                         return;
                     }
                 }
@@ -243,12 +245,12 @@ public class CompanyPaymentManagementActivity extends BaseRefreshMvpActivity<Com
                 pullDownRefresh(page);
                 break;
             case R.id.titlebar_right:
-                if (titlebar_right.getText().toString().equals(getString(R.string.delete))) {
+                if (titlebar_right.getText().toString().equals(getString(R.string.Delete))) {
                     titlebar_right.setText(R.string.cancel);
                     tv_delete.setVisibility(View.VISIBLE);
                     mShowCheckBox = true;
                 } else {
-                    titlebar_right.setText(R.string.delete);
+                    titlebar_right.setText(R.string.Delete);
                     tv_delete.setVisibility(View.GONE);
                     mShowCheckBox = false;
                 }
@@ -267,7 +269,7 @@ public class CompanyPaymentManagementActivity extends BaseRefreshMvpActivity<Com
                     }
                 }
                 if (ListUtils.isEmpty(mDeleteList)) {
-                    toastMsg("尚未选择删除项");
+                    toastMsg(getString(R.string.no_choose_delete));
                     return;
                 }
                 mDeleteDialog = new AlertDialog.Builder(CompanyPaymentManagementActivity.this)
@@ -389,6 +391,19 @@ public class CompanyPaymentManagementActivity extends BaseRefreshMvpActivity<Com
                         }
                     }
                 });
+                mPaymentListAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+                    @Override
+                    public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                        BluetoothDevice device = PrintUtils.getBluetoothAdapter(CompanyPaymentManagementActivity.this);
+                        CompanyPayOrderInfo companyPayOrderInfo = mPaymentInfoBeanList.get(position);
+                        if (device != null) {
+                            PrintUtils.printPaymentOrder(CompanyPaymentManagementActivity.this, device, companyPayOrderInfo.getCompanyName(), companyPayOrderInfo.getCustomerName(), companyPayOrderInfo.getCode(), companyPayOrderInfo.getName(), companyPayOrderInfo.getPayTime(), companyPayOrderInfo.getPrice(), companyPayOrderInfo.getRemark());
+                        } else {
+                            toastMsg(getString(R.string.Please_connect_a_Bluetooth_device_first));
+                        }
+                    }
+                });
+
             }
         }
 
@@ -420,7 +435,7 @@ public class CompanyPaymentManagementActivity extends BaseRefreshMvpActivity<Com
                 }
             }
             if (ListUtils.isEmpty(mPaymentInfoBeanList)) {
-                titlebar_right.setText(R.string.delete);
+                titlebar_right.setText(R.string.Delete);
                 tv_delete.setVisibility(View.GONE);
                 mShowCheckBox = false;
                 layout_network_error.setVisibility(View.GONE);

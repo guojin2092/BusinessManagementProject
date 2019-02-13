@@ -169,7 +169,7 @@ public class CompanyTaskManagementActivity extends BaseRefreshMvpActivity<Compan
             public void onTimeSelect(Date date, View v) {
                 if (mEndDate != null) {
                     if (mEndDate.getTime() < date.getTime()) {
-                        toastMsg("起止时间不得小于起始时间");
+                        toastMsg(getString(R.string.The_end_time_cannot_be_earlier_than_the_start_time));
                         return;
                     }
                 }
@@ -185,7 +185,7 @@ public class CompanyTaskManagementActivity extends BaseRefreshMvpActivity<Compan
             public void onTimeSelect(Date date, View v) {
                 if (mStartDate != null) {
                     if (date.getTime() < mStartDate.getTime()) {
-                        toastMsg("起止时间不得小于起始时间");
+                        toastMsg(getString(R.string.The_end_time_cannot_be_earlier_than_the_start_time));
                         return;
                     }
                 }
@@ -232,12 +232,12 @@ public class CompanyTaskManagementActivity extends BaseRefreshMvpActivity<Compan
                 pullDownRefresh(page);
                 break;
             case R.id.titlebar_right:
-                if (titlebar_right.getText().toString().equals(getString(R.string.delete))) {
+                if (titlebar_right.getText().toString().equals(getString(R.string.Delete))) {
                     titlebar_right.setText(R.string.cancel);
                     tv_delete.setVisibility(View.VISIBLE);
                     mShowCheckBox = true;
                 } else {
-                    titlebar_right.setText(R.string.delete);
+                    titlebar_right.setText(R.string.Delete);
                     tv_delete.setVisibility(View.GONE);
                     mShowCheckBox = false;
                 }
@@ -256,7 +256,7 @@ public class CompanyTaskManagementActivity extends BaseRefreshMvpActivity<Compan
                     }
                 }
                 if (ListUtils.isEmpty(mDeleteList)) {
-                    toastMsg("尚未选择删除项");
+                    toastMsg(getString(R.string.no_choose_delete));
                     return;
                 }
                 mDeleteDialog = new AlertDialog.Builder(CompanyTaskManagementActivity.this)
@@ -422,7 +422,7 @@ public class CompanyTaskManagementActivity extends BaseRefreshMvpActivity<Compan
                 }
             }
             if (ListUtils.isEmpty(mTaskInfoBeanList)) {
-                titlebar_right.setText(R.string.delete);
+                titlebar_right.setText(R.string.Delete);
                 tv_delete.setVisibility(View.GONE);
                 mShowCheckBox = false;
                 layout_network_error.setVisibility(View.GONE);

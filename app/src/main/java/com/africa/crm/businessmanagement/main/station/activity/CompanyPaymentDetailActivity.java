@@ -149,7 +149,7 @@ public class CompanyPaymentDetailActivity extends BaseMvpActivity<CompanyPayOrde
         mCompanyName = UserInfoManager.getUserLoginInfo(this).getCompanyName();
         mFromName = UserInfoManager.getUserLoginInfo(this).getName();
         mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
-        titlebar_name.setText("付款单详情");
+        titlebar_name.setText(R.string.Payment_order_details);
         tv_save.setOnClickListener(this);
         tv_pay_time.setOnClickListener(this);
         fl_sf_invoice.setOnClickListener(this);
@@ -162,11 +162,11 @@ public class CompanyPaymentDetailActivity extends BaseMvpActivity<CompanyPayOrde
         if (roleCode.equals("companySales")) {
             if (TextUtils.isEmpty(mPayOrderId) && mLocalId == 0l) {
                 titlebar_right.setVisibility(View.GONE);
-                tv_save.setText(R.string.add);
+                tv_save.setText(R.string.Add);
                 tv_save.setVisibility(View.VISIBLE);
             } else if (!TextUtils.isEmpty(mPayOrderId) || mLocalId != 0l) {
-                titlebar_right.setText(R.string.edit);
-                tv_save.setText(R.string.save);
+                titlebar_right.setText(R.string.Edit);
+                tv_save.setText(R.string.Save);
                 setEditTextInput(false);
             }
         } else {
@@ -209,10 +209,10 @@ public class CompanyPaymentDetailActivity extends BaseMvpActivity<CompanyPayOrde
                 type = 1;
                 if (singlePopup1 == null) {
                     List<String> list = new ArrayList<>();
-                    list.add("拍照");
-                    list.add("从相册选择");
+                    list.add(getString(R.string.Takephoto));
+                    list.add(getString(R.string.Select_from_album));
                     singlePopup1 = new SinglePopup(this, list, this);
-                    singlePopup1.setTitle(View.GONE, "选择来源");
+                    singlePopup1.setTitle(View.GONE, getString(R.string.Select_source));
                 }
                 singlePopup1.showAtLocation(iv_fp_1, Gravity.BOTTOM, 0, 0);
                 break;
@@ -220,10 +220,10 @@ public class CompanyPaymentDetailActivity extends BaseMvpActivity<CompanyPayOrde
                 type = 2;
                 if (singlePopup2 == null) {
                     List<String> list = new ArrayList<>();
-                    list.add("拍照");
-                    list.add("从相册选择");
+                    list.add(getString(R.string.Takephoto));
+                    list.add(getString(R.string.Select_from_album));
                     singlePopup2 = new SinglePopup(this, list, this);
-                    singlePopup2.setTitle(View.GONE, "选择来源");
+                    singlePopup2.setTitle(View.GONE, getString(R.string.Select_source));
                 }
                 singlePopup2.showAtLocation(iv_fp_2, Gravity.BOTTOM, 0, 0);
                 break;
@@ -234,46 +234,46 @@ public class CompanyPaymentDetailActivity extends BaseMvpActivity<CompanyPayOrde
                 if (cb_sf_invoice.isChecked()) {
                     cb_sf_invoice.setChecked(false);
                     mInvoiceCode = "2";
-                    mInvoiceName = "否";
+                    mInvoiceName = getString(R.string.No);
                 } else {
                     cb_sf_invoice.setChecked(true);
                     mInvoiceCode = "1";
-                    mInvoiceName = "是";
+                    mInvoiceName = getString(R.string.Yes);
                 }
                 break;
             case R.id.fl_sf_print:
                 if (cb_sf_print.isChecked()) {
                     cb_sf_print.setChecked(false);
                     mPrintCode = "2";
-                    mPrintName = "否";
+                    mPrintName = getString(R.string.No);
                 } else {
                     cb_sf_print.setChecked(true);
                     mPrintCode = "1";
-                    mPrintName = "是";
+                    mPrintName = getString(R.string.Yes);
                 }
                 break;
             case R.id.titlebar_right:
-                if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
+                if (titlebar_right.getText().toString().equals(getString(R.string.Edit))) {
                     titlebar_right.setText(R.string.cancel);
                     tv_save.setVisibility(View.VISIBLE);
                     setEditTextInput(true);
                 } else {
-                    titlebar_right.setText(R.string.edit);
+                    titlebar_right.setText(R.string.Edit);
                     tv_save.setVisibility(View.GONE);
                     setEditTextInput(false);
                 }
                 break;
             case R.id.tv_save:
                 if (TextUtils.isEmpty(et_pay_name.getText())) {
-                    toastMsg("尚未填写付款单名称");
+                    toastMsg(getString(R.string.Please_fill_in_the_name));
                     return;
                 }
                 if (TextUtils.isEmpty(spinner_customer_name.getText())) {
-                    toastMsg("尚未选择客户名称");
+                    toastMsg(getString(R.string.Please_select_the_customer_name));
                     return;
                 }
                 if (TextUtils.isEmpty(et_pay_price.getText().toString().trim())) {
-                    toastMsg("尚未输入付款金额");
+                    toastMsg(getString(R.string.Please_enter_the_payment_amount));
                     return;
                 }
                 /*if (TextUtils.isEmpty(mHeadCode1)) {
@@ -455,9 +455,9 @@ public class CompanyPaymentDetailActivity extends BaseMvpActivity<CompanyPayOrde
     public void saveCompanyPayOrder(UploadInfoBean uploadInfoBean, boolean isLocal) {
         String toastString = "";
         if (TextUtils.isEmpty(mPayOrderId) && mLocalId == 0l) {
-            toastString = "付款单创建成功";
+            toastString = getString(R.string.Added_Successfully);
         } else {
-            toastString = "付款单修改成功";
+            toastString = getString(R.string.Successfully_Modified);
         }
         if (isLocal) {
             CompanyPayOrderInfo companyPayOrderInfo = null;

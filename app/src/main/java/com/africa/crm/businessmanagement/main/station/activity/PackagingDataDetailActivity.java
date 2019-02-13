@@ -60,7 +60,7 @@ public class PackagingDataDetailActivity extends BaseActivity {
         titlebar_right.setOnClickListener(this);
         tv_save.setOnClickListener(this);
         ll_add.setOnClickListener(this);
-        titlebar_right.setText(R.string.edit);
+        titlebar_right.setText(R.string.Edit);
         mAddPackagingDataDialog = AddPackagingDataDialog.getInstance(this);
     }
 
@@ -72,11 +72,11 @@ public class PackagingDataDetailActivity extends BaseActivity {
                 onBackPressed();
                 break;
             case R.id.titlebar_right:
-                if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
+                if (titlebar_right.getText().toString().equals(getString(R.string.Edit))) {
                     titlebar_right.setText(R.string.cancel);
                     tv_save.setVisibility(View.VISIBLE);
                 } else {
-                    titlebar_right.setText(R.string.edit);
+                    titlebar_right.setText(R.string.Edit);
                     tv_save.setVisibility(View.GONE);
                 }
                 break;

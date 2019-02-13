@@ -27,6 +27,7 @@ import com.africa.crm.businessmanagement.main.bean.UserManagementInfoBean;
 import com.africa.crm.businessmanagement.main.bean.delete.CompanyUserDeleteInfoBean;
 import com.africa.crm.businessmanagement.main.dao.CompanyUserDeleteInfoBeanDao;
 import com.africa.crm.businessmanagement.main.dao.CompanyUserInfoBeanDao;
+import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
 import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
 import com.africa.crm.businessmanagement.main.station.activity.CompanyUserDetailActivity;
@@ -50,8 +51,12 @@ import java.util.List;
 
 import butterknife.BindView;
 
+import static com.africa.crm.businessmanagement.network.api.DicUtil.STATE_CODE;
+import static com.africa.crm.businessmanagement.network.api.DicUtil.USER_TYPE;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_STATE;
 import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_COMPANY_SYSTEM_USER_LIST;
 import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_DELETE_COMPANY_SYSTEM_USER;
+import static com.africa.crm.businessmanagement.network.api.RequestMethod.REQUEST_USER_TYPE;
 
 /**
  * Project：BusinessManagementProject
@@ -88,15 +93,17 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
 
     private String mSearchUserNameText = "";//查询用户名
     private String mSearchNickNameText = "";//查询昵称
+
     /**
      * 用户类型
      */
     @BindView(R.id.spinner_type)
     MySpinner spinner_type;
-
     private List<DicInfo> mSpinnerTypeList = new ArrayList<>();
     private String mType = "";
+    private String mTypeName = "";
     private String mCompanyId = "";
+
     /**
      * 用户状态
      */
@@ -104,13 +111,16 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
     MySpinner spinner_state;
     private List<DicInfo> mSpinnerStateList = new ArrayList<>();
     private String mState = "";
+    private String mStateName = "";
 
     private AlertDialog mDeleteDialog;
 
     private GreendaoManager<CompanyUserInfoBean, CompanyUserInfoBeanDao> mUserInfoBeanDaoManager;
     private GreendaoManager<CompanyUserDeleteInfoBean, CompanyUserDeleteInfoBeanDao> mDeleteInfoBeanDaoManager;
-
     private List<CompanyUserInfoBean> mUserInfoLocalList = new ArrayList<>();//本地数据
+
+    private GreendaoManager<DicInfo, DicInfoDao> mDicInfoDaoManager;
+    private List<DicInfo> mDicInfoLocalList = new ArrayList<>();//本地数据
 
     public static UserManagementFragment newInstance() {
         UserManagementFragment userManagementFragment = new UserManagementFragment();
@@ -142,6 +152,8 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
 
     @Override
     protected void requestData() {
+        mPresenter.getUserType(USER_TYPE);
+        mPresenter.getStateType(STATE_CODE);
         pullDownRefresh(page);
     }
 
@@ -151,13 +163,17 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
         ll_add.setOnClickListener(this);
         tv_delete.setOnClickListener(this);
         tv_search.setOnClickListener(this);
-        titlebar_right.setText(R.string.delete);
+        titlebar_right.setText(R.string.Delete);
 
         //得到Dao对象管理器
         mUserInfoBeanDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyUserInfoBeanDao());
         //得到Dao对象管理器
         mDeleteInfoBeanDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyUserDeleteInfoBeanDao());
-/*
+        //得到Dao对象管理器
+        mDicInfoDaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getDicInfoDao());
+        //得到本地数据
+        mDicInfoLocalList = mDicInfoDaoManager.queryAll();
+        /*
         et_search_username.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -211,14 +227,6 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
 
     @Override
     public void initData() {
-        mSpinnerTypeList.add(new DicInfo("系统管理用户", "1"));
-        mSpinnerTypeList.add(new DicInfo("企业用户", "2"));
-
-        spinner_type.setListDatas(getBVActivity(), mSpinnerTypeList);
-        mSpinnerStateList.add(new DicInfo("正常", "1"));
-        mSpinnerStateList.add(new DicInfo("禁用", "2"));
-        spinner_state.setListDatas(getBVActivity(), mSpinnerStateList);
-
         mUserListAdapter = new UserListAdapter(mUserInfoBeanList);
         recyclerView.setAdapter(mUserListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -265,12 +273,12 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
                 getBVActivity().onBackPressed();
                 break;
             case R.id.titlebar_right:
-                if (titlebar_right.getText().toString().equals(getString(R.string.delete))) {
+                if (titlebar_right.getText().toString().equals(getString(R.string.Delete))) {
                     titlebar_right.setText(R.string.cancel);
                     tv_delete.setVisibility(View.VISIBLE);
                     mShowCheckBox = true;
                 } else {
-                    titlebar_right.setText(R.string.delete);
+                    titlebar_right.setText(R.string.Delete);
                     tv_delete.setVisibility(View.GONE);
                     mShowCheckBox = false;
                 }
@@ -302,13 +310,13 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
                     }
                 }
                 if (ListUtils.isEmpty(mDeleteList)) {
-                    toastMsg("尚未选择删除项");
+                    toastMsg(getString(R.string.no_choose_delete));
                     return;
                 }
                 String userId = String.valueOf(UserInfoManager.getUserLoginInfo(getBVActivity()).getId());
                 for (CompanyUserInfoBean userInfoBean : mDeleteList) {
                     if (userInfoBean.getId().equals(userId)) {
-                        toastMsg("个人账号不能删除");
+                        toastMsg(getString(R.string.Personal_accounts_cannot_be_deleted));
                         return;
                     }
                 }
@@ -339,6 +347,44 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
         mSearchUserNameText = et_search_username.getText().toString().trim();
         mSearchNickNameText = et_search_nickname.getText().toString().trim();
         mPresenter.getUserList(page, rows, mSearchUserNameText, mType, mCompanyId, mState, mSearchNickNameText);
+    }
+
+    @Override
+    public void getUserType(List<DicInfo> dicInfoList) {
+        mSpinnerTypeList.clear();
+        mSpinnerTypeList.addAll(dicInfoList);
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerTypeList, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            dicInfo.setType(USER_TYPE);
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
+        }
+        spinner_type.setListDatas(getBVActivity(), mSpinnerTypeList);
+        spinner_type.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+            @Override
+            public void onItemClick(DicInfo dicInfo, int position) {
+                mType = dicInfo.getCode();
+                mTypeName = dicInfo.getText();
+            }
+        });
+    }
+
+    @Override
+    public void getStateType(List<DicInfo> dicInfoList) {
+        mSpinnerStateList.clear();
+        mSpinnerStateList.addAll(dicInfoList);
+        List<DicInfo> addList = DifferentDataUtil.addDataToLocal(mSpinnerStateList, mDicInfoLocalList);
+        for (DicInfo dicInfo : addList) {
+            dicInfo.setType(STATE_CODE);
+            mDicInfoDaoManager.insertOrReplace(dicInfo);
+        }
+        spinner_state.setListDatas(getBVActivity(), mSpinnerStateList);
+        spinner_state.addOnItemClickListener(new MySpinner.OnItemClickListener() {
+            @Override
+            public void onItemClick(DicInfo dicInfo, int position) {
+                mState = dicInfo.getCode();
+                mStateName = dicInfo.getText();
+            }
+        });
     }
 
     @Override
@@ -432,7 +478,7 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
                 }
             }
             if (ListUtils.isEmpty(mUserInfoBeanList)) {
-                titlebar_right.setText(R.string.delete);
+                titlebar_right.setText(R.string.Delete);
                 tv_delete.setVisibility(View.GONE);
                 mShowCheckBox = false;
                 layout_network_error.setVisibility(View.GONE);
@@ -467,6 +513,24 @@ public class UserManagementFragment extends BaseRefreshMvpFragment<UserManagemen
         super.loadLocalData(port);
         mRefreshLayout.setEnableLoadmore(false);
         switch (port) {
+            case REQUEST_USER_TYPE:
+                List<DicInfo> typeList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(USER_TYPE)) {
+                        typeList.add(dicInfo);
+                    }
+                }
+                getUserType(typeList);
+                break;
+            case REQUEST_COMPANY_STATE:
+                List<DicInfo> stateList = new ArrayList<>();
+                for (DicInfo dicInfo : mDicInfoDaoManager.queryAll()) {
+                    if (dicInfo.getType().equals(STATE_CODE)) {
+                        stateList.add(dicInfo);
+                    }
+                }
+                getStateType(stateList);
+                break;
             case REQUEST_COMPANY_SYSTEM_USER_LIST:
                 List<CompanyUserInfoBean> rows = new ArrayList<>();
                 if (!TextUtils.isEmpty(StringUtil.getText(et_search_username)) || !TextUtils.isEmpty(StringUtil.getText(et_search_nickname)) || !TextUtils.isEmpty(mType) || !TextUtils.isEmpty(mState)) {

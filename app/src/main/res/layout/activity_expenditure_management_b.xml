@@ -23,7 +23,7 @@
             android:layout_weight="0.95"
             android:background="@drawable/et_bg_search"
             android:gravity="center_vertical"
-            android:hint="请选择起始时间"
+            android:hint="@string/Start_Time"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
             android:textColor="@color/a333333"
@@ -38,7 +38,7 @@
             android:layout_weight="0.95"
             android:background="@drawable/et_bg_search"
             android:gravity="center_vertical"
-            android:hint="请选择起止时间"
+            android:hint="@string/End_Time"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
             android:textColor="@color/a333333"
@@ -57,7 +57,7 @@
             android:paddingTop="2dp"
             android:paddingRight="20dp"
             android:paddingBottom="2dp"
-            android:text="查询"
+            android:text="@string/Search"
             android:textColor="@color/white"
             android:textSize="18sp" />
     </LinearLayout>

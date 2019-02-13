@@ -55,7 +55,7 @@ public class MyApplication extends MultiDexApplication {
             @Override
             public RefreshHeader createRefreshHeader(Context context, RefreshLayout layout) {
                 layout.setPrimaryColorsId(R.color.F2F2F2, R.color.a999999);//全局设置主题颜色
-                return new ClassicsHeader(context).setTimeFormat(new DynamicTimeFormat("更新于 %s"));
+                return new ClassicsHeader(context).setTimeFormat(new DynamicTimeFormat("%s", context));
             }
         });
     }

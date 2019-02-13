@@ -125,16 +125,16 @@ public class CompanySupplierDetailActivity extends BaseMvpActivity<CompanySuppli
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
         mLocalId = getIntent().getLongExtra("localId", 0l);
         tv_save.setOnClickListener(this);
-        titlebar_right.setText(R.string.edit);
-        titlebar_name.setText("供应商详情");
+        titlebar_right.setText(R.string.Edit);
+        titlebar_name.setText(R.string.Supplier_details);
         iv_icon.setOnClickListener(this);
         if (TextUtils.isEmpty(mSupplierId) && mLocalId == 0l) {
             titlebar_right.setVisibility(View.GONE);
-            tv_save.setText(R.string.add);
+            tv_save.setText(R.string.Add);
             tv_save.setVisibility(View.VISIBLE);
         } else if (!TextUtils.isEmpty(mSupplierId) || mLocalId != 0l) {
-            titlebar_right.setText(R.string.edit);
-            tv_save.setText(R.string.save);
+            titlebar_right.setText(R.string.Edit);
+            tv_save.setText(R.string.Save);
             setEditTextInput(false);
         }
         cameraCore = new CameraCore.Builder(this)
@@ -171,27 +171,27 @@ public class CompanySupplierDetailActivity extends BaseMvpActivity<CompanySuppli
             case R.id.iv_icon:
                 if (singlePopup == null) {
                     List<String> list = new ArrayList<>();
-                    list.add("拍照");
-                    list.add("从相册选择");
+                    list.add(getString(R.string.Takephoto));
+                    list.add(getString(R.string.Select_from_album));
                     singlePopup = new SinglePopup(this, list, this);
-                    singlePopup.setTitle(View.GONE, "选择来源");
+                    singlePopup.setTitle(View.GONE, getString(R.string.Select_source));
                 }
                 singlePopup.showAtLocation(iv_icon, Gravity.BOTTOM, 0, 0);
                 break;
             case R.id.titlebar_right:
-                if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
+                if (titlebar_right.getText().toString().equals(getString(R.string.Edit))) {
                     titlebar_right.setText(R.string.cancel);
                     tv_save.setVisibility(View.VISIBLE);
                     setEditTextInput(true);
                 } else {
-                    titlebar_right.setText(R.string.edit);
+                    titlebar_right.setText(R.string.Edit);
                     tv_save.setVisibility(View.GONE);
                     setEditTextInput(false);
                 }
                 break;
             case R.id.tv_save:
                 if (TextUtils.isEmpty(et_supplier_name.getText().toString().trim())) {
-                    toastMsg("尚未填写供应商名称");
+                    toastMsg(getString(R.string.Please_fill_in_the_name));
                     return;
                 }
                 mPresenter.saveCompanySupplier(mSupplierId, mCompanyId, mHeadCode, et_supplier_name.getText().toString().trim(), mCompanyType, et_address.getText().toString().trim(), et_phone.getText().toString().trim(), et_email.getText().toString().trim(), et_zip_code.getText().toString().trim(), et_area.getText().toString().trim(), et_remark.getText().toString().trim());
@@ -268,9 +268,9 @@ public class CompanySupplierDetailActivity extends BaseMvpActivity<CompanySuppli
     public void saveCompanySupplier(UploadInfoBean uploadInfoBean, boolean isLocal) {
         String toastString = "";
         if (TextUtils.isEmpty(mSupplierId) && mLocalId == 0l) {
-            toastString = "企业供应商创建成功";
+            toastString = getString(R.string.Added_Successfully);
         } else {
-            toastString = "企业供应商修改成功";
+            toastString = getString(R.string.Successfully_Modified);
         }
         if (isLocal) {
             CompanySupplierInfo companyInfo = null;

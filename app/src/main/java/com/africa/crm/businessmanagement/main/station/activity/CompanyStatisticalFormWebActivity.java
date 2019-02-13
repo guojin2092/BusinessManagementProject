@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.africa.crm.businessmanagement.R;
@@ -61,6 +62,8 @@ public class CompanyStatisticalFormWebActivity extends BaseMvpActivity<CompanySt
     TextView tv_search;
     @BindView(R.id.tv_export)
     TextView tv_export;
+    @BindView(R.id.ll_manager)
+    LinearLayout ll_manager;
 
     @BindView(R.id.spinner_from_company)
     MySpinner spinner_from_company;
@@ -126,6 +129,7 @@ public class CompanyStatisticalFormWebActivity extends BaseMvpActivity<CompanySt
             titlebar_name.setText(mDicInfo.getName());
         }
         if (mRoleCode.equals("root")) {
+            ll_manager.setVisibility(View.VISIBLE);
             spinner_from_company.setVisibility(View.VISIBLE);
             spinner_show_delete_data.setVisibility(View.VISIBLE);
             spinner_show_delete_data2.setVisibility(View.GONE);
@@ -135,6 +139,7 @@ public class CompanyStatisticalFormWebActivity extends BaseMvpActivity<CompanySt
                 spinner_from_user.setVisibility(View.GONE);
             }
         } else if (mRoleCode.equals("companyRoot")) {
+            ll_manager.setVisibility(View.VISIBLE);
             spinner_from_company.setVisibility(View.GONE);
             spinner_show_delete_data.setVisibility(View.VISIBLE);
             spinner_show_delete_data2.setVisibility(View.GONE);
@@ -144,15 +149,13 @@ public class CompanyStatisticalFormWebActivity extends BaseMvpActivity<CompanySt
                 spinner_from_user.setVisibility(View.GONE);
             }
         } else if (mRoleCode.equals("companySales")) {
-            spinner_from_company.setVisibility(View.GONE);
-            spinner_from_user.setVisibility(View.GONE);
-            spinner_show_delete_data.setVisibility(View.GONE);
+            ll_manager.setVisibility(View.GONE);
             spinner_show_delete_data2.setVisibility(View.VISIBLE);
         }
         initTimePicker();
         mSpinnerSfList.clear();
-        mSpinnerSfList.add(new DicInfo("是", "1"));
-        mSpinnerSfList.add(new DicInfo("否", "2"));
+        mSpinnerSfList.add(new DicInfo(getString(R.string.Yes), "1"));
+        mSpinnerSfList.add(new DicInfo(getString(R.string.No), "2"));
         if (mRoleCode.equals("companySales")) {
             spinner_show_delete_data2.setListDatas(getBVActivity(), mSpinnerSfList);
             spinner_show_delete_data2.addOnItemClickListener(new MySpinner.OnItemClickListener() {
@@ -178,7 +181,7 @@ public class CompanyStatisticalFormWebActivity extends BaseMvpActivity<CompanySt
             public void onTimeSelect(Date date, View v) {
                 if (mEndDate != null) {
                     if (mEndDate.getTime() < date.getTime()) {
-                        toastMsg("起止时间不得小于起始时间");
+                        toastMsg(getString(R.string.The_end_time_cannot_be_earlier_than_the_start_time));
                         return;
                     }
                 }
@@ -194,7 +197,7 @@ public class CompanyStatisticalFormWebActivity extends BaseMvpActivity<CompanySt
             public void onTimeSelect(Date date, View v) {
                 if (mStartDate != null) {
                     if (date.getTime() < mStartDate.getTime()) {
-                        toastMsg("起止时间不得小于起始时间");
+                        toastMsg(getString(R.string.The_end_time_cannot_be_earlier_than_the_start_time));
                         return;
                     }
                 }
@@ -450,7 +453,7 @@ public class CompanyStatisticalFormWebActivity extends BaseMvpActivity<CompanySt
                 fos.write(buf, 0, len);
             }
             fos.flush();
-            toastMsg("保存成功");
+            toastMsg(getString(R.string.Save_Success));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

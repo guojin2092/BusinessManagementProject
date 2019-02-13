@@ -39,7 +39,7 @@
                     android:gravity="center"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:text="@string/role_detail"
+                    android:text="@string/Role_details"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 
@@ -103,7 +103,7 @@
                         android:gravity="center"
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
-                        android:text="名称"
+                        android:text="@string/Name"
                         android:textColor="@color/A606060"
                         android:textSize="18sp" />
 
@@ -154,7 +154,7 @@
                         android:gravity="center"
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
-                        android:text="编号"
+                        android:text="@string/Number"
                         android:textColor="@color/A606060"
                         android:textSize="18sp" />
 
@@ -205,7 +205,7 @@
                         android:gravity="center"
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
-                        android:text="分类名称"
+                        android:text="@string/Type"
                         android:textColor="@color/A606060"
                         android:textSize="18sp" />
 
@@ -256,7 +256,7 @@
                         android:gravity="center"
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
-                        android:text="排序号"
+                        android:text="@string/Serial_Number"
                         android:textColor="@color/A606060"
                         android:textSize="18sp" />
 
@@ -320,7 +320,7 @@
                 android:paddingTop="5dp"
                 android:paddingRight="30dp"
                 android:paddingBottom="5dp"
-                android:text="@string/save"
+                android:text="@string/Save"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:visibility="gone" />

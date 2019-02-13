@@ -24,7 +24,7 @@
 
                 <TextView
                     style="@style/product_title_blue"
-                    android:text="付款单信息：" />
+                    android:text="@string/Payment_order_information" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -40,7 +40,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="付款单名称：" />
+                            android:text="@string/Company_Name" />
 
                         <EditText
                             android:id="@+id/et_pay_name"
@@ -55,7 +55,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="客户名称：" />
+                            android:text="@string/Client_Name" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
                             android:id="@+id/spinner_customer_name"
@@ -92,7 +92,7 @@
 
                             <TextView
                                 style="@style/product_title_black"
-                                android:text="付款金额（¥）：" />
+                                android:text="@string/Payment_amount" />
 
                             <EditText
                                 android:id="@+id/et_pay_price"
@@ -109,7 +109,7 @@
 
                             <TextView
                                 style="@style/product_title_black"
-                                android:text="付款时间：" />
+                                android:text="@string/Payment_time" />
 
                             <TextView
                                 android:id="@+id/tv_pay_time"
@@ -138,7 +138,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="销售单：" />
+                            android:text="@string/Sales_order_name" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
                             android:id="@+id/spinner_sales"
@@ -159,7 +159,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="交易单：" />
+                            android:text="@string/Transaction_order_name" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
                             android:id="@+id/spinner_trading_order"
@@ -189,7 +189,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="是否有发票：" />
+                            android:text="@string/Is_there_an_invoice" />
 
                         <FrameLayout
                             android:id="@+id/fl_sf_invoice"
@@ -224,7 +224,7 @@
 
                             <TextView
                                 style="@style/product_title_black"
-                                android:text="是否打印：" />
+                                android:text="@string/Has_it_been_printed" />
 
                             <FrameLayout
                                 android:id="@+id/fl_sf_print"
@@ -282,7 +282,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="发票照片：" />
+                            android:text="@string/Invoice_photo" />
 
                         <ImageView
                             android:id="@+id/iv_fp_1"
@@ -309,7 +309,7 @@
 
                 <TextView
                     style="@style/product_title_blue"
-                    android:text="备注：" />
+                    android:text="@string/Remarks" />
 
                 <EditText
                     android:id="@+id/et_remark"
@@ -317,7 +317,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:hint="添加备注"
+                    android:hint="@string/Add_remarks"
                     android:textColorHint="@color/D5D5D5" />
 
                 <TextView
@@ -331,7 +331,7 @@
                     android:paddingTop="8dp"
                     android:paddingRight="38dp"
                     android:paddingBottom="8dp"
-                    android:text="@string/save"
+                    android:text="@string/Save"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:visibility="invisible" />
@@ -350,7 +350,7 @@
             android:paddingTop="8dp"
             android:paddingRight="38dp"
             android:paddingBottom="8dp"
-            android:text="@string/save"
+            android:text="@string/Save"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:visibility="gone" />

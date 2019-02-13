@@ -120,16 +120,16 @@ public class CompanyTaskDetailActivity extends BaseMvpActivity<CompanyTaskDetail
         mCompanyName = UserInfoManager.getUserLoginInfo(this).getCompanyName();
         mFromName = UserInfoManager.getUserLoginInfo(this).getName();
         mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
-        titlebar_name.setText("任务详情");
+        titlebar_name.setText(getString(R.string.Task_Details));
         tv_remind_time.setOnClickListener(this);
         tv_save.setOnClickListener(this);
         if (TextUtils.isEmpty(mTaskId) && mLocalId == 0l) {
             titlebar_right.setVisibility(View.GONE);
-            tv_save.setText(R.string.add);
+            tv_save.setText(R.string.Add);
             tv_save.setVisibility(View.VISIBLE);
         } else if (!TextUtils.isEmpty(mTaskId) || mLocalId != 0l) {
-            titlebar_right.setText(R.string.edit);
-            tv_save.setText(R.string.save);
+            titlebar_right.setText(R.string.Edit);
+            tv_save.setText(R.string.Save);
             setEditTextInput(false);
         }
         initTimePicker();
@@ -179,19 +179,19 @@ public class CompanyTaskDetailActivity extends BaseMvpActivity<CompanyTaskDetail
                 pvTime.show();
                 break;
             case R.id.titlebar_right:
-                if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
+                if (titlebar_right.getText().toString().equals(getString(R.string.Edit))) {
                     titlebar_right.setText(R.string.cancel);
                     tv_save.setVisibility(View.VISIBLE);
                     setEditTextInput(true);
                 } else {
-                    titlebar_right.setText(R.string.edit);
+                    titlebar_right.setText(R.string.Edit);
                     tv_save.setVisibility(View.GONE);
                     setEditTextInput(false);
                 }
                 break;
             case R.id.tv_save:
                 if (TextUtils.isEmpty(et_task_name.getText().toString().trim())) {
-                    toastMsg("尚未填写任务名称");
+                    toastMsg(getString(R.string.Please_fill_in_the_name));
                     return;
                 }
                 mPresenter.saveCompanyTask(mTaskId, mCompanyId, mUserId, et_task_name.getText().toString().trim(), tv_remind_time.getText().toString().trim(), spinner_customer_name.getText().trim().trim(), spinner_contact_name.getText().trim().trim(), mLevelCode, mStateCode, et_remark.getText().toString().trim());
@@ -326,9 +326,9 @@ public class CompanyTaskDetailActivity extends BaseMvpActivity<CompanyTaskDetail
     public void saveCompanyTask(UploadInfoBean uploadInfoBean, boolean isLocal) {
         String toastString = "";
         if (TextUtils.isEmpty(mTaskId) && mLocalId == 0l) {
-            toastString = "任务创建成功";
+            toastString = getString(R.string.Added_Successfully);
         } else {
-            toastString = "任务修改成功";
+            toastString = getString(R.string.Successfully_Modified);
         }
         if (isLocal) {
             CompanyTaskInfo companyTaskInfo = null;

@@ -1,6 +1,9 @@
 package com.simplesoft.baselibrary.utils;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
+
+import com.simplesoft.baselibrary.R;
 
 import java.text.FieldPosition;
 import java.text.SimpleDateFormat;
@@ -14,20 +17,21 @@ import java.util.Locale;
  */
 
 public class DynamicTimeFormat extends SimpleDateFormat {
-
-    private static Locale locale = Locale.CHINA;
-    private static String weeks[] = {"周日", "周一", "周二", "周三", "周四", "周五", "周六"};
-    private static String moments[] = {"中午", "凌晨", "早上", "下午", "晚上"};
+    private Context mContext;
+    private static Locale locale = Locale.ENGLISH;
+    private static String weeks[] = new String[7]; /*= {"周日", "周一", "周二", "周三", "周四", "周五", "周六"}*/
+    private static String moments[] = new String[5];/* = {"中午", "凌晨", "早上", "下午", "晚上"}*/
 
     private String mFormat = "%s";
 
     public DynamicTimeFormat() {
-        this("%s", "yyyy年", "M月d日", "HH:mm");
+        this("%s", "yyyy-", "M-d", "HH:mm");
     }
 
-    public DynamicTimeFormat(String format) {
+    public DynamicTimeFormat(String format, Context context) {
         this();
         this.mFormat = format;
+        this.mContext = context;
     }
 
     public DynamicTimeFormat(String yearFormat, String dateFormat, String timeFormat) {
@@ -41,6 +45,18 @@ public class DynamicTimeFormat extends SimpleDateFormat {
 
     @Override
     public StringBuffer format(@NonNull Date date, @NonNull StringBuffer toAppendTo, @NonNull FieldPosition pos) {
+        weeks[0] = mContext.getString(R.string.Sunday);
+        weeks[1] = mContext.getString(R.string.Monday);
+        weeks[2] = mContext.getString(R.string.Tuesday);
+        weeks[3] = mContext.getString(R.string.Wednesday);
+        weeks[4] = mContext.getString(R.string.Thursday);
+        weeks[5] = mContext.getString(R.string.Friday);
+        weeks[6] = mContext.getString(R.string.Saturday);
+        moments[0] = mContext.getString(R.string.noon);
+        moments[1] = mContext.getString(R.string.Early_morning);
+        moments[2] = mContext.getString(R.string.morning);
+        moments[3] = mContext.getString(R.string.afternoon);
+        moments[4] = mContext.getString(R.string.night);
         toAppendTo = super.format(date, toAppendTo, pos);
 
         Calendar otherCalendar = calendar;

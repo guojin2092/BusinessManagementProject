@@ -111,7 +111,7 @@ public class CompanyTradingOrderDetailActivity extends BaseMvpActivity<CompanyTr
         mCompanyName = UserInfoManager.getUserLoginInfo(this).getCompanyName();
         mFromName = UserInfoManager.getUserLoginInfo(this).getName();
         mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
-        titlebar_name.setText("交易单详情");
+        titlebar_name.setText(R.string.Trading_Order_Details);
         tv_save.setOnClickListener(this);
         EditTextUtil.setPricePoint(et_money);
         EditTextUtil.setPricePoint(et_income);
@@ -121,11 +121,11 @@ public class CompanyTradingOrderDetailActivity extends BaseMvpActivity<CompanyTr
         if (roleCode.equals("companySales")) {
             if (TextUtils.isEmpty(mTradingOrderId) && mLocalId == 0l) {
                 titlebar_right.setVisibility(View.GONE);
-                tv_save.setText(R.string.add);
+                tv_save.setText(R.string.Add);
                 tv_save.setVisibility(View.VISIBLE);
             } else if (!TextUtils.isEmpty(mTradingOrderId) || mLocalId != 0l) {
-                titlebar_right.setText(R.string.edit);
-                tv_save.setText(R.string.save);
+                titlebar_right.setText(R.string.Edit);
+                tv_save.setText(R.string.Save);
                 setEditTextInput(false);
             }
         } else {
@@ -167,19 +167,19 @@ public class CompanyTradingOrderDetailActivity extends BaseMvpActivity<CompanyTr
         super.onClick(v);
         switch (v.getId()) {
             case R.id.titlebar_right:
-                if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
+                if (titlebar_right.getText().toString().equals(getString(R.string.Edit))) {
                     titlebar_right.setText(R.string.cancel);
                     tv_save.setVisibility(View.VISIBLE);
                     setEditTextInput(true);
                 } else {
-                    titlebar_right.setText(R.string.edit);
+                    titlebar_right.setText(R.string.Edit);
                     tv_save.setVisibility(View.GONE);
                     setEditTextInput(false);
                 }
                 break;
             case R.id.tv_save:
                 if (TextUtils.isEmpty(et_order_name.getText().toString().trim())) {
-                    toastMsg("尚未填写交易单名称");
+                    toastMsg(getString(R.string.Please_fill_in_the_name));
                     return;
                 }
                 mPresenter.saveCompanyTradingOrder(mTradingOrderId, mCompanyId, mUserId, et_order_name.getText().toString().trim(), spinner_customer_name.getText(), et_money.getText().toString().trim(), et_income.getText().toString().trim(), spinner_contact_name.getText(), et_possibility.getText().toString().trim(), et_thread_from.getText().toString().trim(), et_remark.getText().toString().trim());
@@ -279,9 +279,9 @@ public class CompanyTradingOrderDetailActivity extends BaseMvpActivity<CompanyTr
     public void saveCompanyTradingOrder(UploadInfoBean uploadInfoBean, boolean isLocal) {
         String toastString = "";
         if (TextUtils.isEmpty(mTradingOrderId) && mLocalId == 0l) {
-            toastString = "交易单创建成功";
+            toastString = getString(R.string.Added_Successfully);
         } else {
-            toastString = "交易单修改成功";
+            toastString = getString(R.string.Successfully_Modified);
         }
         if (isLocal) {
             CompanyTradingOrderInfo companyTradingOrderInfo = null;
@@ -378,7 +378,7 @@ public class CompanyTradingOrderDetailActivity extends BaseMvpActivity<CompanyTr
                             //重置输入框内容后默认光标位置会回到索引0的地方，要改变光标位置
                             input.setSelection(2);
                         }
-                        toastMsg("请输入范围在1-100之间的整数");
+                        toastMsg(getString(R.string.Please_enter_an_integer_ranging_from_1_100));
                     }
                 }
             }
@@ -391,7 +391,7 @@ public class CompanyTradingOrderDetailActivity extends BaseMvpActivity<CompanyTr
                 if (!TextUtils.isEmpty(words)) {
                     if (Integer.parseInt(s.toString()) <= 0) {
                         input.setText("");
-                        toastMsg("请输入范围在1-100之间的整数");
+                        toastMsg(getString(R.string.Please_enter_an_integer_ranging_from_1_100));
                     }
                 }
             }

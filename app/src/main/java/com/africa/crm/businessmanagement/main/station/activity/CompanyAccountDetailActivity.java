@@ -137,23 +137,23 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
         mLocalId = getIntent().getLongExtra("localId", 0l);
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
         mCompanyName = UserInfoManager.getUserLoginInfo(this).getCompanyName();
-        titlebar_name.setText("企业账号详情");
+        titlebar_name.setText(getString(R.string.Account_Details));
         tv_save.setOnClickListener(this);
         spinner_user_type.getTextView().setEnabled(false);
-        spinner_user_type.setText("企业用户");
+        spinner_user_type.setText(getString(R.string.Enterprise_user));
         mUserType = "2";
         if (TextUtils.isEmpty(mAccountId) && mLocalId == 0l) {
 //            ll_password.setVisibility(View.VISIBLE);
             titlebar_right.setVisibility(View.GONE);
             spinner_role.setEnabled(true);
-            tv_save.setText(R.string.add);
+            tv_save.setText(R.string.Add);
             tv_save.setVisibility(View.VISIBLE);
             et_role_name.setEnabled(true);
             et_role_code.setEnabled(true);
         } else if (!TextUtils.isEmpty(mAccountId) || mLocalId != 0l) {
 //            ll_password.setVisibility(View.GONE);
-            titlebar_right.setText(R.string.edit);
-            tv_save.setText(R.string.save);
+            titlebar_right.setText(R.string.Edit);
+            tv_save.setText(R.string.Save);
             spinner_role.setEnabled(false);
             et_role_name.setEnabled(false);
             et_role_code.setEnabled(false);
@@ -196,41 +196,41 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
             case R.id.tv_add_icon:
                 if (singlePopup == null) {
                     List<String> list = new ArrayList<>();
-                    list.add("拍照");
-                    list.add("从相册选择");
+                    list.add(getString(R.string.Takephoto));
+                    list.add(getString(R.string.Select_from_album));
                     singlePopup = new SinglePopup(this, list, this);
-                    singlePopup.setTitle(View.GONE, "选择来源");
+                    singlePopup.setTitle(View.GONE, getString(R.string.Select_source));
                 }
                 singlePopup.showAtLocation(tv_add_icon, Gravity.BOTTOM, 0, 0);
                 break;
             case R.id.titlebar_right:
-                if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
+                if (titlebar_right.getText().toString().equals(getString(R.string.Edit))) {
                     titlebar_right.setText(R.string.cancel);
                     tv_save.setVisibility(View.VISIBLE);
                     setEditTextInput(true);
                 } else {
-                    titlebar_right.setText(R.string.edit);
+                    titlebar_right.setText(R.string.Edit);
                     tv_save.setVisibility(View.GONE);
                     setEditTextInput(false);
                 }
                 break;
             case R.id.tv_save:
                 if (TextUtils.isEmpty(et_username.getText().toString().trim())) {
-                    toastMsg("尚未填写用户名");
+                    toastMsg(getString(R.string.Please_fill_in_the_name));
                     return;
                 }
                 if (TextUtils.isEmpty(mAccountId) && mLocalId == 0l) {
                     if (TextUtils.isEmpty(et_password.getText().toString().trim())) {
-                        toastMsg("尚未填写密码");
+                        toastMsg(getString(R.string.Please_fill_in_the_password));
                         return;
                     }
                 }
                 if (TextUtils.isEmpty(mRoleId)) {
-                    toastMsg("尚未选择角色分类");
+                    toastMsg(getString(R.string.Please_select_a_role_classification));
                     return;
                 }
                 if (TextUtils.isEmpty(mState)) {
-                    toastMsg("尚未选择企业状态");
+                    toastMsg(getString(R.string.Please_select_a_user_status));
                     return;
                 }
                 mPresenter.saveCompanyAccount(mAccountId, et_username.getText().toString().trim(), mUserType, mRoleId, et_password.getText().toString().trim(), et_nickname.getText().toString().trim(), et_phone.getText().toString().trim(), et_address.getText().toString().trim(), et_email.getText().toString().trim(), mState, mCompanyId, mHeadCode);
@@ -337,9 +337,9 @@ public class CompanyAccountDetailActivity extends BaseMvpActivity<CompanyAccount
     public void saveCompanyAccount(UploadInfoBean uploadInfoBean, boolean isLocal) {
         String toastString = "";
         if (TextUtils.isEmpty(mAccountId) && mLocalId == 0l) {
-            toastString = "企业账号创建成功";
+            toastString = getString(R.string.Added_Successfully);
         } else {
-            toastString = "企业账号修改成功";
+            toastString = getString(R.string.Successfully_Modified);
         }
         if (isLocal) {
             CompanyAccountInfo companyAccountInfo = null;

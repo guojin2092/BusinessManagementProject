@@ -45,9 +45,9 @@ public class ProductListAdapter extends BaseQuickAdapter<CompanyProductInfo, Bas
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
         tv_product_name.setText(item.getName());
-        tv_type.setText(item.getTypeName());
+        tv_type.setText(mContext.getString(R.string.Company_Classification) + item.getTypeName());
+        tv_supplier_name.setText(mContext.getString(R.string.Supplier) + item.getSupplierName());
         cb_choose.setChecked(item.isChosen());
-        tv_supplier_name.setText(item.getSupplierName());
         if (mIsDeleted) {
             cb_choose.setVisibility(View.VISIBLE);
         } else {

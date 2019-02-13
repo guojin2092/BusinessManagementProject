@@ -147,19 +147,19 @@ public class CompanyUserDetailActivity extends BaseMvpActivity<UserDetailPresent
         super.initView();
         mUserId = getIntent().getStringExtra("userId");
         mLocalId = getIntent().getLongExtra("localId", 0l);
-        titlebar_name.setText("用户详情");
+        titlebar_name.setText(R.string.User_details);
         tv_add_icon.setOnClickListener(this);
         tv_save.setOnClickListener(this);
         spinner_type.getTextView().setEnabled(false);
         if (TextUtils.isEmpty(mUserId) && mLocalId == 0l) {
             ll_password.setVisibility(View.VISIBLE);
             titlebar_right.setVisibility(View.GONE);
-            tv_save.setText(R.string.add);
+            tv_save.setText(R.string.Add);
             tv_save.setVisibility(View.VISIBLE);
         } else if (!TextUtils.isEmpty(mUserId) || mLocalId != 0l) {
             ll_password.setVisibility(View.GONE);
-            titlebar_right.setText(R.string.edit);
-            tv_save.setText(R.string.save);
+            titlebar_right.setText(R.string.Edit);
+            tv_save.setText(R.string.Save);
             setEditTextInput(false);
         }
         cameraCore = new CameraCore.Builder(this)
@@ -203,21 +203,21 @@ public class CompanyUserDetailActivity extends BaseMvpActivity<UserDetailPresent
             case R.id.tv_add_icon:
                 if (singlePopup == null) {
                     List<String> list = new ArrayList<>();
-                    list.add("拍照");
-                    list.add("从相册选择");
+                    list.add(getString(R.string.Takephoto));
+                    list.add(getString(R.string.Select_from_album));
                     singlePopup = new SinglePopup(this, list, this);
-                    singlePopup.setTitle(View.GONE, "选择来源");
+                    singlePopup.setTitle(View.GONE, getString(R.string.Select_source));
                 }
                 singlePopup.showAtLocation(tv_add_icon, Gravity.BOTTOM, 0, 0);
                 break;
             case R.id.titlebar_right:
                 if (!TextUtils.isEmpty(mUserId)) {
-                    if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
+                    if (titlebar_right.getText().toString().equals(getString(R.string.Edit))) {
                         titlebar_right.setText(R.string.cancel);
                         tv_save.setVisibility(View.VISIBLE);
                         setEditTextInput(true);
                     } else {
-                        titlebar_right.setText(R.string.edit);
+                        titlebar_right.setText(R.string.Edit);
                         tv_save.setVisibility(View.GONE);
                         setEditTextInput(false);
                     }
@@ -225,30 +225,30 @@ public class CompanyUserDetailActivity extends BaseMvpActivity<UserDetailPresent
                 break;
             case R.id.tv_save:
                 if (TextUtils.isEmpty(et_account.getText().toString().trim())) {
-                    toastMsg("尚未填写账号");
+                    toastMsg(getString(R.string.Please_fill_in_the_account_number));
                     return;
                 }
                 if (TextUtils.isEmpty(spinner_type.getText())) {
-                    toastMsg("尚未选择账号类型");
+                    toastMsg(getString(R.string.Please_select_an_account_type));
                     return;
                 }
                 if (TextUtils.isEmpty(spinner_role.getText())) {
-                    toastMsg("尚未选择账号角色");
+                    toastMsg(getString(R.string.Please_select_an_account_role));
                     return;
                 }
                 if (TextUtils.isEmpty(mUserId)) {
                     if (TextUtils.isEmpty(et_password.getText().toString().trim())) {
-                        toastMsg("尚未填写密码");
+                        toastMsg(getString(R.string.Please_fill_in_the_password));
                         return;
                     }
                     if (et_password.getText().toString().trim().length() < 6) {
-                        toastMsg("密码不得小于6位");
+                        toastMsg(getString(R.string.Password_must_be_no_less_than_6_digits));
                         return;
                     }
                 }
                 if (mRoleId.equals("13") || mRoleId.equals("14")) {
                     if (TextUtils.isEmpty(mCompanyId)) {
-                        toastMsg("尚未选择所属企业");
+                        toastMsg(getString(R.string.Please_select_your_company));
                         return;
                     }
                 }
@@ -303,9 +303,7 @@ public class CompanyUserDetailActivity extends BaseMvpActivity<UserDetailPresent
             dicInfo.setType(STATE_CODE);
             mDicInfoDaoManager.insertOrReplace(dicInfo);
         }
-        spinner_type.setListDatas(this, mSpinnerUserList);
         spinner_state.setListDatas(this, mSpinnerStateList);
-
         spinner_state.addOnItemClickListener(new MySpinner.OnItemClickListener() {
             @Override
             public void onItemClick(DicInfo dicInfo, int position) {
@@ -398,14 +396,14 @@ public class CompanyUserDetailActivity extends BaseMvpActivity<UserDetailPresent
                     mRoleId = dicInfo.getCode();
                     mRoleName = dicInfo.getText();
                     if (mRoleId.equals("13") || mRoleId.equals("14")) {
-                        spinner_type.setText("企业用户");
+                        spinner_type.setText(getString(R.string.Enterprise_user));
                         mUserType = "2";
-                        mTypeName = "企业用户";
+                        mTypeName = getString(R.string.Enterprise_user);
                         spinner_company.getTextView().setEnabled(true);
                     } else if (mRoleId.equals("1")) {
-                        spinner_type.setText("系统用户");
+                        spinner_type.setText(getString(R.string.System_user));
                         mUserType = "1";
-                        mTypeName = "系统用户";
+                        mTypeName = getString(R.string.System_user);
                         spinner_company.getTextView().setEnabled(false);
                     } else {
                         mUserType = "";
@@ -422,9 +420,9 @@ public class CompanyUserDetailActivity extends BaseMvpActivity<UserDetailPresent
     public void saveOrcreateUser(UploadInfoBean uploadInfoBean, boolean isLocal) {
         String msg = "";
         if (TextUtils.isEmpty(mUserId) && mLocalId == 0l) {
-            msg = "用户创建成功";
+            msg = getString(R.string.Added_Successfully);
         } else {
-            msg = "用户修改成功";
+            msg = getString(R.string.Successfully_Modified);
         }
         if (isLocal) {
             CompanyUserInfoBean companyUserInfoBean = null;

@@ -26,9 +26,8 @@
             android:paddingLeft="0dp"
             android:paddingTop="0dp"
             android:paddingBottom="0dp"
-            android:visibility="gone"
             app:backgroundSelector="@drawable/background_selector"
-            app:hintText="请选择所属企业" />
+            app:hintText="@string/Company" />
 
         <com.africa.crm.businessmanagement.widget.MySpinner
             android:id="@+id/spinner_from_user"
@@ -40,9 +39,8 @@
             android:paddingLeft="0dp"
             android:paddingTop="0dp"
             android:paddingBottom="0dp"
-            android:visibility="gone"
             app:backgroundSelector="@drawable/background_selector"
-            app:hintText="请选择所属用户" />
+            app:hintText="@string/fromUser" />
 
         <com.africa.crm.businessmanagement.widget.MySpinner
             android:id="@+id/spinner_show_delete_data"
@@ -53,9 +51,8 @@
             android:paddingLeft="0dp"
             android:paddingTop="0dp"
             android:paddingBottom="0dp"
-            android:visibility="gone"
             app:backgroundSelector="@drawable/background_selector"
-            app:hintText="显示已删除数据" />
+            app:hintText="@string/Show_deleted" />
 
 
     </LinearLayout>
@@ -77,7 +74,7 @@
             android:layout_weight="0.95"
             android:background="@drawable/et_bg_search"
             android:gravity="center_vertical"
-            android:hint="请选择起始时间"
+            android:hint="@string/Start_Time"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
             android:textColor="@color/a333333"
@@ -93,7 +90,7 @@
             android:layout_weight="0.95"
             android:background="@drawable/et_bg_search"
             android:gravity="center_vertical"
-            android:hint="请选择起止时间"
+            android:hint="@string/End_Time"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
             android:textColor="@color/a333333"
@@ -110,9 +107,8 @@
             android:paddingLeft="0dp"
             android:paddingTop="0dp"
             android:paddingBottom="0dp"
-            android:visibility="gone"
             app:backgroundSelector="@drawable/background_selector"
-            app:hintText="显示已删除数据" />
+            app:hintText="@string/Show_deleted" />
 
         <TextView
             android:id="@+id/tv_search"
@@ -125,7 +121,7 @@
             android:paddingTop="2dp"
             android:paddingRight="20dp"
             android:paddingBottom="2dp"
-            android:text="查询"
+            android:text="@string/Search"
             android:textColor="@color/white"
             android:textSize="18sp" />
 
@@ -164,7 +160,7 @@
                     android:paddingTop="8dp"
                     android:paddingRight="38dp"
                     android:paddingBottom="8dp"
-                    android:text="数据导出"
+                    android:text="@string/Export"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 

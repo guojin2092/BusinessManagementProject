@@ -20,17 +20,14 @@ import com.africa.crm.businessmanagement.eventbus.AddOrSaveCompanyQuotationEvent
 import com.africa.crm.businessmanagement.main.bean.CompanyQuotationInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo;
 import com.africa.crm.businessmanagement.main.bean.DicInfo2;
-import com.africa.crm.businessmanagement.main.bean.OrderProductInfo;
 import com.africa.crm.businessmanagement.main.bean.ProductInfo;
 import com.africa.crm.businessmanagement.main.bean.UploadInfoBean;
 import com.africa.crm.businessmanagement.main.dao.CompanyQuotationInfoDao;
 import com.africa.crm.businessmanagement.main.dao.DicInfoDao;
 import com.africa.crm.businessmanagement.main.dao.GreendaoManager;
 import com.africa.crm.businessmanagement.main.dao.UserInfoManager;
-import com.africa.crm.businessmanagement.main.station.adapter.OrderProductListAdapter;
 import com.africa.crm.businessmanagement.main.station.adapter.QuotationProductListAdapter;
 import com.africa.crm.businessmanagement.main.station.contract.CompanyQuotationDetailContract;
-import com.africa.crm.businessmanagement.main.station.dialog.AddProductDialog;
 import com.africa.crm.businessmanagement.main.station.dialog.AddQuotationProductDialog;
 import com.africa.crm.businessmanagement.main.station.presenter.CompanyQuotationDetailPresenter;
 import com.africa.crm.businessmanagement.mvp.activity.BaseMvpActivity;
@@ -152,7 +149,7 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
         mCompanyName = UserInfoManager.getUserLoginInfo(this).getCompanyName();
         mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
-        titlebar_name.setText("报价单详情");
+        titlebar_name.setText(R.string.Quotation_Details);
         tv_delete.setOnClickListener(this);
         tv_delete_product.setOnClickListener(this);
         tv_add_product.setOnClickListener(this);
@@ -164,11 +161,11 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
         if (roleCode.equals("companySales")) {
             if (TextUtils.isEmpty(mQuotationId) && mLocalId == 0l) {
                 titlebar_right.setVisibility(View.GONE);
-                tv_save.setText(R.string.add);
+                tv_save.setText(R.string.Add);
                 tv_save.setVisibility(View.VISIBLE);
             } else if (!TextUtils.isEmpty(mQuotationId) || mLocalId != 0l) {
-                titlebar_right.setText(R.string.edit);
-                tv_save.setText(R.string.save);
+                titlebar_right.setText(R.string.Edit);
+                tv_save.setText(R.string.Save);
                 setEditTextInput(false);
             }
         } else {
@@ -268,12 +265,12 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
                 pvTime.show();
                 break;
             case R.id.tv_delete_product:
-                if (tv_delete_product.getText().toString().equals(getString(R.string.delete))) {
+                if (tv_delete_product.getText().toString().equals(getString(R.string.Delete))) {
                     tv_delete_product.setText(R.string.cancel);
                     tv_delete.setVisibility(View.VISIBLE);
                     mShowCheckBox = true;
                 } else {
-                    tv_delete_product.setText(R.string.delete);
+                    tv_delete_product.setText(R.string.Delete);
                     tv_delete.setVisibility(View.GONE);
                     mShowCheckBox = false;
                 }
@@ -292,7 +289,7 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
                     }
                 }
                 if (ListUtils.isEmpty(mDeleteList)) {
-                    toastMsg("尚未选择删除项");
+                    toastMsg(getString(R.string.no_choose_delete));
                     return;
                 }
                 new AlertDialog.Builder(this)
@@ -316,7 +313,7 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
                                         }
                                     }
                                 }
-                                toastMsg("删除成功");
+                                toastMsg(getString(R.string.Delete_Success));
                                 dialogInterface.dismiss();
                             }
                         })
@@ -355,19 +352,19 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
                 });
                 break;*/
             case R.id.titlebar_right:
-                if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
+                if (titlebar_right.getText().toString().equals(getString(R.string.Edit))) {
                     titlebar_right.setText(R.string.cancel);
                     tv_save.setVisibility(View.VISIBLE);
                     setEditTextInput(true);
                 } else {
-                    titlebar_right.setText(R.string.edit);
+                    titlebar_right.setText(R.string.Edit);
                     tv_save.setVisibility(View.GONE);
                     setEditTextInput(false);
                 }
                 break;
             case R.id.tv_save:
                 if (TextUtils.isEmpty(et_quotation_name.getText().toString().trim())) {
-                    toastMsg("尚未填写报价单名称");
+                    toastMsg(getString(R.string.Please_fill_in_the_name));
                     return;
                 }
                 mPresenter.saveCompanyQuotation(mQuotationId, mCompanyId, mUserId, et_quotation_name.getText().toString().trim(), spinner_customer_name.getText(), spinner_contact_name.getText(), tv_validity_date.getText().toString().trim(), et_price.getText().toString().trim(), et_deliver_address.getText().toString().trim(), et_deliver_zip_code.getText().toString().trim(), et_receiver_address.getText().toString().trim(), et_receiver_zip_code.getText().toString().trim(), new Gson().toJson(mOrderProductInfoList), et_clause.getText().toString().trim(), et_remark.getText().toString().trim());
@@ -491,9 +488,9 @@ public class CompanyQuotationDetailActivity extends BaseMvpActivity<CompanyQuota
     public void saveCompanyQuotation(UploadInfoBean uploadInfoBean, boolean isLocal) {
         String toastString = "";
         if (TextUtils.isEmpty(mQuotationId) && mLocalId == 0l) {
-            toastString = "报价单创建成功";
+            toastString = getString(R.string.Added_Successfully);
         } else {
-            toastString = "报价单修改成功";
+            toastString = getString(R.string.Successfully_Modified);
         }
         if (isLocal) {
             CompanyQuotationInfo companyQuotationInfo = null;

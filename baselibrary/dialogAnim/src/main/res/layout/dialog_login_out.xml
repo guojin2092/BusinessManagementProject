@@ -73,7 +73,7 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="30dp"
                 android:gravity="center_horizontal"
-                android:text="是否确认退出?"
+                android:text="@string/Confirm_sign_out"
                 android:textColor="@color/a333333"
                 android:textIsSelectable="true" />
 
@@ -92,7 +92,7 @@
                     android:id="@+id/button2"
                     style="@style/dialog_btn"
                     android:layout_margin="8dp"
-                    android:text="取消"
+                    android:text="@string/Cancel"
                     android:textColor="@color/app_main_color"
                     android:visibility="visible" />
 
@@ -106,7 +106,7 @@
                     android:id="@+id/button1"
                     style="@style/dialog_btn"
                     android:layout_margin="8dp"
-                    android:text="确定"
+                    android:text="@string/Confirm"
                     android:textColor="@color/app_main_color"
                     android:visibility="visible" />
             </LinearLayout>

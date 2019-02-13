@@ -55,14 +55,14 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class ClassicsHeader extends RelativeLayout implements RefreshHeader {
 
-    public static String REFRESH_HEADER_PULLDOWN = "下拉可以刷新";
-    public static String REFRESH_HEADER_REFRESHING = "正在刷新...";
-    public static String REFRESH_HEADER_LOADING = "正在加载...";
-    public static String REFRESH_HEADER_RELEASE = "释放立即刷新";
-    public static String REFRESH_HEADER_FINISH = "刷新完成";
-    public static String REFRESH_HEADER_FAILED = "刷新失败";
-    public static String REFRESH_HEADER_LASTTIME = "上次更新 M-d HH:mm";
-    public static String REFRESH_HEADER_SECOND_FLOOR = "释放进入二楼";
+    public static String REFRESH_HEADER_PULLDOWN;
+    public static String REFRESH_HEADER_REFRESHING;
+    public static String REFRESH_HEADER_LOADING;
+    public static String REFRESH_HEADER_RELEASE;
+    public static String REFRESH_HEADER_FINISH;
+    public static String REFRESH_HEADER_FAILED;
+    public static String REFRESH_HEADER_LASTTIME;
+    public static String REFRESH_HEADER_SECOND_FLOOR;
 //    public static String REFRESH_HEADER_LASTTIME = "'Last update' M-d HH:mm";
 
     protected String KEY_LAST_UPDATE_TIME = "LAST_UPDATE_TIME";
@@ -77,7 +77,7 @@ public class ClassicsHeader extends RelativeLayout implements RefreshHeader {
     protected PathsDrawable mArrowDrawable;
     protected ProgressDrawable mProgressDrawable;
     protected SpinnerStyle mSpinnerStyle = SpinnerStyle.Translate;
-    protected DateFormat mFormat = new SimpleDateFormat(REFRESH_HEADER_LASTTIME, Locale.CHINA);
+    protected DateFormat mFormat;
     protected int mFinishDuration = 500;
     protected int mBackgroundColor;
     protected int mPaddingTop = 20;
@@ -108,7 +108,15 @@ public class ClassicsHeader extends RelativeLayout implements RefreshHeader {
 
     private void initView(Context context, AttributeSet attrs) {
         DensityUtil density = new DensityUtil();
-
+        REFRESH_HEADER_PULLDOWN = context.getString(R.string.Pull_down_to_refresh);
+        REFRESH_HEADER_REFRESHING = context.getString(R.string.Refreshing);
+        REFRESH_HEADER_LOADING = context.getString(R.string.Loading);
+        REFRESH_HEADER_RELEASE = context.getString(R.string.Release_to_refresh_immediately);
+        REFRESH_HEADER_FINISH = context.getString(R.string.Refresh_finished);
+        REFRESH_HEADER_FAILED = context.getString(R.string.Refresh_failed);
+        REFRESH_HEADER_LASTTIME = context.getString(R.string.Last_updated);
+        mFormat = new SimpleDateFormat(REFRESH_HEADER_LASTTIME, Locale.ENGLISH);
+        REFRESH_HEADER_SECOND_FLOOR = context.getString(R.string.Released_into_the_second_floor);
         LinearLayout layout = new LinearLayout(context);
         layout.setId(android.R.id.widget_frame);
         layout.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -126,7 +134,7 @@ public class ClassicsHeader extends RelativeLayout implements RefreshHeader {
 
         LayoutParams lpHeaderLayout = new LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
         lpHeaderLayout.addRule(CENTER_IN_PARENT);
-        addView(layout,lpHeaderLayout);
+        addView(layout, lpHeaderLayout);
 
         LayoutParams lpArrow = new LayoutParams(density.dip2px(20), density.dip2px(20));
         lpArrow.addRule(CENTER_VERTICAL);
@@ -134,7 +142,7 @@ public class ClassicsHeader extends RelativeLayout implements RefreshHeader {
         mArrowView = new ImageView(context);
         addView(mArrowView, lpArrow);
 
-        LayoutParams lpProgress = new LayoutParams((ViewGroup.LayoutParams)lpArrow);
+        LayoutParams lpProgress = new LayoutParams((ViewGroup.LayoutParams) lpArrow);
         lpProgress.addRule(CENTER_VERTICAL);
         lpProgress.addRule(LEFT_OF, android.R.id.widget_frame);
         mProgressView = new ImageView(context);
@@ -166,7 +174,7 @@ public class ClassicsHeader extends RelativeLayout implements RefreshHeader {
 
         mFinishDuration = ta.getInt(R.styleable.ClassicsHeader_srlFinishDuration, mFinishDuration);
         mEnableLastTime = ta.getBoolean(R.styleable.ClassicsHeader_srlEnableLastTime, mEnableLastTime);
-        mSpinnerStyle = SpinnerStyle.values()[ta.getInt(R.styleable.ClassicsHeader_srlClassicsSpinnerStyle,mSpinnerStyle.ordinal())];
+        mSpinnerStyle = SpinnerStyle.values()[ta.getInt(R.styleable.ClassicsHeader_srlClassicsSpinnerStyle, mSpinnerStyle.ordinal())];
 
         mLastUpdateText.setVisibility(mEnableLastTime ? VISIBLE : GONE);
 
@@ -325,8 +333,9 @@ public class ClassicsHeader extends RelativeLayout implements RefreshHeader {
         return mFinishDuration;//延迟500毫秒之后再弹回
     }
 
-    @Override@Deprecated
-    public void setPrimaryColors(@ColorInt int ... colors) {
+    @Override
+    @Deprecated
+    public void setPrimaryColors(@ColorInt int... colors) {
         if (colors.length > 0) {
             if (!(getBackground() instanceof BitmapDrawable)) {
                 setPrimaryColor(colors[0]);
@@ -391,26 +400,31 @@ public class ClassicsHeader extends RelativeLayout implements RefreshHeader {
         mProgressView.setImageBitmap(bitmap);
         return this;
     }
+
     public ClassicsHeader setProgressDrawable(Drawable drawable) {
         mProgressDrawable = null;
         mProgressView.setImageDrawable(drawable);
         return this;
     }
+
     public ClassicsHeader setProgressResource(@DrawableRes int resId) {
         mProgressDrawable = null;
         mProgressView.setImageResource(resId);
         return this;
     }
+
     public ClassicsHeader setArrowBitmap(Bitmap bitmap) {
         mArrowDrawable = null;
         mArrowView.setImageBitmap(bitmap);
         return this;
     }
+
     public ClassicsHeader setArrowDrawable(Drawable drawable) {
         mArrowDrawable = null;
         mArrowView.setImageDrawable(drawable);
         return this;
     }
+
     public ClassicsHeader setArrowResource(@DrawableRes int resId) {
         mArrowDrawable = null;
         mArrowView.setImageResource(resId);
@@ -461,7 +475,7 @@ public class ClassicsHeader extends RelativeLayout implements RefreshHeader {
             mProgressDrawable.setColor(accentColor);
         }
         mTitleText.setTextColor(accentColor);
-        mLastUpdateText.setTextColor(accentColor&0x00ffffff|0xcc000000);
+        mLastUpdateText.setTextColor(accentColor & 0x00ffffff | 0xcc000000);
         return this;
     }
 
@@ -526,7 +540,7 @@ public class ClassicsHeader extends RelativeLayout implements RefreshHeader {
     }
 
     public ClassicsHeader setTextTimeMarginTopPx(int px) {
-        MarginLayoutParams lp = (MarginLayoutParams)mLastUpdateText.getLayoutParams();
+        MarginLayoutParams lp = (MarginLayoutParams) mLastUpdateText.getLayoutParams();
         lp.topMargin = px;
         mLastUpdateText.setLayoutParams(lp);
         return this;
@@ -537,8 +551,8 @@ public class ClassicsHeader extends RelativeLayout implements RefreshHeader {
     }
 
     public ClassicsHeader setDrawableMarginRightPx(int px) {
-        MarginLayoutParams lpArrow = (MarginLayoutParams)mArrowView.getLayoutParams();
-        MarginLayoutParams lpProgress = (MarginLayoutParams)mProgressView.getLayoutParams();
+        MarginLayoutParams lpArrow = (MarginLayoutParams) mArrowView.getLayoutParams();
+        MarginLayoutParams lpProgress = (MarginLayoutParams) mProgressView.getLayoutParams();
         lpArrow.rightMargin = lpProgress.rightMargin = px;
         mArrowView.setLayoutParams(lpArrow);
         mProgressView.setLayoutParams(lpProgress);

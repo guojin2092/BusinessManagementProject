@@ -120,15 +120,15 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
         mCompanyId = getIntent().getStringExtra("companyId");
         mLocalId = getIntent().getLongExtra("localId", 0l);
         tv_save.setOnClickListener(this);
-        titlebar_name.setText("企业详情");
+        titlebar_name.setText(getString(R.string.Business_Details));
         tv_add_icon.setOnClickListener(this);
         if (TextUtils.isEmpty(mCompanyId) && mLocalId == 0l) {
             titlebar_right.setVisibility(View.GONE);
-            tv_save.setText(R.string.add);
+            tv_save.setText(R.string.Add);
             tv_save.setVisibility(View.VISIBLE);
         } else if (!TextUtils.isEmpty(mCompanyId) || mLocalId != 0l) {
-            titlebar_right.setText(R.string.edit);
-            tv_save.setText(R.string.save);
+            titlebar_right.setText(R.string.Edit);
+            tv_save.setText(R.string.Save);
             setEditTextInput(false);
         }
         cameraCore = new CameraCore.Builder(this)
@@ -173,40 +173,40 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
             case R.id.tv_add_icon:
                 if (singlePopup == null) {
                     List<String> list = new ArrayList<>();
-                    list.add("拍照");
-                    list.add("从相册选择");
+                    list.add(getString(R.string.Takephoto));
+                    list.add(getString(R.string.Select_from_album));
                     singlePopup = new SinglePopup(this, list, this);
-                    singlePopup.setTitle(View.GONE, "选择来源");
+                    singlePopup.setTitle(View.GONE, getString(R.string.Select_source));
                 }
                 singlePopup.showAtLocation(tv_add_icon, Gravity.BOTTOM, 0, 0);
                 break;
             case R.id.titlebar_right:
-                if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
+                if (titlebar_right.getText().toString().equals(getString(R.string.Edit))) {
                     titlebar_right.setText(R.string.cancel);
                     tv_save.setVisibility(View.VISIBLE);
                     setEditTextInput(true);
                 } else {
-                    titlebar_right.setText(R.string.edit);
+                    titlebar_right.setText(R.string.Edit);
                     tv_save.setVisibility(View.GONE);
                     setEditTextInput(false);
                 }
                 break;
             case R.id.tv_save:
                 if (TextUtils.isEmpty(et_company_name.getText().toString().trim())) {
-                    toastMsg("尚未填写企业名称");
+                    toastMsg(getString(R.string.Please_fill_in_the_name));
                     return;
                 }
                 if (TextUtils.isEmpty(et_numA.getText().toString().trim())) {
-                    toastMsg("尚未填写可开账号数量");
+                    toastMsg(getString(R.string.Please_fill_in_the_number_of_open_accounts));
                     return;
                 }
                 if (TextUtils.isEmpty(spinner_state.getText())) {
-                    toastMsg("尚未选择企业状态");
+                    toastMsg(getString(R.string.Please_select_a_status));
                     return;
                 }
                 if (TextUtils.isEmpty(mCompanyId) && mLocalId == 0l) {
                     if (mState.equals("2")) {
-                        toastMsg("新增企业状态不可禁用");
+                        toastMsg(getString(R.string.New_businesses_are_not_available));
                         return;
                     }
                 }
@@ -325,9 +325,9 @@ public class CompanyInfoDetailActivity extends BaseMvpActivity<CompanyInfoPresen
     public void saveCompanyInfo(UploadInfoBean uploadInfoBean, boolean isLocal) {
         String toastString = "";
         if (TextUtils.isEmpty(mCompanyId) && mLocalId == 0l) {
-            toastString = "企业信息创建成功";
+            toastString = getString(R.string.Added_Successfully);
         } else {
-            toastString = "企业信息修改成功";
+            toastString = getString(R.string.Successfully_Modified);
         }
         if (isLocal) {
             CompanyInfo companyInfo = null;

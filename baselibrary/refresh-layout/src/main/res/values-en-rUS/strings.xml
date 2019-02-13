@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">SmartRefreshLayout</string>
+    <!--头部-->
+    <string name="Pull_down_to_refresh">Pull down to refresh</string>
+    <string name="Refreshing">Refreshing...</string>
+    <string name="Loading">Loading...</string>
+    <string name="Release_to_refresh_immediately">Release to refresh immediately</string>
+    <string name="Refresh_finished">Refresh finished</string>
+    <string name="Refresh_failed">Refresh failed</string>
+    <string name="Last_updated">M-d HH:mm</string>
+    <string name="Released_into_the_second_floor">Released into the second floor</string>
+
+    <!--尾部-->
+    <string name="Pull_up_load_more">Pull up load more</string>
+    <string name="Release_immediate_load">Release immediate load</string>
+    <string name="Load_success">Load success</string>
+    <string name="Failed_to_load">Failed to load</string>
+    <string name="All_loaded">Tous chargés</string>
+
+    <!--时间-->
+    <string name="noon">noon</string>
+    <string name="Early_morning">Early morning</string>
+    <string name="morning">morning</string>
+    <string name="afternoon">afternoon</string>
+    <string name="night">night</string>
+
+    <string name="Monday">Monday</string>
+    <string name="Tuesday">Tuesday</string>
+    <string name="Wednesday">Wednesday</string>
+    <string name="Thursday">Thursday</string>
+    <string name="Friday">Friday</string>
+    <string name="Saturday">Saturday</string>
+    <string name="Sunday">Sunday</string>
+
+</resources>

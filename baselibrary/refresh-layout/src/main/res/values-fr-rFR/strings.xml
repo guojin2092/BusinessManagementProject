@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">SmartRefreshLayout</string>
+    <!--头部-->
+    <string name="Pull_down_to_refresh">Glisser vers le bas pour rafraichir</string>
+    <string name="Refreshing">En cours de rafraichissement...</string>
+    <string name="Loading">En chargement...</string>
+    <string name="Release_to_refresh_immediately">Relâcher pour rafraichir</string>
+    <string name="Refresh_finished">Fin de rafraichissement</string>
+    <string name="Refresh_failed">Refresh a échoué</string>
+    <string name="Last_updated">M-d HH:mm</string>
+    <string name="Released_into_the_second_floor">Relâché au deuxième étage</string>
+
+    <!--尾部-->
+    <string name="Pull_up_load_more">Tirer la charge plus</string>
+    <string name="Release_immediate_load">Libérer la charge immédiate</string>
+    <string name="Load_success">Fin du chargement</string>
+    <string name="Failed_to_load">Chargement échoué</string>
+    <string name="All_loaded">All loaded</string>
+
+    <!--时间-->
+    <string name="noon">Midi</string>
+    <string name="Early_morning">Tôt le matin</string>
+    <string name="morning">Matin</string>
+    <string name="afternoon">Après midi</string>
+    <string name="night">La nuit</string>
+
+    <string name="Monday">Le lundi</string>
+    <string name="Tuesday">Mardi</string>
+    <string name="Wednesday">Le mercredi</string>
+    <string name="Thursday">Jeudi</string>
+    <string name="Friday">Vendredi</string>
+    <string name="Saturday">Samedi</string>
+    <string name="Sunday">Le dimanche</string>
+
+</resources>

@@ -18,7 +18,7 @@
             android:layout_height="50dp"
             android:layout_weight="1"
             android:background="@drawable/et_bg_search"
-            android:hint="请输入角色名称"
+            android:hint="@string/Name"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
             android:textColor="@color/a333333"
@@ -32,7 +32,7 @@
             android:layout_marginLeft="30dp"
             android:layout_weight="1"
             android:background="@drawable/et_bg_search"
-            android:hint="请输入角色编码"
+            android:hint="@string/Number"
             android:paddingLeft="30dp"
             android:paddingRight="30dp"
             android:textColor="@color/a333333"
@@ -51,7 +51,7 @@
             android:paddingTop="2dp"
             android:paddingRight="20dp"
             android:paddingBottom="2dp"
-            android:text="查询"
+            android:text="@string/Search"
             android:textColor="@color/white"
             android:textSize="18sp" />
 

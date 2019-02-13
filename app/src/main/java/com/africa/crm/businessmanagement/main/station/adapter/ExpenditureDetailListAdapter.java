@@ -41,9 +41,9 @@ public class ExpenditureDetailListAdapter extends BaseQuickAdapter<PayRecordInfo
         TextView tv_date = helper.getView(R.id.tv_date);
         TextView tv_price = helper.getView(R.id.tv_price);
 
-        tv_name.setText("用户：" + item.getUserNickName());
-        tv_date.setText("日期：" + item.getPayDate());
-        tv_price.setText("支出：" + item.getPrice());
+        tv_name.setText(mContext.getString(R.string.fromUser) + ":" + item.getUserNickName());
+        tv_date.setText(mContext.getString(R.string.date) + ":" + item.getPayDate());
+        tv_price.setText(mContext.getString(R.string.expenditure) + ":" + item.getPrice());
     }
 
 }

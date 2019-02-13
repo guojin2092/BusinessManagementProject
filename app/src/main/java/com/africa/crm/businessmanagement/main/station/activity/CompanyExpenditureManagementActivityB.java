@@ -121,7 +121,7 @@ public class CompanyExpenditureManagementActivityB extends BaseRefreshMvpActivit
             public void onTimeSelect(Date date, View v) {
                 if (mEndDate != null) {
                     if (mEndDate.getTime() < date.getTime()) {
-                        toastMsg("起止时间不得小于起始时间");
+                        toastMsg(getString(R.string.The_end_time_cannot_be_earlier_than_the_start_time));
                         return;
                     }
                 }
@@ -137,7 +137,7 @@ public class CompanyExpenditureManagementActivityB extends BaseRefreshMvpActivit
             public void onTimeSelect(Date date, View v) {
                 if (mStartDate != null) {
                     if (date.getTime() < mStartDate.getTime()) {
-                        toastMsg("起止时间不得小于起始时间");
+                        toastMsg(getString(R.string.The_end_time_cannot_be_earlier_than_the_start_time));
                         return;
                     }
                 }

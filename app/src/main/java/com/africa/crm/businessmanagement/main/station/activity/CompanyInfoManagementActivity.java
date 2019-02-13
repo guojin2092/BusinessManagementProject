@@ -112,11 +112,11 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
         if (mWorkStationInfo != null) {
             titlebar_name.setText(mWorkStationInfo.getWork_name());
         }
-        et_search.setHint("请输入企业名称查询");
+        et_search.setHint(R.string.Please_fill_in_the_name);
         tv_search.setOnClickListener(this);
         ll_add.setOnClickListener(this);
         tv_delete.setOnClickListener(this);
-        titlebar_right.setText(R.string.delete);
+        titlebar_right.setText(R.string.Delete);
         //得到Dao对象管理器
         mGreendaoManager = new GreendaoManager<>(MyApplication.getInstance().getDaoSession().getCompanyInfoDao());
         //得到Dao对象管理器
@@ -171,12 +171,12 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
                 pullDownRefresh(page);
                 break;
             case R.id.titlebar_right:
-                if (titlebar_right.getText().toString().equals(getString(R.string.delete))) {
+                if (titlebar_right.getText().toString().equals(getString(R.string.Delete))) {
                     titlebar_right.setText(R.string.cancel);
                     tv_delete.setVisibility(View.VISIBLE);
                     mShowCheckBox = true;
                 } else {
-                    titlebar_right.setText(R.string.delete);
+                    titlebar_right.setText(R.string.Delete);
                     tv_delete.setVisibility(View.GONE);
                     mShowCheckBox = false;
                 }
@@ -195,7 +195,7 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
                     }
                 }
                 if (ListUtils.isEmpty(mDeleteList)) {
-                    toastMsg("尚未选择删除项");
+                    toastMsg(getString(R.string.no_choose_delete));
                     return;
                 }
                 mDeleteDialog = new AlertDialog.Builder(CompanyInfoManagementActivity.this)
@@ -314,7 +314,7 @@ public class CompanyInfoManagementActivity extends BaseRefreshMvpActivity<Compan
                 }
             }
             if (ListUtils.isEmpty(mCompanyInfoList)) {
-                titlebar_right.setText(R.string.delete);
+                titlebar_right.setText(R.string.Delete);
                 tv_delete.setVisibility(View.GONE);
                 mShowCheckBox = false;
                 layout_network_error.setVisibility(View.GONE);

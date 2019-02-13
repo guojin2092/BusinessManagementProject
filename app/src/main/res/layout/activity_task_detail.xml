@@ -24,7 +24,7 @@
 
                 <TextView
                     style="@style/product_title_blue"
-                    android:text="任务信息：" />
+                    android:text="@string/Task_information" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -40,7 +40,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="任务名称：" />
+                            android:text="@string/Company_Name" />
 
                         <EditText
                             android:id="@+id/et_task_name"
@@ -56,7 +56,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="提醒时间：" />
+                            android:text="@string/Reminder_Time" />
 
                         <TextView
                             android:id="@+id/tv_remind_time"
@@ -82,7 +82,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="客户名称：" />
+                            android:text="@string/Client_Name" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
                             android:id="@+id/spinner_customer_name"
@@ -104,7 +104,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="联系人名称：" />
+                            android:text="@string/Contact_Name" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
                             android:id="@+id/spinner_contact_name"
@@ -134,7 +134,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="优先等级：" />
+                            android:text="@string/Company_Priority_Level" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
                             android:id="@+id/spinner_level"
@@ -156,7 +156,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="状态：" />
+                            android:text="@string/Company_Status" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
                             android:id="@+id/spinner_state"
@@ -174,7 +174,7 @@
 
                 <TextView
                     style="@style/product_title_blue"
-                    android:text="备注：" />
+                    android:text="@string/Remarks" />
 
                 <EditText
                     android:id="@+id/et_remark"
@@ -182,7 +182,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:hint="添加备注"
+                    android:hint="@string/Add_remarks"
                     android:textColorHint="@color/D5D5D5" />
 
                 <TextView
@@ -196,7 +196,7 @@
                     android:paddingTop="8dp"
                     android:paddingRight="38dp"
                     android:paddingBottom="8dp"
-                    android:text="@string/save"
+                    android:text="@string/Save"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:visibility="invisible" />
@@ -215,7 +215,7 @@
             android:paddingTop="8dp"
             android:paddingRight="38dp"
             android:paddingBottom="8dp"
-            android:text="@string/save"
+            android:text="@string/Save"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:visibility="gone" />

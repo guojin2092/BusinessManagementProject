@@ -31,7 +31,7 @@
                     android:layout_height="50dp"
                     android:layout_weight="1"
                     android:background="@drawable/et_bg_search"
-                    android:hint="请输入用户名"
+                    android:hint="@string/Name"
                     android:paddingLeft="30dp"
                     android:paddingRight="30dp"
                     android:textColor="@color/a333333"
@@ -45,7 +45,7 @@
                     android:layout_marginLeft="30dp"
                     android:layout_weight="1"
                     android:background="@drawable/et_bg_search"
-                    android:hint="请输入昵称"
+                    android:hint="@string/Nickname"
                     android:paddingLeft="30dp"
                     android:paddingRight="30dp"
                     android:textColor="@color/a333333"
@@ -64,7 +64,7 @@
                     android:paddingTop="2dp"
                     android:paddingRight="20dp"
                     android:paddingBottom="2dp"
-                    android:text="查询"
+                    android:text="@string/Search"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 
@@ -86,7 +86,7 @@
                     android:textSize="18sp"
                     app:arrowTint="@color/A606060"
                     app:backgroundSelector="@drawable/background_selector"
-                    app:hintText="请选择用户类别" />
+                    app:hintText="@string/Type" />
 
                 <com.africa.crm.businessmanagement.widget.MySpinner
                     android:id="@+id/spinner_state"
@@ -98,7 +98,7 @@
                     android:textSize="18sp"
                     app:arrowTint="@color/A606060"
                     app:backgroundSelector="@drawable/background_selector"
-                    app:hintText="请选择状态" />
+                    app:hintText="@string/Status" />
 
                 <TextView
                     android:id="@+id/titlebar_right"
@@ -110,7 +110,7 @@
                     android:paddingTop="5dp"
                     android:paddingRight="20dp"
                     android:paddingBottom="5dp"
-                    android:text="删除"
+                    android:text="@string/Delete"
                     android:textColor="@color/colorPrimary"
                     android:textSize="18sp" />
 

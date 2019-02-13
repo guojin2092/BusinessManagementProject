@@ -465,10 +465,10 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
             case R.id.iv_head_icon:
                 if (singlePopup == null) {
                     List<String> list = new ArrayList<>();
-                    list.add("拍照");
-                    list.add("从相册选择");
+                    list.add(getString(R.string.Takephoto));
+                    list.add(getString(R.string.Select_from_album));
                     singlePopup = new SinglePopup(this, list, this);
-                    singlePopup.setTitle(View.GONE, "选择来源");
+                    singlePopup.setTitle(View.GONE, getString(R.string.Select_source));
                 }
                 singlePopup.showAtLocation(ll_setting, Gravity.BOTTOM, 0, 0);
                 break;
@@ -651,7 +651,7 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                         mHeadCode[0] = fileInfoBean.getCode();
                                         return mDataManager.saveCompanyInfo(companyInfo.getId(), mHeadCode[0], companyInfo.getName(), companyInfo.getCode(), companyInfo.getType(), companyInfo.getAddress(), companyInfo.getPhone(), companyInfo.getEmail(), companyInfo.getMid(), companyInfo.getArea(), companyInfo.getProfession(), companyInfo.getNumA(), companyInfo.getState());
                                     } else {
-                                        return Observable.error(new ComException("上传失败，请重试"));
+                                        return Observable.error(new ComException(getString(R.string.Upload_failed)));
                                     }
                                 }
                             }).compose(RxUtils.<UploadInfoBean>ioToMain(this))
@@ -706,7 +706,7 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                         mHeadCode[0] = fileInfoBean.getCode();
                                         return mDataManager.saveCompanyAccount(companyInfo.getId(), companyInfo.getUserName(), companyInfo.getType(), companyInfo.getRoleId(), companyInfo.getPassword(), companyInfo.getName(), companyInfo.getPhone(), companyInfo.getAddress(), companyInfo.getEmail(), companyInfo.getState(), companyInfo.getCompanyId(), mHeadCode[0]);
                                     } else {
-                                        return Observable.error(new ComException("上传失败，请重试"));
+                                        return Observable.error(new ComException(getString(R.string.Upload_failed)));
                                     }
                                 }
                             }).compose(RxUtils.<UploadInfoBean>ioToMain(this))
@@ -761,7 +761,7 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                         mHeadCode[0] = fileInfoBean.getCode();
                                         return mDataManager.saveCompanySupplier(companyInfo.getId(), companyInfo.getCompanyId(), mHeadCode[0], companyInfo.getName(), companyInfo.getType(), companyInfo.getAddress(), companyInfo.getPhone(), companyInfo.getEmail(), companyInfo.getZipCode(), companyInfo.getArea(), companyInfo.getRemark());
                                     } else {
-                                        return Observable.error(new ComException("上传失败，请重试"));
+                                        return Observable.error(new ComException(getString(R.string.Upload_failed)));
                                     }
                                 }
                             }).compose(RxUtils.<UploadInfoBean>ioToMain(this))
@@ -845,7 +845,7 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                         mHeadCode[0] = fileInfoBean.getCode();
                                         return mDataManager.saveCompanyClient(companyInfo.getId(), companyInfo.getCompanyId(), companyInfo.getUserId(), mHeadCode[0], companyInfo.getName(), companyInfo.getIndustry(), companyInfo.getAddress(), companyInfo.getWorkerNum(), companyInfo.getTel(), companyInfo.getYearIncome(), companyInfo.getRemark());
                                     } else {
-                                        return Observable.error(new ComException("上传失败，请重试"));
+                                        return Observable.error(new ComException(getString(R.string.Upload_failed)));
                                     }
                                 }
                             }).compose(RxUtils.<UploadInfoBean>ioToMain(this))
@@ -900,7 +900,7 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                         mHeadCode[0] = fileInfoBean.getCode();
                                         return mDataManager.saveCompanyContact(companyInfo.getId(), companyInfo.getCompanyId(), companyInfo.getUserId(), mHeadCode[0], companyInfo.getName(), companyInfo.getFromType(), companyInfo.getAddress(), companyInfo.getMailAddress(), companyInfo.getPhone(), companyInfo.getTel(), companyInfo.getEmail(), companyInfo.getJob(), companyInfo.getRemark());
                                     } else {
-                                        return Observable.error(new ComException("上传失败，请重试"));
+                                        return Observable.error(new ComException(getString(R.string.Upload_failed)));
                                     }
                                 }
                             }).compose(RxUtils.<UploadInfoBean>ioToMain(this))
@@ -1072,7 +1072,7 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                         mHeadCode[0] = fileInfoBean.getCode();
                                         return mDataManager.uploadImages(localPath[1]);
                                     } else {
-                                        return Observable.error(new ComException("上传失败，请重试"));
+                                        return Observable.error(new ComException(getString(R.string.Upload_failed)));
                                     }
                                 }
                             })
@@ -1083,7 +1083,7 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                         mHeadCode[1] = fileInfoBean.getCode();
                                         return mDataManager.saveCompanyPayOrder(companyInfo.getId(), companyInfo.getCompanyId(), companyInfo.getUserId(), companyInfo.getName(), companyInfo.getSalesOrderId(), companyInfo.getTradingOrderId(), companyInfo.getCustomerName(), companyInfo.getPrice(), companyInfo.getPayTime(), companyInfo.getHasInvoice(), companyInfo.getHasPrint(), mHeadCode[0] + "," + mHeadCode[1], companyInfo.getRemark());
                                     } else {
-                                        return Observable.error(new ComException("上传失败，请重试"));
+                                        return Observable.error(new ComException(getString(R.string.Upload_failed)));
                                     }
                                 }
                             })
@@ -1245,7 +1245,7 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                         mHeadCode[0] = fileInfoBean.getCode();
                                         return mDataManager.saveCompanyPdfDetail(companyInfo.getId(), companyInfo.getCompanyId(), companyInfo.getUserId(), companyInfo.getName(), companyInfo.getCode(), companyInfo.getRemark());
                                     } else {
-                                        return Observable.error(new ComException("上传失败，请重试"));
+                                        return Observable.error(new ComException(getString(R.string.Upload_failed)));
                                     }
                                 }
                             }).compose(RxUtils.<UploadInfoBean>ioToMain(this))
@@ -1321,7 +1321,7 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                                         mHeadCode[0] = fileInfoBean.getCode();
                                         return mDataManager.saveOrcreateUser(companyInfo.getId(), companyInfo.getUserName(), companyInfo.getType(), companyInfo.getRoleId(), companyInfo.getPassword(), companyInfo.getName(), companyInfo.getPhone(), companyInfo.getAddress(), companyInfo.getEmail(), companyInfo.getState(), companyInfo.getCompanyId(), companyInfo.getHead());
                                     } else {
-                                        return Observable.error(new ComException("上传失败，请重试"));
+                                        return Observable.error(new ComException(getString(R.string.Upload_failed)));
                                     }
                                 }
                             }).compose(RxUtils.<UploadInfoBean>ioToMain(this))
@@ -1350,7 +1350,7 @@ public class SettingActivity extends BaseMvpActivity<UploadPicturePresenter> imp
                 }
             }
         }
-        toastMsg("数据上传成功");
+        toastMsg(getString(R.string.The_data_has_been_uploaded_successfully));
     }
 
     @Override

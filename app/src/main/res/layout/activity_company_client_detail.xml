@@ -53,7 +53,7 @@
                             android:layout_height="match_parent"
                             android:layout_gravity="center_vertical"
                             android:gravity="center_vertical"
-                            android:text="上传头像"
+                            android:text="@string/Upload_Avatar"
                             android:textColor="@color/A768DBD"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -77,7 +77,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="姓名：" />
+                            android:text="@string/Company_Name" />
 
                         <EditText
                             android:id="@+id/et_name"
@@ -92,7 +92,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="员工数量：" />
+                            android:text="@string/Number_of_employees" />
 
                         <EditText
                             android:id="@+id/et_company_staff_num"
@@ -160,7 +160,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="行业：" />
+                            android:text="@string/Company_Industry" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
                             android:id="@+id/spinner_industry"
@@ -182,7 +182,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="年收入：" />
+                            android:text="@string/Annual_Income" />
 
                         <EditText
                             android:id="@+id/et_income"
@@ -211,7 +211,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="电话：" />
+                            android:text="@string/Phone_Number" />
 
                         <EditText
                             android:id="@+id/et_phone"
@@ -228,7 +228,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="地址：" />
+                            android:text="@string/Address" />
 
                         <EditText
                             android:id="@+id/et_address"
@@ -239,7 +239,7 @@
 
                 <TextView
                     style="@style/product_title_blue"
-                    android:text="备注：" />
+                    android:text="@string/Remarks" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -253,7 +253,7 @@
                         style="@style/product_et_blue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="添加备注"
+                        android:hint="@string/Add_remarks"
                         android:textColorHint="@color/D5D5D5" />
 
                 </LinearLayout>
@@ -268,7 +268,7 @@
                     android:paddingTop="8dp"
                     android:paddingRight="38dp"
                     android:paddingBottom="8dp"
-                    android:text="@string/save"
+                    android:text="@string/Save"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:visibility="invisible" />
@@ -287,7 +287,7 @@
             android:paddingTop="8dp"
             android:paddingRight="38dp"
             android:paddingBottom="8dp"
-            android:text="@string/save"
+            android:text="@string/Save"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:visibility="gone" />

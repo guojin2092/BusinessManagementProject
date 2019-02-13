@@ -29,7 +29,7 @@
 
             <TextView
                 style="@style/product_title_black"
-                android:text="产品名称：" />
+                android:text="@string/Product_Name" />
 
             <TextView
                 android:id="@+id/tv_product_name"
@@ -45,7 +45,7 @@
 
             <TextView
                 style="@style/product_title_black"
-                android:text="产品金额：" />
+                android:text="@string/Product_amount2" />
 
             <TextView
                 android:id="@+id/tv_product_price"
@@ -62,7 +62,7 @@
 
             <TextView
                 style="@style/product_title_black"
-                android:text="产品数量：" />
+                android:text="@string/Product_quantity2" />
 
             <TextView
                 android:id="@+id/tv_product_num"

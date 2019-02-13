@@ -68,7 +68,7 @@ public abstract class BaseRefreshMvpActivity<P extends BasePresenter> extends Ba
         tv_back.setOnClickListener(this);
         tv_refresh.setOnClickListener(this);
         tv_load_local.setOnClickListener(this);
-        titlebar_right.setText(R.string.delete);
+        titlebar_right.setText(R.string.Delete);
     }
 
     /**
@@ -127,7 +127,7 @@ public abstract class BaseRefreshMvpActivity<P extends BasePresenter> extends Ba
                     page = 1;
                     pullDownRefresh(page);
                 } else {
-                    ToastUtils.show(getBVActivity(), "网络连接异常，请检查网络");
+                    toastMsg("网络连接失败，请检查网络是否可用");
                 }
                 break;
             case R.id.tv_load_local:

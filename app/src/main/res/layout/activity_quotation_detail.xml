@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/F2F2F2"
@@ -24,7 +25,7 @@
 
                 <TextView
                     style="@style/product_title_blue"
-                    android:text="报价信息：" />
+                    android:text="@string/Quotation_Information" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -40,7 +41,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="报价单名称：" />
+                            android:text="@string/Company_Name" />
 
                         <EditText
                             android:id="@+id/et_quotation_name"
@@ -55,7 +56,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="金额：" />
+                            android:text="@string/Amount" />
 
                         <EditText
                             android:id="@+id/et_price"
@@ -72,7 +73,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="有效期至：" />
+                            android:text="@string/Validity_Period" />
 
                         <TextView
                             android:id="@+id/tv_validity_date"
@@ -98,7 +99,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="客户名称：" />
+                            android:text="@string/Client_Name" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
                             android:id="@+id/spinner_customer_name"
@@ -120,7 +121,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="联系人名称：" />
+                            android:text="@string/Contact_Name" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
                             android:id="@+id/spinner_contact_name"
@@ -137,7 +138,7 @@
 
                 <TextView
                     style="@style/product_title_blue"
-                    android:text="地址信息：" />
+                    android:text="@string/Address" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -228,7 +229,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="发货地址：" />
+                            android:text="@string/Delivery_Address" />
 
                         <EditText
                             android:id="@+id/et_deliver_address"
@@ -244,7 +245,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="发货地址-邮编：" />
+                            android:text="@string/Delivery_Address_Zip_Code" />
 
                         <EditText
                             android:id="@+id/et_deliver_zip_code"
@@ -343,7 +344,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="收货地址：" />
+                            android:text="@string/Shipping_Address" />
 
                         <EditText
                             android:id="@+id/et_receiver_address"
@@ -359,7 +360,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="收货地址-邮编：" />
+                            android:text="@string/Shipping_Address_Zip_Code" />
 
                         <EditText
                             android:id="@+id/et_receiver_zip_code"
@@ -376,7 +377,7 @@
 
                     <TextView
                         style="@style/product_title_blue"
-                        android:text="产品明细：" />
+                        android:text="@string/Product_Detail" />
 
                     <View
                         android:layout_width="0dp"
@@ -389,7 +390,7 @@
                         android:drawablePadding="10dp"
                         android:gravity="center_vertical"
                         android:paddingRight="20dp"
-                        android:text="删除" />
+                        android:text="@string/Delete" />
 
                     <TextView
                         android:id="@+id/tv_add_product"
@@ -397,7 +398,7 @@
                         android:drawablePadding="10dp"
                         android:gravity="center_vertical"
                         android:paddingRight="20dp"
-                        android:text="添加" />
+                        android:text="@string/Add" />
 
                 </LinearLayout>
 
@@ -418,14 +419,14 @@
                     android:paddingTop="8dp"
                     android:paddingRight="38dp"
                     android:paddingBottom="8dp"
-                    android:text="@string/delete"
+                    android:text="@string/Delete"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:visibility="gone" />
 
                 <TextView
                     style="@style/product_title_blue"
-                    android:text="条款及条件：" />
+                    android:text="@string/Terms_and_Conditions" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -439,14 +440,14 @@
                         style="@style/product_et_blue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="请输入条款及条件"
+                        android:hint="@string/Please_enter_terms_and_conditions"
                         android:textColorHint="@color/D5D5D5" />
 
                 </LinearLayout>
 
                 <TextView
                     style="@style/product_title_blue"
-                    android:text="描述：" />
+                    android:text="@string/Description" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -460,7 +461,7 @@
                         style="@style/product_et_blue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="添加描述"
+                        android:hint="@string/Add_a_description"
                         android:textColorHint="@color/D5D5D5" />
 
                 </LinearLayout>
@@ -476,7 +477,7 @@
                     android:paddingTop="8dp"
                     android:paddingRight="38dp"
                     android:paddingBottom="8dp"
-                    android:text="@string/save"
+                    android:text="@string/Save"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:visibility="invisible" />
@@ -495,7 +496,7 @@
             android:paddingTop="8dp"
             android:paddingRight="38dp"
             android:paddingBottom="8dp"
-            android:text="@string/save"
+            android:text="@string/Save"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:visibility="gone" />

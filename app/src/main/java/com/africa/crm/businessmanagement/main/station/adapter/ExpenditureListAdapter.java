@@ -37,8 +37,8 @@ public class ExpenditureListAdapter extends BaseQuickAdapter<CompanyExpenditureI
         tv_operation_name.setText(item.getUserNickName());
         tv_start_time.setText(item.getStartDate());
         tv_end_time.setText(item.getEndDate());
-        tv_ys_money.setText("预算金额：" + item.getEstimatePrice());
-        tv_sj_money.setText("实际金额：" + item.getActualPrice());
+        tv_ys_money.setText(mContext.getString(R.string.Budget_amount) + item.getEstimatePrice());
+        tv_sj_money.setText(mContext.getString(R.string.The_actual_amount) + item.getActualPrice());
     }
 
 }

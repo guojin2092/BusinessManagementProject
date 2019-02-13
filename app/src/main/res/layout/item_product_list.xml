@@ -45,7 +45,7 @@
 
             <TextView
                 style="@style/product_title_black"
-                android:text="产品数量：" />
+                android:text="@string/Product_quantity2" />
 
             <TextView
                 android:id="@+id/tv_product_num"

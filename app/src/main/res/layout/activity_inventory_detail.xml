@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/F2F2F2"
@@ -24,7 +25,7 @@
 
                 <TextView
                     style="@style/product_title_blue"
-                    android:text="库存信息：" />
+                    android:text="@string/Inventory_Information" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -40,7 +41,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="产品名称：" />
+                            android:text="@string/Product_Name" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
                             android:id="@+id/spinner_product"
@@ -72,7 +73,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="操作时间：" />
+                            android:text="@string/Operation_Time" />
 
                         <TextView
                             android:id="@+id/tv_operation_time"
@@ -99,7 +100,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="操作类型：" />
+                            android:text="@string/OperationType" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
                             android:id="@+id/spinner_type"
@@ -131,7 +132,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="数量：" />
+                            android:text="@string/Quantity" />
 
                         <EditText
                             android:id="@+id/et_num"
@@ -139,7 +140,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/white"
-                            android:hint="添加数量"
+                            android:hint="@string/Add_quantity"
                             android:inputType="number"
                             android:textColorHint="@color/D5D5D5" />
                     </LinearLayout>
@@ -162,7 +163,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="操作前数量：" />
+                            android:text="@string/Quantity_before_operation" />
 
                         <EditText
                             android:id="@+id/et_num_before"
@@ -170,7 +171,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/white"
-                            android:hint="添加数量"
+                            android:hint="@string/Add_quantity"
                             android:inputType="number"
                             android:textColorHint="@color/D5D5D5" />
                     </LinearLayout>
@@ -193,7 +194,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="操作后数量：" />
+                            android:text="@string/Quantity_after_operation" />
 
                         <EditText
                             android:id="@+id/et_num_after"
@@ -201,7 +202,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/white"
-                            android:hint="添加数量"
+                            android:hint="@string/Add_quantity"
                             android:inputType="number"
                             android:textColorHint="@color/D5D5D5" />
                     </LinearLayout>
@@ -210,7 +211,7 @@
 
                 <TextView
                     style="@style/product_title_blue"
-                    android:text="备注：" />
+                    android:text="@string/Remarks" />
 
                 <EditText
                     android:id="@+id/et_remark"
@@ -218,7 +219,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:hint="添加备注"
+                    android:hint="@string/Add_remarks"
                     android:textColorHint="@color/D5D5D5" />
 
                 <TextView
@@ -232,7 +233,7 @@
                     android:paddingTop="8dp"
                     android:paddingRight="38dp"
                     android:paddingBottom="8dp"
-                    android:text="@string/save"
+                    android:text="@string/Save"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:visibility="invisible" />
@@ -251,7 +252,7 @@
             android:paddingTop="8dp"
             android:paddingRight="38dp"
             android:paddingBottom="8dp"
-            android:text="@string/save"
+            android:text="@string/Save"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:visibility="gone" />

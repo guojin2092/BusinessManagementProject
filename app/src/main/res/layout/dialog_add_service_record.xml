@@ -38,7 +38,7 @@
                     android:gravity="center"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:text="添加追踪"
+                    android:text="@string/Add_Tracking"
                     android:textColor="@color/white"
                     android:textSize="18sp" />
 
@@ -94,7 +94,7 @@
                     android:gravity="center"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:text="订单描述"
+                    android:text="@string/Order_description"
                     android:textColor="@color/A606060"
                     android:textSize="18sp" />
 
@@ -150,7 +150,7 @@
                 android:paddingTop="5dp"
                 android:paddingRight="30dp"
                 android:paddingBottom="5dp"
-                android:text="@string/save"
+                android:text="@string/Save"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:visibility="visible" />

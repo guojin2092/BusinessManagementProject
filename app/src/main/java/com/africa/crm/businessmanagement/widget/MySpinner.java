@@ -180,7 +180,7 @@ public class MySpinner extends FrameLayout {
 
     public void setListDatas(Context context, List<DicInfo> list) {
         mList = list;
-        mList.add(new DicInfo("不选择", ""));
+        mList.add(new DicInfo(context.getString(R.string.dont_choose), ""));
         myAdapter = new MyAdapter(context, mList);
         listView.setAdapter(myAdapter);
         myAdapter.notifyDataSetChanged();

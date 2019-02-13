@@ -110,16 +110,16 @@ public class CompanyPdfReportDetailActivity extends BaseMvpActivity<CompanyPdfRe
         mCompanyName = UserInfoManager.getUserLoginInfo(this).getCompanyName();
         mFromName = UserInfoManager.getUserLoginInfo(this).getName();
         mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
-        titlebar_name.setText("PDF文件详情");
+        titlebar_name.setText(R.string.PDF_file_details);
         tv_save.setOnClickListener(this);
         tv_file_name.setOnClickListener(this);
         if (TextUtils.isEmpty(mPdfDetailId) && mLocalId == 0l) {
             titlebar_right.setVisibility(View.GONE);
-            tv_save.setText(R.string.add);
+            tv_save.setText(R.string.Add);
             tv_save.setVisibility(View.VISIBLE);
         } else if (!TextUtils.isEmpty(mPdfDetailId) || mLocalId != 0l) {
-            titlebar_right.setText(R.string.edit);
-            tv_save.setText(R.string.save);
+            titlebar_right.setText(R.string.Edit);
+            tv_save.setText(R.string.Save);
             setEditTextInput(false);
         }
         //得到Dao对象管理器
@@ -160,18 +160,18 @@ public class CompanyPdfReportDetailActivity extends BaseMvpActivity<CompanyPdfRe
         super.onClick(v);
         switch (v.getId()) {
             case R.id.titlebar_right:
-                if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
+                if (titlebar_right.getText().toString().equals(getString(R.string.Edit))) {
                     titlebar_right.setText(R.string.cancel);
                     tv_save.setVisibility(View.VISIBLE);
                     setEditTextInput(true);
                 } else {
-                    titlebar_right.setText(R.string.edit);
+                    titlebar_right.setText(R.string.Edit);
                     tv_save.setVisibility(View.GONE);
                     setEditTextInput(false);
                 }
                 break;
             case R.id.tv_file_name:
-                if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
+                if (titlebar_right.getText().toString().equals(getString(R.string.Edit))) {
                     if (mLocalPath.contains(".pdf")) {
                         openOtherFile(mLocalPath);
                     }
@@ -185,12 +185,12 @@ public class CompanyPdfReportDetailActivity extends BaseMvpActivity<CompanyPdfRe
                             new LFilePicker()
                                     .withActivity(this)
                                     .withRequestCode(REQUEST_PICK_FILE)
-                                    .withTitle("文件选择")
+                                    .withTitle(getString(R.string.File_Selection))
                                     .withIconStyle(Constant.ICON_STYLE_BLUE)
                                     .withMutilyMode(false)
                                     .withMaxNum(1)
                                     .withStartPath("/storage/emulated/0")//指定初始显示路径
-                                    .withNotFoundBooks("请选择一个文件")
+                                    .withNotFoundBooks(getString(R.string.Please_select_a_file))
                                     .withIsGreater(false)//过滤文件大小 小于指定大小的文件
                                     .withFileSize(500 * 1024)//指定文件大小为500K
                                     .withChooseMode(true)//文件夹选择模式
@@ -201,12 +201,12 @@ public class CompanyPdfReportDetailActivity extends BaseMvpActivity<CompanyPdfRe
                         new LFilePicker()
                                 .withActivity(this)
                                 .withRequestCode(REQUEST_PICK_FILE)
-                                .withTitle("文件选择")
+                                .withTitle(getString(R.string.File_Selection))
                                 .withIconStyle(Constant.ICON_STYLE_BLUE)
                                 .withMutilyMode(false)
                                 .withMaxNum(1)
                                 .withStartPath("/storage/emulated/0")//指定初始显示路径
-                                .withNotFoundBooks("请选择一个文件")
+                                .withNotFoundBooks(getString(R.string.Please_select_a_file))
                                 .withIsGreater(false)//过滤文件大小 小于指定大小的文件
                                 .withFileSize(500 * 1024)//指定文件大小为500K
                                 .withChooseMode(true)//文件夹选择模式
@@ -217,11 +217,11 @@ public class CompanyPdfReportDetailActivity extends BaseMvpActivity<CompanyPdfRe
                 break;
             case R.id.tv_save:
                 if (TextUtils.isEmpty(et_title.getText().toString().trim())) {
-                    toastMsg("尚未填写文件名称");
+                    toastMsg(getString(R.string.Please_fill_in_the_file_name));
                     return;
                 }
                 if (TextUtils.isEmpty(mFileCode)) {
-                    toastMsg("尚未上传PDF文件");
+                    toastMsg(getString(R.string.Please_upload_the_PDF_file));
                     return;
                 }
                 mPresenter.saveCompanyPdfDetail(mPdfDetailId, mCompanyId, mUserId, et_title.getText().toString().trim(), mFileCode, et_remark.getText().toString().trim());
@@ -289,9 +289,9 @@ public class CompanyPdfReportDetailActivity extends BaseMvpActivity<CompanyPdfRe
     public void saveCompanyPdfDetail(UploadInfoBean uploadInfoBean, boolean isLocal) {
         String toastString = "";
         if (TextUtils.isEmpty(mPdfDetailId) && mLocalId == 0l) {
-            toastString = "PDF文件创建成功";
+            toastString = getString(R.string.Added_Successfully);
         } else {
-            toastString = "PDF文件修改成功";
+            toastString = getString(R.string.Successfully_Modified);
         }
         if (isLocal) {
             CompanyPdfInfo companyPdfInfo = null;
@@ -322,7 +322,7 @@ public class CompanyPdfReportDetailActivity extends BaseMvpActivity<CompanyPdfRe
                     mFilePath = list.get(0);
                     mPresenter.uploadFile(mFilePath);
                 } else {
-                    toastMsg("尚未选择上传文件");
+                    toastMsg(getString(R.string.Please_upload_the_PDF_file));
                 }
             }
         }

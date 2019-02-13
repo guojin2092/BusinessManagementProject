@@ -10,7 +10,7 @@
     android:paddingTop="8dp"
     android:paddingRight="38dp"
     android:paddingBottom="8dp"
-    android:text="@string/delete"
+    android:text="@string/Delete"
     android:textColor="@color/white"
     android:textSize="18sp"
     android:visibility="gone" />

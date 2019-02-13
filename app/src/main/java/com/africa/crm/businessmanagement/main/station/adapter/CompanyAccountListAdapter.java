@@ -1,6 +1,7 @@
 package com.africa.crm.businessmanagement.main.station.adapter;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -42,13 +43,17 @@ public class CompanyAccountListAdapter extends BaseQuickAdapter<CompanyAccountIn
     @Override
     protected void convert(BaseViewHolder helper, CompanyAccountInfo item) {
         ImageView iv_icon = helper.getView(R.id.iv_icon);
-        TextView tv_role_name = helper.getView(R.id.tv_role_name);
         TextView tv_company_account = helper.getView(R.id.tv_company_account);
+        TextView tv_nickname = helper.getView(R.id.tv_nickname);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
         GlideUtil.showImg(iv_icon, item.getHead());
-        tv_role_name.setText(item.getRoleName());
-        tv_company_account.setText("用戶名：" + item.getUserName());
+        tv_company_account.setText(mContext.getString(R.string.Username) + item.getUserName());
+        if (!TextUtils.isEmpty(item.getName())) {
+            tv_nickname.setText(mContext.getString(R.string.Nickname) + item.getName());
+        } else {
+            tv_nickname.setText("");
+        }
         cb_choose.setChecked(item.isChosen());
         if (mIsDeleted) {
             cb_choose.setVisibility(View.VISIBLE);

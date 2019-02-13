@@ -47,13 +47,14 @@ public class DeliveryOrderListAdapter extends BaseQuickAdapter<CompanyDeliveryOr
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
 
         tv_delivery_order_name.setText(item.getName());
-        tv_sale_code.setText("发货单编号："+item.getCode());
-        tv_logistics_code.setText("物流单号：" + item.getLogisticsCode());
+        tv_sale_code.setText(mContext.getString(R.string.Invoice_number) + item.getCode());
+        tv_logistics_code.setText(mContext.getString(R.string.shipment_number) + item.getLogisticsCode());
         if (!TextUtils.isEmpty(item.getCreateTime())) {
             tv_create_time.setText(item.getCreateTime());
         } else {
             tv_create_time.setText("");
-        }        cb_choose.setChecked(item.isChosen());
+        }
+        cb_choose.setChecked(item.isChosen());
 
         if (mIsDeleted) {
             cb_choose.setVisibility(View.VISIBLE);

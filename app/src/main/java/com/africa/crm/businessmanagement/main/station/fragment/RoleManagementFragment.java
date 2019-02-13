@@ -191,19 +191,19 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
                     public void onSaveClick(RoleInfoBean roleInfoBean) {
                         if (roleInfoBean != null) {
                             if (TextUtils.isEmpty(roleInfoBean.getRoleName())) {
-                                toastMsg("尚未填写角色名称");
+                                toastMsg(getString(R.string.Please_fill_in_the_role_name));
                                 return;
                             }
                             if (TextUtils.isEmpty(roleInfoBean.getRoleCode())) {
-                                toastMsg("尚未填写角色编号");
+                                toastMsg(getString(R.string.Please_fill_in_the_role_ID));
                                 return;
                             }
                             if (TextUtils.isEmpty(roleInfoBean.getTypeName())) {
-                                toastMsg("尚未填写分类名称");
+                                toastMsg(getString(R.string.Please_fill_in_the_class_name));
                                 return;
                             }
                             if (TextUtils.isEmpty(roleInfoBean.getOrderNum())) {
-                                toastMsg("尚未填写排序号");
+                                toastMsg(getString(R.string.Please_fill_in_the_sequence));
                                 return;
                             }
                             mPresenter.saveRoleInfo(mUserId, "", roleInfoBean.getRoleName(), roleInfoBean.getRoleCode(), roleInfoBean.getTypeName(), roleInfoBean.getOrderNum());
@@ -307,7 +307,7 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
                             mLimitRoleId = mRoleList.get(position).getId();
                             mPresenter.getRoleLimit(mLimitRoleId);
                         } else {
-                            toastMsg("网络连接失败，请重试");
+                            toastMsg("网络连接失败，请检查网络是否可用");
                         }
                         break;
                 }
@@ -417,7 +417,7 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
     @Override
     public void saveRoleLimit(BaseEntity baseEntity) {
         if (baseEntity.isSuccess()) {
-            toastMsg("角色权限修改成功");
+            toastMsg(getString(R.string.Successfully_Modified));
             mResourceIds = "";
             mBtnIds = "";
             mRoleAuthLimitDialog.dismiss();
@@ -432,10 +432,10 @@ public class RoleManagementFragment extends BaseRefreshMvpFragment<RoleManagemen
     public void saveRoleInfo(BaseEntity baseEntity) {
         if (baseEntity.isSuccess()) {
             if (mType.equals("1")) {
-                toastMsg("角色创建成功");
+                toastMsg(getString(R.string.Added_Successfully));
                 mAddRoleDialog.dismiss();
             } else if (mType.equals("2")) {
-                toastMsg("保存成功");
+                toastMsg(getString(R.string.Save_Success));
                 mRoleDetailDialog.dismiss();
             }
             page = 1;

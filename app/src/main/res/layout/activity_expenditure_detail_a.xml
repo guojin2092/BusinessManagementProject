@@ -24,7 +24,7 @@
 
                 <TextView
                     style="@style/product_title_blue"
-                    android:text="预算信息：" />
+                    android:text="@string/Budget_Information" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -40,7 +40,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="预算标题：" />
+                            android:text="@string/Budget_Title" />
 
                         <EditText
                             android:id="@+id/et_title"
@@ -69,7 +69,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="预算金额：" />
+                            android:text="@string/Budget_Amount" />
 
                         <EditText
                             android:id="@+id/et_price"
@@ -98,7 +98,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="开始日期：" />
+                            android:text="@string/Start_Date" />
 
                         <TextView
                             android:id="@+id/tv_start_date"
@@ -124,7 +124,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="结束日期：" />
+                            android:text="@string/End_Date" />
 
                         <TextView
                             android:id="@+id/tv_end_date"
@@ -137,7 +137,7 @@
 
                 <TextView
                     style="@style/product_title_blue"
-                    android:text="备注：" />
+                    android:text="@string/Remarks" />
 
                 <EditText
                     android:id="@+id/et_remark"
@@ -145,7 +145,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:hint="添加备注"
+                    android:hint="@string/Add_remarks"
                     android:textColorHint="@color/D5D5D5" />
 
                 <LinearLayout
@@ -177,7 +177,7 @@
                     android:paddingTop="8dp"
                     android:paddingRight="38dp"
                     android:paddingBottom="8dp"
-                    android:text="@string/save"
+                    android:text="@string/Save"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:visibility="invisible" />
@@ -196,7 +196,7 @@
             android:paddingTop="8dp"
             android:paddingRight="38dp"
             android:paddingBottom="8dp"
-            android:text="@string/save"
+            android:text="@string/Save"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:visibility="gone" />

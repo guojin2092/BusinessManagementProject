@@ -39,7 +39,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="产品名称：" />
+                            android:text="@string/Company_Name" />
 
                         <EditText
                             android:id="@+id/et_product_name"
@@ -55,7 +55,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="产品编码：" />
+                            android:text="@string/Coding" />
 
                         <EditText
                             android:id="@+id/et_code"
@@ -82,7 +82,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="供应商名称：" />
+                            android:text="@string/Supplier_Name" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
                             android:id="@+id/spinner_supplier_name"
@@ -126,7 +126,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="制造商名称：" />
+                            android:text="@string/Manufacturer_Name" />
 
                         <EditText
                             android:id="@+id/et_maker_name"
@@ -152,7 +152,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="产品分类：" />
+                            android:text="@string/Company_Type" />
 
                         <com.africa.crm.businessmanagement.widget.MySpinner
                             android:id="@+id/spinner_product_type"
@@ -175,7 +175,7 @@
                         <TextView
                             style="@style/costumer_title_style"
                             android:inputType="number"
-                            android:text="单价：" />
+                            android:text="@string/Unit_Price" />
 
                         <EditText
                             android:id="@+id/et_price"
@@ -191,7 +191,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="单位：" />
+                            android:text="@string/Unit" />
 
                         <EditText
                             android:id="@+id/et_unit"
@@ -217,7 +217,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="库存数量：" />
+                            android:text="@string/Stock_Quantity" />
 
                         <EditText
                             android:id="@+id/et_inventory_num"
@@ -234,7 +234,7 @@
 
                         <TextView
                             style="@style/costumer_title_style"
-                            android:text="警戒数量：" />
+                            android:text="@string/Number_of_warnings" />
 
                         <EditText
                             android:id="@+id/et_warn_num"
@@ -247,7 +247,7 @@
 
                 <TextView
                     style="@style/product_title_blue"
-                    android:text="备注：" />
+                    android:text="@string/Remarks" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -261,7 +261,7 @@
                         style="@style/product_et_blue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="添加备注"
+                        android:hint="@string/Add_remarks"
                         android:textColorHint="@color/D5D5D5" />
 
                 </LinearLayout>
@@ -276,7 +276,7 @@
                     android:paddingTop="8dp"
                     android:paddingRight="38dp"
                     android:paddingBottom="8dp"
-                    android:text="@string/save"
+                    android:text="@string/Save"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:visibility="invisible" />
@@ -295,7 +295,7 @@
             android:paddingTop="8dp"
             android:paddingRight="38dp"
             android:paddingBottom="8dp"
-            android:text="@string/save"
+            android:text="@string/Save"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:visibility="gone" />

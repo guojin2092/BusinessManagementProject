@@ -109,17 +109,17 @@ public class CompanyProductDetailActivity extends BaseMvpActivity<CompanyProduct
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
         mCompanyName = UserInfoManager.getUserLoginInfo(this).getCompanyName();
         mLocalId = getIntent().getLongExtra("localId", 0l);
-        titlebar_name.setText("产品详情");
+        titlebar_name.setText(R.string.Product_Details);
         tv_save.setOnClickListener(this);
         EditTextUtil.setPricePoint(et_price);
         if (TextUtils.isEmpty(mProductId) && mLocalId == 0l) {
             titlebar_right.setVisibility(View.GONE);
-            tv_save.setText(R.string.add);
+            tv_save.setText(R.string.Add);
             tv_save.setVisibility(View.VISIBLE);
             et_inventory_num.setEnabled(true);
         } else if (!TextUtils.isEmpty(mProductId) || mLocalId != 0l) {
-            titlebar_right.setText(R.string.edit);
-            tv_save.setText(R.string.save);
+            titlebar_right.setText(R.string.Edit);
+            tv_save.setText(R.string.Save);
             setEditTextInput(false);
             et_inventory_num.setEnabled(false);
         }
@@ -153,19 +153,19 @@ public class CompanyProductDetailActivity extends BaseMvpActivity<CompanyProduct
         super.onClick(v);
         switch (v.getId()) {
             case R.id.titlebar_right:
-                if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
+                if (titlebar_right.getText().toString().equals(getString(R.string.Edit))) {
                     titlebar_right.setText(R.string.cancel);
                     tv_save.setVisibility(View.VISIBLE);
                     setEditTextInput(true);
                 } else {
-                    titlebar_right.setText(R.string.edit);
+                    titlebar_right.setText(R.string.Edit);
                     tv_save.setVisibility(View.GONE);
                     setEditTextInput(false);
                 }
                 break;
             case R.id.tv_save:
                 if (TextUtils.isEmpty(et_product_name.getText().toString().trim())) {
-                    toastMsg("尚未填写产品名称");
+                    toastMsg(getString(R.string.Please_fill_in_the_name));
                     return;
                 }
                 mPresenter.saveCompanyProduct(mProductId, mCompanyId, et_product_name.getText().toString().trim(), et_code.getText().toString().trim(), spinner_supplier_name.getText(), et_maker_name.getText().toString().trim(), mProductType, et_price.getText().toString().trim(), et_unit.getText().toString().trim(), et_inventory_num.getText().toString().trim(), et_warn_num.getText().toString().trim(), et_remark.getText().toString().trim());
@@ -254,9 +254,9 @@ public class CompanyProductDetailActivity extends BaseMvpActivity<CompanyProduct
     public void saveCompanyProduct(UploadInfoBean uploadInfoBean, boolean isLocal) {
         String toastString = "";
         if (TextUtils.isEmpty(mProductId) && mLocalId == 0l) {
-            toastString = "企业产品创建成功";
+            toastString = getString(R.string.Added_Successfully);
         } else {
-            toastString = "企业产品修改成功";
+            toastString = getString(R.string.Successfully_Modified);
         }
         if (isLocal) {
             CompanyProductInfo companyProductInfo = null;

@@ -39,13 +39,13 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 @SuppressWarnings({"unused", "UnusedReturnValue"})
 public class ClassicsFooter extends RelativeLayout implements RefreshFooter {
 
-    public static String REFRESH_FOOTER_PULLUP = "上拉加载更多";
-    public static String REFRESH_FOOTER_RELEASE = "释放立即加载";
-    public static String REFRESH_FOOTER_LOADING = "正在加载...";
-    public static String REFRESH_FOOTER_REFRESHING = "正在刷新...";
-    public static String REFRESH_FOOTER_FINISH = "加载完成";
-    public static String REFRESH_FOOTER_FAILED = "加载失败";
-    public static String REFRESH_FOOTER_ALLLOADED = "全部加载完成";
+    public static String REFRESH_FOOTER_PULLUP;
+    public static String REFRESH_FOOTER_RELEASE;
+    public static String REFRESH_FOOTER_LOADING;
+    public static String REFRESH_FOOTER_REFRESHING;
+    public static String REFRESH_FOOTER_FINISH;
+    public static String REFRESH_FOOTER_FAILED;
+    public static String REFRESH_FOOTER_ALLLOADED;
 
     protected TextView mTitleText;
     protected ImageView mArrowView;
@@ -78,7 +78,13 @@ public class ClassicsFooter extends RelativeLayout implements RefreshFooter {
 
     private void initView(Context context, AttributeSet attrs, int defStyleAttr) {
         DensityUtil density = new DensityUtil();
-
+        REFRESH_FOOTER_PULLUP = context.getString(R.string.Pull_up_load_more);
+        REFRESH_FOOTER_RELEASE = context.getString(R.string.Release_immediate_load);
+        REFRESH_FOOTER_LOADING = context.getString(R.string.Loading);
+        REFRESH_FOOTER_REFRESHING = context.getString(R.string.Refreshing);
+        REFRESH_FOOTER_FINISH = context.getString(R.string.Load_success);
+        REFRESH_FOOTER_FAILED = context.getString(R.string.Failed_to_load);
+        REFRESH_FOOTER_ALLLOADED = context.getString(R.string.All_loaded);
         mTitleText = new TextView(context);
         mTitleText.setId(android.R.id.widget_frame);
         mTitleText.setTextColor(0xff666666);

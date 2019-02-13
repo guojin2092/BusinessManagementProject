@@ -48,7 +48,7 @@
             android:paddingTop="8dp"
             android:paddingRight="20dp"
             android:paddingBottom="8dp"
-            android:text="@string/see_detail"
+            android:text="@string/View_details"
             android:textColor="@color/white"
             android:textSize="18sp" />
 
@@ -64,7 +64,7 @@
             android:paddingTop="8dp"
             android:paddingRight="20dp"
             android:paddingBottom="8dp"
-            android:text="@string/authority_allocation"
+            android:text="@string/permission_assignment"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:visibility="gone" />

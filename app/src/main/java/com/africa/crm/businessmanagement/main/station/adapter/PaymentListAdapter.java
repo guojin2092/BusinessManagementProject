@@ -46,10 +46,11 @@ public class PaymentListAdapter extends BaseQuickAdapter<CompanyPayOrderInfo, Ba
 
         TextView tv_create_time = helper.getView(R.id.tv_create_time);
         CheckBox cb_choose = helper.getView(R.id.cb_choose);
+        helper.addOnClickListener(R.id.tv_print);
 
         tv_pay_order_name.setText(item.getName());
-        tv_pay_code.setText("付款单编号：" + item.getCode());
-        tv_pay_money.setText("金额：" + item.getPrice());
+        tv_pay_code.setText(R.string.Number + item.getCode());
+        tv_pay_money.setText(R.string.Amount + item.getPrice());
         if (!TextUtils.isEmpty(item.getCreateTime())) {
             tv_create_time.setText(item.getCreateTime());
         } else {

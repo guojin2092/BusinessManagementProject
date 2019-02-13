@@ -143,17 +143,17 @@ public class CompanyContactDetailActivity extends BaseMvpActivity<CompanyContact
         mCompanyId = UserInfoManager.getUserLoginInfo(this).getCompanyId();
         mRoleCode = UserInfoManager.getUserLoginInfo(this).getRoleCode();
         mLocalId = getIntent().getLongExtra("localId", 0l);
-        titlebar_name.setText("联系人详情");
+        titlebar_name.setText(getString(R.string.Contact_Details));
         tv_add_icon.setOnClickListener(this);
         tv_save.setOnClickListener(this);
         if (mRoleCode.equals("companySales")) {
             if (TextUtils.isEmpty(mContactId) && mLocalId == 0l) {
                 titlebar_right.setVisibility(View.GONE);
-                tv_save.setText(R.string.add);
+                tv_save.setText(R.string.Add);
                 tv_save.setVisibility(View.VISIBLE);
             } else if (!TextUtils.isEmpty(mContactId) || mLocalId != 0l) {
-                titlebar_right.setText(R.string.edit);
-                tv_save.setText(R.string.save);
+                titlebar_right.setText(R.string.Edit);
+                tv_save.setText(R.string.Save);
                 setEditTextInput(false);
             }
         } else {
@@ -201,27 +201,27 @@ public class CompanyContactDetailActivity extends BaseMvpActivity<CompanyContact
             case R.id.tv_add_icon:
                 if (singlePopup == null) {
                     List<String> list = new ArrayList<>();
-                    list.add("拍照");
-                    list.add("从相册选择");
+                    list.add(getString(R.string.Takephoto));
+                    list.add(getString(R.string.Select_from_album));
                     singlePopup = new SinglePopup(this, list, this);
-                    singlePopup.setTitle(View.GONE, "选择来源");
+                    singlePopup.setTitle(View.GONE, getString(R.string.Select_source));
                 }
                 singlePopup.showAtLocation(tv_add_icon, Gravity.BOTTOM, 0, 0);
                 break;
             case R.id.titlebar_right:
-                if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
+                if (titlebar_right.getText().toString().equals(getString(R.string.Edit))) {
                     titlebar_right.setText(R.string.cancel);
                     tv_save.setVisibility(View.VISIBLE);
                     setEditTextInput(true);
                 } else {
-                    titlebar_right.setText(R.string.edit);
+                    titlebar_right.setText(R.string.Edit);
                     tv_save.setVisibility(View.GONE);
                     setEditTextInput(false);
                 }
                 break;
             case R.id.tv_save:
                 if (TextUtils.isEmpty(et_name.getText().toString().trim())) {
-                    toastMsg("尚未填写姓名");
+                    toastMsg(getString(R.string.Please_fill_in_the_name));
                     return;
                 }
                 if (mRoleCode.equals("companySales")) {
@@ -332,9 +332,9 @@ public class CompanyContactDetailActivity extends BaseMvpActivity<CompanyContact
     public void saveCompanyContact(UploadInfoBean uploadInfoBean, boolean isLocal) {
         String toastString = "";
         if (TextUtils.isEmpty(mContactId) && mLocalId == 0l) {
-            toastString = "企业联系人创建成功";
+            toastString = getString(R.string.Added_Successfully);
         } else {
-            toastString = "企业联系人修改成功";
+            toastString = getString(R.string.Successfully_Modified);
         }
         if (isLocal) {
             CompanyContactInfo companyContactInfo = null;

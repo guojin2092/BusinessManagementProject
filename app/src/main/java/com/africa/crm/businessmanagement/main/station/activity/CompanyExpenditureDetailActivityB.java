@@ -89,8 +89,8 @@ public class CompanyExpenditureDetailActivityB extends BaseMvpActivity<CompanyEx
         mFromName = UserInfoManager.getUserLoginInfo(this).getName();
         mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
         titlebar_right.setVisibility(View.GONE);
-        titlebar_name.setText("企业支出");
-        tv_save.setText(R.string.add);
+        titlebar_name.setText(R.string.Business_Expenditure);
+        tv_save.setText(R.string.Add);
         tv_save.setOnClickListener(this);
         tv_date.setOnClickListener(this);
         EditTextUtil.setPricePoint(et_price);
@@ -157,11 +157,11 @@ public class CompanyExpenditureDetailActivityB extends BaseMvpActivity<CompanyEx
                 break;
             case R.id.tv_save:
                 if (TextUtils.isEmpty(tv_date.getText().toString().trim())) {
-                    toastMsg("尚未选择支出日期");
+                    toastMsg(getString(R.string.Please_select_the_payment_date));
                     return;
                 }
                 if (TextUtils.isEmpty(et_price.getText().toString().trim())) {
-                    toastMsg("尚未填写支出金额");
+                    toastMsg(getString(R.string.Please_select_the_amount_of_the_expenditure));
                     return;
                 }
                 mPresenter.saveExpenditureB(mCompanyId, mUserId, tv_date.getText().toString().trim(), et_price.getText().toString().trim(), et_remark.getText().toString().trim());
@@ -194,7 +194,7 @@ public class CompanyExpenditureDetailActivityB extends BaseMvpActivity<CompanyEx
     public void saveExpenditureB(UploadInfoBean uploadInfoBean, boolean isLocal) {
         String toastString = "";
         if (TextUtils.isEmpty(mExpenditureId) && mLocalId == 0l) {
-            toastString = "企业支出单创建成功";
+            toastString = getString(R.string.Added_Successfully);
         }
         if (isLocal) {
             CompanyExpenditureInfoB companyExpenditureInfoB = null;

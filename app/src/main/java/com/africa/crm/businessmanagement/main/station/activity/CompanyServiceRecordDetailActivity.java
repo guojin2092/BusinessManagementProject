@@ -150,18 +150,18 @@ public class CompanyServiceRecordDetailActivity extends BaseMvpActivity<CompanyS
         mCompanyName = UserInfoManager.getUserLoginInfo(this).getCompanyName();
         mFromName = UserInfoManager.getUserLoginInfo(this).getName();
         mUserId = String.valueOf(UserInfoManager.getUserLoginInfo(this).getId());
-        titlebar_name.setText("服务记录详情");
+        titlebar_name.setText(R.string.Service_record_details);
         tv_save.setOnClickListener(this);
         tv_add_tracking.setOnClickListener(this);
         String roleCode = UserInfoManager.getUserLoginInfo(this).getRoleCode();
         if (roleCode.equals("companySales")) {
             if (TextUtils.isEmpty(mServiceRecordId) && mLocalId == 0l) {
                 titlebar_right.setVisibility(View.GONE);
-                tv_save.setText(R.string.add);
+                tv_save.setText(R.string.Add);
                 tv_save.setVisibility(View.VISIBLE);
             } else if (!TextUtils.isEmpty(mServiceRecordId) || mLocalId != 0l) {
-                titlebar_right.setText(R.string.edit);
-                tv_save.setText(R.string.save);
+                titlebar_right.setText(R.string.Edit);
+                tv_save.setText(R.string.Save);
                 setEditTextInput(false);
             }
         } else {
@@ -212,12 +212,12 @@ public class CompanyServiceRecordDetailActivity extends BaseMvpActivity<CompanyS
         super.onClick(v);
         switch (v.getId()) {
             case R.id.titlebar_right:
-                if (titlebar_right.getText().toString().equals(getString(R.string.edit))) {
+                if (titlebar_right.getText().toString().equals(getString(R.string.Edit))) {
                     titlebar_right.setText(R.string.cancel);
                     tv_save.setVisibility(View.VISIBLE);
                     setEditTextInput(true);
                 } else {
-                    titlebar_right.setText(R.string.edit);
+                    titlebar_right.setText(R.string.Edit);
                     tv_save.setVisibility(View.GONE);
                     setEditTextInput(false);
                 }
@@ -238,7 +238,7 @@ public class CompanyServiceRecordDetailActivity extends BaseMvpActivity<CompanyS
                     @Override
                     public void onSaveClick(OrderProductInfo orderProductInfo) {
                         if (TextUtils.isEmpty(orderProductInfo.getName())) {
-                            toastMsg("尚未填写服务追踪");
+                            toastMsg(getString(R.string.Please_fill_in_the_service_tracking_information));
                             return;
                         }
                         mServiceTrackingInfoBeans.add(new ServiceTrackingInfoBean(orderProductInfo.getName(), orderProductInfo.getNum()));
@@ -251,11 +251,11 @@ public class CompanyServiceRecordDetailActivity extends BaseMvpActivity<CompanyS
                 break;
             case R.id.tv_save:
                 if (TextUtils.isEmpty(et_service_record_name.getText().toString().trim())) {
-                    toastMsg("尚未填写服务记录名称");
+                    toastMsg(getString(R.string.Please_fill_in_the_name));
                     return;
                 }
                 if (TextUtils.isEmpty(mTypeCode)) {
-                    toastMsg("尚未选择服务记录类型");
+                    toastMsg(getString(R.string.Please_choose_the_type));
                     return;
                 }
                 mPresenter.saveCompanyServiceRecord(mServiceRecordId, mCompanyId, mUserId, et_service_record_name.getText().toString().trim(), mStateCode, mTypeCode, mProductId, spinner_customer_name.getText(), mLevelCode, et_phone.getText().toString().trim(), et_email.getText().toString().trim(), et_reason.getText().toString().trim(), et_remark.getText().toString().trim(), et_solution.getText().toString().trim(), new Gson().toJson(mServiceTrackingInfoBeans));
@@ -422,9 +422,9 @@ public class CompanyServiceRecordDetailActivity extends BaseMvpActivity<CompanyS
     public void saveCompanyServiceRecord(UploadInfoBean uploadInfoBean, boolean isLocal) {
         String toastString = "";
         if (TextUtils.isEmpty(mServiceRecordId) && mLocalId == 0l) {
-            toastString = "服务记录创建成功";
+            toastString = getString(R.string.Added_Successfully);
         } else {
-            toastString = "服务记录修改成功";
+            toastString = getString(R.string.Successfully_Modified);
         }
         if (isLocal) {
             CompanyServiceRecordInfo companyServiceRecordInfo = null;

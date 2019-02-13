@@ -73,7 +73,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:drawablePadding="10dp"
-                            android:text="所属公司："
+                            android:text="@string/Affiliated_Company"
                             android:textColor="@color/A606060"
                             android:textSize="18sp" />
 
@@ -113,7 +113,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:drawablePadding="10dp"
-                            android:text="用户角色："
+                            android:text="@string/User_role"
                             android:textColor="@color/A606060"
                             android:textSize="18sp" />
 
@@ -154,7 +154,7 @@
                         android:drawableTop="@drawable/iv_upload_data"
                         android:drawablePadding="12dp"
                         android:gravity="center"
-                        android:text="上传数据"
+                        android:text="@string/Upload"
                         android:textColor="@color/A606060" />
 
                     <View
@@ -174,7 +174,7 @@
                 android:gravity="center"
                 android:paddingTop="20dp"
                 android:paddingBottom="20dp"
-                android:text="退出登录"
+                android:text="@string/Sign_Out"
                 android:textColor="@color/A586683"
                 android:textSize="22sp" />
 

@@ -19,6 +19,7 @@
         android:background="@drawable/et_bg_search"
         android:drawableLeft="@drawable/iv_search_logo"
         android:drawablePadding="10dp"
+        android:hint="@string/Name"
         android:imeOptions="actionSearch"
         android:maxLines="1"
         android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -40,7 +41,7 @@
         android:paddingTop="2dp"
         android:paddingRight="20dp"
         android:paddingBottom="2dp"
-        android:text="查询"
+        android:text="@string/Search"
         android:textColor="@color/white"
         android:textSize="18sp" />
 

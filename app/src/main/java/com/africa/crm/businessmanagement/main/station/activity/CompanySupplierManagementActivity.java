@@ -174,12 +174,12 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
                 pullDownRefresh(page);
                 break;
             case R.id.titlebar_right:
-                if (titlebar_right.getText().toString().equals(getString(R.string.delete))) {
+                if (titlebar_right.getText().toString().equals(getString(R.string.Delete))) {
                     titlebar_right.setText(R.string.cancel);
                     tv_delete.setVisibility(View.VISIBLE);
                     mShowCheckBox = true;
                 } else {
-                    titlebar_right.setText(R.string.delete);
+                    titlebar_right.setText(R.string.Delete);
                     tv_delete.setVisibility(View.GONE);
                     mShowCheckBox = false;
                 }
@@ -198,7 +198,7 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
                     }
                 }
                 if (ListUtils.isEmpty(mDeleteList)) {
-                    toastMsg("尚未选择删除项");
+                    toastMsg(getString(R.string.no_choose_delete));
                     return;
                 }
                 mDeleteDialog = new AlertDialog.Builder(CompanySupplierManagementActivity.this)
@@ -337,7 +337,7 @@ public class CompanySupplierManagementActivity extends BaseRefreshMvpActivity<Co
                 }
             }
             if (ListUtils.isEmpty(mCompanySupplierInfoList)) {
-                titlebar_right.setText(R.string.delete);
+                titlebar_right.setText(R.string.Delete);
                 tv_delete.setVisibility(View.GONE);
                 mShowCheckBox = false;
                 layout_network_error.setVisibility(View.GONE);

@@ -23,7 +23,7 @@
 
                 <TextView
                     style="@style/product_title_blue"
-                    android:text="包装数据信息：" />
+                    android:text="@string/Packaging_data_information" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -40,7 +40,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="包装开始时间：" />
+                            android:text="@string/Company_Start_Time" />
 
                         <TextView
                             android:id="@+id/tv_start_date"
@@ -58,7 +58,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="包装结束时间：" />
+                            android:text="@string/Company_End_Time" />
 
                         <TextView
                             android:id="@+id/tv_end_date"
@@ -80,7 +80,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="预览信息：" />
+                        android:text="@string/Preview_the_information" />
 
                     <TextView
                         android:id="@+id/tv_get_preview_info"
@@ -88,7 +88,7 @@
                         android:drawablePadding="10dp"
                         android:gravity="center_vertical"
                         android:paddingRight="20dp"
-                        android:text="获取预览信息" />
+                        android:text="@string/Get_the_preview_information" />
 
                 </LinearLayout>
 
@@ -106,7 +106,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="包装数据量：" />
+                            android:text="@string/Packaging_data_volume" />
 
                         <TextView
                             android:id="@+id/tv_num"
@@ -131,7 +131,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="交易单：" />
+                            android:text="@string/Company_Trading_Order" />
 
                         <TextView
                             android:id="@+id/tv_tradingOrder"
@@ -161,7 +161,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="报价单：" />
+                            android:text="@string/Company_Quotation" />
 
                         <TextView
                             android:id="@+id/tv_quotationOrder"
@@ -192,7 +192,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="付款单：" />
+                            android:text="@string/Company_Payment_order" />
 
                         <TextView
                             android:id="@+id/tv_paymentOrder"
@@ -223,7 +223,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="采购单：" />
+                            android:text="@string/Company_Purchase_order" />
 
                         <TextView
                             android:id="@+id/tv_purchaseOrder"
@@ -254,7 +254,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="发货单：" />
+                            android:text="@string/Company_Dispatch_bill" />
 
                         <TextView
                             android:id="@+id/tv_invoiceOrder"
@@ -285,7 +285,7 @@
 
                         <TextView
                             style="@style/product_title_black"
-                            android:text="销售单：" />
+                            android:text="@string/Company_Sales_Order" />
 
                         <TextView
                             android:id="@+id/tv_salesOrder"
@@ -304,7 +304,7 @@
 
                 <TextView
                     style="@style/product_title_blue"
-                    android:text="备注：" />
+                    android:text="@string/Remarks" />
 
                 <EditText
                     android:id="@+id/et_remark"
@@ -312,7 +312,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:hint="添加备注"
+                    android:hint="@string/Add_remarks"
                     android:textColorHint="@color/D5D5D5" />
 
                 <TextView
@@ -326,7 +326,7 @@
                     android:paddingTop="8dp"
                     android:paddingRight="38dp"
                     android:paddingBottom="8dp"
-                    android:text="@string/save"
+                    android:text="@string/Save"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:visibility="invisible" />
@@ -352,7 +352,7 @@
                 android:paddingTop="8dp"
                 android:paddingRight="38dp"
                 android:paddingBottom="8dp"
-                android:text="@string/save"
+                android:text="@string/Save"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:visibility="gone" />
